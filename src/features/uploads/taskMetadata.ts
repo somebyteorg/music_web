@@ -50,6 +50,8 @@ export function applyUploadedFile(task: UploadTask, file: AudioFile, reused = fa
   if (file.upload_draft) {
     const { data, organize } = file.upload_draft
     task.publicationGroup = data.publication_group
+    task.musicbrainzRecordingId = data.musicbrainz_id || undefined
+    task.artistCredits = data.artist_credits || []
     task.title = data.name || task.title
     task.artist = data.artist_name ?? task.artist
     task.version = data.recording_version || ''

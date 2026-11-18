@@ -71,6 +71,9 @@ export interface AlbumDraft {
   name: string
   artist_name: string
   release_year: number | null
+  release_date?: string | null
+  genre?: string
+  artist_credits?: import('@/features/uploads/musicBrainz').MusicBrainzArtistCredit[]
   edition: string
   release_country: string
   label: string

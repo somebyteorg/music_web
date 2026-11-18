@@ -71,6 +71,8 @@ export interface UploadTask {
   catalogNumber?: string
   releaseCountry?: string
   musicbrainzId?: string
+  musicbrainzRecordingId?: string
+  artistCredits?: import('./musicBrainz').MusicBrainzArtistCredit[]
   trackTotal?: number
   discTotal?: number
   albumAssignment?: Pick<PublishData, 'album_id' | 'album' | 'album_supplement'>
