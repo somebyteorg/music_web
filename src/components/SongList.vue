@@ -335,7 +335,7 @@ function playNext(song: Entity) {
 .song-title > .cover {
   width: 42px;
   flex-shrink: 0;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
 }
 .song-info {
   min-width: 0;
@@ -400,7 +400,7 @@ function playNext(song: Entity) {
 @container (max-width: 800px) {
   .song-grid {
     grid-template-columns: 26px minmax(140px, 1.7fr) minmax(90px, 1fr) 82px 152px;
-    gap: 8px;
+    gap: var(--space-2);
     padding-inline: 14px;
   }
   .selectable .song-grid {

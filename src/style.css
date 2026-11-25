@@ -20,11 +20,20 @@
   --danger: #b33645;
   --success: #23774c;
   --radius: 12px;
-  /* 圆角：只保留四档，原值与像素一一对应，替换后观感不变 */
+  /* 圆角：五档（+50% 用于头像/圆形按钮） */
+  --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+  /* 间距：4px 刻度，只覆盖与现有取值完全相同的档位 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
   /* 字号：常用四档 */
   --font-xs: 11px;
   --font-sm: 12px;
@@ -188,7 +197,7 @@ summary:focus-visible {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   min-height: 40px;
   padding: 9px 16px;
   border: 1px solid transparent;
@@ -233,7 +242,7 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .icon-button {
@@ -390,7 +399,7 @@ summary:focus-visible {
 .badge {
   display: inline-block;
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   background: var(--lilac);
   color: var(--purple-dark);
   font-size: var(--font-xs);
@@ -498,7 +507,7 @@ summary:focus-visible {
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 label {
@@ -561,14 +570,14 @@ input[type='radio'] {
 .check-label {
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   line-height: 1.6;
 }
 
 .search-inline {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .search-inline input {
@@ -578,7 +587,7 @@ input[type='radio'] {
 .picker-results {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   max-height: 260px;
   overflow: auto;
 }
@@ -590,7 +599,7 @@ input[type='radio'] {
   gap: 4px 10px;
   padding: 8px 10px;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: var(--font-base);
   text-align: left;
 }
@@ -648,7 +657,7 @@ input[type='radio'] {
   right: 0;
   width: max-content;
   min-width: 130px;
-  padding: 4px;
+  padding: var(--space-1);
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -681,7 +690,7 @@ input[type='radio'] {
 .segmented button {
   flex: 1;
   padding: 6px 10px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   color: var(--muted);
   font-size: var(--font-sm);
   white-space: nowrap;
@@ -724,7 +733,7 @@ input[type='radio'] {
   font-size: var(--font-sm);
 }
 
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .page-heading {
     margin-bottom: 22px;
   }
@@ -798,12 +807,12 @@ input[type='radio'] {
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .image-card {
   min-width: 0;
-  padding: 8px;
+  padding: var(--space-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
@@ -819,7 +828,7 @@ input[type='radio'] {
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   background: var(--soft);
 }
 

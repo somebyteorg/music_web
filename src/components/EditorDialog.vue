@@ -653,10 +653,10 @@ const {
 .album-track-rows .removed > div {
   opacity: 0.5;
 }
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .album-track-rows article {
     grid-template-columns: minmax(0, 1fr) 55px 55px;
-    gap: 8px;
+    gap: var(--space-2);
   }
   .album-track-rows .check-label {
     grid-column: 1 / -1;
@@ -666,7 +666,7 @@ const {
 .cover-editor {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
 }
 .cover-preview-button {
   width: 72px;
@@ -692,7 +692,7 @@ const {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   margin-bottom: 5px;
 }
 .cover-picker span {

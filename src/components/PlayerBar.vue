@@ -156,7 +156,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   padding: 14px 20px;
   background: #fffffff5;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 8px 40px #29203514;
   backdrop-filter: blur(20px);
 }
@@ -167,7 +167,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .player-title {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   width: 168px;
   min-width: 0;
 }
@@ -217,7 +217,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .player-extra {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
   flex-shrink: 0;
 }
 .player-extra .icon-button {
@@ -258,12 +258,12 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .collapsed .player-controls {
   flex-shrink: 0;
 }
-@media (max-width: 980px) {
+@media (max-width: 900px) {
   .mode-button {
     display: none;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .player {
     left: 16px;
     right: 16px;
@@ -276,7 +276,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     display: none;
   }
 }
-@media (max-width: 540px) {
+@media (max-width: 640px) {
   .player {
     left: 10px;
     right: 10px;

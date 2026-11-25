@@ -65,7 +65,7 @@ function jump() {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
   margin-top: 12px;
   color: var(--muted);
   font-size: var(--font-sm);
@@ -74,12 +74,12 @@ function jump() {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .pagination-jump {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .pagination-jump label {
   flex-direction: row;
@@ -102,7 +102,7 @@ function jump() {
     gap: 5px;
   }
   .pagination-jump label {
-    gap: 4px;
+    gap: var(--space-1);
   }
   .pagination-jump input {
     width: 46px !important;

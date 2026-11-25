@@ -231,14 +231,14 @@ const {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
   margin-bottom: 40px;
   padding-inline: 12px;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 .brand > img {
   width: 40px;
@@ -282,7 +282,7 @@ const {
   gap: 13px;
   min-height: 46px;
   padding: 11px 14px;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   color: #77707f;
   font-size: var(--font-md);
   transition:
@@ -373,7 +373,7 @@ const {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 12px;
+  gap: var(--space-3);
   margin-left: auto;
 }
 .account {
@@ -407,7 +407,7 @@ const {
 .account-actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-1);
 }
 .account-action {
   display: inline-flex;
@@ -416,7 +416,7 @@ const {
   gap: 6px;
   min-height: 34px;
   padding: 7px 9px;
-  border-radius: 9px;
+  border-radius: var(--radius-md);
   color: #776b83;
   font-size: var(--font-sm);
   white-space: nowrap;
@@ -445,7 +445,7 @@ const {
   place-items: center;
   width: 38px;
   height: 38px;
-  border-radius: 11px;
+  border-radius: var(--radius-lg);
   color: #8b8196;
   transition:
     background 0.15s,
@@ -484,19 +484,19 @@ const {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: var(--space-6);
   color: var(--muted);
 }
 .sign-in-screen {
   display: grid;
   min-height: 100dvh;
   place-items: center;
-  padding: 20px;
+  padding: var(--space-5);
 }
 .sign-in-card {
   width: 100%;
   max-width: 400px;
-  padding: 32px;
+  padding: var(--space-8);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: #fff;
@@ -517,7 +517,7 @@ const {
   margin-top: 10px;
 }
 .sign-in-link img {
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   object-fit: contain;
 }
 .sign-in-link > span {
@@ -531,7 +531,7 @@ const {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   width: max-content;
   max-width: min(680px, calc(100% - 24px));
   padding: 14px 20px;
@@ -567,16 +567,16 @@ const {
   }
   .account-action {
     width: 34px;
-    padding: 8px;
+    padding: var(--space-2);
   }
   .account {
-    gap: 12px;
+    gap: var(--space-3);
   }
   .topbar {
     gap: 14px;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .sidebar {
     transform: translateX(-100%);
     width: 240px;
@@ -607,25 +607,25 @@ const {
     padding-inline: 20px;
   }
 }
-@media (max-width: 540px) {
+@media (max-width: 640px) {
   .breadcrumb-parent {
     display: none;
   }
   .topbar-actions {
-    gap: 8px;
+    gap: var(--space-2);
   }
   .account {
-    gap: 8px;
+    gap: var(--space-2);
     padding-left: 8px;
   }
   .account-profile {
-    gap: 8px;
+    gap: var(--space-2);
   }
   .account-name {
     max-width: 64px;
   }
   .account-actions {
-    gap: 4px;
+    gap: var(--space-1);
   }
   .account-action {
     width: 32px;
@@ -636,7 +636,7 @@ const {
   }
   .topbar {
     padding-inline: 12px;
-    gap: 8px;
+    gap: var(--space-2);
   }
   .sign-in-card {
     padding: 32px 24px;

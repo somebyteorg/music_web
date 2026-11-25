@@ -266,7 +266,7 @@ const {
   flex-wrap: wrap;
   gap: 14px;
   margin-bottom: 14px;
-  padding: 16px;
+  padding: var(--space-4);
 }
 .history-filters > label {
   width: 180px;
@@ -277,7 +277,7 @@ const {
 .member-list > article {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--space-3);
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
 }
@@ -344,10 +344,10 @@ const {
 .member-role :deep(.select-trigger) {
   width: auto;
   min-height: 0;
-  gap: 4px;
+  gap: var(--space-1);
   padding: 2px 6px;
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   background: var(--lilac);
   color: var(--purple-dark);
   font-size: var(--font-xs);
@@ -374,12 +374,12 @@ const {
 .message-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .message {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--space-3);
   padding: 14px;
 }
 .message.unread {
@@ -421,9 +421,9 @@ const {
   font-size: var(--font-base);
 }
 .history-diff p {
-  padding: 8px;
+  padding: var(--space-2);
   margin-top: 6px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: var(--font-sm);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -436,7 +436,7 @@ const {
   background: #edf7ef;
   color: #286840;
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .history-filters {
     gap: 9px;
     padding: 10px;
@@ -447,7 +447,7 @@ const {
   .history-list > article,
   .member-list > article {
     padding: 11px 10px;
-    gap: 8px;
+    gap: var(--space-2);
     flex-wrap: wrap;
   }
   .history-list .text-button {
@@ -463,7 +463,7 @@ const {
     width: 16px;
   }
   .message {
-    padding: 12px;
+    padding: var(--space-3);
     gap: 10px;
     flex-wrap: wrap;
   }

@@ -187,14 +187,14 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   padding: 16px 8px 8px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 12px 48px #2920351f;
 }
 .queue-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 0 10px 10px;
 }
 .queue-head h2 {
@@ -211,7 +211,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-tools {
   display: flex;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 0 10px 10px;
 }
 .queue-tools .button {
@@ -235,7 +235,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   display: flex;
   align-items: center;
   gap: 2px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 .queue-row:hover {
   background: #faf9fd;
@@ -299,7 +299,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   opacity: 1;
 }
 /* 触屏没有 hover：删除按钮常显，否则手机上无法移除曲目 */
-@media (pointer: coarse), (max-width: 760px) {
+@media (pointer: coarse), (max-width: 900px) {
   .queue-remove {
     opacity: 1;
   }
@@ -345,7 +345,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   font-size: var(--font-xs);
   line-height: 1.6;
 }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .queue-backdrop {
     background: #1b162a26;
   }

@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
   max-height: calc(100dvh - 48px);
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   background: #fff;
   color: #292733;
   box-shadow: 0 15px 70px #172d2326;
@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
 }
 .modal-body {
   min-height: 0;
-  padding: 24px;
+  padding: var(--space-6);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
@@ -133,7 +133,7 @@ onBeforeUnmount(() => {
   .modal-heading,
   .modal-body,
   .modal-footer {
-    padding: 16px;
+    padding: var(--space-4);
   }
   .modal-heading h2 {
     font-size: 17px;

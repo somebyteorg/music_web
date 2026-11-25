@@ -951,13 +951,13 @@ const lyricInput = ref<HTMLInputElement>()
   padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-3);
 }
 .recording-releases a {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .follow-button.active {
   color: var(--purple-dark);
@@ -971,7 +971,7 @@ const lyricInput = ref<HTMLInputElement>()
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
   margin: 16px 0 12px;
 }
 .lyric-toolbar > :first-child {
@@ -983,12 +983,12 @@ const lyricInput = ref<HTMLInputElement>()
 }
 .song-upload-list {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
 }
 .song-upload-list article {
   display: grid;
-  gap: 8px;
-  padding: 12px;
+  gap: var(--space-2);
+  padding: var(--space-3);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -1012,8 +1012,8 @@ const lyricInput = ref<HTMLInputElement>()
 .detail-hero {
   display: flex;
   align-items: center;
-  gap: 32px;
-  padding: 32px;
+  gap: var(--space-8);
+  padding: var(--space-8);
   margin-bottom: 32px;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
@@ -1158,7 +1158,7 @@ const lyricInput = ref<HTMLInputElement>()
   width: 26px;
   height: 28px;
   flex-shrink: 0;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   background: var(--lilac);
   color: var(--purple);
   font-size: var(--font-xs);
@@ -1192,7 +1192,7 @@ const lyricInput = ref<HTMLInputElement>()
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   margin-top: 24px;
   padding-top: 12px;
   border-top: 1px solid var(--line);
@@ -1204,7 +1204,7 @@ const lyricInput = ref<HTMLInputElement>()
 }
 .lyrics-panel {
   margin-top: 16px;
-  padding: 20px;
+  padding: var(--space-5);
 }
 .lyrics-panel pre {
   font-family: inherit;
@@ -1216,7 +1216,7 @@ const lyricInput = ref<HTMLInputElement>()
 .track-editor > article {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 6px 0;
   border-bottom: 1px solid var(--line);
 }
@@ -1230,7 +1230,7 @@ const lyricInput = ref<HTMLInputElement>()
 .collaborators {
   margin-bottom: 10px;
 }
-@media (max-width: 1150px) {
+@media (max-width: 1100px) {
   .uploader {
     display: none;
   }
@@ -1243,11 +1243,11 @@ const lyricInput = ref<HTMLInputElement>()
     display: none;
   }
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .detail-hero {
     align-items: flex-start;
-    gap: 20px;
-    padding: 24px;
+    gap: var(--space-5);
+    padding: var(--space-6);
     margin-bottom: 24px;
   }
   .detail-hero > .cover {

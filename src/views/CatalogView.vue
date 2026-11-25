@@ -326,7 +326,7 @@ const {
 .view-toggle button {
   min-height: 32px;
   padding: 6px 11px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: var(--font-sm);
   color: var(--muted);
 }
@@ -350,7 +350,7 @@ const {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 12px;
+  padding: var(--space-3);
 }
 .loading-list .skeleton {
   height: 32px;
@@ -467,7 +467,7 @@ const {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
   font-size: var(--font-base);
 }
 .grid .entity-actions {
@@ -478,7 +478,7 @@ const {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
   padding-top: 20px;
   margin-top: 24px;
   border-top: 1px solid var(--line);
@@ -487,7 +487,7 @@ const {
   flex: 1;
   margin: 0;
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .catalog {
     --entity-action-width: 34px;
   }
@@ -497,7 +497,7 @@ const {
   .entity-label,
   .list .entity-row {
     grid-template-columns: minmax(120px, 1fr) 65px var(--entity-action-width);
-    gap: 8px;
+    gap: var(--space-2);
     padding-inline: 10px;
   }
   .entity-label > span:nth-child(2),

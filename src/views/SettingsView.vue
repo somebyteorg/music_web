@@ -128,7 +128,7 @@ async function save() {
 <style scoped>
 .settings-card {
   width: 100%;
-  padding: 20px;
+  padding: var(--space-5);
 }
 .settings-card h2 {
   margin-top: 6px;
@@ -152,7 +152,7 @@ async function save() {
 .quality-options {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--space-2);
 }
 .quality-options label {
   position: relative;
@@ -182,9 +182,9 @@ async function save() {
   font-size: var(--font-xs);
   font-weight: 400;
 }
-@media (max-width: 540px) {
+@media (max-width: 640px) {
   .settings-card {
-    padding: 16px;
+    padding: var(--space-4);
   }
   .quality-options {
     grid-template-columns: 1fr 1fr;
