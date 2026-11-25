@@ -147,7 +147,7 @@ async function apply() {
   padding: 12px;
   margin-top: 8px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 .metadata-field > div {
   min-width: 0;
@@ -157,9 +157,9 @@ async function apply() {
   max-height: 130px;
   overflow: auto;
   overflow-wrap: anywhere;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .metadata-field strong {
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 </style>

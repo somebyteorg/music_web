@@ -314,20 +314,20 @@ const {
 .catalog-intro {
   margin-top: 10px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 .view-toggle {
   display: flex;
   padding: 3px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: #fff;
 }
 .view-toggle button {
   min-height: 32px;
   padding: 6px 11px;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   color: var(--muted);
 }
 .view-toggle .active {
@@ -343,8 +343,8 @@ const {
   margin-bottom: 8px;
   background: var(--lilac);
   border: 1px solid #d9cbed;
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-sm);
 }
 .loading-list {
   display: flex;
@@ -378,7 +378,7 @@ const {
   min-height: 44px;
   color: var(--muted);
   background: var(--soft);
-  font-size: 12px;
+  font-size: var(--font-sm);
   border-radius: var(--radius) var(--radius) 0 0;
 }
 .list .entity-row {
@@ -405,7 +405,7 @@ const {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .entity-main:hover h3 {
   color: var(--purple);
@@ -416,7 +416,7 @@ const {
 .entity-secondary,
 .entity-count {
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -450,7 +450,7 @@ const {
   margin: 8px auto 20px;
 }
 .grid .entity-main p {
-  font-size: 12px;
+  font-size: var(--font-sm);
   margin-top: 6px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -468,7 +468,7 @@ const {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 .grid .entity-actions {
   float: right;

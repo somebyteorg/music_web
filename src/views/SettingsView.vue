@@ -160,7 +160,7 @@ async function save() {
   gap: 5px;
   padding: 12px 10px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 .quality-options label.selected {
   border-color: #baa2e2;
@@ -174,12 +174,12 @@ async function save() {
   height: 12px;
 }
 .quality-options strong {
-  font-size: 12px;
+  font-size: var(--font-sm);
   padding-right: 12px;
 }
 .quality-options span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 400;
 }
 @media (max-width: 540px) {

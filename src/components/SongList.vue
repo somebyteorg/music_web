@@ -274,7 +274,7 @@ function playNext(song: Entity) {
   background: var(--soft);
   border-radius: var(--radius) var(--radius) 0 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .number-label {
   text-align: center;
@@ -309,7 +309,7 @@ function playNext(song: Entity) {
   width: 28px;
   height: 30px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-variant-numeric: tabular-nums;
 }
 .play-icon {
@@ -346,7 +346,7 @@ function playNext(song: Entity) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: var(--font-md);
   font-weight: 550;
 }
 .song-name:hover,
@@ -356,14 +356,14 @@ function playNext(song: Entity) {
 }
 .song-name small {
   margin-left: 6px;
-  font-size: 11px;
+  font-size: var(--font-xs);
   color: var(--muted);
   font-weight: 400;
 }
 .song-artists,
 .song-album {
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -376,7 +376,7 @@ function playNext(song: Entity) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 12px;
+  font-size: var(--font-sm);
   color: var(--muted);
 }
 .song-actions {

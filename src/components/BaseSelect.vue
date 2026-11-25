@@ -205,11 +205,11 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   min-height: 40px;
   padding: 9px 12px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: #fff;
   color: #484551;
   text-align: left;
-  font-size: 13px;
+  font-size: var(--font-base);
   white-space: nowrap;
 }
 .select-trigger:hover:not(:disabled) {
@@ -248,7 +248,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
 .select-search input {
   min-height: 32px;
   background: var(--soft);
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 .select-options {
   overflow-y: auto;
@@ -265,7 +265,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   border-radius: 4px;
   color: #484551;
   text-align: left;
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 .select-options > button.active {
   background: var(--soft);
@@ -279,7 +279,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   padding: 18px 10px;
   text-align: center;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 @media (pointer: coarse) {
   .select-trigger,

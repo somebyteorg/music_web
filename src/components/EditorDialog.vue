@@ -645,7 +645,7 @@ const {
   overflow-wrap: anywhere;
 }
 .album-track-rows label {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .album-track-rows input[type='number'] {
   padding-inline: 7px;
@@ -674,7 +674,7 @@ const {
 }
 .cover-editor .text-button {
   display: block;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .cover-editor .hint {
   margin-top: 4px;
@@ -701,6 +701,6 @@ const {
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 </style>
