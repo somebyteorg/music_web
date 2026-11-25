@@ -108,6 +108,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
       </button>
       <button
         :aria-expanded="queue.open"
+        aria-controls="queue-panel"
         :aria-label="`播放队列，共 ${queue.length} 首`"
         :title="`播放队列（${queue.length}）`"
         class="icon-button queue-button"
@@ -171,10 +172,10 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   min-width: 0;
 }
 .player-title strong {
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .player-title span {
-  font-size: 11px;
+  font-size: var(--font-xs);
   color: var(--muted);
 }
 .player-controls {
@@ -210,7 +211,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 }
 .time {
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-variant-numeric: tabular-nums;
 }
 .player-extra {
@@ -231,7 +232,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   right: -4px;
   min-width: 15px;
   padding: 0 3px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--purple);
   color: #fff;
   font-size: 9px;
@@ -247,7 +248,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   min-height: 54px;
   gap: 10px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   box-shadow: 0 4px 16px #28233512;
 }
 .collapsed .player-title {

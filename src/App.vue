@@ -58,6 +58,7 @@ const {
     </main>
   </div>
   <div v-else :class="['app-shell', { 'player-visible': playerVisible }]">
+    <a class="skip-link" href="#main">跳到主要内容</a>
     <aside id="app-navigation" :class="['sidebar', { expanded: menu }]" aria-label="主导航">
       <div class="sidebar-brand">
         <RouterLink class="brand" to="/" @click="closeNavigation">
@@ -264,8 +265,8 @@ const {
 }
 .nav-label {
   margin: 0 14px 12px;
-  color: #9b94a5;
-  font-size: 11px;
+  color: var(--muted);
+  font-size: var(--font-xs);
   font-weight: 500;
   letter-spacing: 2px;
 }
@@ -283,7 +284,7 @@ const {
   padding: 11px 14px;
   border-radius: 9px;
   color: #77707f;
-  font-size: 14px;
+  font-size: var(--font-md);
   transition:
     background 0.15s,
     color 0.15s;
@@ -316,12 +317,12 @@ const {
   width: 15px;
   height: 15px;
   margin-left: auto;
-  color: #aaa3b1;
+  color: var(--muted);
 }
 .nav-count {
   margin-left: auto;
   padding: 1px 7px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: var(--purple-dark);
   background: var(--lilac);
   font-size: 10px;
@@ -350,8 +351,8 @@ const {
   align-items: center;
   gap: 14px;
   min-width: 0;
-  color: #918b9c;
-  font-size: 12px;
+  color: var(--muted);
+  font-size: var(--font-sm);
   white-space: nowrap;
 }
 .breadcrumb-parent {
@@ -365,7 +366,7 @@ const {
   overflow: hidden;
   text-overflow: ellipsis;
   color: #575160;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 500;
 }
 .topbar-actions {
@@ -390,7 +391,7 @@ const {
   width: 32px;
   height: 32px;
   background: #e9e0f6;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 600;
 }
 .account-name {
@@ -400,7 +401,7 @@ const {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 600;
 }
 .account-actions {
@@ -417,7 +418,7 @@ const {
   padding: 7px 9px;
   border-radius: 9px;
   color: #776b83;
-  font-size: 12px;
+  font-size: var(--font-sm);
   white-space: nowrap;
   transition:
     background 0.15s,
@@ -497,7 +498,7 @@ const {
   max-width: 400px;
   padding: 32px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: #fff;
   text-align: center;
 }
@@ -535,10 +536,10 @@ const {
   max-width: min(680px, calc(100% - 24px));
   padding: 14px 20px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   background: #fff;
   box-shadow: 0 8px 32px #28233516;
-  font-size: 13px;
+  font-size: var(--font-base);
   line-height: 1.6;
 }
 .toast > span {
