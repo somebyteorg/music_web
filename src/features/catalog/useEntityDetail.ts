@@ -39,9 +39,11 @@ export function useEntityDetail() {
               .json<Page<Entity>>()
           : await getCatalogPage('songs', params, signal)
       if (signal.aborted) return
+      if (!Array.isArray(result?.items) || !Number.isFinite(Number(result.total)))
+        throw new Error('曲目接口返回的数据格式异常，请稍后重试。')
       songs.value = result.items
-      total.value = result.total
-      songPageSize.value = result.page_size
+      total.value = Number(result.total)
+      songPageSize.value = Number(result.page_size) || songPageSize.value
     } catch (error) {
       if (!signal.aborted) report(error)
     }
@@ -54,6 +56,7 @@ export function useEntityDetail() {
     try {
       const result = await getCatalogItem(type, id, signal)
       if (signal.aborted) return
+      if (!result || !result.item) throw new Error('接口返回的数据格式异常，请稍后重试。')
       item.value = result.item
       editable.value = result.can_edit ?? true
       if (type !== 'songs') await loadSongs()
