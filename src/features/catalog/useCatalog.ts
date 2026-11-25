@@ -109,13 +109,17 @@ export function useCatalog() {
     try {
       const result = await getCatalogPage(type.value, params, request.signal)
       if (request.signal.aborted) return
-      const last = Math.max(1, Math.ceil(result.total / result.page_size))
+      // 接口形状不对（例如返回空对象）时明确报错，而不是让 undefined 冒到模板里
+      if (!result || !Array.isArray(result.items) || !Number.isFinite(Number(result.total)))
+        throw new Error('音乐库接口返回的数据格式异常，请稍后重试。')
+      total.value = Number(result.total)
+      const pageSizeValue = Number(result.page_size) || pageSize.value
+      const last = Math.max(1, Math.ceil(total.value / pageSizeValue))
       if (page.value > last) {
         update({ page: last > 1 ? String(last) : undefined }, false, true)
         return
       }
       items.value = result.items
-      total.value = result.total
       loaded.value = true
       cache.delete(key)
       cache.set(key, result)
