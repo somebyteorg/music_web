@@ -5,6 +5,7 @@ import { playModeLabels, useQueueStore } from '@/stores/queue'
 import { duration, qualities } from '@/utils/format'
 import EntityCover from './EntityCover.vue'
 import PlayModeIcon from './PlayModeIcon.vue'
+import ScrollingTitle from './ScrollingTitle.vue'
 import QueuePanel from './QueuePanel.vue'
 
 const player = usePlayerStore()
@@ -38,7 +39,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   >
     <EntityCover :item="displayItem" />
     <div class="player-title">
-      <strong>{{ displayItem?.name }}</strong><span>{{ subtitle }}</span>
+      <ScrollingTitle :text="displayItem?.name" /><span>{{ subtitle }}</span>
     </div>
     <div class="player-controls">
       <button
@@ -171,9 +172,6 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 }
 .player-title strong {
   font-size: 14px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .player-title span {
   font-size: 11px;
