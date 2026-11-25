@@ -5,7 +5,7 @@ export function artworkType(name: string): ArtworkType {
   if (/back|封底|背面/i.test(name)) return 'back'
   if (/disc|碟面|光盘/i.test(name)) return 'disc'
   if (/booklet|内页|册页/i.test(name)) return 'booklet'
-  if (/^(?:cover|front|folder|album[ _-]?cover|封面|正面)(?:[ ._()\-]|\d|$)/i.test(name))
+  if (/^(?:cover|front|folder|album[ _-]?cover|封面|正面)(?:[ ._()-]|\d|$)/i.test(name))
     return 'cover'
   return 'other'
 }

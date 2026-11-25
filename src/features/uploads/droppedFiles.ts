@@ -5,7 +5,9 @@ async function entryFiles(entry: FileSystemEntry, prefix = ''): Promise<File[]> 
     )
     try {
       Object.defineProperty(file, 'webkitRelativePath', { value: prefix + file.name })
-    } catch {}
+    } catch {
+      // 个别浏览器禁止改写该属性；拿不到相对路径也不影响上传
+    }
     return [file]
   }
   if (!entry.isDirectory) return []
