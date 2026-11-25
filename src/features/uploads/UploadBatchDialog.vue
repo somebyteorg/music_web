@@ -655,13 +655,13 @@ const emit = defineEmits<{
 <style scoped>
 .track-numbering {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 .track-numbering-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: end;
-  gap: 10px;
+  gap: var(--space-12);
 }
 .track-numbering-actions > label {
   width: 100px;
@@ -678,13 +678,13 @@ const emit = defineEmits<{
 }
 .group-performer {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 .group-move {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-12);
 }
 .group-move > .select-control {
   flex: 1;
@@ -694,23 +694,23 @@ const emit = defineEmits<{
   overflow-wrap: anywhere;
 }
 .new-group {
-  padding: var(--space-4);
+  padding: var(--space-16);
   border: 1px dashed var(--line);
   border-radius: var(--radius-md);
 }
 .album-confirmation {
-  padding: 18px;
+  padding: var(--space-20);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--space-16);
   background: var(--soft);
 }
 .album-confirmation-heading {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-16);
   min-width: 0;
 }
 .album-confirmation-heading > .cover {
@@ -726,7 +726,7 @@ const emit = defineEmits<{
 .album-artwork {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--space-8);
 }
 .album-artwork .badge {
   max-width: 100%;
@@ -755,7 +755,7 @@ const emit = defineEmits<{
 }
 .preview-warnings {
   margin: 0;
-  padding: 10px 12px 10px 28px;
+  padding: var(--space-12) var(--space-12) var(--space-12) var(--space-32);
   border: 1px solid #eddfc8;
   border-radius: var(--radius-md);
   background: #fffaf2;
@@ -767,24 +767,24 @@ const emit = defineEmits<{
 .batch-common {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: var(--space-16);
   margin: 0;
   padding: 0;
   border: 0;
 }
 .batch-common > div {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 .batch-files {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-12);
   margin: 0;
   padding: 0;
   border: 0;
 }
 .batch-file {
-  padding: 14px;
+  padding: var(--space-16);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
@@ -792,7 +792,7 @@ const emit = defineEmits<{
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 6px 12px;
+  gap: var(--space-8) var(--space-12);
   margin-bottom: 12px;
 }
 .batch-file-heading > strong {
@@ -807,7 +807,7 @@ const emit = defineEmits<{
 .batch-file-fields {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  gap: var(--space-12);
   margin-bottom: 8px;
 }
 .batch-file-fields > label:first-child,
@@ -834,7 +834,7 @@ const emit = defineEmits<{
     grid-column: 1 / -1;
   }
   .batch-file {
-    padding: var(--space-3);
+    padding: var(--space-12);
   }
 }
 </style>

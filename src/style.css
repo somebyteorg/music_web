@@ -26,14 +26,24 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
-  /* 间距：4px 刻度，只覆盖与现有取值完全相同的档位 */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
+  /* 间距：4px 栅格（2px 为发丝档），token 名即像素值 */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-96: 96px;
+  --space-104: 104px;
+  --space-108: 108px;
+  --space-120: 120px;
   /* 字号：常用四档 */
   --font-xs: 11px;
   --font-sm: 12px;
@@ -163,7 +173,7 @@ summary:focus-visible {
   top: 8px;
   left: 8px;
   z-index: 60;
-  padding: 8px 14px;
+  padding: var(--space-8) var(--space-16);
   color: #fff;
   background: var(--purple);
   border-radius: var(--radius-md);
@@ -197,9 +207,9 @@ summary:focus-visible {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-8);
   min-height: 40px;
-  padding: 9px 16px;
+  padding: var(--space-8) var(--space-16);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   font-size: var(--font-base);
@@ -234,7 +244,7 @@ summary:focus-visible {
 
 .button.small {
   min-height: 34px;
-  padding: 6px 12px;
+  padding: var(--space-8) var(--space-12);
   font-size: var(--font-sm);
 }
 
@@ -242,7 +252,7 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 
 .icon-button {
@@ -263,7 +273,7 @@ summary:focus-visible {
 
 .text-button,
 .text-link {
-  padding: 4px 0;
+  padding: var(--space-4) 0;
   color: var(--purple);
   font-size: var(--font-base);
   line-height: 1.6;
@@ -290,7 +300,7 @@ summary:focus-visible {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 16px 20px;
+  gap: var(--space-16) var(--space-20);
   margin-bottom: 28px;
 }
 
@@ -298,7 +308,7 @@ summary:focus-visible {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: var(--space-16);
 }
 
 .heading-title > .muted {
@@ -314,7 +324,7 @@ summary:focus-visible {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px 14px;
+  gap: var(--space-8) var(--space-16);
   margin-bottom: 18px;
 }
 
@@ -326,7 +336,7 @@ summary:focus-visible {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-12);
   margin-bottom: 20px;
 }
 
@@ -340,10 +350,10 @@ summary:focus-visible {
 .search-field {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-8);
   min-width: 180px;
   width: 280px;
-  padding: 0 12px;
+  padding: 0 var(--space-12);
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
@@ -359,7 +369,7 @@ summary:focus-visible {
   border: 0 !important;
   box-shadow: none !important;
   min-height: 38px !important;
-  padding: 5px 2px !important;
+  padding: var(--space-4) var(--space-2) !important;
   background: transparent !important;
 }
 
@@ -370,7 +380,7 @@ summary:focus-visible {
 }
 
 .chip {
-  padding: 8px 13px;
+  padding: var(--space-8) var(--space-12);
   min-height: 40px;
   border: 1px solid var(--line);
   background: #fff;
@@ -393,12 +403,12 @@ summary:focus-visible {
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--space-8);
 }
 
 .badge {
   display: inline-block;
-  padding: 2px 6px;
+  padding: var(--space-2) var(--space-8);
   border-radius: var(--radius-xs);
   background: var(--lilac);
   color: var(--purple-dark);
@@ -424,13 +434,13 @@ summary:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  padding: 56px 24px;
+  gap: var(--space-8);
+  padding: var(--space-56) var(--space-24);
   text-align: center;
 }
 
 .empty.compact {
-  padding: 32px 20px;
+  padding: var(--space-32) var(--space-20);
 }
 
 .empty-symbol {
@@ -451,7 +461,7 @@ summary:focus-visible {
 
 .notice {
   margin-bottom: 12px;
-  padding: 10px 12px;
+  padding: var(--space-12) var(--space-12);
   border: 1px solid #ded3f2;
   border-radius: var(--radius-sm);
   background: #f5f1fc;
@@ -501,19 +511,19 @@ summary:focus-visible {
 .form-stack {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: var(--space-20);
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  gap: var(--space-16);
 }
 
 label {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-8);
   color: #484551;
   font-size: var(--font-base);
   font-weight: 500;
@@ -524,7 +534,7 @@ select,
 textarea {
   width: 100%;
   min-height: 40px;
-  padding: 9px 12px;
+  padding: var(--space-8) var(--space-12);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: #fff;
@@ -570,14 +580,14 @@ input[type='radio'] {
 .check-label {
   flex-direction: row;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-8);
   line-height: 1.6;
 }
 
 .search-inline {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 
 .search-inline input {
@@ -587,7 +597,7 @@ input[type='radio'] {
 .picker-results {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-4);
   max-height: 260px;
   overflow: auto;
 }
@@ -596,8 +606,8 @@ input[type='radio'] {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 10px;
-  padding: 8px 10px;
+  gap: var(--space-4) var(--space-12);
+  padding: var(--space-8) var(--space-12);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   font-size: var(--font-base);
@@ -632,7 +642,7 @@ input[type='radio'] {
   justify-content: center;
   min-width: 30px;
   min-height: 40px;
-  padding: 8px 12px;
+  padding: var(--space-8) var(--space-12);
   cursor: pointer;
   list-style: none;
   border: 1px solid var(--line);
@@ -657,7 +667,7 @@ input[type='radio'] {
   right: 0;
   width: max-content;
   min-width: 130px;
-  padding: var(--space-1);
+  padding: var(--space-4);
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -668,10 +678,10 @@ input[type='radio'] {
 .action-menu-items > a {
   display: block;
   width: 100%;
-  padding: 7px 10px;
+  padding: var(--space-8) var(--space-12);
   text-align: left;
   font-size: var(--font-sm);
-  border-radius: 3px;
+  border-radius: var(--radius-xs);
 }
 
 .action-menu-items > button:hover,
@@ -681,15 +691,15 @@ input[type='radio'] {
 
 .segmented {
   display: flex;
-  gap: 2px;
-  padding: 3px;
+  gap: var(--space-2);
+  padding: var(--space-4);
   background: #edf0f4;
   border-radius: var(--radius-sm);
 }
 
 .segmented button {
   flex: 1;
-  padding: 6px 10px;
+  padding: var(--space-8) var(--space-12);
   border-radius: var(--radius-xs);
   color: var(--muted);
   font-size: var(--font-sm);
@@ -739,11 +749,11 @@ input[type='radio'] {
   }
 
   .page-heading > .button-group {
-    gap: 6px;
+    gap: var(--space-8);
   }
 
   .heading-title {
-    gap: 6px;
+    gap: var(--space-8);
   }
 
   h1 {
@@ -751,7 +761,7 @@ input[type='radio'] {
   }
 
   .button {
-    padding-inline: 10px;
+    padding-inline: var(--space-12);
   }
 
   .search-field {
@@ -759,7 +769,7 @@ input[type='radio'] {
   }
 
   .filter-bar {
-    gap: 6px;
+    gap: var(--space-8);
   }
 
   .filter-bar select {
@@ -807,12 +817,12 @@ input[type='radio'] {
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-12);
 }
 
 .image-card {
   min-width: 0;
-  padding: var(--space-2);
+  padding: var(--space-8);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
 }
@@ -840,7 +850,7 @@ input[type='radio'] {
 
 .image-card > span {
   display: block;
-  margin-block: 6px;
+  margin-block: var(--space-8);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -856,6 +866,6 @@ input[type='radio'] {
   display: block;
   max-width: 100%;
   max-height: 65dvh;
-  margin: 0 auto 12px;
+  margin: 0 auto var(--space-12);
   object-fit: contain;
 }

@@ -184,7 +184,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   flex-direction: column;
   width: min(360px, calc(100vw - 32px));
   max-height: min(620px, calc(100vh - 160px));
-  padding: 16px 8px 8px;
+  padding: var(--space-16) var(--space-8) var(--space-8);
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -194,15 +194,15 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-2);
-  padding: 0 10px 10px;
+  gap: var(--space-8);
+  padding: 0 var(--space-12) var(--space-12);
 }
 .queue-head h2 {
   margin: 0;
   font-size: 15px;
 }
 .queue-source {
-  margin: 4px 0 0;
+  margin: var(--space-4) 0 0;
   color: var(--muted);
   font-size: var(--font-xs);
 }
@@ -211,14 +211,14 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-tools {
   display: flex;
-  gap: var(--space-2);
-  padding: 0 10px 10px;
+  gap: var(--space-8);
+  padding: 0 var(--space-12) var(--space-12);
 }
 .queue-tools .button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-12);
   font-size: var(--font-sm);
 }
 .queue-tools :deep(.ui-icon) {
@@ -227,14 +227,14 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-list {
   margin: 0;
-  padding: 0 4px 4px;
+  padding: 0 var(--space-4) var(--space-4);
   overflow-y: auto;
   list-style: none;
 }
 .queue-row {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-2);
   border-radius: var(--radius-md);
 }
 .queue-row:hover {
@@ -250,10 +250,10 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   display: grid;
   grid-template-columns: 22px 36px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-12);
   flex: 1;
   min-width: 0;
-  padding: 7px 6px;
+  padding: var(--space-8) var(--space-8);
   text-align: left;
 }
 .queue-index {
@@ -268,7 +268,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .queue-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
   min-width: 0;
 }
 .queue-text strong {
@@ -307,7 +307,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .queue-bars {
   display: inline-flex;
   align-items: flex-end;
-  gap: 2px;
+  gap: var(--space-2);
   height: 12px;
 }
 .queue-bars i {
@@ -332,12 +332,12 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   }
 }
 .queue-empty {
-  padding: 28px 18px 34px;
+  padding: var(--space-32) var(--space-20) var(--space-32);
   color: var(--muted);
   text-align: center;
 }
 .queue-empty p {
-  margin: 6px 0 4px;
+  margin: var(--space-8) 0 var(--space-4);
   color: var(--text, #2a2438);
   font-size: var(--font-md);
 }

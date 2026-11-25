@@ -264,9 +264,9 @@ const {
   display: flex;
   align-items: flex-end;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: var(--space-16);
   margin-bottom: 14px;
-  padding: var(--space-4);
+  padding: var(--space-16);
 }
 .history-filters > label {
   width: 180px;
@@ -277,8 +277,8 @@ const {
 .member-list > article {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
-  padding: 12px 14px;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
   border-bottom: 1px solid var(--line);
 }
 .history-list > article:last-child,
@@ -296,7 +296,7 @@ const {
 }
 .history-body > p .muted {
   font-size: var(--font-sm);
-  margin-inline: 4px;
+  margin-inline: var(--space-4);
 }
 .history-body > p > a {
   color: var(--purple);
@@ -330,7 +330,7 @@ const {
 .member-name {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: var(--space-4);
   flex: 1;
   min-width: 0;
 }
@@ -344,8 +344,8 @@ const {
 .member-role :deep(.select-trigger) {
   width: auto;
   min-height: 0;
-  gap: var(--space-1);
-  padding: 2px 6px;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-8);
   border: 0;
   border-radius: var(--radius-xs);
   background: var(--lilac);
@@ -360,7 +360,7 @@ const {
 .member-contribution {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: var(--space-4);
   min-width: 90px;
   text-align: right;
 }
@@ -374,13 +374,13 @@ const {
 .message-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 .message {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
-  padding: 14px;
+  gap: var(--space-12);
+  padding: var(--space-16);
 }
 .message.unread {
   background: #fcfaff;
@@ -398,7 +398,7 @@ const {
   font-size: var(--font-md);
 }
 .message p {
-  margin: 6px 0;
+  margin: var(--space-8) 0;
   color: var(--muted);
   font-size: var(--font-base);
   white-space: pre-line;
@@ -413,7 +413,7 @@ const {
   white-space: nowrap;
 }
 .history-diff {
-  padding: 10px;
+  padding: var(--space-12);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
 }
@@ -421,7 +421,7 @@ const {
   font-size: var(--font-base);
 }
 .history-diff p {
-  padding: var(--space-2);
+  padding: var(--space-8);
   margin-top: 6px;
   border-radius: var(--radius-xs);
   font-size: var(--font-sm);
@@ -438,16 +438,16 @@ const {
 }
 @media (max-width: 640px) {
   .history-filters {
-    gap: 9px;
-    padding: 10px;
+    gap: var(--space-8);
+    padding: var(--space-12);
   }
   .history-filters > label {
     flex: 1 1 130px;
   }
   .history-list > article,
   .member-list > article {
-    padding: 11px 10px;
-    gap: var(--space-2);
+    padding: var(--space-12) var(--space-12);
+    gap: var(--space-8);
     flex-wrap: wrap;
   }
   .history-list .text-button {
@@ -463,8 +463,8 @@ const {
     width: 16px;
   }
   .message {
-    padding: var(--space-3);
-    gap: 10px;
+    padding: var(--space-12);
+    gap: var(--space-12);
     flex-wrap: wrap;
   }
   .message .text-button {

@@ -143,8 +143,8 @@ async function apply() {
 .metadata-field {
   flex-direction: row;
   align-items: flex-start;
-  gap: 10px;
-  padding: var(--space-3);
+  gap: var(--space-12);
+  padding: var(--space-12);
   margin-top: 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);

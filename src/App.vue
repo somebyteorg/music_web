@@ -222,7 +222,7 @@ const {
   display: flex;
   flex-direction: column;
   width: var(--sidebar-width);
-  padding: 30px 16px 18px;
+  padding: var(--space-32) var(--space-16) var(--space-20);
   background: #fff;
   border-right: 1px solid var(--line);
   overflow-y: auto;
@@ -231,14 +231,14 @@ const {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-8);
   margin-bottom: 40px;
-  padding-inline: 12px;
+  padding-inline: var(--space-12);
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-12);
 }
 .brand > img {
   width: 40px;
@@ -264,7 +264,7 @@ const {
   border-top: 1px solid var(--line);
 }
 .nav-label {
-  margin: 0 14px 12px;
+  margin: 0 var(--space-16) var(--space-12);
   color: var(--muted);
   font-size: var(--font-xs);
   font-weight: 500;
@@ -273,15 +273,15 @@ const {
 .sidebar nav {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: var(--space-4);
 }
 .sidebar nav a {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: var(--space-12);
   min-height: 46px;
-  padding: 11px 14px;
+  padding: var(--space-12) var(--space-16);
   border-radius: var(--radius-md);
   color: #77707f;
   font-size: var(--font-md);
@@ -321,7 +321,7 @@ const {
 }
 .nav-count {
   margin-left: auto;
-  padding: 1px 7px;
+  padding: var(--space-2) var(--space-8);
   border-radius: var(--radius-sm);
   color: var(--purple-dark);
   background: var(--lilac);
@@ -339,7 +339,7 @@ const {
   z-index: 30;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: var(--space-20);
   height: 72px;
   padding: 0 var(--page-gutter);
   background: #ffffffd9;
@@ -349,7 +349,7 @@ const {
 .breadcrumb {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-16);
   min-width: 0;
   color: var(--muted);
   font-size: var(--font-sm);
@@ -373,19 +373,19 @@ const {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: var(--space-3);
+  gap: var(--space-12);
   margin-left: auto;
 }
 .account {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 5px 6px 5px 12px;
+  gap: var(--space-16);
+  padding: var(--space-4) var(--space-8) var(--space-4) var(--space-12);
 }
 .account-profile {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-12);
 }
 .account-profile .avatar {
   width: 32px;
@@ -407,15 +407,15 @@ const {
 .account-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-4);
 }
 .account-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--space-8);
   min-height: 34px;
-  padding: 7px 9px;
+  padding: var(--space-8) var(--space-8);
   border-radius: var(--radius-md);
   color: #776b83;
   font-size: var(--font-sm);
@@ -469,7 +469,7 @@ const {
   width: 100%;
   max-width: 1680px;
   margin-inline: auto;
-  padding: 36px var(--page-gutter) 48px;
+  padding: var(--space-40) var(--page-gutter) var(--space-48);
 }
 .player-visible .main-content {
   padding-bottom: 120px;
@@ -484,26 +484,26 @@ const {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-6);
+  gap: var(--space-24);
   color: var(--muted);
 }
 .sign-in-screen {
   display: grid;
   min-height: 100dvh;
   place-items: center;
-  padding: var(--space-5);
+  padding: var(--space-20);
 }
 .sign-in-card {
   width: 100%;
   max-width: 400px;
-  padding: var(--space-8);
+  padding: var(--space-32);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: #fff;
   text-align: center;
 }
 .sign-in-logo {
-  margin: 0 auto 16px;
+  margin: 0 auto var(--space-16);
 }
 .sign-in-card h1 {
   font-size: 26px;
@@ -513,7 +513,7 @@ const {
   justify-content: flex-start;
   width: 100%;
   min-height: 44px;
-  gap: 10px;
+  gap: var(--space-12);
   margin-top: 10px;
 }
 .sign-in-link img {
@@ -531,10 +531,10 @@ const {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-12);
   width: max-content;
   max-width: min(680px, calc(100% - 24px));
-  padding: 14px 20px;
+  padding: var(--space-16) var(--space-20);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: #fff;
@@ -567,13 +567,13 @@ const {
   }
   .account-action {
     width: 34px;
-    padding: var(--space-2);
+    padding: var(--space-8);
   }
   .account {
-    gap: var(--space-3);
+    gap: var(--space-12);
   }
   .topbar {
-    gap: 14px;
+    gap: var(--space-16);
   }
 }
 @media (max-width: 900px) {
@@ -597,14 +597,14 @@ const {
     margin-left: 0;
   }
   .main-content {
-    padding: 28px 24px 36px;
+    padding: var(--space-32) var(--space-24) var(--space-40);
   }
   .mobile-menu {
     display: inline-grid;
   }
   .topbar {
     height: 64px;
-    padding-inline: 20px;
+    padding-inline: var(--space-20);
   }
 }
 @media (max-width: 640px) {
@@ -612,34 +612,34 @@ const {
     display: none;
   }
   .topbar-actions {
-    gap: var(--space-2);
+    gap: var(--space-8);
   }
   .account {
-    gap: var(--space-2);
+    gap: var(--space-8);
     padding-left: 8px;
   }
   .account-profile {
-    gap: var(--space-2);
+    gap: var(--space-8);
   }
   .account-name {
     max-width: 64px;
   }
   .account-actions {
-    gap: var(--space-1);
+    gap: var(--space-4);
   }
   .account-action {
     width: 32px;
-    padding-inline: 7px;
+    padding-inline: var(--space-8);
   }
   .main-content {
-    padding: 24px 18px 32px;
+    padding: var(--space-24) var(--space-20) var(--space-32);
   }
   .topbar {
-    padding-inline: 12px;
-    gap: var(--space-2);
+    padding-inline: var(--space-12);
+    gap: var(--space-8);
   }
   .sign-in-card {
-    padding: 32px 24px;
+    padding: var(--space-32) var(--space-24);
   }
   .player-visible .main-content {
     padding-bottom: 140px;

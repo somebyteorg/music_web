@@ -565,7 +565,7 @@ onMounted(loadPending)
 .parsed-preview {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-4);
+  gap: var(--space-16);
 }
 .parsed-cover {
   width: 96px;
@@ -593,12 +593,12 @@ onMounted(loadPending)
 .parsed-lyrics {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: var(--space-4);
   margin-top: 8px;
 }
 .preview-warnings {
   margin: 0;
-  padding: 10px 12px 10px 28px;
+  padding: var(--space-12) var(--space-12) var(--space-12) var(--space-32);
   border: 1px solid #eddfc8;
   border-radius: var(--radius-md);
   background: #fffaf2;
@@ -609,26 +609,26 @@ onMounted(loadPending)
 }
 .recording-matches {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 .recording-matches article {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-12);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  padding: 10px 12px;
+  padding: var(--space-12) var(--space-12);
 }
 .recording-matches article > div {
   min-width: 0;
 }
 .notice-panel {
-  padding: var(--space-5);
+  padding: var(--space-20);
   margin-bottom: 16px;
 }
 .notice-panel .preline {
-  margin: 12px 0;
+  margin: var(--space-12) 0;
   color: var(--muted);
   font-size: var(--font-base);
 }
@@ -640,15 +640,15 @@ onMounted(loadPending)
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 14px;
-  padding: 26px 22px;
+  gap: var(--space-16);
+  padding: var(--space-24) var(--space-24);
   margin-bottom: 18px;
   border: 1px dashed #c1afdf;
   border-radius: var(--radius-md);
   background: #f6f3fc;
 }
 .upload-drop.compact {
-  padding: 14px 16px;
+  padding: var(--space-16) var(--space-16);
 }
 .upload-drop.over {
   border-color: var(--purple);
@@ -685,8 +685,8 @@ onMounted(loadPending)
 .pending-row {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: 10px 14px;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
   border-bottom: 1px solid var(--line);
 }
 .pending-row:last-child {
@@ -701,7 +701,7 @@ onMounted(loadPending)
   overflow-wrap: anywhere;
 }
 .pending-note {
-  padding: 14px;
+  padding: var(--space-16);
 }
 .notice-details {
   margin-top: 18px;
@@ -717,7 +717,7 @@ onMounted(loadPending)
 }
 @media (max-width: 640px) {
   .parsed-preview {
-    gap: var(--space-3);
+    gap: var(--space-12);
   }
   .parsed-cover {
     width: 72px;
@@ -725,7 +725,7 @@ onMounted(loadPending)
   }
   .upload-drop,
   .upload-drop.compact {
-    padding: var(--space-4);
+    padding: var(--space-16);
   }
   .task-icon,
   .task-thumbnail {
@@ -737,8 +737,8 @@ onMounted(loadPending)
     height: 30px;
   }
   .pending-row {
-    padding: 10px;
-    gap: var(--space-2);
+    padding: var(--space-12);
+    gap: var(--space-8);
   }
 }
 </style>
