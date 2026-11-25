@@ -1,7 +1,8 @@
 import { computed, markRaw, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useIntervalFn, useStorage } from '@vueuse/core'
-import { Upload } from 'tus-js-client'
+import type { Upload } from 'tus-js-client'
+import { report } from '@/composables/useFeedback'
 import api from '@/utils/ky'
 import { createUuid } from '@/utils/uuid'
 import { prepareUpload } from '@/utils/uploadPreparation'
@@ -26,11 +27,69 @@ interface SessionResponse {
   file: AudioFile | null
 }
 
+const STORAGE_KEY = 'music-upload-tasks-v1'
+/** 已完成任务只保留最近这么多条，避免无限膨胀 */
+const KEEP_DONE = 200
+/** 进度事件很密集：合并写入，而不是每个 progress 都全量序列化 */
+const PERSIST_DELAY = 800
+
+type SavedTasks = Record<string, UploadTask[]>
+
+function readSaved(): SavedTasks {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    const parsed = raw ? (JSON.parse(raw) as SavedTasks) : {}
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
 export const useUploadsStore = defineStore('uploads', () => {
   const sign = useSignStore()
-  const saved = useStorage<Record<string, UploadTask[]>>('music-upload-tasks-v1', {})
+  const saved = ref<SavedTasks>(readSaved())
   const concurrency = useStorage('music-upload-concurrency', 8)
   concurrency.value = normalizeUploadConcurrency(concurrency.value)
+  let persistTimer: ReturnType<typeof setTimeout> | undefined
+  let persistBlocked = false
+  let persistWarned = false
+
+  function snapshot(): SavedTasks {
+    const out: SavedTasks = {}
+    for (const [userId, list] of Object.entries(saved.value)) {
+      const done = list.filter(isUploadDone)
+      const dropped = new Set(
+        done.slice(0, Math.max(0, done.length - KEEP_DONE)).map((task) => task.id),
+      )
+      out[userId] = list.filter((task) => !dropped.has(task.id))
+    }
+    return out
+  }
+
+  function persistNow() {
+    if (persistBlocked) return
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot()))
+    } catch (error) {
+      // 配额/隐私模式：停止写入并明确告知，避免"看起来存了、其实没存"
+      persistBlocked = true
+      if (!persistWarned) {
+        persistWarned = true
+        report(new Error('本地存储空间不足，上传队列将不再自动保存，刷新后可能需要重新添加文件。'))
+      }
+      console.error('[uploads] 持久化失败', error)
+    }
+  }
+
+  watch(
+    saved,
+    () => {
+      clearTimeout(persistTimer)
+      persistTimer = setTimeout(persistNow, PERSIST_DELAY)
+    },
+    { deep: true },
+  )
+
   const localFiles = new Map<string, File>()
   const localArtwork = reactive(new Map<string, string>())
   const active = new Map<string, Upload>()
@@ -271,9 +330,10 @@ export const useUploadsStore = defineStore('uploads', () => {
       assertActive()
       task.state = 'uploading'
       task.errorStage = 'transfer'
+      const { Upload: TusUpload } = await import('tus-js-client')
       await new Promise<void>((resolve, reject) => {
         cancelWait.set(task.id, () => reject(new DOMException('上传已暂停。', 'AbortError')))
-        const upload = new Upload(file, {
+        const upload = new TusUpload(file, {
           endpoint: task.endpoint,
           uploadUrl: task.uploadUrl,
           chunkSize: sign.config!.chunk_size,
@@ -349,14 +409,54 @@ export const useUploadsStore = defineStore('uploads', () => {
       polling.delete(task.id)
     }
   }
-  async function poll() {
-    await Promise.all(
-      tasks.value.filter((task) => ['processing', 'publishing'].includes(task.state)).map(pollTask),
-    )
+  const POLL_TICK = 3000
+  const POLL_MAX_BACKOFF = 30000
+  /** 每轮最多查这么多任务，任务多时轮转，避免一次打出几十个请求 */
+  const POLL_BATCH = 12
+  let pollBackoff = POLL_TICK
+  let pollNotBefore = 0
+  const lastPolled = new Map<string, number>()
+
+  function pendingTasks() {
+    return tasks.value.filter((task) => ['processing', 'publishing'].includes(task.state))
   }
+
+  async function poll() {
+    const pending = pendingTasks()
+    if (!pending.length) return
+    const batch = [...pending]
+      .sort((a, b) => (lastPolled.get(a.id) ?? 0) - (lastPolled.get(b.id) ?? 0))
+      .slice(0, POLL_BATCH)
+    for (const task of batch) lastPolled.set(task.id, Date.now())
+    await Promise.all(batch.map(pollTask))
+  }
+
+  function resetPolling() {
+    pollBackoff = POLL_TICK
+    pollNotBefore = 0
+  }
+
   useIntervalFn(() => {
-    void poll()
-  }, 3000)
+    // 后台标签页不轮询；退避期未到也跳过
+    if (typeof document !== 'undefined' && document.hidden) return
+    if (Date.now() < pollNotBefore) return
+    void poll().finally(() => {
+      pollBackoff = Math.min(Math.round(pollBackoff * 1.4), POLL_MAX_BACKOFF)
+      pollNotBefore = Date.now() + pollBackoff
+    })
+  }, POLL_TICK)
+  // 有新任务开始处理时立刻恢复高频轮询
+  watch(
+    () => pendingTasks().length,
+    (count, previous) => {
+      if (count > (previous ?? 0)) resetPolling()
+    },
+  )
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) resetPolling()
+    })
+  }
   useIntervalFn(() => {
     now.value = Date.now()
   }, 1000)
