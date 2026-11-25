@@ -67,8 +67,10 @@ function play(song: Entity, index: number) {
     void player.toggle()
     return
   }
-  // 点哪一首，就把当前这份列表整体变成播放队列。
+  // 点哪一首，就把当前这份列表整体变成播放队列（来自别的列表时给一句提示，不提供撤销）
+  const replaced = queue.length > 0 && queue.source !== props.label
   void player.playList(props.items, index, props.label)
+  if (replaced) notify(`队列已切换为「${props.label || '当前列表'}」· ${props.items.length} 首`)
 }
 function enqueue(song: Entity) {
   queue.append([song])

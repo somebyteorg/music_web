@@ -51,106 +51,103 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 
 <template>
   <Teleport to="body">
-    <div v-if="queue.open" class="queue-backdrop" @click.self="queue.open = false">
-      <section aria-label="播放队列" class="queue-panel">
-        <header class="queue-head">
-          <div>
-            <h2>播放队列</h2>
-            <p class="queue-source">
-              <span>{{ queue.progress }}</span>
-              <span v-if="queue.source" class="queue-from">· {{ queue.source }}</span>
-            </p>
-          </div>
+    <div v-if="queue.open" class="queue-backdrop" @click.self="queue.open = false" />
+    <section v-if="queue.open" aria-label="播放队列" class="queue-panel">
+      <header class="queue-head">
+        <div>
+          <h2>播放队列</h2>
+          <p class="queue-source">
+            <span>{{ queue.progress }}</span>
+            <span v-if="queue.source" class="queue-from">· {{ queue.source }}</span>
+          </p>
+        </div>
+        <button aria-label="关闭队列" class="icon-button" title="关闭" @click="queue.open = false">
+          <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
+            <path d="m6 6 12 12M6 18 18 6" />
+          </svg>
+        </button>
+      </header>
+
+      <div class="queue-tools">
+        <button class="button secondary small" @click="queue.cycleMode()">
+          <PlayModeIcon :mode="queue.mode" />{{ playModeLabels[queue.mode] }}
+        </button>
+        <button :disabled="!queue.length" class="button secondary small" @click="queue.clear()">
+          清空
+        </button>
+      </div>
+
+      <ol v-if="rows.length" class="queue-list">
+        <li
+          v-for="(entry, index) in rows"
+          :key="entry.key"
+          :class="[
+            'queue-row',
+            { current: queue.current?.key === entry.key, muted: !entry.playable },
+          ]"
+        >
           <button
-            aria-label="关闭队列"
-            class="icon-button"
-            title="关闭"
-            @click="queue.open = false"
+            :aria-label="`播放 ${entry.name}`"
+            :disabled="!entry.playable"
+            class="queue-main"
+            @click="play(entry.key)"
+          >
+            <span class="queue-index">
+              <span v-if="queue.current?.key === entry.key" class="queue-bars" aria-hidden="true"
+                ><i></i><i></i><i></i
+              ></span>
+              <template v-else>{{ index + 1 }}</template>
+            </span>
+            <EntityCover
+              :item="
+                coverOf({
+                  id: entry.songId,
+                  name: entry.name,
+                  coverId: entry.coverId,
+                  imageUrl: entry.imageUrl,
+                })
+              "
+            />
+            <span class="queue-text">
+              <strong>{{ entry.name }}</strong>
+              <small>{{ entry.artists }} · {{ entry.album }}</small>
+            </span>
+            <span class="queue-time">{{ entry.playable ? entry.total : '缺音频' }}</span>
+          </button>
+          <button
+            aria-label="从队列移除"
+            class="icon-button queue-remove"
+            title="从队列移除"
+            @click="remove(entry.key)"
           >
             <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-              <path d="m6 6 12 12M6 18 18 6" />
+              <path d="M5 12h14" />
             </svg>
           </button>
-        </header>
+        </li>
+      </ol>
 
-        <div class="queue-tools">
-          <button class="button secondary small" @click="queue.cycleMode()">
-            <PlayModeIcon :mode="queue.mode" />{{ playModeLabels[queue.mode] }}
-          </button>
-          <button :disabled="!queue.length" class="button secondary small" @click="queue.clear()">
-            清空
-          </button>
-        </div>
-
-        <ol v-if="rows.length" class="queue-list">
-          <li
-            v-for="(entry, index) in rows"
-            :key="entry.key"
-            :class="[
-              'queue-row',
-              { current: queue.current?.key === entry.key, muted: !entry.playable },
-            ]"
-          >
-            <button
-              :aria-label="`播放 ${entry.name}`"
-              :disabled="!entry.playable"
-              class="queue-main"
-              @click="play(entry.key)"
-            >
-              <span class="queue-index">
-                <span v-if="queue.current?.key === entry.key" class="queue-bars" aria-hidden="true"
-                  ><i></i><i></i><i></i
-                ></span>
-                <template v-else>{{ index + 1 }}</template>
-              </span>
-              <EntityCover
-                :item="
-                  coverOf({
-                    id: entry.songId,
-                    name: entry.name,
-                    coverId: entry.coverId,
-                    imageUrl: entry.imageUrl,
-                  })
-                "
-              />
-              <span class="queue-text">
-                <strong>{{ entry.name }}</strong>
-                <small>{{ entry.artists }} · {{ entry.album }}</small>
-              </span>
-              <span class="queue-time">{{ entry.playable ? entry.total : '缺音频' }}</span>
-            </button>
-            <button
-              aria-label="从队列移除"
-              class="icon-button queue-remove"
-              title="从队列移除"
-              @click="remove(entry.key)"
-            >
-              <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-                <path d="M5 12h14" />
-              </svg>
-            </button>
-          </li>
-        </ol>
-
-        <div v-else class="queue-empty">
-          <span aria-hidden="true" class="empty-symbol">♫</span>
-          <p>队列还是空的</p>
-          <small>在任意歌曲列表里点一首歌，整个列表就会成为播放队列。</small>
-        </div>
-      </section>
-    </div>
+      <div v-else class="queue-empty">
+        <span aria-hidden="true" class="empty-symbol">♫</span>
+        <p>队列还是空的</p>
+        <small>在任意歌曲列表里点一首歌，整个列表就会成为播放队列。</small>
+      </div>
+    </section>
   </Teleport>
 </template>
 
 <style scoped>
 .queue-backdrop {
   position: fixed;
+  /* 低于播放器（45）：点空白关队列，但播放器仍可操作 */
   z-index: 40;
   inset: 0;
   background: #1b162a0f;
 }
 .queue-panel {
-  position: absolute;
+  /* 高于播放器（45）：桌面右下角展开，不遮挡播放器 */
+  position: fixed;
+  z-index: 46;
   right: 16px;
   bottom: 108px;
   display: flex;
@@ -271,6 +268,12 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .queue-remove:focus-visible {
   opacity: 1;
 }
+/* 触屏没有 hover：删除按钮常显，否则手机上无法移除曲目 */
+@media (pointer: coarse), (max-width: 760px) {
+  .queue-remove {
+    opacity: 1;
+  }
+}
 .queue-bars {
   display: inline-flex;
   align-items: flex-end;
@@ -317,13 +320,13 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
     background: #1b162a26;
   }
   .queue-panel {
-    right: 0;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 72vh;
-    padding-bottom: 18px;
-    border-radius: 16px 16px 0 0;
+    right: 8px;
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+    left: 8px;
+    width: auto;
+    max-height: 62vh;
+    padding-bottom: 10px;
+    border-radius: 16px;
   }
 }
 </style>

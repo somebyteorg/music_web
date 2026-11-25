@@ -25,6 +25,9 @@ export const usePlayerStore = defineStore('player', () => {
   const collapsed = ref(false)
   const available = computed(() => !!file.value)
   let failures = 0
+  /** 切歌令牌：晚到的旧响应不得覆盖用户最新选择 */
+  let loadToken = 0
+  let detailRequest: AbortController | null = null
 
   audio.preload = 'metadata'
   audio.addEventListener('timeupdate', () => (time.value = audio.currentTime))
@@ -118,13 +121,19 @@ export const usePlayerStore = defineStore('player', () => {
       await skipBroken()
       return
     }
+    const token = (loadToken += 1)
+    detailRequest?.abort()
+    const request = new AbortController()
+    detailRequest = request
     loading.value = true
     try {
       const cached = song.value
       const full =
         cached && cached.id === entry.songId && cached.files?.length
           ? cached
-          : (await getCatalogItem('songs', entry.songId)).item
+          : (await getCatalogItem('songs', entry.songId, request.signal)).item
+      // 期间用户已经切到别的曲目：丢弃这次结果，不要覆盖新选择
+      if (token !== loadToken || queue.current?.key !== entry.key) return
       const selected = pickFile(full)
       if (!selected) throw new Error('这首歌还没有音频，请先上传。')
       if (!supported(selected))
@@ -132,6 +141,8 @@ export const usePlayerStore = defineStore('player', () => {
       await start(selected, full, entry.key)
       failures = 0
     } catch (e) {
+      // 主动取消（用户切歌）：静默退出，既不提示也不跳过
+      if (request.signal.aborted) return
       report(e)
       await skipBroken()
     } finally {
@@ -207,6 +218,9 @@ export const usePlayerStore = defineStore('player', () => {
   }
 
   function close() {
+    loadToken += 1
+    detailRequest?.abort()
+    detailRequest = null
     file.value = null
     song.value = null
     entryKey.value = null

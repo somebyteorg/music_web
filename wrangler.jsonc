@@ -19,25 +19,11 @@
       "enabled": false,
     },
   },
+  // 全域通配：之前的逐条白名单会让「/?a=b」「/settings」直接 404，
+  // 还会让「/assets/不存在的文件」落到 SPA 回退返回 HTML（旧页面拿旧 chunk 时白屏）
   "routes": [
     {
-      "pattern": "music.emos.best/",
-      "zone_name": "emos.best",
-    },
-    {
-      "pattern": "music.emos.best/favicon*",
-      "zone_name": "emos.best",
-    },
-    {
-      "pattern": "music.emos.best/robots.txt",
-      "zone_name": "emos.best",
-    },
-    {
-      "pattern": "music.emos.best/assets/*",
-      "zone_name": "emos.best",
-    },
-    {
-      "pattern": "music.emos.best/.well-known/*",
+      "pattern": "music.emos.best/*",
       "zone_name": "emos.best",
     },
   ],
