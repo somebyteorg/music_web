@@ -655,7 +655,7 @@ const emit = defineEmits<{
 <style scoped>
 .track-numbering {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .track-numbering-actions {
   display: flex;
@@ -678,7 +678,7 @@ const emit = defineEmits<{
 }
 .group-performer {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .group-move {
   display: flex;
@@ -694,14 +694,14 @@ const emit = defineEmits<{
   overflow-wrap: anywhere;
 }
 .new-group {
-  padding: 16px;
+  padding: var(--space-4);
   border: 1px dashed var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 .album-confirmation {
   padding: 18px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -774,11 +774,11 @@ const emit = defineEmits<{
 }
 .batch-common > div {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .batch-files {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
   margin: 0;
   padding: 0;
   border: 0;
@@ -786,7 +786,7 @@ const emit = defineEmits<{
 .batch-file {
   padding: 14px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
 }
 .batch-file-heading {
   display: flex;
@@ -823,7 +823,7 @@ const emit = defineEmits<{
   align-items: center;
   min-height: 40px;
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .batch-common {
     grid-template-columns: 1fr;
   }
@@ -834,7 +834,7 @@ const emit = defineEmits<{
     grid-column: 1 / -1;
   }
   .batch-file {
-    padding: 12px;
+    padding: var(--space-3);
   }
 }
 </style>

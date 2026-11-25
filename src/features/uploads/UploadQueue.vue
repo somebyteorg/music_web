@@ -430,7 +430,7 @@ const {
   width: 44px;
   height: 44px;
   flex-shrink: 0;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   background: var(--soft);
 }
@@ -447,7 +447,7 @@ const {
 .summary-heading > div:first-child {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 .summary-heading {
@@ -475,7 +475,7 @@ const {
 .summary-progress {
   height: 6px;
   margin: 15px 0;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   overflow: hidden;
   background: var(--lilac);
 }
@@ -506,7 +506,7 @@ const {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   flex-wrap: wrap;
   margin-bottom: 12px;
 }
@@ -525,7 +525,7 @@ const {
 }
 .queue-grouping button {
   padding: 5px 9px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   color: var(--muted);
 }
 .queue-grouping button.active {
@@ -542,7 +542,7 @@ const {
 }
 .upload-groups {
   display: grid;
-  gap: 12px;
+  gap: var(--space-3);
 }
 .upload-queue {
   overflow: hidden;
@@ -558,7 +558,7 @@ const {
 .upload-group-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   flex: 1;
   min-width: 0;
   text-align: left;
@@ -615,7 +615,7 @@ const {
 .queue-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: var(--space-1);
 }
 .queue-filters > button {
   display: inline-flex;
@@ -623,7 +623,7 @@ const {
   gap: 6px;
   min-height: 32px;
   padding: 5px 9px;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: var(--font-sm);
   color: var(--muted);
 }
@@ -640,14 +640,14 @@ const {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 8px;
+  gap: var(--space-2);
   margin-left: auto;
 }
 .concurrency-input {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
   height: 36px;
   padding: 0 10px;
   border: 1px solid var(--line);
@@ -696,7 +696,7 @@ const {
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   outline: 0;
   background: transparent;
   box-shadow: none;
@@ -747,7 +747,7 @@ const {
 .upload-task {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   padding: 10px 14px;
   border-top: 1px solid var(--line);
 }
@@ -759,7 +759,7 @@ const {
   flex-shrink: 0;
   color: var(--purple);
   background: var(--lilac);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: 16px;
 }
 .task-icon.done {
@@ -821,7 +821,7 @@ const {
   background: var(--purple);
   transition: width 0.2s;
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .queue-summary {
     padding: 15px;
   }
@@ -845,7 +845,7 @@ const {
     gap: 6px;
   }
   .upload-group-toggle {
-    gap: 4px;
+    gap: var(--space-1);
   }
   .upload-group-toggle small {
     font-size: 10px;

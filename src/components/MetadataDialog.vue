@@ -144,7 +144,7 @@ async function apply() {
   flex-direction: row;
   align-items: flex-start;
   gap: 10px;
-  padding: 12px;
+  padding: var(--space-3);
   margin-top: 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);

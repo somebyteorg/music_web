@@ -35,7 +35,7 @@ watch(src, () => (failed.value = false))
   aspect-ratio: 1;
   min-width: 0;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   isolation: isolate;
   container-type: inline-size;
 }

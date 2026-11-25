@@ -200,7 +200,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   width: 100%;
   min-height: 40px;
   padding: 9px 12px;
@@ -235,7 +235,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   flex-direction: column;
   padding: 6px;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: #fff;
   box-shadow: 0 8px 28px #28233520;
   overflow: hidden;
@@ -259,10 +259,10 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   width: 100%;
   padding: 8px 10px;
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   color: #484551;
   text-align: left;
   font-size: var(--font-base);

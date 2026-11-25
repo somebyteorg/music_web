@@ -539,7 +539,7 @@ onMounted(loadPending)
   width: 44px;
   height: 44px;
   flex-shrink: 0;
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
   background: var(--soft);
 }
@@ -565,14 +565,14 @@ onMounted(loadPending)
 .parsed-preview {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: var(--space-4);
 }
 .parsed-cover {
   width: 96px;
   height: 96px;
   flex-shrink: 0;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   object-fit: cover;
 }
 .parsed-cover.placeholder {
@@ -609,13 +609,13 @@ onMounted(loadPending)
 }
 .recording-matches {
   display: grid;
-  gap: 8px;
+  gap: var(--space-2);
 }
 .recording-matches article {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: 10px 12px;
@@ -624,7 +624,7 @@ onMounted(loadPending)
   min-width: 0;
 }
 .notice-panel {
-  padding: 20px;
+  padding: var(--space-5);
   margin-bottom: 16px;
 }
 .notice-panel .preline {
@@ -675,7 +675,7 @@ onMounted(loadPending)
   flex-shrink: 0;
   color: var(--purple);
   background: var(--lilac);
-  border-radius: 4px;
+  border-radius: var(--radius-xs);
   font-size: 16px;
 }
 .task-icon.done {
@@ -685,7 +685,7 @@ onMounted(loadPending)
 .pending-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   padding: 10px 14px;
   border-bottom: 1px solid var(--line);
 }
@@ -715,9 +715,9 @@ onMounted(loadPending)
 .notice-details p {
   margin-top: 10px;
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .parsed-preview {
-    gap: 12px;
+    gap: var(--space-3);
   }
   .parsed-cover {
     width: 72px;
@@ -725,7 +725,7 @@ onMounted(loadPending)
   }
   .upload-drop,
   .upload-drop.compact {
-    padding: 16px;
+    padding: var(--space-4);
   }
   .task-icon,
   .task-thumbnail {
@@ -738,7 +738,7 @@ onMounted(loadPending)
   }
   .pending-row {
     padding: 10px;
-    gap: 8px;
+    gap: var(--space-2);
   }
 }
 </style>
