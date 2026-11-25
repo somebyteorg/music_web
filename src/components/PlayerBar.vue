@@ -4,6 +4,7 @@ import { usePlayerStore } from '@/stores/player'
 import { playModeLabels, useQueueStore } from '@/stores/queue'
 import { duration, qualities } from '@/utils/format'
 import EntityCover from './EntityCover.vue'
+import PlayModeIcon from './PlayModeIcon.vue'
 import QueuePanel from './QueuePanel.vue'
 
 const player = usePlayerStore()
@@ -27,18 +28,6 @@ function closeAll() {
   queue.clear()
 }
 const modeLabel = computed(() => playModeLabels[queue.mode])
-const modeIcon = computed(() => {
-  switch (queue.mode) {
-    case 'shuffle':
-      return 'M4 7h4l8 10h4M16 7h4M20 7l-3-3M20 17l-3 3'
-    case 'repeat-all':
-      return 'M6 8h12l-3-3M18 16H6l3 3'
-    case 'repeat-one':
-      return 'M6 8h12l-3-3M18 16H6l3 3M12 11v4'
-    default:
-      return 'M4 7h16M4 12h16M4 17h10'
-  }
-})
 </script>
 
 <template>
@@ -114,9 +103,7 @@ const modeIcon = computed(() => {
         class="icon-button mode-button"
         @click="queue.cycleMode()"
       >
-        <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-          <path :d="modeIcon" />
-        </svg>
+        <PlayModeIcon :mode="queue.mode" />
       </button>
       <button
         :aria-expanded="queue.open"
