@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, provide, reactive } from 'vue'
 import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
 import BaseDialog from '@/components/BaseDialog.vue'
 import Pagination from '@/components/Pagination.vue'
 import UploadQueue from '@/features/uploads/UploadQueue.vue'
 import UploadBatchDialog from '@/features/uploads/UploadBatchDialog.vue'
+import { uploadBatchKey } from '@/features/uploads/batchContext'
 import { usePendingUploads } from '@/features/uploads/usePendingUploads'
 import { useUploadSource } from '@/features/uploads/useUploadSource'
 import { useUploadBatch } from '@/features/uploads/useUploadBatch'
@@ -29,6 +30,7 @@ const {
   changePendingPage,
 } = usePendingUploads()
 const batch = reactive(useUploadBatch(loadPending))
+provide(uploadBatchKey, batch)
 const {
   imageAlbum,
   imageTask,
@@ -526,7 +528,6 @@ onMounted(loadPending)
     ></BaseDialog
   >
   <UploadBatchDialog
-    :batch="batch"
     @inspect="inspectPicture"
     @preview="open($event, true)"
     @browse-images="browseImages"
@@ -552,13 +553,13 @@ onMounted(loadPending)
   overflow-y: auto;
   margin-top: 8px;
   padding-left: 20px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   overflow-wrap: anywhere;
 }
 .task-warning {
   margin-top: 5px;
   color: #91632b;
-  font-size: 12px;
+  font-size: var(--font-sm);
   overflow-wrap: anywhere;
 }
 .parsed-preview {
@@ -599,10 +600,10 @@ onMounted(loadPending)
   margin: 0;
   padding: 10px 12px 10px 28px;
   border: 1px solid #eddfc8;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: #fffaf2;
   color: #8d622c;
-  font-size: 12px;
+  font-size: var(--font-sm);
   line-height: 1.7;
   list-style: disc;
 }
@@ -616,7 +617,7 @@ onMounted(loadPending)
   justify-content: space-between;
   gap: 12px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 10px 12px;
 }
 .recording-matches article > div {
@@ -629,7 +630,7 @@ onMounted(loadPending)
 .notice-panel .preline {
   margin: 12px 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 .notice-panel > .button {
   margin-top: 12px;
@@ -643,7 +644,7 @@ onMounted(loadPending)
   padding: 26px 22px;
   margin-bottom: 18px;
   border: 1px dashed #c1afdf;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: #f6f3fc;
 }
 .upload-drop.compact {
@@ -654,7 +655,7 @@ onMounted(loadPending)
   background: #ede5fb;
 }
 .drop-copy strong {
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .drop-copy p {
   margin-top: 3px;
@@ -696,7 +697,7 @@ onMounted(loadPending)
   flex: 1;
 }
 .pending-row strong {
-  font-size: 13px;
+  font-size: var(--font-base);
   overflow-wrap: anywhere;
 }
 .pending-note {
@@ -705,7 +706,7 @@ onMounted(loadPending)
 .notice-details {
   margin-top: 18px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .notice-details summary {
   width: fit-content;

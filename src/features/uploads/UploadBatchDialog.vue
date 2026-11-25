@@ -5,11 +5,15 @@ import BaseSelect from '@/components/BaseSelect.vue'
 import EntityCover from '@/components/EntityCover.vue'
 import { fileUrl } from '@/utils/file'
 import { duration, qualities } from '@/utils/format'
+import { inject } from 'vue'
 import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
 import type { UploadTask } from './model'
+import { uploadBatchKey } from './batchContext'
 
-const props = defineProps<{ batch: UploadBatch }>()
+const injected = inject(uploadBatchKey)
+if (!injected) throw new Error('批量整理对话框缺少上下文（uploadBatchKey）')
+const batch = injected
 const addingAlbum = ref(false)
 const albumName = ref('')
 const albumNameInput = useTemplateRef<HTMLInputElement>('albumNameInput')
@@ -29,13 +33,13 @@ async function startAlbumGroup() {
   albumNameInput.value?.focus()
 }
 function confirmAlbumGroup() {
-  if (props.batch.addAlbum(albumName.value)) {
+  if (batch.addAlbum(albumName.value)) {
     addingAlbum.value = false
     albumName.value = ''
   }
 }
 watch(
-  () => props.batch.open,
+  () => batch.open,
   () => {
     addingAlbum.value = false
     albumName.value = ''
@@ -661,12 +665,12 @@ const emit = defineEmits<{
 }
 .track-numbering-actions > label {
   width: 100px;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .batch-details > summary {
   cursor: pointer;
   color: var(--purple-dark);
-  font-size: 12px;
+  font-size: var(--font-sm);
   font-weight: 550;
 }
 .batch-details[open] > summary {
@@ -733,7 +737,7 @@ const emit = defineEmits<{
   position: relative;
   width: fit-content;
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .album-cover-upload input {
   position: absolute;
@@ -746,17 +750,17 @@ const emit = defineEmits<{
 .task-warning {
   margin-top: 5px;
   color: #91632b;
-  font-size: 12px;
+  font-size: var(--font-sm);
   overflow-wrap: anywhere;
 }
 .preview-warnings {
   margin: 0;
   padding: 10px 12px 10px 28px;
   border: 1px solid #eddfc8;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: #fffaf2;
   color: #8d622c;
-  font-size: 12px;
+  font-size: var(--font-sm);
   line-height: 1.7;
   list-style: disc;
 }
@@ -794,11 +798,11 @@ const emit = defineEmits<{
 .batch-file-heading > strong {
   min-width: 0;
   flex: 1;
-  font-size: 13px;
+  font-size: var(--font-base);
   overflow-wrap: anywhere;
 }
 .batch-file-heading > .hint {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .batch-file-fields {
   display: grid;
@@ -812,7 +816,7 @@ const emit = defineEmits<{
 }
 .batch-file-fields > label {
   min-width: 0;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .batch-static {
   display: flex;
