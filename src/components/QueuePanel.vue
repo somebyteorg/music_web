@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import { playModeLabels, useQueueStore } from '@/stores/queue'
 import { duration } from '@/utils/format'
@@ -8,6 +8,23 @@ import PlayModeIcon from './PlayModeIcon.vue'
 
 const queue = useQueueStore()
 const player = usePlayerStore()
+const panel = ref<HTMLElement>()
+/** 打开面板前的焦点位置，关闭时归还，键盘用户不会掉到页面顶部 */
+let returnFocus: HTMLElement | null = null
+
+watch(
+  () => queue.open,
+  async (open) => {
+    if (open) {
+      returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null
+      await nextTick()
+      panel.value?.focus()
+      return
+    }
+    returnFocus?.focus()
+    returnFocus = null
+  },
+)
 
 const rows = computed(() =>
   queue.items.map((entry) => ({
@@ -52,7 +69,16 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 <template>
   <Teleport to="body">
     <div v-if="queue.open" class="queue-backdrop" @click.self="queue.open = false" />
-    <section v-if="queue.open" aria-label="播放队列" class="queue-panel">
+    <section
+      v-if="queue.open"
+      id="queue-panel"
+      ref="panel"
+      aria-label="播放队列"
+      aria-modal="false"
+      class="queue-panel"
+      role="dialog"
+      tabindex="-1"
+    >
       <header class="queue-head">
         <div>
           <h2>播放队列</h2>
@@ -144,6 +170,10 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   inset: 0;
   background: #1b162a0f;
 }
+.queue-panel:focus {
+  /* 容器只是接住焦点，不需要可见描边 */
+  outline: none;
+}
 .queue-panel {
   /* 高于播放器（45）：桌面右下角展开，不遮挡播放器 */
   position: fixed;
@@ -174,7 +204,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .queue-source {
   margin: 4px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .queue-from {
   margin-left: 4px;
@@ -189,7 +219,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .queue-tools :deep(.ui-icon) {
   width: 14px;
@@ -228,7 +258,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-index {
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
@@ -243,7 +273,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-text strong {
   overflow: hidden;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 550;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -251,13 +281,13 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .queue-text small {
   overflow: hidden;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .queue-time {
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-variant-numeric: tabular-nums;
 }
 .queue-remove {
@@ -309,10 +339,10 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .queue-empty p {
   margin: 6px 0 4px;
   color: var(--text, #2a2438);
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .queue-empty small {
-  font-size: 11px;
+  font-size: var(--font-xs);
   line-height: 1.6;
 }
 @media (max-width: 760px) {
@@ -326,7 +356,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
     width: auto;
     max-height: 62vh;
     padding-bottom: 10px;
-    border-radius: 16px;
+    border-radius: var(--radius-xl);
   }
 }
 </style>

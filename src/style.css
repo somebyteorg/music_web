@@ -11,12 +11,25 @@
   --purple-dark: #5e3d9c;
   --lilac: #f0ebf8;
   --line: #e9e8ef;
-  --muted: #777481;
+  /* 对比度：--muted 压在 --soft 上原本只有 4.33:1，加深到约 4.9:1 */
+  --muted: #6b6875;
+  /* 需要更低亮度时（小号徽标等）用它，压在浅灰底上仍有 5:1 以上 */
+  --muted-strong: #5f5c69;
   --surface: #fff;
   --soft: #f8f9fb;
   --danger: #b33645;
   --success: #23774c;
   --radius: 12px;
+  /* 圆角：只保留四档，原值与像素一一对应，替换后观感不变 */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  /* 字号：常用四档 */
+  --font-xs: 11px;
+  --font-sm: 12px;
+  --font-base: 13px;
+  --font-md: 14px;
   --sidebar-width: 224px;
   --page-gutter: clamp(24px, 3.2vw, 56px);
 }
@@ -98,7 +111,7 @@ h2 {
 }
 
 h3 {
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 
 p {
@@ -135,6 +148,23 @@ summary:focus-visible {
   stroke: none;
 }
 
+/* 键盘用户第一个可聚焦元素：平时移出视口，聚焦时滑入 */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 60;
+  padding: 8px 14px;
+  color: #fff;
+  background: var(--purple);
+  border-radius: var(--radius-md);
+  font-size: var(--font-base);
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 .muted,
 .hint {
   color: var(--muted);
@@ -142,11 +172,11 @@ summary:focus-visible {
 }
 
 .muted {
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 
 .hint {
-  font-size: 12px;
+  font-size: var(--font-sm);
   line-height: 1.6;
 }
 
@@ -162,8 +192,8 @@ summary:focus-visible {
   min-height: 40px;
   padding: 9px 16px;
   border: 1px solid transparent;
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-base);
   font-weight: 550;
   line-height: 1.5;
   white-space: nowrap;
@@ -196,7 +226,7 @@ summary:focus-visible {
 .button.small {
   min-height: 34px;
   padding: 6px 12px;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 
 .button-group {
@@ -212,7 +242,7 @@ summary:focus-visible {
   width: 34px;
   min-width: 34px;
   height: 34px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--muted);
   font-size: 18px;
 }
@@ -226,7 +256,7 @@ summary:focus-visible {
 .text-link {
   padding: 4px 0;
   color: var(--purple);
-  font-size: 13px;
+  font-size: var(--font-base);
   line-height: 1.6;
 }
 
@@ -263,7 +293,7 @@ summary:focus-visible {
 }
 
 .heading-title > .muted {
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 
 .section {
@@ -294,7 +324,7 @@ summary:focus-visible {
 .filter-count {
   margin-left: auto;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   white-space: nowrap;
 }
 
@@ -307,7 +337,7 @@ summary:focus-visible {
   padding: 0 12px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .search-field > span {
@@ -335,9 +365,9 @@ summary:focus-visible {
   min-height: 40px;
   border: 1px solid var(--line);
   background: #fff;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   white-space: nowrap;
 }
 
@@ -363,15 +393,16 @@ summary:focus-visible {
   border-radius: 4px;
   background: var(--lilac);
   color: var(--purple-dark);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 500;
   white-space: nowrap;
   line-height: 1.6;
 }
 
 .badge.quiet {
-  color: var(--muted);
-  background: #eef0f4;
+  /* 4.0:1 → 约 5.6:1 */
+  color: var(--muted-strong);
+  background: #e7e9ef;
 }
 
 .badge.warning {
@@ -406,17 +437,17 @@ summary:focus-visible {
 .empty p {
   max-width: 440px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 
 .notice {
   margin-bottom: 12px;
   padding: 10px 12px;
   border: 1px solid #ded3f2;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: #f5f1fc;
   color: #65469c;
-  font-size: 13px;
+  font-size: var(--font-base);
   line-height: 1.65;
 }
 
@@ -433,7 +464,7 @@ summary:focus-visible {
 
 .error-text {
   color: var(--danger);
-  font-size: 12px;
+  font-size: var(--font-sm);
   margin-top: 4px;
 }
 
@@ -441,7 +472,7 @@ summary:focus-visible {
   background: linear-gradient(100deg, #eceef3 30%, #f8f9fb 50%, #eceef3 70%);
   background-size: 200% 100%;
   animation: shimmer 1.8s infinite;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .list-skeleton {
@@ -475,7 +506,7 @@ label {
   flex-direction: column;
   gap: 6px;
   color: #484551;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 500;
 }
 
@@ -486,10 +517,10 @@ textarea {
   min-height: 40px;
   padding: 9px 12px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: #fff;
   color: #292733;
-  font-size: 13px;
+  font-size: var(--font-base);
   line-height: 1.5;
   transition:
     border-color 0.15s,
@@ -560,7 +591,7 @@ input[type='radio'] {
   padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 5px;
-  font-size: 13px;
+  font-size: var(--font-base);
   text-align: left;
 }
 
@@ -572,12 +603,12 @@ input[type='radio'] {
 
 .picker-results small {
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   overflow-wrap: anywhere;
 }
 
 .picker-results strong {
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 550;
 }
 
@@ -596,8 +627,8 @@ input[type='radio'] {
   cursor: pointer;
   list-style: none;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
   background: #fff;
 }
 
@@ -620,7 +651,7 @@ input[type='radio'] {
   padding: 4px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   box-shadow: 0 6px 20px #28233514;
 }
 
@@ -630,7 +661,7 @@ input[type='radio'] {
   width: 100%;
   padding: 7px 10px;
   text-align: left;
-  font-size: 12px;
+  font-size: var(--font-sm);
   border-radius: 3px;
 }
 
@@ -644,7 +675,7 @@ input[type='radio'] {
   gap: 2px;
   padding: 3px;
   background: #edf0f4;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 
 .segmented button {
@@ -652,7 +683,7 @@ input[type='radio'] {
   padding: 6px 10px;
   border-radius: 4px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   white-space: nowrap;
 }
 
@@ -684,13 +715,13 @@ input[type='radio'] {
   object-fit: cover;
   background: var(--lilac);
   color: var(--purple-dark);
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 
 .avatar.small {
   width: 28px;
   height: 28px;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 
 @media (max-width: 680px) {
@@ -774,7 +805,7 @@ input[type='radio'] {
   min-width: 0;
   padding: 8px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .image-card.selected {
@@ -804,12 +835,12 @@ input[type='radio'] {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 
 .image-card .text-button,
 .image-card .check-label {
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 
 .image-preview {
