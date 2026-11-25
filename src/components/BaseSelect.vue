@@ -200,10 +200,10 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-12);
   width: 100%;
   min-height: 40px;
-  padding: 9px 12px;
+  padding: var(--space-8) var(--space-12);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: #fff;
@@ -233,7 +233,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   z-index: 150;
   display: flex;
   flex-direction: column;
-  padding: 6px;
+  padding: var(--space-8);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: #fff;
@@ -242,7 +242,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   outline: none;
 }
 .select-search {
-  padding: 3px 3px 7px;
+  padding: var(--space-4) var(--space-4) var(--space-8);
   flex-shrink: 0;
 }
 .select-search input {
@@ -259,9 +259,9 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-12);
   width: 100%;
-  padding: 8px 10px;
+  padding: var(--space-8) var(--space-12);
   border-radius: var(--radius-xs);
   color: #484551;
   text-align: left;
@@ -276,7 +276,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   background: var(--lilac);
 }
 .select-empty {
-  padding: 18px 10px;
+  padding: var(--space-20) var(--space-12);
   text-align: center;
   color: var(--muted);
   font-size: var(--font-sm);

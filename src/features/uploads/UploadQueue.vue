@@ -440,14 +440,14 @@ const {
   object-fit: contain;
 }
 .queue-summary {
-  padding: 18px 20px;
+  padding: var(--space-20) var(--space-20);
   margin-bottom: 18px;
 }
 .summary-heading,
 .summary-heading > div:first-child {
   display: flex;
   align-items: baseline;
-  gap: var(--space-3);
+  gap: var(--space-12);
   flex-wrap: wrap;
 }
 .summary-heading {
@@ -468,13 +468,13 @@ const {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 2px;
+  gap: var(--space-2);
   font-size: var(--font-base);
   font-variant-numeric: tabular-nums;
 }
 .summary-progress {
   height: 6px;
-  margin: 15px 0;
+  margin: var(--space-16) 0;
   border-radius: var(--radius-xs);
   overflow: hidden;
   background: var(--lilac);
@@ -489,7 +489,7 @@ const {
 .summary-stages {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 22px;
+  gap: var(--space-8) var(--space-24);
   color: var(--muted);
   font-size: var(--font-sm);
 }
@@ -506,17 +506,17 @@ const {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-12);
   flex-wrap: wrap;
   margin-bottom: 12px;
 }
 .queue-bulk > .button-group {
-  gap: 10px;
+  gap: var(--space-12);
 }
 .queue-grouping {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: var(--space-4);
   font-size: var(--font-sm);
   margin-left: auto;
 }
@@ -524,7 +524,7 @@ const {
   margin-right: 5px;
 }
 .queue-grouping button {
-  padding: 5px 9px;
+  padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-sm);
   color: var(--muted);
 }
@@ -533,7 +533,7 @@ const {
   color: var(--purple-dark);
 }
 .queue-selection {
-  padding: 10px 12px;
+  padding: var(--space-12) var(--space-12);
   border: 1px solid #dfd4ef;
   border-radius: var(--radius-md);
   background: var(--lilac);
@@ -542,7 +542,7 @@ const {
 }
 .upload-groups {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-12);
 }
 .upload-queue {
   overflow: hidden;
@@ -550,15 +550,15 @@ const {
 .upload-group-heading {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
   background: var(--soft);
-  border-radius: 11px 11px 0 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 .upload-group-toggle {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-8);
   flex: 1;
   min-width: 0;
   text-align: left;
@@ -610,19 +610,19 @@ const {
 }
 .queue-tools {
   justify-content: space-between;
-  gap: 12px 16px;
+  gap: var(--space-12) var(--space-16);
 }
 .queue-filters {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1);
+  gap: var(--space-4);
 }
 .queue-filters > button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-8);
   min-height: 32px;
-  padding: 5px 9px;
+  padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-sm);
   font-size: var(--font-sm);
   color: var(--muted);
@@ -640,16 +640,16 @@ const {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: var(--space-2);
+  gap: var(--space-8);
   margin-left: auto;
 }
 .concurrency-input {
   display: inline-flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-8);
   height: 36px;
-  padding: 0 10px;
+  padding: 0 var(--space-12);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--surface);
@@ -682,7 +682,7 @@ const {
 .concurrency-value {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--space-2);
   padding-left: 7px;
   border-left: 1px solid var(--line);
 }
@@ -720,9 +720,9 @@ const {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--space-8);
   min-height: 36px;
-  padding: 0 8px;
+  padding: 0 var(--space-8);
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--muted);
@@ -741,14 +741,14 @@ const {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: var(--space-8) var(--space-16);
   margin-bottom: 10px;
 }
 .upload-task {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: 10px 14px;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
   border-top: 1px solid var(--line);
 }
 .task-icon {
@@ -802,7 +802,7 @@ const {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-12);
   flex-wrap: wrap;
   min-width: 150px;
   max-width: 230px;
@@ -812,7 +812,7 @@ const {
   height: 3px;
   max-width: 460px;
   overflow: hidden;
-  border-radius: 2px;
+  border-radius: var(--radius-xs);
   background: #ebe5f5;
 }
 .progress-track > span {
@@ -823,13 +823,13 @@ const {
 }
 @media (max-width: 640px) {
   .queue-summary {
-    padding: 15px;
+    padding: var(--space-16);
   }
   .summary-heading {
     align-items: center;
   }
   .summary-heading > div:first-child {
-    gap: 6px 10px;
+    gap: var(--space-8) var(--space-12);
   }
   .summary-heading > div:first-child > .hint:last-child {
     flex-basis: 100%;
@@ -838,14 +838,14 @@ const {
     font-size: var(--font-sm);
   }
   .summary-stages {
-    gap: 8px 16px;
+    gap: var(--space-8) var(--space-16);
   }
   .upload-group-heading {
-    padding: 10px;
-    gap: 6px;
+    padding: var(--space-12);
+    gap: var(--space-8);
   }
   .upload-group-toggle {
-    gap: var(--space-1);
+    gap: var(--space-4);
   }
   .upload-group-toggle small {
     font-size: 10px;
@@ -853,8 +853,8 @@ const {
   .upload-task {
     display: grid;
     grid-template-columns: 26px minmax(0, 1fr);
-    gap: 4px 10px;
-    padding: 10px;
+    gap: var(--space-4) var(--space-12);
+    padding: var(--space-12);
   }
   .task-icon,
   .task-thumbnail,

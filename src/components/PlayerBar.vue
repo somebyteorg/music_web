@@ -151,9 +151,9 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   bottom: 16px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-16);
   min-height: 76px;
-  padding: 14px 20px;
+  padding: var(--space-16) var(--space-20);
   background: #fffffff5;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -167,7 +167,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .player-title {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-4);
   width: 168px;
   min-width: 0;
 }
@@ -181,7 +181,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .player-controls {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-8);
   flex-shrink: 0;
 }
 .player-controls .icon-button {
@@ -217,7 +217,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .player-extra {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-4);
   flex-shrink: 0;
 }
 .player-extra .icon-button {
@@ -231,7 +231,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   top: -2px;
   right: -4px;
   min-width: 15px;
-  padding: 0 3px;
+  padding: 0 var(--space-4);
   border-radius: var(--radius-md);
   background: var(--purple);
   color: #fff;
@@ -244,9 +244,9 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   right: 12px;
   bottom: 12px;
   width: min(420px, calc(100% - 24px));
-  padding: 8px 12px;
+  padding: var(--space-8) var(--space-12);
   min-height: 54px;
-  gap: 10px;
+  gap: var(--space-12);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: 0 4px 16px #28233512;
@@ -267,7 +267,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   .player {
     left: 16px;
     right: 16px;
-    padding-inline: 14px;
+    padding-inline: var(--space-16);
   }
   .player-title {
     width: 120px;
@@ -282,7 +282,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     right: 10px;
     bottom: 10px;
     flex-wrap: wrap;
-    gap: 7px;
+    gap: var(--space-8);
   }
   .player-title {
     flex: 1;

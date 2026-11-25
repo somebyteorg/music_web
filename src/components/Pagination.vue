@@ -65,7 +65,7 @@ function jump() {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-12);
   margin-top: 12px;
   color: var(--muted);
   font-size: var(--font-sm);
@@ -74,23 +74,23 @@ function jump() {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 .pagination-jump {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-8);
 }
 .pagination-jump label {
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: var(--space-8);
   font-weight: 400;
 }
 .pagination-jump input {
   width: 58px !important;
   min-height: 28px !important;
-  padding: 4px 6px !important;
+  padding: var(--space-4) var(--space-8) !important;
   font-size: var(--font-base) !important;
 }
 @media (max-width: 640px) {
@@ -99,10 +99,10 @@ function jump() {
     justify-content: space-between;
   }
   .pagination-jump {
-    gap: 5px;
+    gap: var(--space-4);
   }
   .pagination-jump label {
-    gap: var(--space-1);
+    gap: var(--space-4);
   }
   .pagination-jump input {
     width: 46px !important;

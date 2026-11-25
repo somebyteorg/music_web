@@ -318,14 +318,14 @@ const {
 }
 .view-toggle {
   display: flex;
-  padding: 3px;
+  padding: var(--space-4);
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   background: #fff;
 }
 .view-toggle button {
   min-height: 32px;
-  padding: 6px 11px;
+  padding: var(--space-8) var(--space-12);
   border-radius: var(--radius-sm);
   font-size: var(--font-sm);
   color: var(--muted);
@@ -338,8 +338,8 @@ const {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-12);
   margin-bottom: 8px;
   background: var(--lilac);
   border: 1px solid #d9cbed;
@@ -349,8 +349,8 @@ const {
 .loading-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: var(--space-3);
+  gap: var(--space-12);
+  padding: var(--space-12);
 }
 .loading-list .skeleton {
   height: 32px;
@@ -371,8 +371,8 @@ const {
   display: grid;
   grid-template-columns: minmax(180px, 2fr) minmax(100px, 1fr) 80px var(--entity-action-width);
   align-items: center;
-  gap: 14px;
-  padding: 10px 20px;
+  gap: var(--space-16);
+  padding: var(--space-12) var(--space-20);
 }
 .entity-label {
   min-height: 44px;
@@ -391,7 +391,7 @@ const {
 .entity-main {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--space-16);
   min-width: 0;
 }
 .entity-main > .cover {
@@ -424,7 +424,7 @@ const {
 .catalog.grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 30px 24px;
+  gap: var(--space-32) var(--space-24);
 }
 .grid .entity-row {
   position: relative;
@@ -447,7 +447,7 @@ const {
 }
 .grid .entity-main > .cover.round {
   width: 85%;
-  margin: 8px auto 20px;
+  margin: var(--space-8) auto var(--space-20);
 }
 .grid .entity-main p {
   font-size: var(--font-sm);
@@ -467,7 +467,7 @@ const {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-8);
   font-size: var(--font-base);
 }
 .grid .entity-actions {
@@ -478,7 +478,7 @@ const {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-12);
   padding-top: 20px;
   margin-top: 24px;
   border-top: 1px solid var(--line);
@@ -497,8 +497,8 @@ const {
   .entity-label,
   .list .entity-row {
     grid-template-columns: minmax(120px, 1fr) 65px var(--entity-action-width);
-    gap: var(--space-2);
-    padding-inline: 10px;
+    gap: var(--space-8);
+    padding-inline: var(--space-12);
   }
   .entity-label > span:nth-child(2),
   .list .entity-secondary {
@@ -506,7 +506,7 @@ const {
   }
   .catalog.grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 18px;
+    gap: var(--space-24) var(--space-20);
   }
   .catalog-pagination {
     align-items: flex-start;

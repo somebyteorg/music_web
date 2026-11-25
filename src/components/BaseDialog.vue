@@ -90,8 +90,8 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
-  padding: 20px 24px;
+  gap: var(--space-16);
+  padding: var(--space-20) var(--space-24);
   border-bottom: 1px solid var(--line);
 }
 .modal-heading h2 {
@@ -100,7 +100,7 @@ onBeforeUnmount(() => {
 }
 .modal-body {
   min-height: 0;
-  padding: var(--space-6);
+  padding: var(--space-24);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
@@ -111,8 +111,8 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 12px 18px;
-  padding: 16px 24px;
+  gap: var(--space-12) var(--space-20);
+  padding: var(--space-16) var(--space-24);
   border-top: 1px solid var(--line);
   background: var(--soft);
 }
@@ -133,13 +133,13 @@ onBeforeUnmount(() => {
   .modal-heading,
   .modal-body,
   .modal-footer {
-    padding: var(--space-4);
+    padding: var(--space-16);
   }
   .modal-heading h2 {
     font-size: 17px;
   }
   .modal-footer {
-    gap: 9px;
+    gap: var(--space-8);
   }
   .modal-footer > :deep(.hint) {
     flex-basis: 100%;
@@ -148,7 +148,7 @@ onBeforeUnmount(() => {
     margin-left: auto;
   }
   .modal-footer :deep(.button) {
-    padding-inline: 10px;
+    padding-inline: var(--space-12);
   }
 }
 </style>

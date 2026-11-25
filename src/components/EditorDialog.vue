@@ -635,9 +635,9 @@ const {
 .album-track-rows article {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 66px 66px 60px;
-  gap: 10px;
+  gap: var(--space-12);
   align-items: center;
-  padding: 10px 0;
+  padding: var(--space-12) 0;
   border-top: 1px solid var(--line);
 }
 .album-track-rows article > div {
@@ -648,7 +648,7 @@ const {
   font-size: var(--font-xs);
 }
 .album-track-rows input[type='number'] {
-  padding-inline: 7px;
+  padding-inline: var(--space-8);
 }
 .album-track-rows .removed > div {
   opacity: 0.5;
@@ -656,7 +656,7 @@ const {
 @media (max-width: 640px) {
   .album-track-rows article {
     grid-template-columns: minmax(0, 1fr) 55px 55px;
-    gap: var(--space-2);
+    gap: var(--space-8);
   }
   .album-track-rows .check-label {
     grid-column: 1 / -1;
@@ -666,7 +666,7 @@ const {
 .cover-editor {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-16);
 }
 .cover-preview-button {
   width: 72px;
@@ -682,7 +682,7 @@ const {
 .cover-picker {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: var(--space-12);
 }
 .cover-picker > button {
   min-width: 0;

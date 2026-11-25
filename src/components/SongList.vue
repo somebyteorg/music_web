@@ -261,8 +261,8 @@ function playNext(song: Entity) {
   display: grid;
   grid-template-columns: 28px minmax(150px, 2fr) minmax(90px, 1fr) minmax(100px, 1fr) 82px 152px;
   align-items: center;
-  gap: 14px;
-  padding: 10px 18px;
+  gap: var(--space-16);
+  padding: var(--space-12) var(--space-20);
 }
 .selectable .song-grid {
   grid-template-columns:
@@ -329,7 +329,7 @@ function playNext(song: Entity) {
 .song-title {
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: var(--space-12);
   min-width: 0;
 }
 .song-title > .cover {
@@ -383,7 +383,7 @@ function playNext(song: Entity) {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 2px;
+  gap: var(--space-2);
 }
 .song-actions .icon-button {
   font-size: 17px;
@@ -400,8 +400,8 @@ function playNext(song: Entity) {
 @container (max-width: 800px) {
   .song-grid {
     grid-template-columns: 26px minmax(140px, 1.7fr) minmax(90px, 1fr) 82px 152px;
-    gap: var(--space-2);
-    padding-inline: 14px;
+    gap: var(--space-8);
+    padding-inline: var(--space-16);
   }
   .selectable .song-grid {
     grid-template-columns: 20px 26px minmax(140px, 1.7fr) minmax(90px, 1fr) 82px 152px;
@@ -416,7 +416,7 @@ function playNext(song: Entity) {
     min-height: 68px;
   }
 }
-@container (max-width: 620px) {
+@container (max-width: 600px) {
   .song-grid {
     grid-template-columns: 26px minmax(120px, 1fr) 82px 70px;
   }
@@ -429,16 +429,16 @@ function playNext(song: Entity) {
     display: none;
   }
 }
-@container (max-width: 460px) {
+@container (max-width: 400px) {
   .song-grid {
     grid-template-columns: 24px minmax(0, 1fr) 70px;
-    gap: 3px 6px;
+    gap: var(--space-4) var(--space-8);
   }
   .selectable .song-grid {
     grid-template-columns: 18px 24px minmax(0, 1fr) 70px;
   }
   .song-row {
-    padding-block: 12px;
+    padding-block: var(--space-12);
   }
   .song-row > input {
     grid-column: 1;
@@ -467,7 +467,7 @@ function playNext(song: Entity) {
   .mobile-meta {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-8);
   }
   .mobile-artist {
     min-width: 0;
