@@ -13,16 +13,16 @@ defineProps<{ mode: PlayMode }>()
         <path d="M19 5v14M16.5 16.5 19 19l2.5-2.5" />
       </template>
       <template v-else-if="mode === 'repeat-all'">
-        <path d="M17 3l4 4-4 4" />
-        <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-        <path d="M7 21l-4-4 4-4" />
-        <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+        <path d="M4 11V9a3 3 0 0 1 3-3h13" />
+        <path d="M16 2l4 4-4 4" />
+        <path d="M20 13v2a3 3 0 0 1-3 3H4" />
+        <path d="M8 22l-4-4 4-4" />
       </template>
       <template v-else-if="mode === 'repeat-one'">
-        <path d="M17 3l4 4-4 4" />
-        <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-        <path d="M7 21l-4-4 4-4" />
-        <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+        <path d="M4 11V9a3 3 0 0 1 3-3h13" />
+        <path d="M16 2l4 4-4 4" />
+        <path d="M20 13v2a3 3 0 0 1-3 3H4" />
+        <path d="M8 22l-4-4 4-4" />
       </template>
       <template v-else>
         <path d="M16 3h5v5" />
