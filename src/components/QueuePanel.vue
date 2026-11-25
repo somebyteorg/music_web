@@ -4,6 +4,7 @@ import { usePlayerStore } from '@/stores/player'
 import { playModeLabels, useQueueStore } from '@/stores/queue'
 import { duration } from '@/utils/format'
 import EntityCover from './EntityCover.vue'
+import PlayModeIcon from './PlayModeIcon.vue'
 
 const queue = useQueueStore()
 const player = usePlayerStore()
@@ -74,7 +75,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 
         <div class="queue-tools">
           <button class="button secondary small" @click="queue.cycleMode()">
-            {{ playModeLabels[queue.mode] }}
+            <PlayModeIcon :mode="queue.mode" />{{ playModeLabels[queue.mode] }}
           </button>
           <button :disabled="!queue.length" class="button secondary small" @click="queue.clear()">
             清空
@@ -187,8 +188,15 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   padding: 0 10px 10px;
 }
 .queue-tools .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 4px 10px;
   font-size: 12px;
+}
+.queue-tools :deep(.ui-icon) {
+  width: 14px;
+  height: 14px;
 }
 .queue-list {
   margin: 0;
