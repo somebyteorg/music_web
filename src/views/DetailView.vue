@@ -991,7 +991,7 @@ const lyricInput = ref<HTMLInputElement>()
   padding: 12px;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 .song-upload-list strong {
   overflow-wrap: anywhere;
@@ -1004,7 +1004,7 @@ const lyricInput = ref<HTMLInputElement>()
   display: inline-block;
   margin-bottom: 24px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .back-link:hover {
   color: var(--purple);
@@ -1016,7 +1016,7 @@ const lyricInput = ref<HTMLInputElement>()
   padding: 32px;
   margin-bottom: 32px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   background: linear-gradient(125deg, #f0eaf6, #fcfbfd 75%);
 }
 .detail-hero > .cover {
@@ -1031,7 +1031,7 @@ const lyricInput = ref<HTMLInputElement>()
 .detail-kind {
   margin-bottom: 12px;
   color: var(--purple);
-  font-size: 12px;
+  font-size: var(--font-sm);
   letter-spacing: 1px;
 }
 .detail-copy h1 {
@@ -1046,7 +1046,7 @@ const lyricInput = ref<HTMLInputElement>()
   gap: 5px 12px;
   margin: 14px 0 20px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 .detail-meta a:hover {
   color: var(--purple);
@@ -1061,7 +1061,7 @@ const lyricInput = ref<HTMLInputElement>()
   -webkit-line-clamp: 2;
   overflow: hidden;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--font-base);
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
@@ -1078,7 +1078,7 @@ const lyricInput = ref<HTMLInputElement>()
   padding: 12px 0;
   border-bottom: 2px solid transparent;
   color: var(--muted);
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .detail-tabs > button.active {
   color: var(--purple-dark);
@@ -1086,23 +1086,23 @@ const lyricInput = ref<HTMLInputElement>()
 }
 .detail-tabs > button > span {
   margin-left: 4px;
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .detail-tabs > a {
   margin-left: auto;
   color: var(--purple);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .resource-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .resource-table th {
   padding: 9px 12px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   font-weight: 450;
   text-align: left;
   white-space: nowrap;
@@ -1126,7 +1126,7 @@ const lyricInput = ref<HTMLInputElement>()
   display: block;
   margin-top: 3px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .resource-file {
   width: 30%;
@@ -1144,7 +1144,7 @@ const lyricInput = ref<HTMLInputElement>()
   -webkit-box-orient: vertical;
   overflow: hidden;
   overflow-wrap: anywhere;
-  font-size: 12px;
+  font-size: var(--font-sm);
   font-weight: 550;
 }
 .resource-file .badge,
@@ -1161,7 +1161,7 @@ const lyricInput = ref<HTMLInputElement>()
   border-radius: 4px;
   background: var(--lilac);
   color: var(--purple);
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .quality-label,
 .numeric,
@@ -1197,7 +1197,7 @@ const lyricInput = ref<HTMLInputElement>()
   padding-top: 12px;
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .detail-foot > a {
   color: var(--purple);
@@ -1208,7 +1208,7 @@ const lyricInput = ref<HTMLInputElement>()
 }
 .lyrics-panel pre {
   font-family: inherit;
-  font-size: 13px;
+  font-size: var(--font-base);
   line-height: 2;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -1223,7 +1223,7 @@ const lyricInput = ref<HTMLInputElement>()
 .track-editor strong {
   min-width: 0;
   flex: 1;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 500;
   overflow-wrap: anywhere;
 }
@@ -1268,7 +1268,7 @@ const lyricInput = ref<HTMLInputElement>()
     gap: 6px;
   }
   .detail-copy .button {
-    font-size: 12px;
+    font-size: var(--font-sm);
     padding-inline: 8px;
   }
   .detail-tabs {

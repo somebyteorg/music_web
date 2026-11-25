@@ -68,7 +68,7 @@ function jump() {
   gap: 12px;
   margin-top: 12px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .pagination-tools {
   display: flex;
@@ -91,7 +91,7 @@ function jump() {
   width: 58px !important;
   min-height: 28px !important;
   padding: 4px 6px !important;
-  font-size: 13px !important;
+  font-size: var(--font-base) !important;
 }
 @media (max-width: 640px) {
   .pagination-tools {

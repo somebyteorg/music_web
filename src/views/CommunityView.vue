@@ -270,7 +270,7 @@ const {
 }
 .history-filters > label {
   width: 180px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   color: var(--muted);
 }
 .history-list > article,
@@ -290,12 +290,12 @@ const {
   flex: 1;
 }
 .history-body > p {
-  font-size: 13px;
+  font-size: var(--font-base);
   line-height: 1.6;
   overflow-wrap: anywhere;
 }
 .history-body > p .muted {
-  font-size: 12px;
+  font-size: var(--font-sm);
   margin-inline: 4px;
 }
 .history-body > p > a {
@@ -304,12 +304,12 @@ const {
 .history-reason {
   margin-top: 5px;
   color: var(--muted);
-  font-size: 12px !important;
+  font-size: var(--font-sm) !important;
 }
 .history-body .hint {
   display: block;
   margin-top: 4px;
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .history-list .text-button {
   white-space: nowrap;
@@ -321,7 +321,7 @@ const {
   width: 22px;
   flex-shrink: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   text-align: center;
 }
 .ranking.top {
@@ -335,7 +335,7 @@ const {
   min-width: 0;
 }
 .member-name strong {
-  font-size: 13px;
+  font-size: var(--font-base);
   overflow-wrap: anywhere;
 }
 .member-role {
@@ -350,7 +350,7 @@ const {
   border-radius: 4px;
   background: var(--lilac);
   color: var(--purple-dark);
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-weight: 500;
   line-height: 1.6;
 }
@@ -365,11 +365,11 @@ const {
   text-align: right;
 }
 .member-contribution strong {
-  font-size: 13px;
+  font-size: var(--font-base);
   font-variant-numeric: tabular-nums;
 }
 .member-contribution .hint {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .message-list {
   display: flex;
@@ -395,16 +395,16 @@ const {
   flex: 1;
 }
 .message h3 {
-  font-size: 14px;
+  font-size: var(--font-md);
 }
 .message p {
   margin: 6px 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--font-base);
   white-space: pre-line;
 }
 .message .hint {
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .message .text-link {
   margin-left: 12px;
@@ -415,16 +415,16 @@ const {
 .history-diff {
   padding: 10px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 .history-diff > strong {
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 .history-diff p {
   padding: 8px;
   margin-top: 6px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }

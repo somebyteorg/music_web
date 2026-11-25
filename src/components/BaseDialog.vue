@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
 }
 .modal-footer > :deep(.hint) {
   margin-right: auto;
-  font-size: 13px;
+  font-size: var(--font-base);
 }
 @media (max-width: 640px) {
   .modal {

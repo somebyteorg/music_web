@@ -461,7 +461,7 @@ const {
 }
 .summary-heading small {
   margin-left: 2px;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 500;
 }
 .summary-speed {
@@ -469,7 +469,7 @@ const {
   flex-direction: column;
   align-items: flex-end;
   gap: 2px;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-variant-numeric: tabular-nums;
 }
 .summary-progress {
@@ -491,7 +491,7 @@ const {
   flex-wrap: wrap;
   gap: 8px 22px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .summary-stages b {
   margin-left: 4px;
@@ -517,7 +517,7 @@ const {
   display: flex;
   align-items: center;
   gap: 3px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   margin-left: auto;
 }
 .queue-grouping > span {
@@ -535,10 +535,10 @@ const {
 .queue-selection {
   padding: 10px 12px;
   border: 1px solid #dfd4ef;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--lilac);
   color: var(--purple-dark);
-  font-size: 12px;
+  font-size: var(--font-sm);
 }
 .upload-groups {
   display: grid;
@@ -568,7 +568,7 @@ const {
 }
 .upload-group-toggle strong {
   display: block;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 550;
   overflow: hidden;
   white-space: nowrap;
@@ -578,7 +578,7 @@ const {
   display: block;
   margin-top: 3px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--font-xs);
 }
 .group-chevron {
   width: 14px;
@@ -602,7 +602,7 @@ const {
 .task-warning {
   margin-top: 5px;
   color: #91632b;
-  font-size: 12px;
+  font-size: var(--font-sm);
   overflow-wrap: anywhere;
 }
 .queue-section {
@@ -624,7 +624,7 @@ const {
   min-height: 32px;
   padding: 5px 9px;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: var(--font-sm);
   color: var(--muted);
 }
 .queue-filters > button.active {
@@ -633,7 +633,7 @@ const {
   font-weight: 550;
 }
 .queue-filters > button > span {
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-variant-numeric: tabular-nums;
 }
 .queue-settings {
@@ -651,10 +651,10 @@ const {
   height: 36px;
   padding: 0 10px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   font-weight: 400;
   white-space: nowrap;
   cursor: text;
@@ -701,7 +701,7 @@ const {
   background: transparent;
   box-shadow: none;
   color: var(--purple-dark);
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
   text-align: center;
@@ -713,7 +713,7 @@ const {
 }
 .concurrency-limit {
   color: #99949f;
-  font-size: 11px;
+  font-size: var(--font-xs);
   font-variant-numeric: tabular-nums;
 }
 .queue-clear {
@@ -724,9 +724,9 @@ const {
   min-height: 36px;
   padding: 0 8px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   white-space: nowrap;
   transition:
     background-color 0.15s,
@@ -772,20 +772,20 @@ const {
 }
 .task-body strong {
   display: block;
-  font-size: 13px;
+  font-size: var(--font-base);
   font-weight: 550;
   overflow-wrap: anywhere;
 }
 .task-body > .hint {
   margin-top: 2px;
-  font-size: 11px;
+  font-size: var(--font-xs);
   overflow-wrap: anywhere;
 }
 .task-state {
   width: 82px;
   flex-shrink: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--font-sm);
   white-space: nowrap;
 }
 .task-state.ready,
@@ -835,7 +835,7 @@ const {
     flex-basis: 100%;
   }
   .summary-speed {
-    font-size: 12px;
+    font-size: var(--font-sm);
   }
   .summary-stages {
     gap: 8px 16px;
@@ -896,7 +896,7 @@ const {
     font-size: 16px;
   }
   .queue-search > .hint {
-    font-size: 11px;
+    font-size: var(--font-xs);
   }
 }
 </style>
