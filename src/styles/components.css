@@ -1,4 +1,14 @@
-/* 组合层：面板、页面骨架、提示、骨架屏与图片网格 */
+/*
+ * 组合层：面板、页面骨架、提示、骨架屏与图片网格
+ *
+ * ⚠️ 这里的类名不是死样式，不要删：
+ *   .panel ← src/components/ui/Card.vue 渲染 this class（内边距由 ui-card--pad-* 或页面自己管）
+ *            ← src/features/uploads/UploadQueue.vue(3)、src/views/UploadsView.vue(3) 仍直接写 class="panel"
+ *   .empty / .empty.compact / .empty-symbol / .empty h2 / .empty p
+ *            ← src/components/ui/EmptyState.vue 渲染 .empty / .empty-symbol
+ *            ← src/features/uploads/UploadQueue.vue 仍用 class="empty panel compact"
+ *            ← src/components/QueuePanel.vue 复用 .empty-symbol（配 .queue-empty 自带间距）
+ */
 
 .panel {
   background: var(--surface);
