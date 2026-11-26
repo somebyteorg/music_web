@@ -17,7 +17,8 @@ export function applyTaskMetadata(task: UploadTask, metadata: UploadDraftMetadat
   task.disc = metadata.disc || task.disc
   task.duration = metadata.duration || task.duration
 }
-export function applyUploadedFile(task: UploadTask, file: AudioFile, reused = false) {
+/** 把已入库文件的标签与草稿合并进任务；状态与进度由状态机的 processed / published 事件负责 */
+export function applyUploadedFile(task: UploadTask, file: AudioFile) {
   const tags = file.metadata || {}
   applyTaskMetadata(task, {
     title: String(tags.title || ''),
@@ -38,15 +39,6 @@ export function applyUploadedFile(task: UploadTask, file: AudioFile, reused = fa
     duration: file.duration,
   })
   task.file = { ...file, metadata: null }
-  task.state = file.song_id ? 'published' : 'ready'
-  task.songId = file.song_id || undefined
-  task.reused = reused || task.reused
-  task.progress = 100
-  task.error = ''
-  task.errorStage = undefined
-  task.token = undefined
-  task.duplicateFile = undefined
-  task.duplicateOf = undefined
   if (file.upload_draft) {
     const { data, organize } = file.upload_draft
     task.publicationGroup = data.publication_group
