@@ -1,7 +1,6 @@
-import api from '@/utils/ky'
 import type { CatalogType, Entity } from '@/types/catalog'
 import type { Page } from '@/types/common'
-import { getCatalogPage } from './api'
+import { assertPage, catalogApi } from '@/lib/api/catalog'
 import { MAX_PAGE_SIZE } from './limits'
 
 /** 详情页按实体类型筛选曲目：专辑 / 歌手 / 媒体库各用不同参数 */
@@ -13,7 +12,6 @@ export function songFilter(type: CatalogType, id: string) {
   return filter
 }
 
-/** 取详情页的一页曲目：歌单走 playlists/{id}/songs，其余走 catalog/songs */
 export function getSongPage(
   type: CatalogType,
   id: string,
@@ -21,18 +19,10 @@ export function getSongPage(
   pageSize: number,
   signal?: AbortSignal,
 ): Promise<Page<Entity>> {
-  const params = { ...songFilter(type, id), page, page_size: pageSize }
-  return type === 'playlists'
-    ? api.get(`playlists/${id}/songs`, { searchParams: params, signal }).json<Page<Entity>>()
-    : getCatalogPage('songs', params, signal)
+  return catalogApi.songs(type, id, { ...songFilter(type, id), page, page_size: pageSize }, signal)
 }
 
-/** 接口形状不对时给出可读错误，而不是让 undefined 冒进模板 */
-export function assertPage(page: Page<Entity> | null | undefined): Page<Entity> {
-  if (!page || !Array.isArray(page.items) || !Number.isFinite(Number(page.total)))
-    throw new Error('曲目接口返回的数据格式异常，请稍后重试。')
-  return page
-}
+export { assertPage }
 
 /**
  * 翻页取某张专辑 / 歌单的全部曲目，最多 limit 首。

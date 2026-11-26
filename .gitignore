@@ -13,6 +13,5 @@ node_modules/
 logs/
 *.log
 pnpm-debug.log*
-/pnpm-lock.yaml
 
 .DS_Store

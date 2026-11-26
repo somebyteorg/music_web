@@ -1,26 +1,20 @@
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { type LocationQueryRaw, useRoute, useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
+import type { Page } from '@/types/common'
+import type { CatalogType, Entity } from '@/types/catalog'
+import { useQuery } from '@/lib/query'
+import { useSignStore } from '@/stores/sign'
 import { getCatalogPage } from './api'
 import { PAGE_SIZES } from './limits'
-import { useSignStore } from '@/stores/sign'
-import type { CatalogType, Entity } from '@/types/catalog'
-import type { Page } from '@/types/common'
 
-const cache = new Map<string, Page<Entity>>()
 export function useCatalog() {
   const route = useRoute()
   const router = useRouter()
   const sign = useSignStore()
   const type = computed(() => route.meta.type as CatalogType)
-  const items = ref<Entity[]>([])
-  const total = ref(0)
-  const busy = ref(false)
-  const loaded = ref(false)
-  const error = ref('')
   const q = ref(String(route.query.q || ''))
-  let controller: AbortController | undefined
-  let disposed = false
+
   function text(key: string) {
     return typeof route.query[key] === 'string' ? (route.query[key] as string) : ''
   }
@@ -81,56 +75,44 @@ export function useCatalog() {
         sort.value !== 'latest'
       ),
   )
-  async function load() {
-    controller?.abort()
-    const request = new AbortController()
-    controller = request
-    const key = `${sign.user?.id}:${route.fullPath}`
-    const saved = cache.get(key)
-    if (saved && !loaded.value) {
-      items.value = saved.items
-      total.value = saved.total
-      loaded.value = true
-    }
-    busy.value = true
-    error.value = ''
-    const params: Record<string, string | number> = {
+
+  /** 请求参数只在一处拼装：URL 即真相，这里把它翻译成后端参数 */
+  function params(): Record<string, string | number | undefined> {
+    const next: Record<string, string | number | undefined> = {
       page: page.value,
       page_size: pageSize.value,
-      q: text('q').slice(0, 100),
+      q: text('q').slice(0, 100) || undefined,
     }
-    if (type.value !== 'playlists') params.sort = sort.value
-    if (library.value && ['songs', 'albums'].includes(type.value)) params.library_id = library.value
+    if (type.value !== 'playlists') next.sort = sort.value
+    if (library.value && ['songs', 'albums'].includes(type.value)) next.library_id = library.value
     if (type.value === 'songs') {
-      if (quality.value) params.quality = quality.value
-      if (favorites.value) params.favorites = 1
-      if (missing.value) params.missing = 1
+      if (quality.value) next.quality = quality.value
+      if (favorites.value) next.favorites = 1
+      if (missing.value) next.missing = 1
     }
-    if (mine.value) params.mine = 1
-    try {
-      const result = await getCatalogPage(type.value, params, request.signal)
-      if (request.signal.aborted) return
-      const last = Math.max(1, Math.ceil(result.total / result.page_size))
-      if (page.value > last) {
-        update({ page: last > 1 ? String(last) : undefined }, false, true)
-        return
-      }
-      items.value = result.items
-      total.value = result.total
-      loaded.value = true
-      cache.delete(key)
-      cache.set(key, result)
-      if (cache.size > 20) cache.delete(cache.keys().next().value!)
-    } catch (e) {
-      if (!request.signal.aborted)
-        error.value = e instanceof Error ? e.message : '加载失败，请重试。'
-    } finally {
-      if (!request.signal.aborted) busy.value = false
-    }
+    if (mine.value) next.mine = 1
+    return next
   }
+
+  const query = useQuery<Page<Entity>>({
+    key: () => (sign.user ? `${sign.user.id}:catalog:${route.fullPath}` : null),
+    fetcher: (signal) => getCatalogPage(type.value, params(), signal),
+    staleTime: 60_000,
+  })
+
+  const items = computed<Entity[]>(() => query.data.value?.items ?? [])
+  const total = computed(() => Number(query.data.value?.total ?? 0))
+  const loaded = computed(() => query.data.value !== null)
+
+  // 页码越界（例如筛选后总数变少）时收敛到最后一页
+  watch(query.data, (data) => {
+    if (!data) return
+    const last = Math.max(1, Math.ceil(Number(data.total) / (Number(data.page_size) || 1)))
+    if (page.value > last) update({ page: last > 1 ? String(last) : undefined }, false, true)
+  })
+
   const search = useDebounceFn(() => {
-    if (!disposed && q.value.trim() !== text('q'))
-      update({ q: q.value.trim().slice(0, 100) }, true, true)
+    if (q.value.trim() !== text('q')) update({ q: q.value.trim().slice(0, 100) }, true, true)
   }, 300)
   watch(q, () => {
     void search()
@@ -139,14 +121,15 @@ export function useCatalog() {
     () => route.fullPath,
     () => {
       q.value = text('q')
-      void load()
+      void query.run(false)
     },
     { immediate: true },
   )
-  onBeforeUnmount(() => {
-    disposed = true
-    controller?.abort()
-  })
+
+  /** 显式刷新：写操作之后调用，强制回源（不接收事件参数，便于直接当 @click 处理器） */
+  function load() {
+    return query.run(true)
+  }
   function reset() {
     q.value = ''
     update({
@@ -163,9 +146,9 @@ export function useCatalog() {
     type,
     items,
     total,
-    busy,
+    busy: query.busy,
     loaded,
-    error,
+    error: query.error,
     q,
     page,
     pageSize,
