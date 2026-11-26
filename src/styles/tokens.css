@@ -141,3 +141,31 @@
   --soft: var(--surface-muted);
   --radius: var(--radius-lg);
 }
+
+/* 深色主题：只覆盖基础色，派生色与之联动 */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #131218;
+  --surface: #1b1a23;
+  --surface-muted: #232231;
+  --line: #2e2c3a;
+
+  --text: #eceaf2;
+  --text-muted: #9d9aab;
+  --text-soft: #cbc8d6;
+
+  --brand: #9d80dd;
+  --brand-strong: #bda6f0;
+  --brand-soft: #2b2439;
+
+  --danger: #ef8d9d;
+  --success: #6ec59a;
+  --warning: #ddaa63;
+  --warning-soft: #3a2f1d;
+  --danger-hover: #f6a6b4;
+  --warning-veil: color-mix(in srgb, var(--warning) 14%, var(--surface));
+  --danger-soft: color-mix(in srgb, var(--danger) 16%, var(--surface));
+  --success-soft: color-mix(in srgb, var(--success) 16%, var(--surface));
+  --brand-veil-ink: #efe6ff;
+}
