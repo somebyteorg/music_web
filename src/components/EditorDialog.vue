@@ -653,7 +653,7 @@ const {
 .album-track-rows .removed > div {
   opacity: 0.5;
 }
-@media (max-width: 480px) {
+@media (max-width: 680px) {
   .album-track-rows article {
     grid-template-columns: minmax(0, 1fr) 55px 55px;
     gap: 8px;
@@ -700,7 +700,7 @@ const {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
 }
 </style>

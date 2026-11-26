@@ -65,9 +65,9 @@ onBeforeUnmount(() => {
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
-  color: #292733;
-  box-shadow: 0 15px 70px #172d2326;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 15px 70px color-mix(in srgb, var(--ink) 15%, transparent);
   overflow: hidden;
 }
 .modal[open] {
@@ -82,7 +82,7 @@ onBeforeUnmount(() => {
   max-height: calc(100dvh - 32px);
 }
 .modal::backdrop {
-  background: #201a2d66;
+  background: var(--scrim);
   backdrop-filter: blur(4px);
 }
 .modal-heading {
@@ -114,13 +114,13 @@ onBeforeUnmount(() => {
   gap: 12px 18px;
   padding: 16px 24px;
   border-top: 1px solid var(--line);
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .modal-footer > :deep(.hint) {
   margin-right: auto;
   font-size: 13px;
 }
-@media (max-width: 640px) {
+@media (max-width: 680px) {
   .modal {
     width: calc(100vw - 16px);
     max-height: calc(100dvh - 16px);

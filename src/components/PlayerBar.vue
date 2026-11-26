@@ -153,10 +153,10 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   gap: 14px;
   min-height: var(--player-height);
   padding: 14px 20px;
-  background: #fffffff5;
+  background: var(--surface-glass-strong);
   border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 8px 40px #29203514;
+  box-shadow: 0 8px 40px color-mix(in srgb, var(--ink) 7.8%, transparent);
   backdrop-filter: blur(20px);
 }
 .player > .cover {
@@ -178,7 +178,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 }
 .player-title span {
   font-size: 11px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .player-controls {
   display: flex;
@@ -187,7 +187,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   flex-shrink: 0;
 }
 .player-controls .icon-button {
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .play-button {
   display: grid;
@@ -196,8 +196,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   height: 40px;
   flex-shrink: 0;
   border-radius: 50%;
-  color: #fff;
-  background: var(--purple);
+  color: var(--on-brand);
+  background: var(--brand);
 }
 .play-button[aria-busy='true'] {
   opacity: 0.6;
@@ -205,14 +205,14 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .seek {
   flex: 1;
   min-width: 60px;
-  accent-color: var(--purple);
+  accent-color: var(--brand);
 }
 .volume {
   width: 75px;
-  accent-color: var(--purple);
+  accent-color: var(--brand);
 }
 .time {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
@@ -223,7 +223,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   flex-shrink: 0;
 }
 .player-extra .icon-button {
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .queue-button {
   position: relative;
@@ -235,8 +235,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   min-width: 15px;
   padding: 0 3px;
   border-radius: 8px;
-  background: var(--purple);
-  color: #fff;
+  background: var(--brand);
+  color: var(--on-brand);
   font-size: 9px;
   line-height: 15px;
   font-variant-numeric: tabular-nums;
@@ -251,7 +251,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   gap: 10px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 4px 16px #28233512;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--ink) 7.1%, transparent);
 }
 .collapsed .player-title {
   flex: 1;
@@ -265,7 +265,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     display: none;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 680px) {
   .player {
     left: 16px;
     right: 16px;
@@ -277,8 +277,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   .volume {
     display: none;
   }
-}
-@media (max-width: 540px) {
+
   .player {
     left: 10px;
     right: 10px;

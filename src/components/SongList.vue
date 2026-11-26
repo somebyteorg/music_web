@@ -249,7 +249,7 @@ function playNext(song: Entity) {
 .song-library {
   display: block;
   margin-top: 3px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 10px;
 }
 .song-list {
@@ -269,9 +269,9 @@ function playNext(song: Entity) {
 }
 .song-label {
   min-height: 44px;
-  background: var(--soft);
-  border-radius: var(--radius) var(--radius) 0 0;
-  color: var(--muted);
+  background: var(--surface-muted);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  color: var(--text-muted);
   font-size: 12px;
 }
 .number-label {
@@ -286,17 +286,17 @@ function playNext(song: Entity) {
   border-top: 1px solid var(--line);
 }
 .song-row:hover {
-  background: #faf9fd;
+  background: var(--surface-hover);
 }
 .song-row:last-child {
-  border-radius: 0 0 var(--radius) var(--radius);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 .song-row.playing,
 .song-row.selected {
-  background: #f5f1fc;
+  background: var(--brand-tint);
 }
 .song-row.playing .song-name {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
 }
 .song-row > input {
   margin: 0;
@@ -306,13 +306,13 @@ function playNext(song: Entity) {
   place-items: center;
   width: 28px;
   height: 30px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 .play-icon {
   display: none;
-  color: var(--purple);
+  color: var(--brand);
 }
 .song-row:hover .song-index,
 .playing .song-index,
@@ -350,17 +350,17 @@ function playNext(song: Entity) {
 .song-name:hover,
 .song-artists a:hover,
 .song-album:hover {
-  color: var(--purple);
+  color: var(--brand);
 }
 .song-name small {
   margin-left: 6px;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-weight: 400;
 }
 .song-artists,
 .song-album {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -375,7 +375,7 @@ function playNext(song: Entity) {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .song-actions {
   display: flex;
@@ -387,13 +387,13 @@ function playNext(song: Entity) {
   font-size: 17px;
 }
 .follow {
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .follow.active {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
 }
 .follow.active .ui-icon {
-  fill: var(--lilac);
+  fill: var(--brand-soft);
 }
 @container (max-width: 800px) {
   .song-grid {

@@ -67,7 +67,7 @@ function jump() {
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 .pagination-tools {
@@ -93,7 +93,7 @@ function jump() {
   padding: 4px 6px !important;
   font-size: 13px !important;
 }
-@media (max-width: 640px) {
+@media (max-width: 680px) {
   .pagination-tools {
     width: 100%;
     justify-content: space-between;

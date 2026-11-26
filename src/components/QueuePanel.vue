@@ -142,7 +142,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   /* 低于播放器（45）：点空白可关队列，但播放器仍可操作 */
   z-index: 40;
   inset: 0;
-  background: #1b162a0f;
+  background: var(--scrim-soft);
 }
 .queue-panel {
   /* 高于播放器（45）：桌面右下角展开，移动端浮在播放器上方 */
@@ -155,10 +155,10 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   width: min(360px, calc(100vw - 32px));
   max-height: min(620px, calc(100vh - 160px));
   padding: 16px 8px 8px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 12px 48px #2920351f;
+  box-shadow: var(--shadow-lg);
 }
 .queue-head {
   display: flex;
@@ -173,7 +173,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-source {
   margin: 4px 0 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
 }
 .queue-from {
@@ -208,10 +208,10 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   border-radius: 10px;
 }
 .queue-row:hover {
-  background: #faf9fd;
+  background: var(--surface-hover);
 }
 .queue-row.current {
-  background: #f5f1fc;
+  background: var(--brand-tint);
 }
 .queue-row.muted {
   opacity: 0.55;
@@ -227,7 +227,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   text-align: left;
 }
 .queue-index {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   text-align: center;
@@ -250,13 +250,13 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-text small {
   overflow: hidden;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .queue-time {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
@@ -269,7 +269,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   opacity: 1;
 }
 /* 触屏没有 hover：删除按钮常显，否则手机上无法移除曲目 */
-@media (pointer: coarse), (max-width: 760px) {
+@media (pointer: coarse), (max-width: 680px) {
   .queue-remove {
     opacity: 1;
   }
@@ -283,7 +283,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 .queue-bars i {
   width: 2px;
   height: 100%;
-  background: var(--purple);
+  background: var(--brand);
   animation: queue-bar 0.9s ease-in-out infinite;
 }
 .queue-bars i:nth-child(2) {
@@ -303,21 +303,21 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-empty {
   padding: 28px 18px 34px;
-  color: var(--muted);
+  color: var(--text-muted);
   text-align: center;
 }
 .queue-empty p {
   margin: 6px 0 4px;
-  color: var(--text, #2a2438);
+  color: var(--text);
   font-size: 14px;
 }
 .queue-empty small {
   font-size: 11px;
   line-height: 1.6;
 }
-@media (max-width: 760px) {
+@media (max-width: 680px) {
   .queue-backdrop {
-    background: #1b162a26;
+    background: var(--scrim-strong);
   }
   .queue-panel {
     /* 留出播放器高度 + 安全区，避免最后几条曲目被压在播放器下面点不到 */

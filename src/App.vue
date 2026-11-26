@@ -222,7 +222,7 @@ const {
   flex-direction: column;
   width: var(--sidebar-width);
   padding: 30px 16px 18px;
-  background: #fff;
+  background: var(--surface);
   border-right: 1px solid var(--line);
   overflow-y: auto;
 }
@@ -251,7 +251,7 @@ const {
 }
 .brand small {
   display: block;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 9px;
   font-weight: 500;
   letter-spacing: 1.8px;
@@ -264,7 +264,7 @@ const {
 }
 .nav-label {
   margin: 0 14px 12px;
-  color: #9b94a5;
+  color: var(--text-faint);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 2px;
@@ -282,19 +282,19 @@ const {
   min-height: 46px;
   padding: 11px 14px;
   border-radius: 9px;
-  color: #77707f;
+  color: var(--text-muted);
   font-size: 14px;
   transition:
     background 0.15s,
     color 0.15s;
 }
 .sidebar nav a:hover {
-  background: var(--soft);
-  color: var(--purple-dark);
+  background: var(--surface-muted);
+  color: var(--brand-strong);
 }
 .sidebar nav a.is-active {
-  color: var(--purple-dark);
-  background: var(--lilac);
+  color: var(--brand-strong);
+  background: var(--brand-soft);
   font-weight: 600;
 }
 .sidebar nav a.is-active::before {
@@ -305,7 +305,7 @@ const {
   bottom: 15px;
   width: 3px;
   border-radius: 0 3px 3px 0;
-  background: var(--purple);
+  background: var(--brand);
 }
 .nav-icon {
   width: 19px;
@@ -316,14 +316,14 @@ const {
   width: 15px;
   height: 15px;
   margin-left: auto;
-  color: #aaa3b1;
+  color: var(--text-ghost);
 }
 .nav-count {
   margin-left: auto;
   padding: 1px 7px;
   border-radius: 6px;
-  color: var(--purple-dark);
-  background: var(--lilac);
+  color: var(--brand-strong);
+  background: var(--brand-soft);
   font-size: 10px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -341,7 +341,7 @@ const {
   gap: 18px;
   height: 72px;
   padding: 0 var(--page-gutter);
-  background: #ffffffd9;
+  background: var(--surface-glass);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(16px);
 }
@@ -350,7 +350,7 @@ const {
   align-items: center;
   gap: 14px;
   min-width: 0;
-  color: #918b9c;
+  color: var(--text-faint);
   font-size: 12px;
   white-space: nowrap;
 }
@@ -359,12 +359,12 @@ const {
 }
 .breadcrumb-parent > span {
   margin-left: 14px;
-  color: #c4c0cc;
+  color: var(--line-strong);
 }
 .breadcrumb strong {
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #575160;
+  color: var(--text-subtle);
   font-size: 13px;
   font-weight: 500;
 }
@@ -389,7 +389,7 @@ const {
 .account-profile .avatar {
   width: 32px;
   height: 32px;
-  background: #e9e0f6;
+  background: var(--brand-tint-strong);
   font-size: 13px;
   font-weight: 600;
 }
@@ -416,7 +416,7 @@ const {
   min-height: 34px;
   padding: 7px 9px;
   border-radius: 9px;
-  color: #776b83;
+  color: var(--text-muted);
   font-size: 12px;
   white-space: nowrap;
   transition:
@@ -424,15 +424,15 @@ const {
     color 0.15s;
 }
 .account-action:hover:not(:disabled) {
-  color: var(--purple-dark);
-  background: var(--lilac);
+  color: var(--brand-strong);
+  background: var(--brand-soft);
 }
 .account-action.router-link-active {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
 }
 .account-logout:hover:not(:disabled) {
-  color: #af4d65;
-  background: #fff0f3;
+  color: var(--danger-hover);
+  background: var(--danger-soft);
 }
 .account-action .ui-icon {
   width: 18px;
@@ -445,14 +445,14 @@ const {
   width: 38px;
   height: 38px;
   border-radius: 11px;
-  color: #8b8196;
+  color: var(--text-faint);
   transition:
     background 0.15s,
     color 0.15s;
 }
 .inbox-link:hover {
-  background: var(--lilac);
-  color: var(--purple);
+  background: var(--brand-soft);
+  color: var(--brand);
 }
 .unread-dot {
   position: absolute;
@@ -460,7 +460,7 @@ const {
   right: 5px;
   width: 6px;
   height: 6px;
-  border: 1px solid #fff;
+  border: 1px solid var(--surface);
   border-radius: 50%;
   background: var(--danger);
 }
@@ -484,7 +484,7 @@ const {
   align-items: center;
   justify-content: center;
   gap: 24px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .sign-in-screen {
   display: grid;
@@ -498,7 +498,7 @@ const {
   padding: 32px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
   text-align: center;
 }
 .sign-in-logo {
@@ -536,8 +536,8 @@ const {
   padding: 14px 20px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 8px 32px #28233516;
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
   font-size: 13px;
   line-height: 1.6;
 }
@@ -560,7 +560,7 @@ const {
 .toast-leave-to {
   opacity: 0;
 }
-@media (max-width: 1100px) {
+@media (max-width: 980px) {
   .account-action-label {
     display: none;
   }
@@ -575,11 +575,11 @@ const {
     gap: 14px;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 680px) {
   .sidebar {
     transform: translateX(-100%);
     width: 240px;
-    transition: transform 0.2s;
+    transition: transform var(--transition-base);
   }
   .sidebar.expanded {
     transform: translateX(0);
@@ -589,7 +589,7 @@ const {
     position: fixed;
     inset: 0;
     z-index: 35;
-    background: #17132466;
+    background: var(--scrim);
     backdrop-filter: blur(3px);
   }
   .main-shell {
@@ -605,8 +605,7 @@ const {
     height: 64px;
     padding-inline: 20px;
   }
-}
-@media (max-width: 540px) {
+
   .breadcrumb-parent {
     display: none;
   }
