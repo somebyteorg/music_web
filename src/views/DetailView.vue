@@ -16,32 +16,18 @@ import DetailHero from './detail/DetailHero.vue'
 import LyricsDialogs from './detail/LyricsDialogs.vue'
 import LyricsPanel from './detail/LyricsPanel.vue'
 import { songLyricsKey } from './detail/lyricsContext'
+import { tracksContextKey, uploadContextKey } from './detail/detailContext'
+import TracksSection from './detail/TracksSection.vue'
 import ResourcesPanel from './detail/ResourcesPanel.vue'
 import EditorDialog from '@/components/EditorDialog.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import MetadataDialog from '@/components/MetadataDialog.vue'
-import SongList from '@/components/SongList.vue'
-import Pagination from '@/components/Pagination.vue'
 import { date, displayName } from '@/utils/format'
 
 const sign = useSignStore()
 const player = usePlayerStore()
 const detail = useEntityDetail()
-const {
-  type,
-  id,
-  backTo,
-  item,
-  songs,
-  page,
-  total,
-  songPageSize,
-  busy,
-  error,
-  editable,
-  load,
-  loadSongs,
-} = detail
+const { type, id, backTo, item, songs, page, total, busy, error, load, loadSongs } = detail
 const queueLabel = type === 'albums' ? '专辑' : type === 'playlists' ? '歌单' : ''
 const playingAll = ref(false)
 async function playAll() {
@@ -58,6 +44,7 @@ async function playAll() {
     playingAll.value = false
   }
 }
+const options = useDetailOperations(detail)
 const {
   busy: operationBusy,
   run,
@@ -68,8 +55,6 @@ const {
   target,
   selectedFile,
   trackDraft,
-  selectedEntries,
-  managingTracks,
   movingEntry,
   movePosition,
   canEdit,
@@ -77,14 +62,10 @@ const {
   searchTargets,
   apply,
   setDefault,
-  tracks,
-  toggleEntry,
-  selectPage,
-  moveEntry,
-  removeEntries,
   reorder,
   favorite,
-} = useDetailOperations(detail)
+} = options
+const songUploadState = useSongUploads(detail)
 const {
   uploads,
   busy: uploadNoticeBusy,
@@ -100,8 +81,10 @@ const {
   uploadStates,
   chooseAudio,
   acceptUploadNotice,
-} = useSongUploads(detail)
+} = songUploadState
+provide(uploadContextKey, { detail, uploads: songUploadState })
 const acting = computed(() => operationBusy.value || uploadNoticeBusy.value)
+provide(tracksContextKey, { detail, operations: options, queueLabel, acting })
 const lyrics = reactive(useSongLyrics(item))
 provide(songLyricsKey, lyrics)
 const editor = ref(false)
@@ -152,99 +135,22 @@ const tab = ref('resources')
       @upload="uploadOpen = true"
     />
     <LyricsPanel v-if="type === 'songs' && tab === 'lyrics'" />
-    <section v-if="type !== 'songs'" class="section">
-      <div class="section-heading">
-        <h2>
-          {{ type === 'playlists' ? '歌单曲目' : '收录的歌曲' }}
-          <span class="muted">{{ total }}</span>
-        </h2>
-        <div v-if="type === 'playlists' && editable" class="button-group">
-          <button :disabled="acting" class="button primary" @click="tracks">添加歌曲</button>
-          <button
-            :disabled="acting"
-            class="button secondary"
-            @click="managingTracks = !managingTracks"
-          >
-            {{ managingTracks ? '完成管理' : '管理本页曲目' }}
-          </button>
-          <button
-            v-if="managingTracks && selectedEntries.length"
-            :disabled="acting"
-            class="button secondary"
-            @click="removeEntries(selectedEntries)"
-          >
-            移除已选 {{ selectedEntries.length }} 首
-          </button>
-        </div>
-        <div v-else-if="type === 'albums'" class="button-group">
-          <button v-if="songs.length" class="button secondary" @click="albumEditor = true">
-            管理本页曲目</button
-          ><RouterLink class="button secondary" to="/songs">选择歌曲 →</RouterLink>
-        </div>
-      </div>
-      <p v-if="type === 'playlists' && item.collaborators?.length" class="muted collaborators">
-        协作者：{{ item.collaborators.map((m) => displayName(m)).join('、') }}
-      </p>
-      <div class="panel">
-        <SongList
-          v-if="songs.length"
-          :album-context-id="type === 'albums' ? id : undefined"
-          :disabled="acting"
-          :editable="type === 'albums'"
-          :items="songs"
-          :label="queueLabel"
-          :offset="(page - 1) * songPageSize"
-          :selectable="type === 'playlists' && editable && managingTracks"
-          :selected="selectedEntries"
-          :track-numbers="type === 'albums'"
-          @edit="
-            (song) => {
-              editingSong = song
-              songEditor = true
-            }
-          "
-          @favorite="
-            (sid, value) => {
-              songs.filter((song) => song.id === sid).forEach((song) => (song.is_favorite = value))
-            }
-          "
-          @select="toggleEntry"
-          @select-all="selectPage"
-        >
-          <template
-            v-if="type === 'playlists' && editable && managingTracks"
-            #actions="{ song, index }"
-          >
-            <button :disabled="acting" class="text-button" @click="moveEntry(song, index)">
-              移动
-            </button>
-            <button
-              :disabled="acting"
-              class="text-button danger"
-              @click="removeEntries([song.entry_id!])"
-            >
-              移除
-            </button>
-          </template>
-        </SongList>
-        <div v-else class="empty">
-          <span class="empty-symbol">♫</span>
-          <h3>暂无歌曲</h3>
-          <p>添加歌曲后会显示在这里。</p>
-        </div>
-      </div>
-      <Pagination
-        :page="page"
-        :page-size="songPageSize"
-        :total="total"
-        @change="
-          (value: number) => {
-            page = value
-            loadSongs()
-          }
-        "
-      />
-    </section>
+    <TracksSection
+      v-if="type !== 'songs'"
+      @edit-song="
+        (song) => {
+          editingSong = song
+          songEditor = true
+        }
+      "
+      @manage-album="albumEditor = true"
+      @page-change="
+        (value: number) => {
+          page = value
+          loadSongs()
+        }
+      "
+    />
     <section v-if="type === 'songs'" class="section">
       <div class="section-heading">
         <h2>

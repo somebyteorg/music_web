@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { inject, ref } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
+import BaseSelect from '@/components/BaseSelect.vue'
 import { useSignStore } from '@/stores/sign'
 import { lyricFormats, lyricKinds } from '@/features/catalog/useSongLyrics'
 import type { CatalogType } from '@/types/catalog'
