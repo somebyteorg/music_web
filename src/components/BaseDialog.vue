@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
   margin-right: auto;
   font-size: 13px;
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .modal {
     width: calc(100vw - 16px);
     max-height: calc(100dvh - 16px);

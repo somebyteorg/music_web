@@ -278,7 +278,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     display: none;
   }
 }
-@media (max-width: 680px) {
+@media (max-width: 540px) {
   .player {
     left: 10px;
     right: 10px;

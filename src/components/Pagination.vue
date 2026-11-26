@@ -93,7 +93,7 @@ function jump() {
   padding: 4px 6px !important;
   font-size: 13px !important;
 }
-@media (max-width: 680px) {
+@media (max-width: 640px) {
   .pagination-tools {
     width: 100%;
     justify-content: space-between;

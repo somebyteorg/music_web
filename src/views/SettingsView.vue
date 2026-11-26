@@ -178,7 +178,7 @@ async function save() {
   font-size: 11px;
   font-weight: 400;
 }
-@media (max-width: 680px) {
+@media (max-width: 540px) {
   .settings-card {
     padding: 16px;
   }

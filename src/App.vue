@@ -560,7 +560,7 @@ const {
 .toast-leave-to {
   opacity: 0;
 }
-@media (max-width: 980px) {
+@media (max-width: 1100px) {
   .account-action-label {
     display: none;
   }
@@ -606,7 +606,7 @@ const {
     padding-inline: 20px;
   }
 }
-@media (max-width: 680px) {
+@media (max-width: 540px) {
   .breadcrumb-parent {
     display: none;
   }
