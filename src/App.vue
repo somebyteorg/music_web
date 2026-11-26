@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import IconButton from '@/components/ui/IconButton.vue'
+import Button from '@/components/ui/Button.vue'
 import PlayerBar from '@/components/PlayerBar.vue'
 import { notification, notificationTarget } from '@/composables/useFeedback'
 import { useAppShell } from '@/app/useAppShell'
@@ -27,14 +29,14 @@ const {
   <div v-if="booting || !sign.ready" class="boot">
     <img alt="跃律" height="56" src="/favicon.svg" width="56" />
     <p>{{ bootError || '正在加载…' }}</p>
-    <button v-if="bootError" class="button primary" @click="hydrate">重试</button>
+    <Button variant="primary" v-if="bootError" @click="hydrate">重试</Button>
   </div>
   <div v-else-if="!sign.user" class="sign-in-screen">
     <main class="sign-in-card">
       <img alt="" class="sign-in-logo" height="56" src="/favicon.svg" width="56" />
       <h1>跃律</h1>
       <p v-if="bootError" class="notice error">{{ bootError }}</p>
-      <a :href="sign.signUrl" class="button primary sign-in-link">
+      <Button as="a" variant="primary" class="sign-in-link" :href="sign.signUrl">
         <img
           alt=""
           height="24"
@@ -42,19 +44,21 @@ const {
           width="24"
         />
         使用 EMOS 登录<span aria-hidden="true">↗</span>
-      </a>
-      <a
+      </Button>
+      <Button
+        as="a"
+        variant="secondary"
+        class="sign-in-link"
         v-for="link in playbackLinks"
         :key="link.name"
         :aria-label="`新窗口打开 ${link.name} 播放器`"
         :href="link.href"
-        class="button secondary sign-in-link"
         rel="noopener noreferrer"
         target="_blank"
       >
         <img :src="link.icon" alt="" height="24" width="24" />
         {{ link.name }}<span aria-hidden="true">↗</span>
-      </a>
+      </Button>
     </main>
   </div>
   <div v-else :class="['app-shell', { 'player-visible': playerVisible }]">
@@ -64,11 +68,11 @@ const {
           <img alt="" height="40" src="/favicon.svg" width="40" />
           <span>跃律<small>EMOS MUSIC</small></span>
         </RouterLink>
-        <button aria-label="关闭导航" class="icon-button mobile-menu" @click="menu = false">
+        <IconButton label="关闭导航" class="mobile-menu" @click="menu = false">
           <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
             <path d="m6 6 12 12M6 18 18 6" />
           </svg>
-        </button>
+        </IconButton>
       </div>
       <div v-for="group in navigation" :key="group.label" class="nav-group">
         <p class="nav-label">{{ group.label }}</p>
@@ -123,6 +127,7 @@ const {
     ></button>
     <div class="main-shell">
       <header class="topbar">
+        <!-- 模板 ref 必须落在原生元素上（useAppShell 里直接调 .focus()），故此处不用 IconButton -->
         <button
           ref="menuButton"
           :aria-expanded="menu"

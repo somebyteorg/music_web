@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { useId } from 'vue'
 import type { Entity } from '@/types/catalog'
 import type { EditorProps } from '@/features/editor/model'
@@ -88,7 +89,7 @@ const {
               v-model="albumQuery"
               placeholder="输入专辑名称搜索"
               @keydown.enter.prevent="search('albums')"
-            /><button class="button secondary" type="button" @click="search('albums')">搜索</button>
+            /><Button variant="secondary" type="button" @click="search('albums')">搜索</Button>
           </div></label
         >
         <div v-if="albumOptions.length" class="picker-results">
@@ -185,14 +186,14 @@ const {
             />
           </button>
           <div>
-            <button
+            <Button
+              variant="secondary"
               :disabled="busy || uploading"
-              class="button secondary"
               type="button"
               @click="coverInput?.click()"
             >
               {{ uploading ? '正在上传…' : '上传封面' }}
-            </button>
+            </Button>
             <input
               ref="coverInput"
               :disabled="busy || uploading"
@@ -260,14 +261,14 @@ const {
               placeholder="搜索图片文件名"
               @keydown.enter.prevent="images.load(1)"
             />
-            <button
+            <Button
+              variant="secondary"
               :disabled="images.busy"
-              class="button secondary"
               type="button"
               @click="images.load(1)"
             >
               搜索
-            </button>
+            </Button>
             <button class="text-button" type="button" @click="images.open = false">收起</button>
           </div>
           <p v-if="images.error" class="error-text" role="alert">{{ images.error }}</p>
@@ -312,9 +313,7 @@ const {
                 v-model="query"
                 placeholder="搜索歌手"
                 @keydown.enter.prevent="search('artists')"
-              /><button class="button secondary" type="button" @click="search('artists')">
-                搜索
-              </button>
+              /><Button variant="secondary" type="button" @click="search('artists')"> 搜索 </Button>
             </div></label
           >
           <div class="chips">
@@ -397,9 +396,7 @@ const {
                 v-model="albumQuery"
                 placeholder="搜索并添加专辑"
                 @keydown.enter.prevent="search('albums')"
-              /><button class="button secondary" type="button" @click="search('albums')">
-                搜索
-              </button>
+              /><Button variant="secondary" type="button" @click="search('albums')"> 搜索 </Button>
             </div></label
           >
           <div v-if="albumOptions.length" class="picker-results">
@@ -465,9 +462,7 @@ const {
                 placeholder="可选，确认同一录音后再关联"
                 @input="recordingSongId = ''"
                 @keydown.enter.prevent="searchRecordings"
-              /><button class="button secondary" type="button" @click="searchRecordings">
-                查找
-              </button>
+              /><Button variant="secondary" type="button" @click="searchRecordings"> 查找 </Button>
             </div></label
           >
           <div v-if="recordingOptions.length" class="picker-results">
@@ -510,9 +505,7 @@ const {
                 v-model="memberQuery"
                 placeholder="搜索成员"
                 @keydown.enter.prevent="search('members')"
-              /><button class="button secondary" type="button" @click="search('members')">
-                搜索
-              </button>
+              /><Button variant="secondary" type="button" @click="search('members')"> 搜索 </Button>
             </div></label
           >
           <div class="chips">
@@ -557,9 +550,9 @@ const {
       </template>
     </form>
     <template #footer
-      ><button :disabled="busy || uploading" class="button secondary" @click="open = false">
-        取消</button
-      ><button
+      ><Button variant="secondary" :disabled="busy || uploading" @click="open = false"> 取消</Button
+      ><Button
+        variant="primary"
         :disabled="
           busy ||
           uploading ||
@@ -568,10 +561,9 @@ const {
             (!form.library_id || libraries.busy))
         "
         :form="formId"
-        class="button primary"
       >
         {{ busy ? '正在保存…' : '保存' }}
-      </button></template
+      </Button></template
     ></BaseDialog
   >
   <BaseDialog
@@ -591,14 +583,14 @@ const {
     <p v-if="images.previewError" class="error-text" role="alert">{{ images.previewError }}</p>
     <p v-if="images.confirmDelete" class="notice">确认删除这张已上传的图片？</p>
     <template #footer>
-      <button
+      <Button
+        variant="secondary"
         :disabled="images.previewBusy"
-        class="button secondary"
         type="button"
         @click="images.previewOpen = false"
       >
         关闭
-      </button>
+      </Button>
       <button
         v-if="images.preview?.file"
         :disabled="
@@ -614,15 +606,15 @@ const {
       >
         {{ images.confirmDelete ? '确认删除' : '删除图片' }}
       </button>
-      <button
+      <Button
+        variant="primary"
         v-if="images.preview?.file"
         :disabled="images.previewBusy || busy || uploading"
-        class="button primary"
         type="button"
         @click="selectCover(images.preview.file)"
       >
         用作封面
-      </button>
+      </Button>
     </template>
   </BaseDialog>
 </template>

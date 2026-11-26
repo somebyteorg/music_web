@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import IconButton from '@/components/ui/IconButton.vue'
 import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import { registerFeedbackDialog, unregisterFeedbackDialog } from '@/composables/useFeedback'
 
@@ -41,15 +42,7 @@ onBeforeUnmount(() => {
   >
     <div class="modal-heading">
       <h2 :id="titleId">{{ title }}</h2>
-      <button
-        :disabled="busy"
-        aria-label="关闭弹窗"
-        class="icon-button"
-        type="button"
-        @click="close"
-      >
-        ×
-      </button>
+      <IconButton label="关闭弹窗" :disabled="busy" type="button" @click="close"> × </IconButton>
     </div>
     <div class="modal-body"><slot /></div>
     <footer v-if="$slots.footer" class="modal-footer"><slot name="footer" /></footer>

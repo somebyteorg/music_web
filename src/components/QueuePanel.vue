@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import IconButton from '@/components/ui/IconButton.vue'
+import Button from '@/components/ui/Button.vue'
 import { computed, onMounted, onUnmounted } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import { playModeLabels, useQueueStore } from '@/stores/queue'
@@ -61,20 +63,20 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
             <span v-if="queue.source" class="queue-from">· {{ queue.source }}</span>
           </p>
         </div>
-        <button aria-label="关闭队列" class="icon-button" title="关闭" @click="queue.open = false">
+        <IconButton label="关闭队列" title="关闭" @click="queue.open = false">
           <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
             <path d="m6 6 12 12M6 18 18 6" />
           </svg>
-        </button>
+        </IconButton>
       </header>
 
       <div class="queue-tools">
-        <button class="button secondary small" @click="queue.cycleMode()">
+        <Button variant="secondary" size="sm" @click="queue.cycleMode()">
           <PlayModeIcon :mode="queue.mode" />{{ playModeLabels[queue.mode] }}
-        </button>
-        <button :disabled="!queue.length" class="button secondary small" @click="queue.clear()">
+        </Button>
+        <Button variant="secondary" size="sm" :disabled="!queue.length" @click="queue.clear()">
           清空
-        </button>
+        </Button>
       </div>
 
       <ol v-if="rows.length" class="queue-list">
@@ -114,16 +116,16 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
             </span>
             <span class="queue-time">{{ entry.playable ? entry.total : '缺音频' }}</span>
           </button>
-          <button
-            aria-label="从队列移除"
-            class="icon-button queue-remove"
+          <IconButton
+            label="从队列移除"
+            class="queue-remove"
             title="从队列移除"
             @click="remove(entry.key)"
           >
             <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
               <path d="M5 12h14" />
             </svg>
-          </button>
+          </IconButton>
         </li>
       </ol>
 

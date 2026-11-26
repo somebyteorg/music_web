@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { ref, watch } from 'vue'
 import { catalogApi } from '@/lib/api/catalog'
 import type { CatalogType, Entity } from '@/types/catalog'
@@ -76,9 +77,7 @@ async function apply() {
             v-model="query"
             placeholder="输入歌曲、专辑或歌手名称"
             @keydown.enter.prevent="search"
-          /><button :disabled="busy || !query" class="button secondary" @click="search">
-            搜索
-          </button>
+          /><Button variant="secondary" :disabled="busy || !query" @click="search"> 搜索 </Button>
         </div></label
       >
       <div v-if="results.length" class="picker-results">
@@ -103,9 +102,9 @@ async function apply() {
             inputmode="numeric"
             placeholder="填写 todb 的条目 ID"
             @input="preview = null"
-          /><button :disabled="busy || !todbId" class="button secondary" @click="getPreview">
+          /><Button variant="secondary" :disabled="busy || !todbId" @click="getPreview">
             预览资料
-          </button>
+          </Button>
         </div></label
       >
       <div v-if="conflict" class="notice error">
@@ -127,10 +126,10 @@ async function apply() {
       </div>
     </div>
     <template #footer
-      ><button :disabled="busy" class="button secondary" @click="open = false">取消</button
-      ><button :disabled="busy || !preview || !!conflict" class="button primary" @click="apply">
+      ><Button variant="secondary" :disabled="busy" @click="open = false">取消</Button
+      ><Button variant="primary" :disabled="busy || !preview || !!conflict" @click="apply">
         {{ selected.length ? '关联并更新所选资料' : '只建立关联' }}
-      </button></template
+      </Button></template
     ></BaseDialog
   >
 </template>

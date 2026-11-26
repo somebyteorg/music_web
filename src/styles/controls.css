@@ -1,4 +1,18 @@
-/* 控件层：按钮、标签、表单与菜单 */
+/*
+ * 控件层：按钮、表单与菜单
+ *
+ * ⚠️ 这里的类名不是死样式，不要删：
+ *   .button / .button.primary / .button.secondary / .button.small
+ *     ← src/components/ui/Button.vue 直接渲染 this class（组件给语义与 API，基元给视觉）
+ *     ← src/features/uploads/UploadBatchDialog.vue(7)、UploadQueue.vue(5)、
+ *       src/views/UploadsView.vue(17) 仍直接写 class="button"，属上传域，尚未迁移
+ *   .icon-button ← src/components/ui/IconButton.vue
+ *   .text-button(62 处) / .text-link / .chip / .search-field / .button-group(15 处) 仍被页面直接使用
+ *
+ * 历史：.badge / .badge.quiet / .badge.warning 已删除，改由 src/components/ui/Tag.vue 的
+ *       .ui-tag / .ui-tag--* 提供（内联在组件里，视觉等价）。
+ *       注：src/views/UploadsView.vue 仍有 1 处 class="badge" 未迁移（上传域，待该分支合并时随改）。
+ */
 
 .button {
   display: inline-flex;
@@ -142,26 +156,4 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-}
-
-.badge {
-  display: inline-block;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: var(--brand-soft);
-  color: var(--brand-strong);
-  font-size: var(--font-xs);
-  font-weight: 500;
-  white-space: nowrap;
-  line-height: 1.6;
-}
-
-.badge.quiet {
-  color: var(--text-muted);
-  background: var(--surface-sunken);
-}
-
-.badge.warning {
-  color: var(--warning);
-  background: var(--warning-soft);
 }
