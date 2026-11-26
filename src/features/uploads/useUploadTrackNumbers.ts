@@ -1,7 +1,6 @@
 import { onScopeDispose, ref, watch, type ComputedRef, type Ref } from 'vue'
-import { HTTPError } from 'ky'
-import api from '@/utils/ky'
-import type { AudioFile } from '@/types/uploads'
+import { ApiError } from '@/lib/api/client'
+import { uploadRepository } from './repository'
 import type { BatchAlbum, BatchEntry, BatchRow } from './batchModel'
 
 interface Position {
@@ -220,12 +219,10 @@ export function useUploadTrackNumbers(
         )
       for (let offset = 0; offset < pending.length; offset += 100) {
         const chunk = pending.slice(offset, offset + 100)
-        const response = await api
-          .post('files/preview', {
-            signal: request.signal,
-            json: { ids: chunk.map(({ task }) => task.file!.id) },
-          })
-          .json<{ files: AudioFile[] }>()
+        const response = await uploadRepository.previewFiles(
+          chunk.map(({ task }) => task.file!.id),
+          request.signal,
+        )
         if (response.files.length !== chunk.length)
           throw new Error('部分音频状态已变化，请刷新上传列表。')
         if (response.files.some((file) => file.song_id))
@@ -241,13 +238,9 @@ export function useUploadTrackNumbers(
         )
       if (needsPositions) {
         try {
-          positions = (
-            await api
-              .get(`albums/${id}/positions`, { signal: request.signal })
-              .json<{ items: Position[] }>()
-          ).items
+          positions = (await uploadRepository.albumPositions(id, request.signal)).items
         } catch (error) {
-          if (!(selection === 'new' && error instanceof HTTPError && error.response.status === 404))
+          if (!(selection === 'new' && error instanceof ApiError && error.status === 404))
             throw error
         }
       }

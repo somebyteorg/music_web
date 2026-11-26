@@ -1,8 +1,7 @@
 import { type ComputedRef, onBeforeUnmount, ref, type Ref } from 'vue'
-import api from '@/utils/ky'
 import type { ArtworkType } from '@/types/catalog'
 import type { AudioFile } from '@/types/uploads'
-import type { Page } from '@/types/common'
+import { filesApi } from '@/lib/api/files'
 import { useUploadsStore } from '@/stores/uploads'
 import { artworkType } from '@/utils/albumArtwork'
 import {
@@ -156,12 +155,10 @@ export function useBatchArtwork(entries: ComputedRef<BatchEntry[]>, albums: Ref<
       )) {
         let page = 1
         while (true) {
-          const response = await api
-            .get('files', {
-              signal: request.signal,
-              searchParams: { kind: 'cover', active: 1, batch_id: batchId, page, page_size: 60 },
-            })
-            .json<Page<AudioFile>>()
+          const response = await filesApi.page(
+            { kind: 'cover', active: 1, batch_id: batchId, page, page_size: 60 },
+            request.signal,
+          )
           remotePictures.value.push(...response.items)
           if (page * response.page_size >= response.total) break
           page++

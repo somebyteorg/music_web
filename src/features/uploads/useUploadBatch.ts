@@ -1,13 +1,12 @@
 import { computed, ref, type UnwrapRef } from 'vue'
-import api from '@/utils/ky'
 import { createUuid } from '@/utils/uuid'
+import { catalogApi } from '@/lib/api/catalog'
 import { useLibrariesStore } from '@/stores/libraries'
-import type { AlbumDraft, AlbumMatch, Entity } from '@/types/catalog'
-import type { AudioFile } from '@/types/uploads'
+import type { AlbumDraft } from '@/types/catalog'
 import { type PublishData } from '@/types/uploads'
-import type { Page } from '@/types/common'
 import { useUploadsStore } from '@/stores/uploads'
 import { type UploadTask, uploadTrackKey } from '@/features/uploads/model'
+import { uploadRepository } from './repository'
 import { notify, useAction } from '@/composables/useFeedback'
 import { useBatchArtwork } from './useBatchArtwork'
 import { useUploadTrackNumbers } from './useUploadTrackNumbers'
@@ -128,29 +127,25 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
     album.loading = true
     album.error = ''
     try {
-      const response = await api
-        .post('albums/matches', {
-          json: {
-            name: album.name,
-            artist_name: album.artist_name,
-            release_year: album.release_year || null,
-            edition: album.edition,
-            catalog_number: album.catalog_number,
-            release_country: album.release_country,
-            label: album.label,
-            musicbrainz_id: album.musicbrainz_id || null,
-            total_discs: album.total_discs,
-            total_tracks: album.total_tracks,
-          },
-        })
-        .json<{ items: AlbumMatch[] }>()
+      const response = await uploadRepository.albumMatches({
+        name: album.name,
+        artist_name: album.artist_name,
+        release_year: album.release_year || null,
+        edition: album.edition,
+        catalog_number: album.catalog_number,
+        release_country: album.release_country,
+        label: album.label,
+        musicbrainz_id: album.musicbrainz_id || null,
+        total_discs: album.total_discs,
+        total_tracks: album.total_tracks,
+      })
       album.matches = response.items
       if (
         album.selection &&
         !['new', 'none'].includes(album.selection) &&
         !album.matches.some((match) => match.id === album.selection)
       ) {
-        const response = await api.get(`catalog/albums/${album.selection}`).json<{ item: Entity }>()
+        const response = await catalogApi.item('albums', album.selection)
         album.matches.push({ ...response.item, recommended: false, conflicts: [] })
       }
       if (initial && !album.selection && !album.needsReview) {
@@ -436,20 +431,18 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
   }
   async function persistDrafts(items: ReturnType<typeof publishItems>) {
     for (let offset = 0; offset < items.length; offset += 100) {
-      await api.put('files/drafts', {
-        json: {
-          items: items.slice(offset, offset + 100).map(({ task, data }) => ({
-            file_id: task.file!.id,
-            data,
-            organize: {
-              coverChoice: task.organizeDraft!.coverChoice,
-              includeArtwork: task.organizeDraft!.includeArtwork,
-              excludedPictureIds: task.organizeDraft!.excludedPictureIds || [],
-              replaceCover: task.organizeDraft!.replaceCover || false,
-            },
-          })),
-        },
-      })
+      await uploadRepository.saveDrafts(
+        items.slice(offset, offset + 100).map(({ task, data }) => ({
+          file_id: task.file!.id,
+          data,
+          organize: {
+            coverChoice: task.organizeDraft!.coverChoice,
+            includeArtwork: task.organizeDraft!.includeArtwork,
+            excludedPictureIds: task.organizeDraft!.excludedPictureIds || [],
+            replaceCover: task.organizeDraft!.replaceCover || false,
+          },
+        })),
+      )
     }
   }
   async function save() {
@@ -523,9 +516,9 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
     for (let offset = 0; offset < missing.length; offset += 100) {
       const batch = missing.slice(offset, offset + 100)
       try {
-        const response = await api
-          .post('files/preview', { json: { ids: batch.map(({ task }) => task.file!.id) } })
-          .json<{ files: AudioFile[] }>()
+        const response = await uploadRepository.previewFiles(
+          batch.map(({ task }) => task.file!.id),
+        )
         for (const { row, task } of batch) {
           const file = response.files.find((file) => file.id === task.file?.id)
           if (file && task.file) {
@@ -561,9 +554,7 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
   async function searchTracks(task: UploadTask, row: BatchRow) {
     row.searching = true
     try {
-      const response = await api
-        .get('catalog/songs', { searchParams: { q: row.title, page_size: 20 } })
-        .json<Page<Entity>>()
+      const response = await catalogApi.page('songs', { q: row.title, page_size: 20 })
       row.matches = response.items.map((song) => ({
         id: song.id,
         name: song.name,

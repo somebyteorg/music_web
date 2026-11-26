@@ -1,6 +1,5 @@
 import { computed, ref } from 'vue'
-import api from '@/utils/ky'
-import type { Page } from '@/types/common'
+import { filesApi } from '@/lib/api/files'
 import type { AudioFile } from '@/types/uploads'
 import { useUploadsStore } from '@/stores/uploads'
 import { report } from '@/composables/useFeedback'
@@ -23,12 +22,10 @@ export function usePendingUploads() {
     pendingBusy.value = true
     try {
       while (!signal.aborted) {
-        const result = await api
-          .get('files', {
-            signal,
-            searchParams: { pending: 1, kind: 'audio', page: pendingPage.value },
-          })
-          .json<Page<AudioFile>>()
+        const result = await filesApi.page(
+          { pending: 1, kind: 'audio', page: pendingPage.value },
+          signal,
+        )
         if (signal.aborted) return
         const lastPage = Math.max(1, Math.ceil(result.total / result.page_size))
         if (pendingPage.value > lastPage) {

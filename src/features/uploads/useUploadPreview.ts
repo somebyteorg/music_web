@@ -1,12 +1,11 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import api from '@/utils/ky'
 import type { Entity } from '@/types/catalog'
-import type { AudioFile } from '@/types/uploads'
 import { useUploadsStore } from '@/stores/uploads'
 import { notify, report, useAction } from '@/composables/useFeedback'
 import { useLatestRequest } from '@/composables/useLatestRequest'
 import { getCatalogItem, getCatalogPage } from '@/features/catalog/api'
+import { uploadRepository } from './repository'
 import type { UploadTask } from './model'
 
 type SongChoice = Pick<Entity, 'id' | 'name' | 'artists' | 'albums' | 'recording_version'>
@@ -49,9 +48,7 @@ export function useUploadPreview(
     confirm.value = true
     try {
       if (task.file && !task.file.preview) {
-        const result = await api
-          .post('files/preview', { signal, json: { ids: [task.file.id] } })
-          .json<{ files: AudioFile[] }>()
+        const result = await uploadRepository.previewFiles([task.file.id], signal)
         if (signal.aborted) return
         const file = result.files[0]
         if (file) task.file = { ...file, metadata: null }
