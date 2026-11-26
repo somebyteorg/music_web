@@ -540,7 +540,7 @@ onMounted(loadPending)
   flex-shrink: 0;
   border-radius: 5px;
   overflow: hidden;
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .task-thumbnail img {
   width: 100%;
@@ -557,7 +557,7 @@ onMounted(loadPending)
 }
 .task-warning {
   margin-top: 5px;
-  color: #91632b;
+  color: var(--warning);
   font-size: 12px;
   overflow-wrap: anywhere;
 }
@@ -577,8 +577,8 @@ onMounted(loadPending)
 .parsed-cover.placeholder {
   display: grid;
   place-items: center;
-  background: var(--lilac);
-  color: var(--purple);
+  background: var(--brand-soft);
+  color: var(--brand);
   font-size: 30px;
 }
 .parsed-details {
@@ -598,10 +598,10 @@ onMounted(loadPending)
 .preview-warnings {
   margin: 0;
   padding: 10px 12px 10px 28px;
-  border: 1px solid #eddfc8;
+  border: 1px solid var(--warning-line);
   border-radius: 8px;
-  background: #fffaf2;
-  color: #8d622c;
+  background: var(--warning-veil);
+  color: var(--warning);
   font-size: 12px;
   line-height: 1.7;
   list-style: disc;
@@ -628,7 +628,7 @@ onMounted(loadPending)
 }
 .notice-panel .preline {
   margin: 12px 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 13px;
 }
 .notice-panel > .button {
@@ -642,16 +642,16 @@ onMounted(loadPending)
   gap: 14px;
   padding: 26px 22px;
   margin-bottom: 18px;
-  border: 1px dashed #c1afdf;
+  border: 1px dashed var(--brand-line-strong);
   border-radius: 8px;
-  background: #f6f3fc;
+  background: var(--brand-tint);
 }
 .upload-drop.compact {
   padding: 14px 16px;
 }
 .upload-drop.over {
-  border-color: var(--purple);
-  background: #ede5fb;
+  border-color: var(--brand);
+  background: var(--brand-tint-strong);
 }
 .drop-copy strong {
   font-size: 14px;
@@ -663,7 +663,7 @@ onMounted(loadPending)
   cursor: pointer;
 }
 .upload-drop label:focus-within {
-  outline: 2px solid var(--purple);
+  outline: 2px solid var(--brand);
   outline-offset: 3px;
 }
 .task-icon {
@@ -672,13 +672,13 @@ onMounted(loadPending)
   width: 26px;
   height: 30px;
   flex-shrink: 0;
-  color: var(--purple);
-  background: var(--lilac);
+  color: var(--brand);
+  background: var(--brand-soft);
   border-radius: 4px;
   font-size: 16px;
 }
 .task-icon.done {
-  background: #eaf5ee;
+  background: var(--success-soft);
   color: var(--success);
 }
 .pending-row {
@@ -704,7 +704,7 @@ onMounted(loadPending)
 }
 .notice-details {
   margin-top: 18px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 .notice-details summary {

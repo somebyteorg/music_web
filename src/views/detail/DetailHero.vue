@@ -163,13 +163,13 @@ function togglePlay() {
   padding: 32px;
   margin-bottom: 32px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-xl, 16px);
-  background: linear-gradient(125deg, #f0eaf6, #fcfbfd 75%);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(125deg, var(--brand-soft), var(--surface-hover) 75%);
 }
 .detail-hero > .cover {
   width: clamp(160px, 15vw, 220px);
   flex-shrink: 0;
-  box-shadow: 0 12px 28px #35234018;
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 9.4%, transparent);
 }
 .detail-copy {
   min-width: 0;
@@ -177,7 +177,7 @@ function togglePlay() {
 }
 .detail-kind {
   margin-bottom: 12px;
-  color: var(--purple);
+  color: var(--brand);
   font-size: var(--font-sm, 12px);
   letter-spacing: 1px;
 }
@@ -192,11 +192,11 @@ function togglePlay() {
   flex-wrap: wrap;
   gap: 5px 12px;
   margin: 14px 0 20px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: var(--font-base, 13px);
 }
 .detail-meta a:hover {
-  color: var(--purple);
+  color: var(--brand);
 }
 .description {
   margin-bottom: 18px;
@@ -207,7 +207,7 @@ function togglePlay() {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: var(--font-base, 13px);
   white-space: pre-line;
   overflow-wrap: anywhere;
@@ -220,12 +220,12 @@ function togglePlay() {
   padding: 9px;
 }
 .follow-button.active {
-  color: var(--purple-dark);
-  border-color: #d6c7eb;
-  background: var(--lilac);
+  color: var(--brand-strong);
+  border-color: var(--brand-line);
+  background: var(--brand-soft);
 }
 .follow-button.active .ui-icon {
-  fill: #dfd2f3;
+  fill: var(--brand-veil);
 }
 @media (max-width: 680px) {
   .detail-hero {

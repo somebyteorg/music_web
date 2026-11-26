@@ -313,7 +313,7 @@ const {
 <style scoped>
 .catalog-intro {
   margin-top: 10px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 13px;
 }
 .view-toggle {
@@ -321,18 +321,18 @@ const {
   padding: 3px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
 }
 .view-toggle button {
   min-height: 32px;
   padding: 6px 11px;
   border-radius: 5px;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .view-toggle .active {
-  color: var(--purple-dark);
-  background: var(--lilac);
+  color: var(--brand-strong);
+  background: var(--brand-soft);
 }
 .selection-bar {
   display: flex;
@@ -341,8 +341,8 @@ const {
   gap: 10px;
   padding: 8px 12px;
   margin-bottom: 8px;
-  background: var(--lilac);
-  border: 1px solid #d9cbed;
+  background: var(--brand-soft);
+  border: 1px solid var(--brand-line);
   border-radius: 6px;
   font-size: 12px;
 }
@@ -356,9 +356,9 @@ const {
   height: 32px;
 }
 .catalog.list {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
 }
 .catalog {
   --entity-action-width: 48px;
@@ -376,17 +376,17 @@ const {
 }
 .entity-label {
   min-height: 44px;
-  color: var(--muted);
-  background: var(--soft);
+  color: var(--text-muted);
+  background: var(--surface-muted);
   font-size: 12px;
-  border-radius: var(--radius) var(--radius) 0 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 .list .entity-row {
   min-height: 74px;
   border-top: 1px solid var(--line);
 }
 .list .entity-row:hover {
-  background: #faf9fd;
+  background: var(--surface-hover);
 }
 .entity-main {
   display: flex;
@@ -408,14 +408,14 @@ const {
   font-size: 14px;
 }
 .entity-main:hover h3 {
-  color: var(--purple);
+  color: var(--brand);
 }
 .entity-main .badge {
   margin-top: 3px;
 }
 .entity-secondary,
 .entity-count {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -436,14 +436,14 @@ const {
 .grid .entity-main > .cover {
   width: 100%;
   margin-bottom: 16px;
-  box-shadow: 0 5px 16px #29203509;
+  box-shadow: 0 5px 16px color-mix(in srgb, var(--ink) 3.5%, transparent);
   transition:
     transform 0.25s,
     box-shadow 0.25s;
 }
 .grid .entity-main:hover > .cover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 24px #29203516;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 8.6%, transparent);
 }
 .grid .entity-main > .cover.round {
   width: 85%;

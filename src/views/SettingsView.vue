@@ -159,8 +159,8 @@ async function save() {
   border-radius: 6px;
 }
 .quality-options label.selected {
-  border-color: #baa2e2;
-  background: #f6f2fc;
+  border-color: var(--brand-line-strong);
+  background: var(--brand-tint);
 }
 .quality-options input {
   position: absolute;
@@ -174,11 +174,11 @@ async function save() {
   padding-right: 12px;
 }
 .quality-options span {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   font-weight: 400;
 }
-@media (max-width: 540px) {
+@media (max-width: 680px) {
   .settings-card {
     padding: 16px;
   }

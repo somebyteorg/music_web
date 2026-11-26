@@ -271,7 +271,7 @@ const {
 .history-filters > label {
   width: 180px;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .history-list > article,
 .member-list > article {
@@ -299,11 +299,11 @@ const {
   margin-inline: 4px;
 }
 .history-body > p > a {
-  color: var(--purple);
+  color: var(--brand);
 }
 .history-reason {
   margin-top: 5px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px !important;
 }
 .history-body .hint {
@@ -320,12 +320,12 @@ const {
 .ranking {
   width: 22px;
   flex-shrink: 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   text-align: center;
 }
 .ranking.top {
-  color: #956323;
+  color: var(--warning);
 }
 .member-name {
   display: flex;
@@ -348,14 +348,14 @@ const {
   padding: 2px 6px;
   border: 0;
   border-radius: 4px;
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
   font-size: 11px;
   font-weight: 500;
   line-height: 1.6;
 }
 .member-role :deep(.select-trigger:hover:not(:disabled)) {
-  background: #e5d9f7;
+  background: var(--brand-veil);
 }
 .member-contribution {
   display: flex;
@@ -383,12 +383,12 @@ const {
   padding: 14px;
 }
 .message.unread {
-  background: #fcfaff;
-  border-color: #cdbce9;
+  background: var(--surface-hover);
+  border-color: var(--brand-line);
 }
 .message-icon {
   font-size: 22px;
-  color: var(--purple);
+  color: var(--brand);
 }
 .message > div {
   min-width: 0;
@@ -399,7 +399,7 @@ const {
 }
 .message p {
   margin: 6px 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 13px;
   white-space: pre-line;
 }
@@ -429,12 +429,12 @@ const {
   overflow-wrap: anywhere;
 }
 .history-diff .before {
-  background: #fff0f1;
-  color: #9a3544;
+  background: var(--danger-soft);
+  color: var(--danger-ink);
 }
 .history-diff .after {
-  background: #edf7ef;
-  color: #286840;
+  background: var(--success-soft);
+  color: var(--success-ink);
 }
 @media (max-width: 680px) {
   .history-filters {
