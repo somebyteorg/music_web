@@ -33,10 +33,9 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
 
   async function publish(task: UploadTask, data: PublishData) {
     if (!task.transfer.file) throw new Error('文件还未解析完成。')
-    task.draft.pendingPublish = data
-    task.error = ''
     publishing.add(task.id)
-    apply(task, { type: 'publishingStarted' })
+    // 待入库数据由状态机写入，发布流程不再直接改任务字段
+    apply(task, { type: 'publishingQueued', payload: data })
     try {
       const result = await uploadRepository.publishFile(task.transfer.file.id, data)
       published(task, result)
@@ -47,6 +46,7 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
         stage: 'publishing',
         error: error instanceof Error ? error.message : '加入曲库失败，请重试。',
         retryable: true,
+        payload: data,
       })
       throw error
     } finally {
@@ -65,9 +65,7 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
       if (!batch.length) continue
       batch.forEach(({ task, data }) => {
         publishing.add(task.id)
-        task.error = ''
-        task.draft.pendingPublish = data
-        apply(task, { type: 'publishingStarted' })
+        apply(task, { type: 'publishingQueued', payload: data })
       })
       try {
         const response = await uploadRepository.publishFiles(
@@ -78,12 +76,13 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
           if (entry) published(entry.task, result)
         }
       } catch (error) {
-        batch.forEach(({ task }) =>
+        batch.forEach(({ task, data }) =>
           apply(task, {
             type: 'failed',
             stage: 'publishing',
             error: error instanceof Error ? error.message : '批量入库失败。',
             retryable: true,
+            payload: data,
           }),
         )
         throw error

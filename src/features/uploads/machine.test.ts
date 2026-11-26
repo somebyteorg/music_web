@@ -142,6 +142,35 @@ describe('上传任务状态机：会话恢复与入库入口', () => {
     const source = at('processing')
     expect(reduceTask(source, { type: 'publishingStarted' })).toBe(source)
   })
+
+  it('publishingQueued 把待入库数据交给状态机写入', () => {
+    const payload = { song_id: 'song-1' }
+    const next = reduceTask(at('ready', { error: '旧错误' }), { type: 'publishingQueued', payload })
+    expect(next.state).toBe('publishing')
+    expect(next.draft.pendingPublish).toBe(payload)
+    expect(next.error).toBe('')
+    expect(next.errorStage).toBe('publishing')
+  })
+
+  it('publishingQueued 只接受 ready / duplicate', () => {
+    const source = at('processing')
+    expect(reduceTask(source, { type: 'publishingQueued', payload: {} })).toBe(source)
+  })
+
+  it('publishingDiscarded 清空待入库数据并留在待确认', () => {
+    const next = reduceTask(
+      at('ready', {
+        error: '入库失败',
+        errorStage: 'publishing',
+        draft: { pendingPublish: { song_id: 'song-1' } },
+      }),
+      { type: 'publishingDiscarded' },
+    )
+    expect(next.state).toBe('ready')
+    expect(next.draft.pendingPublish).toBeUndefined()
+    expect(next.error).toBe('')
+    expect(next.errorStage).toBeUndefined()
+  })
 })
 
 describe('上传任务状态机：传输进度', () => {

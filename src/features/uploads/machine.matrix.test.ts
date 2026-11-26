@@ -53,6 +53,11 @@ const LEGAL: { event: UploadEvent; sources: UploadState[] }[] = [
   },
   { event: { type: 'publishingStarted' }, sources: ['ready', 'duplicate'] },
   {
+    event: { type: 'publishingQueued', payload: { song_id: 'song-1' } },
+    sources: ['ready', 'duplicate'],
+  },
+  { event: { type: 'publishingDiscarded' }, sources: ['ready'] },
+  {
     event: { type: 'progress', progress: 10, preparationProgress: 10 },
     sources: ['preparing', 'uploading'],
   },
@@ -134,6 +139,8 @@ describe('状态机迁移矩阵', () => {
         { type: 'processed' },
         { type: 'sessionRestored' },
         { type: 'publishingStarted' },
+        { type: 'publishingQueued', payload: {} },
+        { type: 'publishingDiscarded' },
         { type: 'resumed' },
         { type: 'retried' },
         { type: 'reset' },

@@ -1,6 +1,7 @@
 import { onScopeDispose, ref, watch, type ComputedRef, type Ref } from 'vue'
 import { ApiError } from '@/lib/api/client'
 import { uploadRepository } from './repository'
+import { reduceTask } from './machine'
 import type { BatchAlbum, BatchEntry, BatchRow } from './batchModel'
 import { planNumbers, type Change, type Position } from './trackNumberPlan'
 
@@ -104,11 +105,8 @@ export function useUploadTrackNumbers(
         !open.value
       )
         return
-      for (const { task } of pending) {
-        task.draft.pendingPublish = undefined
-        task.error = ''
-        task.errorStage = undefined
-      }
+      for (const { task } of pending)
+        Object.assign(task, reduceTask(task, { type: 'publishingDiscarded' }))
       const related = albums.value.filter(
         (item) => (item.selection === 'new' ? item.id : item.selection) === id,
       )

@@ -1,4 +1,4 @@
-import type { AudioFile } from '@/types/uploads'
+import type { AudioFile, PublishData } from '@/types/uploads'
 import type { PreparedLyric } from '@/types/lyrics'
 import type {
   TaskDraft,
@@ -24,6 +24,8 @@ import type {
  *   sessionRestored    preparing | checking | processing | publishing | paused | failed | ready
  *                      → processing | publishing（续传时发现服务端已在处理/入库）
  *   publishingStarted  ready | duplicate → publishing（复用已有文件，直接入库）
+ *   publishingQueued   ready | duplicate → publishing（写入待入库数据）
+ *   publishingDiscarded ready → ready（清空待入库数据，保留在待确认）
  *   progress           preparing → preparing（校验进度）；uploading → uploading（传输进度）
  *   transferred        uploading → processing（服务端返回 publishing 时 → publishing）
  *   processed          processing | publishing → ready（未入库）/ published（已关联歌曲）
@@ -50,6 +52,8 @@ export type UploadEvent =
     }
   | { type: 'sessionRestored'; status?: 'processing' | 'publishing' }
   | { type: 'publishingStarted' }
+  | { type: 'publishingQueued'; payload: PublishData }
+  | { type: 'publishingDiscarded' }
   | { type: 'progress'; progress?: number; preparationProgress?: number }
   | { type: 'transferred'; status?: 'processing' | 'publishing' }
   | { type: 'processed'; reused?: boolean }
@@ -60,6 +64,7 @@ export type UploadEvent =
       stage: UploadErrorStage
       error: string
       retryable?: boolean
+      payload?: PublishData
     }
   | { type: 'paused' }
   | { type: 'resumed' }
@@ -175,6 +180,20 @@ export function reduceTask(task: UploadTask, event: UploadEvent): UploadTask {
       if (!['ready', 'duplicate'].includes(task.state)) return task
       return move(task, 'publishing', { common: { error: '', errorStage: 'publishing' } })
 
+    case 'publishingQueued':
+      if (!['ready', 'duplicate'].includes(task.state)) return task
+      return move(task, 'publishing', {
+        common: { error: '', errorStage: 'publishing' },
+        draft: { pendingPublish: event.payload },
+      })
+
+    case 'publishingDiscarded':
+      if (task.state !== 'ready') return task
+      return move(task, 'ready', {
+        common: { error: '', errorStage: undefined },
+        draft: { pendingPublish: undefined },
+      })
+
     case 'progress':
       if (task.state === 'preparing' && event.preparationProgress !== undefined)
         return move(task, 'preparing', {
@@ -220,7 +239,10 @@ export function reduceTask(task: UploadTask, event: UploadEvent): UploadTask {
 
     case 'failed': {
       if (['published', 'skipped', 'duplicate'].includes(task.state)) return task
-      const patch: TaskPatch = { common: { error: event.error, errorStage: event.stage } }
+      const patch: TaskPatch = {
+        common: { error: event.error, errorStage: event.stage },
+        ...(event.payload ? { draft: { pendingPublish: event.payload } } : {}),
+      }
       if (task.state === 'publishing' && event.retryable) return move(task, 'ready', patch)
       return move(task, 'failed', patch)
     }
