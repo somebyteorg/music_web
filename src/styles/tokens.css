@@ -63,6 +63,7 @@
   /* —— 派生色：品牌—— */
   --brand-tint: color-mix(in srgb, var(--brand) 7.2%, var(--surface));
   --brand-tint-strong: color-mix(in srgb, var(--brand) 15.6%, var(--surface));
+  --brand-line-soft: color-mix(in srgb, var(--brand) 25%, var(--surface));
   --brand-line: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
   --brand-line-strong: color-mix(in srgb, var(--brand) 49%, var(--surface));
   --brand-line-focus: color-mix(in srgb, var(--brand) 61%, var(--surface));
@@ -138,16 +139,6 @@
   --player-height: 76px;
   --player-offset: 16px;
   --page-gutter: clamp(24px, 3.2vw, 56px);
-}
-
-/* 过渡别名：src/features/uploads/** 仍在用旧命名，等该目录迁移完成后可删除 */
-:root {
-  --purple: var(--brand);
-  --purple-dark: var(--brand-strong);
-  --lilac: var(--brand-soft);
-  --muted: var(--text-muted);
-  --soft: var(--surface-muted);
-  --radius: var(--radius-lg);
 }
 
 /* 深色主题：只覆盖基础色，派生色与之联动 */

@@ -432,7 +432,7 @@ const {
   flex-shrink: 0;
   border-radius: 5px;
   overflow: hidden;
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .task-thumbnail img {
   width: 100%;
@@ -454,7 +454,7 @@ const {
   justify-content: space-between;
 }
 .summary-heading > div:first-child > strong {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 28px;
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
@@ -477,20 +477,20 @@ const {
   margin: 15px 0;
   border-radius: 4px;
   overflow: hidden;
-  background: var(--lilac);
+  background: var(--brand-soft);
 }
 .summary-progress > span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--purple);
+  background: var(--brand);
   transition: width 0.2s;
 }
 .summary-stages {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 22px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 .summary-stages b {
@@ -499,7 +499,7 @@ const {
   font-variant-numeric: tabular-nums;
 }
 .summary-stages .current {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
 }
 .queue-bulk,
 .queue-selection {
@@ -526,18 +526,18 @@ const {
 .queue-grouping button {
   padding: 5px 9px;
   border-radius: 5px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .queue-grouping button.active {
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
 }
 .queue-selection {
   padding: 10px 12px;
-  border: 1px solid #dfd4ef;
+  border: 1px solid var(--brand-line-soft);
   border-radius: 8px;
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
   font-size: 12px;
 }
 .upload-groups {
@@ -552,7 +552,7 @@ const {
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  background: var(--soft);
+  background: var(--surface-muted);
   border-radius: 11px 11px 0 0;
 }
 .upload-group-toggle {
@@ -577,13 +577,13 @@ const {
 .upload-group-toggle small {
   display: block;
   margin-top: 3px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
 }
 .group-chevron {
   width: 14px;
   flex-shrink: 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 18px;
   transition: transform 0.15s;
 }
@@ -601,7 +601,7 @@ const {
 .duplicate-note,
 .task-warning {
   margin-top: 5px;
-  color: #91632b;
+  color: var(--warning);
   font-size: 12px;
   overflow-wrap: anywhere;
 }
@@ -625,11 +625,11 @@ const {
   padding: 5px 9px;
   border-radius: 5px;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .queue-filters > button.active {
-  color: var(--purple-dark);
-  background: var(--lilac);
+  color: var(--brand-strong);
+  background: var(--brand-soft);
   font-weight: 550;
 }
 .queue-filters > button > span {
@@ -653,7 +653,7 @@ const {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
@@ -663,11 +663,11 @@ const {
     box-shadow 0.15s;
 }
 .concurrency-input:hover {
-  border-color: #c9bddf;
+  border-color: var(--brand-line);
 }
 .concurrency-input:focus-within {
-  border-color: #ab91d9;
-  box-shadow: 0 0 0 3px #7654bc12;
+  border-color: var(--brand-line-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 7%, transparent);
 }
 .concurrency-icon,
 .queue-clear svg {
@@ -700,7 +700,7 @@ const {
   outline: 0;
   background: transparent;
   box-shadow: none;
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 13px;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
@@ -712,7 +712,7 @@ const {
   -webkit-appearance: none;
 }
 .concurrency-limit {
-  color: #99949f;
+  color: var(--text-faint);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
@@ -725,7 +725,7 @@ const {
   padding: 0 8px;
   border: 1px solid transparent;
   border-radius: 8px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   white-space: nowrap;
   transition:
@@ -733,8 +733,8 @@ const {
     color 0.15s;
 }
 .queue-clear:not(:disabled):hover {
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
 }
 .queue-search {
   display: flex;
@@ -757,13 +757,13 @@ const {
   width: 26px;
   height: 30px;
   flex-shrink: 0;
-  color: var(--purple);
-  background: var(--lilac);
+  color: var(--brand);
+  background: var(--brand-soft);
   border-radius: 4px;
   font-size: 16px;
 }
 .task-icon.done {
-  background: #eaf5ee;
+  background: var(--success-soft);
   color: var(--success);
 }
 .task-body {
@@ -784,13 +784,13 @@ const {
 .task-state {
   width: 82px;
   flex-shrink: 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   white-space: nowrap;
 }
 .task-state.ready,
 .task-state.duplicate {
-  color: #93601d;
+  color: var(--warning);
 }
 .task-state.published {
   color: var(--success);
@@ -813,12 +813,12 @@ const {
   max-width: 460px;
   overflow: hidden;
   border-radius: 2px;
-  background: #ebe5f5;
+  background: var(--brand-soft);
 }
 .progress-track > span {
   display: block;
   height: 100%;
-  background: var(--purple);
+  background: var(--brand);
   transition: width 0.2s;
 }
 @media (max-width: 680px) {

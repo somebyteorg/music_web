@@ -665,7 +665,7 @@ const emit = defineEmits<{
 }
 .batch-details > summary {
   cursor: pointer;
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 12px;
   font-weight: 550;
 }
@@ -701,7 +701,7 @@ const emit = defineEmits<{
   display: flex;
   flex-direction: column;
   gap: 14px;
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .album-confirmation-heading {
   display: flex;
@@ -740,17 +740,17 @@ const emit = defineEmits<{
 }
 .task-warning {
   margin-top: 5px;
-  color: #91632b;
+  color: var(--warning);
   font-size: 12px;
   overflow-wrap: anywhere;
 }
 .preview-warnings {
   margin: 0;
   padding: 10px 12px 10px 28px;
-  border: 1px solid #eddfc8;
+  border: 1px solid var(--warning-line);
   border-radius: 8px;
-  background: #fffaf2;
-  color: #8d622c;
+  background: var(--warning-veil);
+  color: var(--warning);
   font-size: 12px;
   line-height: 1.7;
   list-style: disc;
