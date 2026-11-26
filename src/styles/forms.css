@@ -132,29 +132,6 @@ input[type='radio'] {
   background: var(--surface-muted);
 }
 
-.segmented {
-  display: flex;
-  gap: 2px;
-  padding: 3px;
-  background: var(--surface-sunken);
-  border-radius: var(--radius-sm);
-}
-
-.segmented button {
-  flex: 1;
-  padding: 6px 10px;
-  border-radius: 4px;
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.segmented button.active {
-  background: var(--surface);
-  color: var(--brand-strong);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 6.3%, transparent);
-}
-
 .avatar {
   display: inline-grid;
   place-items: center;
