@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
 import { onMounted, ref } from 'vue'
 import { accountApi } from '@/lib/api/account'
 import type { PlaybackLibrarySettings, User } from '@/types/session'
@@ -60,7 +62,7 @@ async function save() {
       <h1>个人设置</h1>
     </div>
   </div>
-  <form class="panel settings-card form-stack" @submit.prevent="save">
+  <Card as="form" class="settings-card form-stack" @submit.prevent="save">
     <h2>当前用户：{{ displayName(sign.user || undefined) }}</h2>
     <label>显示名称<input v-model="pseudonym" maxlength="30" placeholder="输入显示名称" /></label>
     <p class="hint">不填时使用 EMOS 用户名。操作记录也会显示这个名字。</p>
@@ -84,11 +86,11 @@ async function save() {
     <p class="hint">
       网页和客户端都会使用这个设置。没有所选音质时，播放默认音频。音频按原文件播放。
     </p>
-    <button :disabled="busy" class="button primary">
+    <Button variant="primary" :disabled="busy">
       {{ busy ? '正在保存…' : '保存设置' }}
-    </button>
-  </form>
-  <form class="panel settings-card form-stack library-settings" @submit.prevent="saveLibraries">
+    </Button>
+  </Card>
+  <Card as="form" class="settings-card form-stack library-settings" @submit.prevent="saveLibraries">
     <h2 id="playback-libraries-heading">播放媒体库</h2>
     <p class="hint">选择在播放器和客户端中显示的媒体库，至少选择一个。</p>
     <p v-if="librariesBusy" class="hint" role="status">正在加载媒体库…</p>
@@ -112,13 +114,13 @@ async function save() {
       </label>
     </fieldset>
     <p v-else class="hint">暂无可选择的媒体库。</p>
-    <button
+    <Button
+      variant="primary"
       :disabled="librariesBusy || !!librariesError || savingLibraries || !selectedLibraries.length"
-      class="button primary"
     >
       {{ savingLibraries ? '正在保存…' : '保存播放媒体库' }}
-    </button>
-  </form>
+    </Button>
+  </Card>
 </template>
 
 <style scoped>

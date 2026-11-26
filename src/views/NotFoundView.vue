@@ -1,8 +1,11 @@
+<script setup lang="ts">
+import EmptyState from '@/components/ui/EmptyState.vue'
+</script>
 <template>
-  <div class="empty panel">
-    <span class="empty-symbol">♩</span>
-    <h1>页面不存在</h1>
-    <p>请检查网址，或返回曲库。</p>
-    <RouterLink class="button primary" to="/">回到曲库</RouterLink>
-  </div>
+  <EmptyState panel symbol="♩" as="h1" title="页面不存在">
+    请检查网址，或返回曲库。
+    <template #actions>
+      <RouterLink class="button primary" to="/">回到曲库</RouterLink>
+    </template>
+  </EmptyState>
 </template>

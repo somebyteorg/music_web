@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+import IconButton from '@/components/ui/IconButton.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
+import Tag from '@/components/ui/Tag.vue'
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
 import { useCatalog } from '@/features/catalog/useCatalog'
 import { useCatalogActions } from '@/features/catalog/useCatalogActions'
 import {
@@ -77,9 +82,9 @@ const {
     <div class="button-group">
       <RouterLink v-if="type === 'songs'" class="button secondary" to="/uploads"
         >↑ 上传音频</RouterLink
-      ><button v-if="canCreate" class="button primary" @click="newItem">
+      ><Button variant="primary" v-if="canCreate" @click="newItem">
         ＋ 新建{{ labels[type] }}
-      </button>
+      </Button>
     </div>
   </div>
   <div :aria-label="`筛选${labels[type]}`" class="filter-bar" role="search">
@@ -90,7 +95,7 @@ const {
         :aria-label="`搜索${labels[type]}名称`"
         :placeholder="`搜索${labels[type]}名称`"
         maxlength="100"
-      /><button v-if="q" aria-label="清空搜索" class="icon-button" @click="q = ''">×</button>
+      /><IconButton label="清空搜索" v-if="q" @click="q = ''">×</IconButton>
     </div>
     <BaseSelect
       v-if="['songs', 'albums'].includes(type)"
@@ -161,22 +166,22 @@ const {
   </div>
   <div v-if="selected.length" class="selection-bar">
     <span>已选 {{ selected.length }} 首</span
-    ><button :disabled="acting" class="button small secondary" @click="assignLibrary = true">
-      修改媒体库</button
-    ><button :disabled="acting" class="button small primary" @click="assignAlbum = true">
-      加入专辑</button
-    ><button :disabled="acting" class="button small secondary" @click="bulkFavorite(true)">
-      收藏</button
-    ><button :disabled="acting" class="button small secondary" @click="bulkFavorite(false)">
-      取消收藏</button
+    ><Button variant="secondary" size="sm" :disabled="acting" @click="assignLibrary = true">
+      修改媒体库</Button
+    ><Button variant="primary" size="sm" :disabled="acting" @click="assignAlbum = true">
+      加入专辑</Button
+    ><Button variant="secondary" size="sm" :disabled="acting" @click="bulkFavorite(true)">
+      收藏</Button
+    ><Button variant="secondary" size="sm" :disabled="acting" @click="bulkFavorite(false)">
+      取消收藏</Button
     ><button :disabled="acting" class="text-button" @click="selected = []">清空选择</button
     ><span v-if="acting" class="hint" role="status">正在处理…</span>
   </div>
-  <div v-if="busy && !loaded" aria-busy="true" aria-label="正在加载" class="panel loading-list">
+  <Card class="loading-list" v-if="busy && !loaded" aria-busy="true" aria-label="正在加载">
     <div v-for="n in 12" :key="n" class="skeleton"></div>
-  </div>
+  </Card>
   <div v-else :aria-busy="busy">
-    <div v-if="items.length && type === 'songs'" class="panel">
+    <Card v-if="items.length && type === 'songs'">
       <SongList
         :disabled="acting"
         :items="items"
@@ -190,7 +195,7 @@ const {
         @select="toggle"
         @select-all="selected = $event ? items.map((item) => item.id) : []"
       />
-    </div>
+    </Card>
     <div v-else-if="items.length" :class="['catalog', layout, { playlists: type === 'playlists' }]">
       <div v-if="layout === 'list'" class="entity-label">
         <span>{{ labels[type] }}</span><span>{{
@@ -207,7 +212,7 @@ const {
           ><EntityCover :item="item" :round="type === 'artists'" />
           <div>
             <h3 :title="item.name">{{ item.name }}</h3>
-            <span v-if="type === 'playlists' && !item.is_public" class="badge quiet">私密</span>
+            <Tag variant="default" v-if="type === 'playlists' && !item.is_public">私密</Tag>
             <p v-if="layout === 'grid'" class="muted">
               {{
                 type === 'playlists' || type === 'libraries'
@@ -246,23 +251,26 @@ const {
         </div>
       </article>
     </div>
-    <div v-else-if="!error && !busy" class="empty panel">
-      <span class="empty-symbol">⌕</span>
-      <h2>{{ filtered ? '没有符合条件的结果' : `暂无${labels[type]}` }}</h2>
-      <p>
-        {{
-          filtered
-            ? '尝试其他关键词或重置筛选。'
-            : canCreate
-              ? `新建${labels[type]}，开始整理曲库。`
-              : '请联系管理员创建媒体库。'
-        }}
-      </p>
-      <button v-if="filtered" class="button secondary" @click="reset">重置筛选</button
-      ><button v-else-if="canCreate" class="button primary" @click="newItem">
-        ＋ 新建{{ labels[type] }}
-      </button>
-    </div>
+    <EmptyState
+      v-else-if="!error && !busy"
+      panel
+      symbol="⌕"
+      :title="filtered ? '没有符合条件的结果' : `暂无${labels[type]}`"
+    >
+      {{
+        filtered
+          ? '尝试其他关键词或重置筛选。'
+          : canCreate
+            ? `新建${labels[type]}，开始整理曲库。`
+            : '请联系管理员创建媒体库。'
+      }}
+      <template #actions>
+        <Button variant="secondary" v-if="filtered" @click="reset">重置筛选</Button
+        ><Button variant="primary" v-else-if="canCreate" @click="newItem">
+          ＋ 新建{{ labels[type] }}
+        </Button>
+      </template>
+    </EmptyState>
     <div v-if="total" class="catalog-pagination">
       <BaseSelect
         v-model="pageSize"
@@ -300,12 +308,12 @@ const {
   >
     <p>将「{{ privatePlaylist?.name }}」设为创建者的私密歌单，之后仅创建者和协作者可见。</p>
     <template #footer>
-      <button :disabled="acting" class="button secondary" @click="privatePlaylist = undefined">
+      <Button variant="secondary" :disabled="acting" @click="privatePlaylist = undefined">
         取消
-      </button>
-      <button :disabled="acting" class="button primary" @click="makePrivate">
+      </Button>
+      <Button variant="primary" :disabled="acting" @click="makePrivate">
         {{ acting ? '正在处理…' : '确认设为私密' }}
-      </button>
+      </Button>
     </template>
   </BaseDialog>
 </template>
@@ -410,7 +418,7 @@ const {
 .entity-main:hover h3 {
   color: var(--brand);
 }
-.entity-main .badge {
+.entity-main .ui-tag {
   margin-top: 3px;
 }
 .entity-secondary,
