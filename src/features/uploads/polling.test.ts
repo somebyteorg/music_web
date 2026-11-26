@@ -77,6 +77,21 @@ describe('上传轮询：调度', () => {
     scope.stop()
   })
 
+  it('单次轮询抛错不会让排期停摆', async () => {
+    vi.useFakeTimers()
+    const task = pending()
+    let polls = 0
+    const scope = track(task, () => {
+      polls += 1
+      if (polls === 1) throw new Error('网络抖动')
+    })
+    await vi.advanceTimersByTimeAsync(0)
+    expect(polls).toBe(1)
+    await vi.advanceTimersByTimeAsync(2000)
+    expect(polls).toBe(2)
+    scope.stop()
+  })
+
   it('非解析/入库状态不进入轮询', async () => {
     vi.useFakeTimers()
     const task = pending()

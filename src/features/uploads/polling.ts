@@ -45,6 +45,8 @@ export function useUploadPolling(
     const attempt = attempts.get(task.id) ?? 0
     try {
       await poll(task)
+    } catch {
+      // 单次轮询失败不影响其它任务，错误信息由传输层写进任务
     } finally {
       if (task.state !== before) {
         attempts.delete(task.id)
@@ -66,8 +68,8 @@ export function useUploadPolling(
       await Promise.all(ready.map(runOne))
     } finally {
       running = false
+      schedule()
     }
-    schedule()
   }
 
   function schedule() {
