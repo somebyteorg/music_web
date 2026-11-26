@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { inject, ref } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -68,14 +69,14 @@ const lyricInput = ref<HTMLInputElement>()
           type="file"
           @change="lyrics.importFile"
         />
-        <button
+        <Button
+          variant="secondary"
           :disabled="lyrics.busy"
-          class="button secondary"
           type="button"
           @click="lyricInput?.click()"
         >
           从文件导入
-        </button>
+        </Button>
         <span class="hint">UTF-8 编码，保留原始歌词和时间标签。</span>
       </div>
       <label
@@ -92,11 +93,11 @@ const lyricInput = ref<HTMLInputElement>()
       >
     </form>
     <template #footer
-      ><button :disabled="lyrics.busy" class="button secondary" @click="lyrics.editor = false">
-        取消</button
-      ><button :disabled="lyrics.busy" class="button primary" form="song-lyrics-form">
+      ><Button variant="secondary" :disabled="lyrics.busy" @click="lyrics.editor = false">
+        取消</Button
+      ><Button variant="primary" :disabled="lyrics.busy" form="song-lyrics-form">
         {{ lyrics.busy ? '正在保存…' : '保存版本' }}
-      </button></template
+      </Button></template
     >
   </BaseDialog>
   <BaseDialog
@@ -117,17 +118,17 @@ const lyricInput = ref<HTMLInputElement>()
       </label>
     </div>
     <template #footer
-      ><button :disabled="lyrics.busy" class="button secondary" @click="lyrics.removing = false">
-        取消</button
-      ><button
+      ><Button variant="secondary" :disabled="lyrics.busy" @click="lyrics.removing = false">
+        取消</Button
+      ><Button
+        variant="primary"
         :disabled="
           lyrics.busy || (lyrics.selected?.user_id !== sign.user?.id && !lyrics.reason.trim())
         "
-        class="button primary"
         @click="lyrics.destroy"
       >
         确认删除
-      </button></template
+      </Button></template
     >
   </BaseDialog>
 </template>

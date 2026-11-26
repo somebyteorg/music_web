@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { computed, inject } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import { useAction } from '@/composables/useFeedback'
@@ -50,13 +51,9 @@ const {
         <label class="check-label"
           ><input v-model="uploadAccepted" type="checkbox" />我已阅读并同意上传须知</label
         >
-        <button
-          :disabled="!uploadAccepted || acting"
-          class="button primary"
-          @click="acceptUploadNotice"
-        >
+        <Button variant="primary" :disabled="!uploadAccepted || acting" @click="acceptUploadNotice">
           确认须知
-        </button>
+        </Button>
       </template>
       <input
         ref="audioInput"
@@ -66,13 +63,9 @@ const {
         type="file"
         @change="chooseAudio"
       />
-      <button
-        :disabled="!hasNotice || addingFiles"
-        class="button primary"
-        @click="audioInput?.click()"
-      >
+      <Button variant="primary" :disabled="!hasNotice || addingFiles" @click="audioInput?.click()">
         {{ addingFiles ? '正在读取文件…' : '选择音频文件' }}
-      </button>
+      </Button>
       <div v-if="songUploads.length" class="song-upload-list">
         <article v-for="task in songUploads" :key="task.id">
           <strong>{{ task.name }}</strong>

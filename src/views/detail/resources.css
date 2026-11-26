@@ -62,7 +62,7 @@
   font-weight: 550;
 }
 
-.resource-file .badge,
+.resource-file .ui-tag,
 .unsupported {
   display: inline-block;
   margin-top: 5px;
