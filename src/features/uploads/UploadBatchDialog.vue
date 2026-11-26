@@ -724,11 +724,6 @@ const emit = defineEmits<{
   flex-wrap: wrap;
   gap: 6px;
 }
-.album-artwork .badge {
-  max-width: 100%;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
 .album-cover-upload {
   position: relative;
   width: fit-content;

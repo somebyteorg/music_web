@@ -4,6 +4,7 @@ import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
 import BaseDialog from '@/components/BaseDialog.vue'
 import Pagination from '@/components/Pagination.vue'
+import Tag from '@/components/ui/Tag.vue'
 import UploadQueue from '@/features/uploads/UploadQueue.vue'
 import UploadBatchDialog from '@/features/uploads/UploadBatchDialog.vue'
 import { usePendingUploads } from '@/features/uploads/usePendingUploads'
@@ -447,9 +448,9 @@ onMounted(loadPending)
             · {{ duration(selected.file.duration) }} · {{ bytes(selected.file.file_size) }}
           </p>
           <div v-if="selected.file.preview?.lyrics.length" class="parsed-lyrics">
-            <span v-for="(lyric, index) in selected.file.preview.lyrics" :key="index" class="badge"
+            <Tag v-for="(lyric, index) in selected.file.preview.lyrics" :key="index" variant="brand"
               >{{ lyricFormats.find((format) => format.value === lyric.format)?.label }} ·
-              {{ lyric.language }}</span
+              {{ lyric.language }}</Tag
             >
           </div>
           <p v-else-if="selected.kind === 'audio'" class="hint">没有内嵌歌词，可在歌曲页补充。</p>
