@@ -33,6 +33,8 @@ export function isUploadDone(task: UploadTask) {
     (task.kind === 'cover' && task.state === 'ready')
   )
 }
+export type UploadErrorStage = 'preparation' | 'transfer' | 'processing' | 'publishing'
+
 export interface UploadTask {
   id: string
   fingerprint: string
@@ -44,7 +46,7 @@ export interface UploadTask {
   state: UploadState
   progress: number
   error: string
-  errorStage?: 'preparation' | 'transfer' | 'processing' | 'publishing'
+  errorStage?: UploadErrorStage
   preparationProgress?: number
   sha256?: string
   preparedLyrics?: PreparedLyric[]
@@ -80,6 +82,43 @@ export interface UploadTask {
   disc: number
   duration?: number
 }
+export interface NewUploadTask {
+  id: string
+  name: string
+  size: number
+  relativePath: string
+  fingerprint: string
+  batchId?: string
+  kind: 'audio' | 'cover'
+  targetSongId?: string
+  targetSongName?: string
+  state?: UploadState
+}
+
+/** 新建任务快照：只有这里决定排队任务的初始形状 */
+export function createUploadTask(init: NewUploadTask): UploadTask {
+  return {
+    id: init.id,
+    fingerprint: init.fingerprint,
+    name: init.name,
+    size: init.size,
+    relativePath: init.relativePath,
+    batchId: init.batchId,
+    kind: init.kind,
+    state: init.state ?? 'queued',
+    progress: 0,
+    error: '',
+    targetSongId: init.targetSongId,
+    targetSongName: init.targetSongName,
+    title: init.name.replace(/\.[^.]+$/, ''),
+    artist: '',
+    album: '',
+    version: '',
+    track: 1,
+    disc: 1,
+  }
+}
+
 export function uploadTrackKey(data: PublishData) {
   const album = data.album_id || data.album?.id
   if (!album || data.song_id) return null
