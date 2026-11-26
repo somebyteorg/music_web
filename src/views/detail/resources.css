@@ -116,12 +116,14 @@
   }
   .resource-file {
     width: 35%;
-  }}
+  }
+}
 
 @media (max-width: 900px) {
   .audio-params {
     display: none;
-  }}
+  }
+}
 
 @media (max-width: 680px) {
   .resource-table th,
@@ -148,4 +150,5 @@
   }
   .resource-name {
     align-items: flex-start;
-  }}
+  }
+}
