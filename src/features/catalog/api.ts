@@ -1,30 +1,13 @@
-import api from '@/utils/ky'
-import type { CatalogType, Entity } from '@/types/catalog'
-import type { Page } from '@/types/common'
+/**
+ * 目录域 API：统一走 lib/api 的类型化实现，这里只保留历史命名的薄别名。
+ * 新代码请直接 import { catalogApi } from '@/lib/api/catalog'。
+ */
+import { catalogApi } from '@/lib/api/catalog'
 
-export function catalogPath(type: CatalogType, id?: string) {
-  const collection = type === 'playlists' ? 'playlists' : `catalog/${type}`
-  return id ? `${collection}/${id}` : collection
-}
+export { catalogPath } from '@/lib/api/catalog'
 
-export function getCatalogPage(
-  type: CatalogType,
-  searchParams: Record<string, string | number>,
-  signal?: AbortSignal,
-) {
-  return api.get(catalogPath(type), { searchParams, signal }).json<Page<Entity>>()
-}
-
-export function getCatalogItem(type: CatalogType, id: string, signal?: AbortSignal) {
-  return api.get(catalogPath(type, id), { signal }).json<{ item: Entity; can_edit?: boolean }>()
-}
-
-export function saveCatalogItem(type: CatalogType, body: Record<string, unknown>, id?: string) {
-  return api(catalogPath(type, id), { method: id ? 'PATCH' : 'POST', json: body }).json<{
-    item: Entity
-  }>()
-}
-
-export function makePlaylistPrivate(id: string) {
-  return api.post(`playlists/${id}/private`).json<{ message: string }>()
-}
+export const getCatalogPage = catalogApi.page
+export const getCatalogItem = catalogApi.item
+export const saveCatalogItem = catalogApi.save
+export const removeCatalogItem = catalogApi.remove
+export const makePlaylistPrivate = catalogApi.privatePlaylist

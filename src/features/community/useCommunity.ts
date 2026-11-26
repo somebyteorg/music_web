@@ -1,9 +1,8 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '@/utils/ky'
+import { communityApi } from '@/lib/api/community'
 import type { Activity, Message } from '@/types/community'
 import type { User } from '@/types/session'
-import type { Page } from '@/types/common'
 import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
 import { defaultHistoryCategory, fields, formatValue } from './activity'
@@ -99,26 +98,20 @@ export function useCommunity() {
         }
         if (route.query.entity_type) params.entity_type = String(route.query.entity_type)
         if (route.query.entity_id) params.entity_id = String(route.query.entity_id)
-        const r = await api
-          .get('history', { searchParams: params, signal: signal })
-          .json<Page<Activity>>()
+        const r = await communityApi.history<Activity>(params, signal)
         if (signal.aborted) return
         history.value = r.items
         total.value = r.total
         pageSize.value = r.page_size
       } else if (section.value === 'members') {
         if (q.value) params.q = q.value
-        const r = await api
-          .get('members', { searchParams: params, signal: signal })
-          .json<Page<User & { created_at: string }>>()
+        const r = await communityApi.members<User & { created_at: string }>(params, signal)
         if (signal.aborted) return
         members.value = r.items
         total.value = r.total
         pageSize.value = r.page_size
       } else if (section.value === 'inbox') {
-        const r = await api
-          .get('inbox', { searchParams: params, signal: signal })
-          .json<Page<Message>>()
+        const r = await communityApi.inbox<Message>(params, signal)
         if (signal.aborted) return
         messages.value = r.items
         total.value = r.total
@@ -150,7 +143,7 @@ export function useCommunity() {
   async function restore() {
     if (!inspect.value) return
     await run(async () => {
-      await api.post(`history/${inspect.value!.id}/restore`)
+      await communityApi.restoreHistory(inspect.value!.id)
       notify('已恢复到修改前的版本。')
       dialog.value = false
       await load()
@@ -158,7 +151,7 @@ export function useCommunity() {
   }
   async function read(id?: number) {
     await run(async () => {
-      await api.post('inbox/read', { json: id ? { ids: [id] } : {} })
+      await communityApi.markRead(id)
       window.dispatchEvent(new Event('music-inbox-updated'))
       await load()
     })
@@ -175,7 +168,7 @@ export function useCommunity() {
     const change = roleChange.value
     if (!roleDialog.value || !change || !canChangeRole(change.member)) return
     await run(async () => {
-      await api.patch(`members/${change.member.id}/role`, { json: { role: change.role } })
+      await communityApi.changeRole(change.member.id, change.role)
       roleDialog.value = false
       roleChange.value = undefined
       notify('角色已更新。')

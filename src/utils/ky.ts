@@ -1,41 +1,6 @@
-import ky from 'ky'
-let csrf = ''
-export function setCsrfToken(value: string) {
-  csrf = value
-}
-const api = ky.create({
-  prefixUrl: '/api',
-  credentials: 'same-origin',
-  retry: 0,
-  timeout: 30_000,
-  headers: { Accept: 'application/json' },
-  hooks: {
-    beforeRequest: [
-      (request) => {
-        if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method) && csrf)
-          request.headers.set('X-CSRF-TOKEN', csrf)
-      },
-    ],
-    afterResponse: [
-      (_request, _options, response) => {
-        if (response.status === 401) window.dispatchEvent(new Event('session-expired'))
-      },
-    ],
-    beforeError: [
-      async (error) => {
-        const body = (await error.response
-          .clone()
-          .json()
-          .catch(() => null)) as { message?: string } | null
-        error.message =
-          body?.message ||
-          (error.response.status === 419
-            ? '页面已过期，请刷新后重试。'
-            : `请求失败（${error.response.status}）`)
-        return error
-      },
-    ],
-  },
-})
-export { ky }
-export default api
+/**
+ * 兼容出口：历史上各领域直接 import 这个 ky 实例。
+ * 现在它就是 lib/api/client 里的同一个 http（同一套 CSRF/401/错误模型），
+ * 新增代码请改用 lib/api 下的类型化 api 模块。
+ */
+export { http as default, http, setCsrfToken } from '@/lib/api/client'

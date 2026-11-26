@@ -4,10 +4,11 @@ import { useEventListener } from '@vueuse/core'
 import { useSignStore } from '@/stores/sign'
 import { useUploadsStore } from '@/stores/uploads'
 import { usePlayerStore } from '@/stores/player'
+import { clearQueryCache } from '@/lib/query'
 import { useQueueStore } from '@/stores/queue'
 import { report, useAction } from '@/composables/useFeedback'
 import { displayName } from '@/utils/format'
-import api from '@/utils/ky'
+import { communityApi } from '@/lib/api/community'
 import { navigation } from './navigation'
 
 export function useAppShell() {
@@ -56,7 +57,7 @@ export function useAppShell() {
   async function refreshUnread() {
     if (sign.user)
       try {
-        unread.value = (await api.get('inbox/unread').json<{ count: number }>()).count
+        unread.value = (await communityApi.unread()).count
       } catch {
         /* Session errors are handled globally. */
       }
@@ -65,6 +66,7 @@ export function useAppShell() {
     uploads.stop()
     player.close()
     queue.reset()
+    clearQueryCache()
     sign.user = null
     report(new Error('登录已过期，请重新登录。'))
   }
@@ -100,6 +102,7 @@ export function useAppShell() {
     uploads.stop()
     player.close()
     queue.reset()
+    clearQueryCache()
   })
   useEventListener(window, 'beforeunload', (event: BeforeUnloadEvent) => {
     if (uploads.activeCount > 0) {

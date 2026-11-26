@@ -1,6 +1,6 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useStorage } from '@vueuse/core'
-import api from '@/utils/ky'
+import { favoriteSongs } from '@/lib/api/catalog'
 import { useLibrariesStore } from '@/stores/libraries'
 import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
@@ -67,9 +67,7 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
       let count = 0
       for (let start = 0; start < ids.length; start += 5) {
         const batch = ids.slice(start, start + 5)
-        const results = await Promise.allSettled(
-          batch.map((id) => api.put(`songs/${id}/favorite`, { json: { favorite: value } })),
-        )
+        const results = await favoriteSongs(batch, value)
         count += results.filter((result) => result.status === 'fulfilled').length
         results.forEach((result, index) => {
           if (result.status === 'rejected') failed.push(batch[index]!)

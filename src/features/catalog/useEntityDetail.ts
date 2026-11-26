@@ -1,8 +1,8 @@
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { CatalogType, Entity } from '@/types/catalog'
-import { report } from '@/composables/useFeedback'
-import { useLatestRequest } from '@/composables/useLatestRequest'
+import { useQuery } from '@/lib/query'
+import { useSignStore } from '@/stores/sign'
 import { catalogReturnTo } from '@/router'
 import { getCatalogItem } from './api'
 import { DETAIL_SONG_PAGE_SIZE } from './limits'
@@ -10,55 +10,67 @@ import { assertPage, getSongPage } from './songs'
 
 export function useEntityDetail() {
   const route = useRoute()
+  const sign = useSignStore()
   // App keys detail views by path, so each instance owns one entity.
   const type = route.meta.type as CatalogType
   const id = String(route.params.id)
   const backTo = catalogReturnTo(type)
-  const item = ref<Entity>()
-  const songs = ref<Entity[]>([])
   const page = ref(1)
-  const total = ref(0)
-  const songPageSize = ref(24)
-  const busy = ref(true)
-  const error = ref('')
-  const editable = ref(false)
-  const detailRequest = useLatestRequest()
-  const songsRequest = useLatestRequest()
+  const songPageSize = ref(DETAIL_SONG_PAGE_SIZE)
+  const editable = ref(true)
 
+  const detail = useQuery<{ item: Entity; can_edit?: boolean }>({
+    key: () => (sign.user ? `${sign.user.id}:detail:${type}:${id}` : null),
+    fetcher: (signal) => getCatalogItem(type, id, signal),
+    staleTime: 30_000,
+  })
+  const tracks = useQuery<{ items: Entity[]; total: number; page_size: number }>({
+    key: () =>
+      sign.user
+        ? `${sign.user.id}:detail-songs:${type}:${id}:${page.value}:${songPageSize.value}`
+        : null,
+    fetcher: async (signal) => {
+      const result = assertPage(await getSongPage(type, id, page.value, songPageSize.value, signal))
+      return {
+        items: result.items,
+        total: Number(result.total),
+        page_size: Number(result.page_size) || songPageSize.value,
+      }
+    },
+    staleTime: 30_000,
+  })
+
+  watch(detail.data, (data) => {
+    if (data) editable.value = data.can_edit ?? true
+  })
+  watch(tracks.data, (data) => {
+    if (data) songPageSize.value = data.page_size
+  })
+
+  const item = computed<Entity | undefined>(() => detail.data.value?.item)
+  const songs = computed<Entity[]>(() => tracks.data.value?.items ?? [])
+  const total = computed(() => Number(tracks.data.value?.total ?? 0))
+  const busy = computed(() => detail.busy.value || tracks.busy.value)
+  const error = computed(() => detail.error.value || tracks.error.value)
+
+  /** 曲目分页刷新（切页、写操作后调用） */
   async function loadSongs() {
-    const signal = songsRequest.start()
-    try {
-      const result = assertPage(
-        await getSongPage(type, id, page.value, DETAIL_SONG_PAGE_SIZE, signal),
-      )
-      if (signal.aborted) return
-      songs.value = result.items
-      total.value = Number(result.total)
-      songPageSize.value = Number(result.page_size) || DETAIL_SONG_PAGE_SIZE
-    } catch (error) {
-      if (!signal.aborted) report(error)
-    }
+    if (type === 'songs') return
+    await tracks.run(true)
   }
 
+  /** 详情刷新：无参数，视图里可直接当事件处理器用 */
   async function load() {
-    const signal = detailRequest.start()
-    busy.value = true
-    error.value = ''
-    try {
-      const result = await getCatalogItem(type, id, signal)
-      if (signal.aborted) return
-      item.value = result.item
-      editable.value = result.can_edit ?? true
-      if (type !== 'songs') await loadSongs()
-    } catch (cause) {
-      if (!signal.aborted)
-        error.value = cause instanceof Error ? cause.message : '无法加载资料，请重试。'
-    } finally {
-      if (!signal.aborted) busy.value = false
-    }
+    await detail.run(true)
+    if (detail.data.value?.item && type !== 'songs') await loadSongs()
   }
 
-  onMounted(load)
+  // 首屏先吃缓存，缺的再回源
+  onMounted(async () => {
+    await detail.run(false)
+    if (detail.data.value?.item && type !== 'songs') await tracks.run(false)
+  })
+
   return {
     type,
     id,

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import type { Entity } from '@/types/catalog'
 import { usePlayerStore } from '@/stores/player'
 import { useQueueStore } from '@/stores/queue'
-import api from '@/utils/ky'
+import { catalogApi } from '@/lib/api/catalog'
 import { notify, report } from '@/composables/useFeedback'
 import EntityCover from './EntityCover.vue'
 
@@ -54,7 +54,7 @@ async function favorite(song: Entity) {
   favoriting.value.add(song.id)
   const value = !song.is_favorite
   try {
-    await api.put(`songs/${song.id}/favorite`, { json: { favorite: value } })
+    await catalogApi.favorite(song.id, value)
     emit('favorite', song.id, value)
   } catch (e) {
     report(e)
