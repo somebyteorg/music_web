@@ -575,7 +575,7 @@ const {
     gap: 14px;
   }
 }
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .sidebar {
     transform: translateX(-100%);
     width: 240px;
@@ -605,7 +605,8 @@ const {
     height: 64px;
     padding-inline: 20px;
   }
-
+}
+@media (max-width: 680px) {
   .breadcrumb-parent {
     display: none;
   }

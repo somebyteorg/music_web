@@ -110,7 +110,7 @@
   display: none !important;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1150px) {
   .uploader {
     display: none;
   }

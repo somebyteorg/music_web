@@ -269,7 +269,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   opacity: 1;
 }
 /* 触屏没有 hover：删除按钮常显，否则手机上无法移除曲目 */
-@media (pointer: coarse), (max-width: 680px) {
+@media (pointer: coarse), (max-width: 760px) {
   .queue-remove {
     opacity: 1;
   }
@@ -315,7 +315,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   font-size: 11px;
   line-height: 1.6;
 }
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .queue-backdrop {
     background: var(--scrim-strong);
   }
