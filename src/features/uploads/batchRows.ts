@@ -2,7 +2,7 @@ import type { Ref } from 'vue'
 import type { UploadTask } from './model'
 import type { BatchAlbum, BatchForm, BatchRow } from './batchModel'
 
-export interface BatchRowFieldsDeps {
+interface BatchRowFieldsDeps {
   uploads: { tasks: UploadTask[] }
   form: Ref<BatchForm>
   albumFor(row: BatchRow): BatchAlbum

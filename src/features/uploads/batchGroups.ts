@@ -12,7 +12,7 @@ import {
   createBatchAlbum,
 } from './batchModel'
 
-export interface BatchGroupsDeps {
+interface BatchGroupsDeps {
   uploads: { tasks: UploadTask[] }
   libraries: { defaultId: string; load(refresh?: boolean): Promise<void> }
   busy: Ref<boolean>

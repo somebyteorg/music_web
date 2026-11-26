@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import type { BatchAlbum } from './batchModel'
 
 /** 专辑字段的写入口：由持有者实现，子组件只负责回传字段与值 */
-export interface AlbumFieldWriter {
+interface AlbumFieldWriter {
   updateAlbum<K extends keyof BatchAlbum>(album: BatchAlbum, key: K, value: BatchAlbum[K]): void
 }
 

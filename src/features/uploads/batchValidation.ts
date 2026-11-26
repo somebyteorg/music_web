@@ -2,7 +2,7 @@ import { computed, type ComputedRef, type Ref } from 'vue'
 import { uploadTrackKey } from './model'
 import type { AlbumAssets, BatchAlbum, BatchEntry, BatchForm, BatchRow } from './batchModel'
 
-export interface BatchValidationDeps {
+interface BatchValidationDeps {
   ready: ComputedRef<BatchEntry[]>
   albums: Ref<BatchAlbum[]>
   form: Ref<BatchForm>

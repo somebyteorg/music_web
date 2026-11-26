@@ -24,7 +24,7 @@ export function resumeUploadUrl(endpoint: string | undefined, tusId: string) {
   return `${endpoint.replace(/\/$/, '')}/${tusId.split('/').map(encodeURIComponent).join('/')}`
 }
 
-export interface UploadRunnerDeps {
+interface UploadRunnerDeps {
   userId(): number | undefined
   chunkSize(): number
   tasks(): UploadTask[]

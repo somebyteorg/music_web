@@ -12,7 +12,7 @@ import {
 } from './batchModel'
 import { uploadRepository } from './repository'
 
-export interface BatchMatchingDeps {
+interface BatchMatchingDeps {
   albums: Ref<BatchAlbum[]>
   entries: ComputedRef<BatchEntry[]>
   form: Ref<BatchForm>

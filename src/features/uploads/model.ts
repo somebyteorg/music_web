@@ -119,7 +119,7 @@ export function isUploadDone(task: UploadTask) {
   )
 }
 
-export interface NewUploadTask {
+interface NewUploadTask {
   id: string
   name: string
   size: number

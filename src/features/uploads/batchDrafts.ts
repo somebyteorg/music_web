@@ -10,7 +10,7 @@ export interface PublishItem {
   data: PublishData
 }
 
-export interface BatchDraftsDeps {
+interface BatchDraftsDeps {
   ready: ComputedRef<BatchEntry[]>
   form: Ref<BatchForm>
   albumFor(row: BatchEntry['row']): BatchAlbum

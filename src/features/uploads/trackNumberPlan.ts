@@ -19,7 +19,7 @@ export interface Change {
   after: { disc: number; track: number }
 }
 
-export function validPosition(disc: number, track: number) {
+function validPosition(disc: number, track: number) {
   return (
     Number.isInteger(disc) &&
     disc >= 1 &&

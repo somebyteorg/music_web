@@ -4,30 +4,30 @@ import type { AlbumMatch } from '@/types/catalog'
 import type { PreparedLyric } from '@/types/lyrics'
 import type { AudioFile, PublishData } from '@/types/uploads'
 
-export interface UploadContextPayload {
+interface UploadContextPayload {
   batch_id: string
   relative_path: string
 }
 
-export interface UploadSession {
+interface UploadSession {
   status: string
   error?: string | null
   expires_at?: string
   tus_id?: string | null
 }
 
-export interface UploadSessionResponse {
+interface UploadSessionResponse {
   session: UploadSession
   file: AudioFile | null
 }
 
-export interface UploadSessionCreated {
+interface UploadSessionCreated {
   session: { id: string }
   token: string
   endpoint: string
 }
 
-export interface UploadCheckBody {
+interface UploadCheckBody {
   sha256: string
   prepared_lyrics?: PreparedLyric[]
   kind: 'audio' | 'cover'
@@ -35,7 +35,7 @@ export interface UploadCheckBody {
   context?: UploadContextPayload
 }
 
-export interface CreateUploadBody {
+interface CreateUploadBody {
   kind: 'audio' | 'cover'
   file_name: string
   file_size: number
@@ -45,7 +45,7 @@ export interface CreateUploadBody {
   context?: UploadContextPayload
 }
 
-export interface AlbumMatchBody {
+interface AlbumMatchBody {
   name: string
   artist_name: string
   release_year: number | null
@@ -58,18 +58,18 @@ export interface AlbumMatchBody {
   total_tracks: number | null
 }
 
-export interface TrackPosition {
+interface TrackPosition {
   song_id: string
   disc_number: number
   track_number: number
 }
 
-export interface PublishFileResult {
+interface PublishFileResult {
   file: AudioFile
   song_id: string
 }
 
-export interface DraftItem {
+interface DraftItem {
   file_id: string
   data: object
   organize?: object

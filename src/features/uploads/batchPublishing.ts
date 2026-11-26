@@ -5,7 +5,7 @@ import type { UploadTask } from './model'
 import type { BatchAlbum } from './batchModel'
 import type { PublishItem } from './batchDrafts'
 
-export interface BatchPublishingDeps {
+interface BatchPublishingDeps {
   form: Ref<{ libraryId: string }>
   open: Ref<boolean>
   valid: ComputedRef<boolean>
