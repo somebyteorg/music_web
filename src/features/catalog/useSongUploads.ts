@@ -17,8 +17,9 @@ export function useSongUploads(detail: ReturnType<typeof useEntityDetail>) {
   const hasNotice = computed(
     () => !!sign.config && sign.user?.notice_version === sign.config.notice.version,
   )
-  const audioAccept = computed(
-    () => sign.config?.audio_extensions.map((extension) => `.${extension}`).join(',') || '',
+  // 后端配置缺字段时不能让整页渲染崩掉（dev 下会中断整棵子树）
+  const audioAccept = computed(() =>
+    (sign.config?.audio_extensions ?? []).map((extension) => `.${extension}`).join(','),
   )
   const songUploads = computed(() => uploads.tasks.filter((task) => task.targetSongId === id))
   const uploadingCount = computed(
