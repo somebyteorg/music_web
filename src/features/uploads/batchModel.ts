@@ -39,6 +39,17 @@ export interface BatchEntry {
   row: BatchRow
   task: UploadTask
 }
+export interface BatchForm {
+  artist: string
+  version: string
+  applyArtist: boolean
+  applyVersion: boolean
+  libraryId: string
+}
+export interface AlbumAssets {
+  cover_id: string | null
+  artwork: AlbumDraft['artwork']
+}
 
 export function selectedBatchAlbum(album: BatchAlbum) {
   return album.matches.find((match) => match.id === album.selection)
