@@ -1,5 +1,5 @@
 import { computed, ref, type Ref, watch } from 'vue'
-import api from '@/utils/ky'
+import { catalogApi } from '@/lib/api/catalog'
 import type { Entity } from '@/types/catalog'
 import type { LyricFormat, LyricKind, LyricVersion } from '@/types/lyrics'
 import { notify, useAction } from '@/composables/useFeedback'
@@ -94,13 +94,11 @@ export function useSongLyrics(item: Ref<Entity | undefined>) {
   async function save() {
     await run(async () => {
       if (!item.value) return
-      const result = await api(
-        `songs/${item.value.id}/lyrics${editingId.value ? `/${editingId.value}` : ''}`,
-        {
-          method: editingId.value ? 'PATCH' : 'POST',
-          json: { ...prepareLyrics(form.value), version: version.value },
-        },
-      ).json<{ lyrics: LyricVersion[]; version: number }>()
+      const result = await catalogApi.saveLyrics<{ lyrics: LyricVersion[]; version: number }>(
+        item.value.id,
+        editingId.value || null,
+        { ...prepareLyrics(form.value), version: version.value },
+      )
       apply(result)
       selectedId.value = editingId.value || result.lyrics.at(-1)?.id || ''
       editor.value = false
@@ -111,11 +109,11 @@ export function useSongLyrics(item: Ref<Entity | undefined>) {
     await run(async () => {
       if (!item.value || !selected.value) return
       apply(
-        await api
-          .put(`songs/${item.value.id}/lyrics/${selected.value.id}/default`, {
-            json: { version: item.value.version },
-          })
-          .json<{ lyrics: LyricVersion[]; version: number }>(),
+        await catalogApi.defaultLyric<{ lyrics: LyricVersion[]; version: number }>(
+          item.value.id,
+          selected.value.id,
+          { version: item.value.version },
+        ),
       )
       notify('默认歌词已更新。')
     })
@@ -130,11 +128,11 @@ export function useSongLyrics(item: Ref<Entity | undefined>) {
     await run(async () => {
       if (!item.value || !editingId.value) return
       apply(
-        await api
-          .delete(`songs/${item.value.id}/lyrics/${editingId.value}`, {
-            json: { version: version.value, reason: reason.value },
-          })
-          .json<{ lyrics: LyricVersion[]; version: number }>(),
+        await catalogApi.removeLyric<{ lyrics: LyricVersion[]; version: number }>(
+          item.value.id,
+          editingId.value,
+          { version: version.value, reason: reason.value },
+        ),
       )
       removing.value = false
       notify('歌词已删除，可从操作记录中恢复。')

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import api from '@/utils/ky'
+import { accountApi } from '@/lib/api/account'
 import type { PlaybackLibrarySettings, User } from '@/types/session'
 import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
@@ -20,7 +20,7 @@ async function loadLibraries() {
   librariesBusy.value = true
   librariesError.value = ''
   try {
-    const result = await api.get('profile/libraries').json<PlaybackLibrarySettings>()
+    const result = await accountApi.profileLibraries<PlaybackLibrarySettings>()
     libraries.value = result.libraries
     selectedLibraries.value = result.library_ids
   } catch (e) {
@@ -32,9 +32,9 @@ async function loadLibraries() {
 
 async function saveLibraries() {
   await runLibraries(async () => {
-    const result = await api
-      .put('profile/libraries', { json: { library_ids: selectedLibraries.value } })
-      .json<PlaybackLibrarySettings>()
+    const result = await accountApi.updateProfileLibraries<PlaybackLibrarySettings>(
+      selectedLibraries.value,
+    )
     libraries.value = result.libraries
     selectedLibraries.value = result.library_ids
     notify('播放媒体库已保存。')
@@ -45,14 +45,10 @@ onMounted(loadLibraries)
 
 async function save() {
   await run(async () => {
-    const r = await api
-      .patch('profile', {
-        json: {
-          pseudonym: pseudonym.value || null,
-          quality: quality.value,
-        },
-      })
-      .json<{ user: User }>()
+    const r = await accountApi.updateProfile<{ user: User }>({
+      pseudonym: pseudonym.value || null,
+      quality: quality.value,
+    })
     sign.user = r.user
     notify('设置已保存。')
   })

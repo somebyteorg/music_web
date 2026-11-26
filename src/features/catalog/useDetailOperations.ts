@@ -1,12 +1,12 @@
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '@/utils/ky'
+import { catalogApi } from '@/lib/api/catalog'
+import { filesApi } from '@/lib/api/files'
 import type { Entity } from '@/types/catalog'
-import type { Page } from '@/types/common'
 import type { AudioFile } from '@/types/uploads'
 import { notify, useAction } from '@/composables/useFeedback'
 import { useSignStore } from '@/stores/sign'
-import { catalogPath, makePlaylistPrivate } from './api'
+import { makePlaylistPrivate } from './api'
 import type { useEntityDetail } from './useEntityDetail'
 
 type DetailOperation =
@@ -52,18 +52,15 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
   async function searchTargets() {
     await run(async () => {
       const kind = operation.value === 'merge' ? type : 'songs'
-      const r = await api
-        .get(`catalog/${kind}`, { searchParams: { q: targetQuery.value, page_size: 20 } })
-        .json<Page<Entity>>()
+      const r = await catalogApi.page(kind, { q: targetQuery.value, page_size: 20 })
       targets.value = r.items.filter((s) => operation.value === 'tracks' || s.id !== id)
     })
   }
   async function apply() {
     await run(async () => {
       if (!item.value) return
-      const path = catalogPath(type, id)
       if (operation.value === 'delete') {
-        await api.delete(path, { json: { version: item.value.version, reason: reason.value } })
+        await catalogApi.remove(type, id, { version: item.value.version, reason: reason.value })
         notify(type === 'playlists' ? '歌单已删除。' : '已删除，可从操作记录中恢复。')
         await router.push(`/${type}`)
       } else if (operation.value === 'playlist-private') {
@@ -71,7 +68,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
         notify(result.message)
         await router.push(backTo)
       } else if (operation.value === 'merge' && target.value) {
-        await api.post(`${path}/merge`, {
+        await catalogApi.merge(type, id, {
           json: {
             target_id: target.value.id,
             version: item.value.version,
@@ -82,21 +79,24 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
         notify('合并成功。')
         await router.push(`/${type}/${target.value.id}`)
       } else if (operation.value === 'file-delete' && selectedFile.value) {
-        await api.delete(`files/${selectedFile.value.id}`, {
-          json: { reason: reason.value, updated_at: selectedFile.value.updated_at },
+        await filesApi.remove(selectedFile.value.id, {
+          reason: reason.value,
+          updated_at: selectedFile.value.updated_at,
         })
         notify('资源已删除，原文件保留，可从操作记录中恢复。')
         await load()
       } else if (operation.value === 'file-move' && selectedFile.value && target.value) {
-        await api.patch(`files/${selectedFile.value.id}`, {
-          json: { song_id: target.value.id, updated_at: selectedFile.value.updated_at },
+        await filesApi.update(selectedFile.value.id, {
+          song_id: target.value.id,
+          updated_at: selectedFile.value.updated_at,
         })
         notify('音频已移动到所选歌曲。')
         await load()
       } else if (operation.value === 'tracks') {
-        await api.post(`playlists/${id}/tracks`, {
-          json: { song_ids: trackDraft.value.map((s) => s.id) },
-        })
+        await catalogApi.playlistAppend(
+          id,
+          trackDraft.value.map((s) => s.id),
+        )
         page.value = Math.max(
           1,
           Math.ceil((total.value + trackDraft.value.length) / songPageSize.value),
@@ -104,9 +104,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
         notify('已添加到歌单。')
         await load()
       } else if (operation.value === 'playlist-move' && movingEntry.value?.entry_id) {
-        await api.patch(`playlists/${id}/tracks/${movingEntry.value.entry_id}`, {
-          json: { position: movePosition.value },
-        })
+        await catalogApi.playlistMove(id, movingEntry.value.entry_id, movePosition.value)
         page.value = Math.ceil(Math.min(movePosition.value, total.value) / songPageSize.value)
         notify('曲序已调整。')
         await load()
@@ -116,9 +114,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
   }
   async function setDefault(file: AudioFile) {
     await run(async () => {
-      await api.patch(`files/${file.id}`, {
-        json: { song_id: id, is_default: true, updated_at: file.updated_at },
-      })
+      await filesApi.update(file.id, { song_id: id, is_default: true, updated_at: file.updated_at })
       notify('系统默认音质已更新。')
       await load()
     })
@@ -144,7 +140,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
   }
   async function removeEntries(entryIds: string[]) {
     await run(async () => {
-      await api.delete(`playlists/${id}/tracks`, { json: { entry_ids: entryIds } })
+      await catalogApi.playlistRemove(id, entryIds)
       page.value = Math.min(
         page.value,
         Math.max(1, Math.ceil((total.value - entryIds.length) / songPageSize.value)),
@@ -162,7 +158,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
   async function favorite() {
     if (!item.value) return
     await run(async () => {
-      await api.put(`songs/${id}/favorite`, { json: { favorite: !item.value!.is_favorite } })
+      await catalogApi.favorite(id, !item.value!.is_favorite)
       item.value!.is_favorite = !item.value!.is_favorite
     })
   }

@@ -4,6 +4,11 @@ import { request } from './client'
 
 export type QueryParams = Record<string, string | number | undefined>
 
+/** 批量收藏：后端只有单曲接口，这里显式并发，失败项交由调用方统计 */
+export function favoriteSongs(ids: string[], value: boolean) {
+  return Promise.allSettled(ids.map((id) => catalogApi.favorite(id, value)))
+}
+
 export function catalogPath(type: CatalogType, id?: string) {
   const collection = type === 'playlists' ? 'playlists' : `catalog/${type}`
   return id ? `${collection}/${id}` : collection
@@ -47,6 +52,48 @@ export const catalogApi = {
   },
   favorite(id: string, value: boolean) {
     return request<void>(`songs/${id}/favorite`, { method: 'PUT', json: { favorite: value } })
+  },
+  metadataSearch(type: CatalogType, q: string) {
+    return request<Record<string, unknown>>(`metadata/${type}/search`, { searchParams: { q } })
+  },
+  metadataPreview(type: CatalogType, id: string, todbId: string) {
+    return request<{ fields: Record<string, unknown>; conflict: Entity | null }>(
+      `catalog/${type}/${id}/metadata`,
+      { searchParams: { todb_id: todbId } },
+    )
+  },
+  metadataApply(type: CatalogType, id: string, body: Record<string, unknown>) {
+    return request<void>(`catalog/${type}/${id}/metadata`, { method: 'POST', json: body })
+  },
+  merge(type: CatalogType, id: string, body: Record<string, unknown>) {
+    return request<void>(`${catalogPath(type, id)}/merge`, { method: 'POST', json: body })
+  },
+  saveLyrics<T>(songId: string, lyricId: string | null, body: Record<string, unknown>) {
+    return request<T>(`songs/${songId}/lyrics${lyricId ? `/${lyricId}` : ''}`, {
+      method: lyricId ? 'PATCH' : 'POST',
+      json: body,
+    })
+  },
+  defaultLyric<T>(songId: string, lyricId: string, body: Record<string, unknown>) {
+    return request<T>(`songs/${songId}/lyrics/${lyricId}/default`, { method: 'PUT', json: body })
+  },
+  removeLyric<T>(songId: string, lyricId: string, body: Record<string, unknown>) {
+    return request<T>(`songs/${songId}/lyrics/${lyricId}`, { method: 'DELETE', json: body })
+  },
+  playlistAppend(id: string, songIds: string[]) {
+    return request<void>(`playlists/${id}/tracks`, { method: 'POST', json: { song_ids: songIds } })
+  },
+  playlistMove(id: string, entryId: string, position: number) {
+    return request<void>(`playlists/${id}/tracks/${entryId}`, {
+      method: 'PATCH',
+      json: { position },
+    })
+  },
+  playlistRemove(id: string, entryIds: string[]) {
+    return request<void>(`playlists/${id}/tracks`, {
+      method: 'DELETE',
+      json: { entry_ids: entryIds },
+    })
   },
   privatePlaylist(id: string) {
     return request<{ message: string }>(`playlists/${id}/private`, { method: 'POST' })

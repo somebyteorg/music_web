@@ -1,7 +1,6 @@
 import { onBeforeUnmount, ref } from 'vue'
-import api from '@/utils/ky'
+import { filesApi } from '@/lib/api/files'
 import type { AudioFile } from '@/types/uploads'
-import type { Page } from '@/types/common'
 import { notify } from './useFeedback'
 
 export function useImageLibrary(onDeleted: (id: string) => void) {
@@ -28,12 +27,10 @@ export function useImageLibrary(onDeleted: (id: string) => void) {
     busy.value = true
     error.value = ''
     try {
-      const result = await api
-        .get('files', {
-          signal: request.signal,
-          searchParams: { kind: 'cover', active: 1, page: target, q: query.value.trim() },
-        })
-        .json<Page<AudioFile>>()
+      const result = await filesApi.page(
+        { kind: 'cover', active: 1, page: target, q: query.value.trim() },
+        request.signal,
+      )
       items.value = result.items
       page.value = result.page
       pageSize.value = result.page_size
@@ -63,9 +60,7 @@ export function useImageLibrary(onDeleted: (id: string) => void) {
     previewBusy.value = !!picture.file
     if (!picture.file) return
     try {
-      const result = await api
-        .get(`files/${picture.id}/image`, { signal: request.signal })
-        .json<{ file: AudioFile; references: string[] }>()
+      const result = await filesApi.image(picture.id, request.signal)
       if (request.signal.aborted) return
       preview.value = { ...picture, file: result.file }
       references.value = result.references
@@ -82,7 +77,7 @@ export function useImageLibrary(onDeleted: (id: string) => void) {
     previewBusy.value = true
     previewError.value = ''
     try {
-      await api.delete(`files/${file.id}`, { json: { updated_at: file.updated_at } })
+      await filesApi.remove(file.id, { updated_at: file.updated_at })
       onDeleted(file.id)
       previewOpen.value = false
       notify('图片已删除。')

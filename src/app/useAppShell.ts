@@ -8,7 +8,7 @@ import { clearQueryCache } from '@/lib/query'
 import { useQueueStore } from '@/stores/queue'
 import { report, useAction } from '@/composables/useFeedback'
 import { displayName } from '@/utils/format'
-import api from '@/utils/ky'
+import { communityApi } from '@/lib/api/community'
 import { navigation } from './navigation'
 
 export function useAppShell() {
@@ -57,7 +57,7 @@ export function useAppShell() {
   async function refreshUnread() {
     if (sign.user)
       try {
-        unread.value = (await api.get('inbox/unread').json<{ count: number }>()).count
+        unread.value = (await communityApi.unread()).count
       } catch {
         /* Session errors are handled globally. */
       }

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import api from '@/utils/ky'
+import { catalogApi } from '@/lib/api/catalog'
 import type { CatalogType, Entity } from '@/types/catalog'
 import BaseDialog from './BaseDialog.vue'
 import { notify, useAction } from '@/composables/useFeedback'
@@ -31,9 +31,7 @@ watch(open, (v) => {
 })
 async function search() {
   await run(async () => {
-    const r = await api
-      .get(`metadata/${props.type}/search`, { searchParams: { q: query.value } })
-      .json<Record<string, unknown>>()
+    const r = await catalogApi.metadataSearch(props.type, query.value)
     const data = r.data || r.items || r.list || r.results || r
     results.value = (Array.isArray(data) ? data : []) as Record<string, unknown>[]
     if (!results.value.length) notify('没有找到结果，可以直接输入 todb ID。')
@@ -49,11 +47,7 @@ function idOf(row: Record<string, unknown>) {
 }
 async function getPreview() {
   await run(async () => {
-    const r = await api
-      .get(`catalog/${props.type}/${props.item.id}/metadata`, {
-        searchParams: { todb_id: todbId.value },
-      })
-      .json<{ fields: Record<string, unknown>; conflict: Entity | null }>()
+    const r = await catalogApi.metadataPreview(props.type, props.item.id, todbId.value)
     preview.value = r.fields
     selected.value = []
     conflict.value = r.conflict
@@ -61,8 +55,10 @@ async function getPreview() {
 }
 async function apply() {
   await run(async () => {
-    await api.post(`catalog/${props.type}/${props.item.id}/metadata`, {
-      json: { todb_id: todbId.value, version: props.item.version, fields: selected.value },
+    await catalogApi.metadataApply(props.type, props.item.id, {
+      todb_id: todbId.value,
+      version: props.item.version,
+      fields: selected.value,
     })
     notify('已提交更新，完成后可在消息中查看结果。')
     open.value = false
