@@ -3,7 +3,6 @@ import { computed, reactive, ref } from 'vue'
 import type { Entity } from '@/types/catalog'
 import { useSignStore } from '@/stores/sign'
 import { usePlayerStore } from '@/stores/player'
-import { useQueueStore } from '@/stores/queue'
 import { ACTIVE_UPLOAD_STATES, TRANSMIT_STATES } from '@/features/uploads/model'
 import { catalogLabels as labels } from '@/features/catalog/config'
 import { useEntityDetail } from '@/features/catalog/useEntityDetail'
@@ -13,7 +12,7 @@ import { getAllSongs } from '@/features/catalog/songs'
 import { notify, report } from '@/composables/useFeedback'
 import { QUEUE_LIMIT } from '@/stores/queue'
 import { lyricFormats, lyricKinds, useSongLyrics } from '@/features/catalog/useSongLyrics'
-import EntityCover from '@/components/EntityCover.vue'
+import DetailHero from './detail/DetailHero.vue'
 import EditorDialog from '@/components/EditorDialog.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import MetadataDialog from '@/components/MetadataDialog.vue'
@@ -24,7 +23,6 @@ import { bytes, date, displayName, duration, qualities } from '@/utils/format'
 
 const sign = useSignStore()
 const player = usePlayerStore()
-const queue = useQueueStore()
 const detail = useEntityDetail()
 const {
   type,
@@ -41,7 +39,6 @@ const {
   load,
   loadSongs,
 } = detail
-const currentSongPlaying = computed(() => player.song?.id === item.value?.id && player.playing)
 const queueLabel = type === 'albums' ? '专辑' : type === 'playlists' ? '歌单' : ''
 const playingAll = ref(false)
 async function playAll() {
@@ -109,7 +106,6 @@ const editingSong = ref<Entity>()
 const songEditor = ref(false)
 const metadata = ref(false)
 const tab = ref('resources')
-const descriptionOpen = ref(false)
 const lyricInput = ref<HTMLInputElement>()
 </script>
 <template>
@@ -122,125 +118,20 @@ const lyricInput = ref<HTMLInputElement>()
     <button class="button secondary" @click="load">重新加载</button>
   </div>
   <template v-else-if="item"
-    ><section class="detail-hero">
-      <EntityCover
-        :item="
-          type === 'songs' && !item.cover_id && !item.image_url ? item.albums?.[0] || item : item
-        "
-        :round="type === 'artists'"
-      />
-      <div class="detail-copy">
-        <p class="detail-kind">
-          {{ labels[type] }}
-          <span v-if="type === 'playlists'"> / {{ item.is_public ? '公开歌单' : '私密歌单' }}</span
-          ><span v-if="item.todb_id"> / TODB #{{ item.todb_id }}</span>
-        </p>
-        <h1>{{ item.name }}</h1>
-        <div class="detail-meta">
-          <template v-if="item.artists?.length"
-            ><RouterLink v-for="a in item.artists" :key="a.id" :to="`/artists/${a.id}`">{{
-              a.name
-            }}</RouterLink></template
-          ><span v-else-if="type === 'playlists'">{{ displayName(item.owner) }} 创建的歌单</span
-          ><span v-if="item.release_date">{{ item.release_date }}</span
-          ><span v-else-if="item.release_year">{{ item.release_year }}</span
-          ><span v-if="item.edition">{{ item.edition }}</span
-          ><span v-if="item.release_country">{{ item.release_country }}</span
-          ><span v-if="item.catalog_number">{{ item.catalog_number }}</span
-          ><RouterLink v-if="item.library" :to="`/libraries/${item.library.id}`">{{
-            item.library.name
-          }}</RouterLink
-          ><span v-if="item.is_default" class="badge">默认媒体库</span
-          ><span v-if="item.genre">{{ item.genre }}</span
-          ><span v-if="item.recording_version" class="badge">{{ item.recording_version }}</span>
-        </div>
-        <div v-if="item.description" class="description">
-          <p :class="{ expanded: descriptionOpen }">{{ item.description }}</p>
-          <button
-            v-if="item.description.length > 60 || item.description.includes('\n')"
-            :aria-expanded="descriptionOpen"
-            class="text-button"
-            @click="descriptionOpen = !descriptionOpen"
-          >
-            {{ descriptionOpen ? '收起简介' : '展开简介' }}
-          </button>
-        </div>
-        <div class="button-group">
-          <button
-            v-if="type === 'songs' && item.files?.length"
-            :aria-label="`${currentSongPlaying ? '暂停' : '试听'} ${item.name}`"
-            :title="currentSongPlaying ? '暂停' : '试听'"
-            class="button primary detail-play"
-            @click="queue.isCurrent(item.id) ? player.toggle() : player.playList([item], 0, '单曲')"
-          >
-            <svg aria-hidden="true" class="ui-icon playback-icon" viewBox="0 0 24 24">
-              <path :d="currentSongPlaying ? 'M6 5h4v14H6zM14 5h4v14h-4z' : 'm8 5 11 7-11 7Z'" />
-            </svg></button
-          ><button
-            v-if="type === 'songs'"
-            :aria-label="item.is_favorite ? `取消收藏 ${item.name}` : `收藏 ${item.name}`"
-            :aria-pressed="!!item.is_favorite"
-            :class="['button secondary follow-button', { active: item.is_favorite }]"
-            :title="item.is_favorite ? '取消收藏' : '收藏歌曲'"
-            @click="favorite"
-          >
-            <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-              <path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1Z" />
-            </svg>
-            {{ item.is_favorite ? '已收藏' : '收藏' }}</button
-          ><button v-if="canEdit" class="button secondary" @click="editor = true">
-            ✎ 编辑资料
-          </button>
-          <button
-            v-if="songs.length"
-            :disabled="playingAll"
-            class="button secondary"
-            @click="playAll"
-          >
-            {{ playingAll ? '正在读取…' : '播放全部' }}
-          </button>
-          <button
-            v-if="type === 'playlists' && item.is_public && sign.canModerate"
-            :disabled="acting"
-            class="button secondary"
-            @click="openOperation('playlist-private')"
-          >
-            设为私密
-          </button>
-          <details class="action-menu">
-            <summary>更多 ⋯</summary>
-            <div
-              class="action-menu-items"
-              @click="($event.currentTarget as HTMLElement).parentElement?.removeAttribute('open')"
-            >
-              <button
-                v-if="['songs', 'albums', 'artists'].includes(type) && sign.todbEnabled"
-                @click="metadata = true"
-              >
-                关联 todb 资料</button
-              ><button
-                v-if="['songs', 'albums', 'artists'].includes(type)"
-                @click="openOperation('merge')"
-              >
-                合并重复资料</button
-              ><RouterLink :to="`/history?entity_type=${type}&entity_id=${id}`"
-                >查看变更记录</RouterLink
-              ><button
-                v-if="
-                  (item.user_id === sign.user?.id || sign.canModerate) &&
-                  canEdit &&
-                  !item.is_default
-                "
-                class="danger"
-                @click="openOperation('delete')"
-              >
-                删除{{ labels[type] }}
-              </button>
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
+    ><DetailHero
+      :acting="acting"
+      :can-edit="canEdit"
+      :has-songs="songs.length > 0"
+      :item="item"
+      :label="labels[type]"
+      :playing-all="playingAll"
+      :type="type"
+      @edit="editor = true"
+      @favorite="favorite"
+      @metadata="metadata = true"
+      @operation="openOperation($event)"
+      @play-all="playAll"
+    />
     <div v-if="type === 'songs'" class="detail-tabs">
       <button :class="{ active: tab === 'resources' }" @click="tab = 'resources'">
         音频文件 <span>{{ item.files?.length || 0 }}</span></button
