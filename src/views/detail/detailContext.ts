@@ -18,6 +18,7 @@ export interface TracksContext {
 export interface UploadContext {
   detail: ReturnType<typeof useEntityDetail>
   uploads: ReturnType<typeof useSongUploads>
+  acting: ComputedRef<boolean>
 }
 
 export const tracksContextKey: InjectionKey<TracksContext> = Symbol('tracksContext')

@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import { computed, provide, reactive, ref } from 'vue'
 import type { Entity } from '@/types/catalog'
-import { useSignStore } from '@/stores/sign'
 import { usePlayerStore } from '@/stores/player'
-import { ACTIVE_UPLOAD_STATES, TRANSMIT_STATES } from '@/features/uploads/model'
 import { catalogLabels as labels } from '@/features/catalog/config'
 import { useEntityDetail } from '@/features/catalog/useEntityDetail'
 import { useDetailOperations } from '@/features/catalog/useDetailOperations'
@@ -18,13 +16,13 @@ import LyricsPanel from './detail/LyricsPanel.vue'
 import { songLyricsKey } from './detail/lyricsContext'
 import { tracksContextKey, uploadContextKey } from './detail/detailContext'
 import TracksSection from './detail/TracksSection.vue'
+import UploadDialog from './detail/UploadDialog.vue'
 import ResourcesPanel from './detail/ResourcesPanel.vue'
 import EditorDialog from '@/components/EditorDialog.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import MetadataDialog from '@/components/MetadataDialog.vue'
 import { date, displayName } from '@/utils/format'
 
-const sign = useSignStore()
 const player = usePlayerStore()
 const detail = useEntityDetail()
 const { type, id, backTo, item, songs, page, total, busy, error, load, loadSongs } = detail
@@ -47,7 +45,6 @@ async function playAll() {
 const options = useDetailOperations(detail)
 const {
   busy: operationBusy,
-  run,
   operation,
   reason,
   targetQuery,
@@ -67,24 +64,14 @@ const {
 } = options
 const songUploadState = useSongUploads(detail)
 const {
-  uploads,
   busy: uploadNoticeBusy,
   uploadOpen,
-  uploadAccepted,
-  addingFiles,
-  audioInput,
-  hasNotice,
-  audioAccept,
-  songUploads,
   uploadingCount,
   unfinishedUploadCount,
-  uploadStates,
-  chooseAudio,
-  acceptUploadNotice,
 } = songUploadState
-provide(uploadContextKey, { detail, uploads: songUploadState })
 const acting = computed(() => operationBusy.value || uploadNoticeBusy.value)
 provide(tracksContextKey, { detail, operations: options, queueLabel, acting })
+provide(uploadContextKey, { detail, uploads: songUploadState, acting })
 const lyrics = reactive(useSongLyrics(item))
 provide(songLyricsKey, lyrics)
 const editor = ref(false)
@@ -189,106 +176,7 @@ const tab = ref('resources')
         >由 {{ displayName(item.creator || item.owner) }} 创建 · {{ date(item.created_at) }}</span
       ><RouterLink :to="`/history?entity_type=${type}&entity_id=${id}`">查看操作记录 ↗</RouterLink>
     </div>
-    <BaseDialog
-      v-if="type === 'songs'"
-      v-model="uploadOpen"
-      :busy="addingFiles"
-      :title="`为「${item.name}」上传音频`"
-    >
-      <div class="form-stack">
-        <p class="notice">
-          上传完成后直接加入这首歌曲。请确认歌手和录音版本一致。<span v-if="item.recording_version"
-            >当前版本：{{ item.recording_version }}</span
-          >
-        </p>
-        <template v-if="!hasNotice">
-          <h3>上传须知</h3>
-          <p class="preline hint">{{ sign.config?.notice.text }}</p>
-          <label class="check-label"
-            ><input v-model="uploadAccepted" type="checkbox" />我已阅读并同意上传须知</label
-          >
-          <button
-            :disabled="!uploadAccepted || acting"
-            class="button primary"
-            @click="acceptUploadNotice"
-          >
-            确认须知
-          </button>
-        </template>
-        <input
-          ref="audioInput"
-          :accept="audioAccept"
-          hidden
-          multiple
-          type="file"
-          @change="chooseAudio"
-        />
-        <button
-          :disabled="!hasNotice || addingFiles"
-          class="button primary"
-          @click="audioInput?.click()"
-        >
-          {{ addingFiles ? '正在读取文件…' : '选择音频文件' }}
-        </button>
-        <div v-if="songUploads.length" class="song-upload-list">
-          <article v-for="task in songUploads" :key="task.id">
-            <strong>{{ task.name }}</strong>
-            <span class="hint"
-              >{{ uploadStates[task.state]
-              }}<template v-if="task.state === 'uploading'"> · {{ task.progress }}%</template></span
-            >
-            <progress
-              v-if="ACTIVE_UPLOAD_STATES.includes(task.state)"
-              :aria-label="`${task.name} 上传进度`"
-              :value="task.state === 'preparing' ? task.preparationProgress || 0 : task.progress"
-              max="100"
-            ></progress>
-            <p v-if="task.error" class="error-text">{{ task.error }}</p>
-            <p v-if="task.state === 'duplicate'" class="hint">
-              相同文件已存在，可使用已有文件或跳过。<RouterLink
-                v-if="uploads.duplicateFile(task)?.song_id"
-                :to="`/songs/${uploads.duplicateFile(task)?.song_id}`"
-                class="text-link"
-                >查看已有歌曲</RouterLink
-              >
-            </p>
-            <div class="button-group">
-              <button
-                v-if="TRANSMIT_STATES.includes(task.state)"
-                class="text-button"
-                @click="run(() => uploads.pause(task))"
-              >
-                暂停
-              </button>
-              <button
-                v-if="['paused', 'failed'].includes(task.state)"
-                class="text-button"
-                @click="run(() => uploads.retry(task))"
-              >
-                重试
-              </button>
-              <button
-                v-if="task.state === 'failed' && !task.file"
-                class="text-button"
-                @click="uploads.restart(task)"
-              >
-                重新上传
-              </button>
-              <template v-if="task.state === 'duplicate'"
-                ><button
-                  :disabled="!uploads.duplicateFile(task)"
-                  class="text-button"
-                  @click="run(() => uploads.useDuplicate(task))"
-                >
-                  使用已有文件</button
-                ><button class="text-button" @click="uploads.skip(task)">跳过</button></template
-              >
-            </div>
-          </article>
-        </div>
-        <RouterLink class="text-link" to="/uploads">管理全部上传任务 →</RouterLink>
-      </div>
-    </BaseDialog>
+    <UploadDialog />
     <LyricsDialogs :type="type" />
     <EditorDialog
       v-if="type === 'albums'"
