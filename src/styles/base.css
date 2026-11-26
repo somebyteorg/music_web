@@ -1,0 +1,143 @@
+/* 基础层：重置、排版、全局元素与图标 */
+
+:root {
+  font-family: Inter, 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  font-size: 14px;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 360px;
+  line-height: 1.5;
+}
+
+::selection {
+  background: var(--brand-veil);
+  color: var(--brand-veil-ink);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 650;
+}
+
+h1 {
+  font-size: 30px;
+  line-height: 1.35;
+  letter-spacing: -0.8px;
+}
+
+h2 {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+h3 {
+  font-size: 14px;
+}
+
+p {
+  line-height: 1.65;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+
+/* 线性图标：统一走 currentColor，颜色由父级 token 决定 */
+.ui-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ui-icon.playback-icon {
+  fill: currentColor;
+  stroke: none;
+}
+
+.muted,
+.hint {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.muted {
+  font-size: 13px;
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.preline {
+  white-space: pre-line;
+}

@@ -1,0 +1,71 @@
+/* 断点：三档（680 手机 / 980 平板 / 1280 窄桌面），其余为交互与动效适配 */
+
+@media (max-width: 680px) {
+  .page-heading {
+    margin-bottom: 22px;
+  }
+
+  .page-heading > .button-group {
+    gap: 6px;
+  }
+
+  .heading-title {
+    gap: 6px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  .button {
+    padding-inline: 10px;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .filter-bar {
+    gap: 6px;
+  }
+
+  .filter-bar select {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .section {
+    margin-top: 26px;
+  }
+}
+
+@media (pointer: coarse) {
+  .icon-button {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .button,
+  .chip,
+  .action-menu > summary {
+    min-height: 38px;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea {
+    min-height: 38px;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
