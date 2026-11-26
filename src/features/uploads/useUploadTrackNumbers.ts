@@ -67,13 +67,13 @@ export function useUploadTrackNumbers(
         .flatMap((item) =>
           entries.value.filter(
             ({ row, task }) =>
-              row.albumKey === item.key && task.pendingPublish && task.state === 'ready',
+              row.albumKey === item.key && task.draft.pendingPublish && task.state === 'ready',
           ),
         )
       for (let offset = 0; offset < pending.length; offset += 100) {
         const chunk = pending.slice(offset, offset + 100)
         const response = await uploadRepository.previewFiles(
-          chunk.map(({ task }) => task.file!.id),
+          chunk.map(({ task }) => task.transfer.file!.id),
           request.signal,
         )
         if (response.files.length !== chunk.length)
@@ -85,8 +85,8 @@ export function useUploadTrackNumbers(
         selection !== 'new' ||
         members.some(
           ({ task }) =>
-            task.albumAssignment?.album?.id === id ||
-            task.pendingPublish ||
+            task.draft.albumAssignment?.album?.id === id ||
+            task.draft.pendingPublish ||
             task.state === 'published',
         )
       if (needsPositions) {
@@ -105,7 +105,7 @@ export function useUploadTrackNumbers(
       )
         return
       for (const { task } of pending) {
-        task.pendingPublish = undefined
+        task.draft.pendingPublish = undefined
         task.error = ''
         task.errorStage = undefined
       }
@@ -151,7 +151,9 @@ export function useUploadTrackNumbers(
           ({ row, after }) =>
             entries.value.some(
               (entry) =>
-                entry.row === row && entry.task.state === 'ready' && !entry.task.pendingPublish,
+                entry.row === row &&
+                entry.task.state === 'ready' &&
+                !entry.task.draft.pendingPublish,
             ) &&
             row.albumKey === album.key &&
             row.disc === after.disc &&

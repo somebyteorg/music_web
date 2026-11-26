@@ -132,7 +132,7 @@ describe('上传业务分支：查重 / 复用 / 跳过', () => {
     const uploads = useUploadsStore()
     await uploads.add([new File(['abc'], 'a.flac')])
     await wait(() => expect(uploads.tasks[0].state).toBe('duplicate'))
-    expect(uploads.tasks[0].duplicateFile?.id).toBe(existing.id)
+    expect(uploads.tasks[0].draft.duplicateFile?.id).toBe(existing.id)
     expect(uploads.duplicateFile(uploads.tasks[0])?.id).toBe(existing.id)
   })
 
@@ -144,8 +144,8 @@ describe('上传业务分支：查重 / 复用 / 跳过', () => {
     await wait(() => expect(uploads.tasks[0].state).toBe('duplicate'))
     await uploads.useDuplicate(uploads.tasks[0])
     expect(uploads.tasks[0].state).toBe('published')
-    expect(uploads.tasks[0].songId).toBe('song-1')
-    expect(uploads.tasks[0].duplicateFile).toBeUndefined()
+    expect(uploads.tasks[0].metadata.songId).toBe('song-1')
+    expect(uploads.tasks[0].draft.duplicateFile).toBeUndefined()
   })
 
   it('skip 把重复任务置为 skipped', async () => {
@@ -171,7 +171,7 @@ describe('上传业务分支：封面与恢复', () => {
     await uploads.add([new File(['abc'], 'cover.jpg')], { kind: 'cover' })
     await wait(() => expect(uploads.tasks[0].state).toBe('ready'))
     expect(uploads.tasks[0].kind).toBe('cover')
-    expect(uploads.tasks[0].file?.kind).toBe('cover')
+    expect(uploads.tasks[0].transfer.file?.kind).toBe('cover')
     expect(isUploadDone(uploads.tasks[0])).toBe(true)
   })
 
@@ -185,22 +185,24 @@ describe('上传业务分支：封面与恢复', () => {
     await nextTick()
     Object.assign(task, {
       state: 'failed',
+      error: '失败',
+      errorStage: 'transfer',
+    })
+    Object.assign(task.transfer, {
       sessionId: 'session-9',
       token: 'token-9',
       uploadUrl: '/upload/tus-9',
       endpoint: '/upload',
       sha256: 'sha-9',
       progress: 40,
-      error: '失败',
-      errorStage: 'transfer',
     })
     uploads.restart(task)
     expect(task.state).toBe('queued')
-    expect(task.sessionId).toBeUndefined()
-    expect(task.token).toBeUndefined()
-    expect(task.uploadUrl).toBeUndefined()
-    expect(task.sha256).toBeUndefined()
-    expect(task.progress).toBe(0)
+    expect(task.transfer.sessionId).toBeUndefined()
+    expect(task.transfer.token).toBeUndefined()
+    expect(task.transfer.uploadUrl).toBeUndefined()
+    expect(task.transfer.sha256).toBeUndefined()
+    expect(task.transfer.progress).toBe(0)
     expect(task.error).toBe('')
   })
 
@@ -212,8 +214,10 @@ describe('上传业务分支：封面与恢复', () => {
     const [failed, paused] = uploads.tasks
     sign.user = null
     await nextTick()
-    Object.assign(failed!, { state: 'failed', sessionId: undefined, error: '失败' })
-    Object.assign(paused!, { state: 'paused', sessionId: undefined, error: '暂停' })
+    Object.assign(failed!, { state: 'failed', error: '失败' })
+    Object.assign(paused!, { state: 'paused', error: '暂停' })
+    failed!.transfer.sessionId = undefined
+    paused!.transfer.sessionId = undefined
 
     expect(await uploads.retryAll([failed!, paused!], true)).toBe(0)
     expect(failed!.state).toBe('queued')

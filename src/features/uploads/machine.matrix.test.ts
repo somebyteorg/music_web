@@ -1,22 +1,39 @@
 import { describe, expect, it } from 'vitest'
 import { reduceTask, type UploadEvent } from './machine'
-import { createUploadTask, UPLOAD_STATES, type UploadState, type UploadTask } from './model'
+import {
+  createUploadTask,
+  UPLOAD_STATES,
+  type TaskDraft,
+  type TaskMetadata,
+  type TaskTransfer,
+  type UploadState,
+  type UploadTask,
+} from './model'
 import type { AudioFile } from '@/types/uploads'
 
 const audioFile = () => ({ id: 'file-1', song_id: null, file_name: 'a.flac' }) as AudioFile
 
-function at(state: UploadState): UploadTask {
+interface Overrides {
+  transfer?: Partial<TaskTransfer>
+  metadata?: Partial<TaskMetadata>
+  draft?: Partial<TaskDraft>
+}
+
+function at(state: UploadState, overrides: Overrides = {}): UploadTask {
+  const base = createUploadTask({
+    id: 'task-1',
+    name: 'a.flac',
+    size: 1024,
+    relativePath: 'album/a.flac',
+    fingerprint: 'album/a.flac:1024:0',
+    kind: 'audio',
+  })
   return {
-    ...createUploadTask({
-      id: 'task-1',
-      name: 'a.flac',
-      size: 1024,
-      relativePath: 'album/a.flac',
-      fingerprint: 'album/a.flac:1024:0',
-      kind: 'audio',
-    }),
+    ...base,
     state,
-    file: audioFile(),
+    transfer: { ...base.transfer, file: audioFile(), ...overrides.transfer },
+    metadata: { ...base.metadata, ...overrides.metadata },
+    draft: { ...base.draft, ...overrides.draft },
   }
 }
 

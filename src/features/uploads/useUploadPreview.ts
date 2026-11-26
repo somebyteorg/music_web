@@ -44,14 +44,14 @@ export function useUploadPreview(
     previewOnly.value = onlyPreview
     song.value = undefined
     candidates.value = []
-    query.value = task.title || task.name
+    query.value = task.metadata.title || task.name
     confirm.value = true
     try {
-      if (task.file && !task.file.preview) {
-        const result = await uploadRepository.previewFiles([task.file.id], signal)
+      if (task.transfer.file && !task.transfer.file.preview) {
+        const result = await uploadRepository.previewFiles([task.transfer.file.id], signal)
         if (signal.aborted) return
         const file = result.files[0]
-        if (file) task.file = { ...file, metadata: null }
+        if (file) task.transfer.file = { ...file, metadata: null }
       }
     } catch (error) {
       if (!signal.aborted) report(error)
@@ -81,7 +81,7 @@ export function useUploadPreview(
 
   async function publish() {
     await run(async () => {
-      if (!selected.value?.file || !song.value) return
+      if (!selected.value?.transfer.file || !song.value) return
       await uploads.publish(selected.value, { song_id: song.value.id })
       confirm.value = false
       notify('音频已加入曲库。')

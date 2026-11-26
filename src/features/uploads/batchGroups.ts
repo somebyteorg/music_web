@@ -39,9 +39,10 @@ export function createBatchGroups(deps: BatchGroupsDeps) {
   function show(tasks: UploadTask[]) {
     const seen = new Set<string>()
     const eligible = tasks.filter((task) => {
-      if (task.state !== 'ready' || task.kind !== 'audio' || !task.file || seen.has(task.file.id))
+      const file = task.transfer.file
+      if (task.state !== 'ready' || task.kind !== 'audio' || !file || seen.has(file.id))
         return false
-      seen.add(task.file.id)
+      seen.add(file.id)
       return true
     })
     if (!eligible.length) {
@@ -55,9 +56,11 @@ export function createBatchGroups(deps: BatchGroupsDeps) {
       applyVersion: false,
       libraryId: '',
     }
-    const performers = [...new Set(eligible.map((task) => task.artist.trim()).filter(Boolean))]
+    const performers = [
+      ...new Set(eligible.map((task) => task.metadata.artist.trim()).filter(Boolean)),
+    ]
     if (performers.length === 1) deps.form.value.artist = performers[0]!
-    deps.form.value.libraryId = eligible[0]?.libraryId || deps.libraries.defaultId
+    deps.form.value.libraryId = eligible[0]?.metadata.libraryId || deps.libraries.defaultId
     void deps.libraries.load().then(() => {
       if (!deps.form.value.libraryId) deps.form.value.libraryId = deps.libraries.defaultId
     })
@@ -98,8 +101,9 @@ export function createBatchGroups(deps: BatchGroupsDeps) {
     deps.rows.value = []
     for (const tasks of groups.values()) {
       const publicationGroup =
-        tasks.find((task) => task.publicationGroup)?.publicationGroup || createUuid()
-      for (const task of tasks) if (!task.pendingPublish) task.publicationGroup = publicationGroup
+        tasks.find((task) => task.draft.publicationGroup)?.draft.publicationGroup || createUuid()
+      for (const task of tasks)
+        if (!task.draft.pendingPublish) task.draft.publicationGroup = publicationGroup
       const previousAlbum = previousAlbums.get(
         tasks
           .map((task) => task.id)
@@ -109,28 +113,32 @@ export function createBatchGroups(deps: BatchGroupsDeps) {
       const album = previousAlbum || createBatchAlbum(tasks)
       deps.albums.value.push(album)
       deps.rows.value.push(
-        ...tasks.map((task) => ({
-          taskId: task.id,
-          title: task.title,
-          artist: task.artist,
-          version: task.version,
-          track: task.track,
-          disc: task.disc,
-          choice: task.organizeDraft?.choice || '',
-          matches: [
-            ...(task.file?.preview?.matches || []),
-            ...(task.organizeDraft?.match &&
-            !task.file?.preview?.matches.some((match) => match.id === task.organizeDraft?.match?.id)
-              ? [task.organizeDraft.match]
-              : []),
-          ],
-          ...previous.get(task.id),
-          searching: false,
-          ...(!previousAlbum && inheritedArtists.has(task.id)
-            ? { artist: inheritedArtists.get(task.id)! }
-            : {}),
-          albumKey: album.key,
-        })),
+        ...tasks.map((task) => {
+          const { metadata, draft, transfer } = task
+          const previews = transfer.file?.preview?.matches || []
+          return {
+            taskId: task.id,
+            title: metadata.title,
+            artist: metadata.artist,
+            version: metadata.version,
+            track: metadata.track,
+            disc: metadata.disc,
+            choice: draft.organizeDraft?.choice || '',
+            matches: [
+              ...previews,
+              ...(draft.organizeDraft?.match &&
+              !previews.some((match) => match.id === draft.organizeDraft?.match?.id)
+                ? [draft.organizeDraft.match]
+                : []),
+            ],
+            ...previous.get(task.id),
+            searching: false,
+            ...(!previousAlbum && inheritedArtists.has(task.id)
+              ? { artist: inheritedArtists.get(task.id)! }
+              : {}),
+            albumKey: album.key,
+          }
+        }),
       )
     }
     deps.rows.value.sort(
@@ -178,10 +186,10 @@ export function createBatchGroups(deps: BatchGroupsDeps) {
       return
     const source = deps.albumFor(row)
     const group =
-      deps.groupEntries(target).find(({ task }) => task.publicationGroup)?.task.publicationGroup ||
-      createUuid()
+      deps.groupEntries(target).find(({ task }) => task.draft.publicationGroup)?.task.draft
+        .publicationGroup || createUuid()
     row.albumKey = targetKey
-    if (!task.pendingPublish) task.publicationGroup = group
+    if (!task.draft.pendingPublish) task.draft.publicationGroup = group
     if (row.choice.startsWith('track:')) deps.choose(task, row, false)
     removeEmptyGroup(source)
     if (renumber) void deps.numberTracks(target, false)

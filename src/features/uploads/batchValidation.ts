@@ -42,7 +42,7 @@ export function createBatchValidation(deps: BatchValidationDeps) {
       const identity = row.choice.startsWith('track:')
         ? row.choice
         : JSON.stringify([
-            task.publicationGroup,
+            task.draft.publicationGroup,
             uploadTrackKey({
               album_id: album.selection,
               name: row.title,

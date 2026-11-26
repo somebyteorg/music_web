@@ -15,12 +15,13 @@ export function createUploadRecovery(
 ) {
   async function resumeTask(task: UploadTask) {
     task.error = ''
-    if (task.file && task.pendingPublish && task.errorStage === 'publishing') {
-      await deps.publish(task, task.pendingPublish)
+    const { transfer } = task
+    if (transfer.file && task.draft.pendingPublish && task.errorStage === 'publishing') {
+      await deps.publish(task, task.draft.pendingPublish)
       return
     }
-    if (task.sessionId) {
-      const response = await uploadRepository.getSession(task.sessionId)
+    if (transfer.sessionId) {
+      const response = await uploadRepository.getSession(transfer.sessionId)
       const status = response.session.status
       if (['processing', 'publishing', 'complete'].includes(status)) {
         deps.apply(task, {
@@ -32,16 +33,16 @@ export function createUploadRecovery(
         return
       }
       if (status === 'failed') {
-        await uploadRepository.retry(task.sessionId)
+        await uploadRepository.retry(transfer.sessionId)
         deps.apply(task, { type: 'sessionRestored' })
         return
       }
       if (new Date(response.session.expires_at || '').getTime() < Date.now()) {
-        task.sessionId = undefined
-        task.token = undefined
-        task.uploadUrl = undefined
-        task.endpoint = undefined
-        task.progress = 0
+        transfer.sessionId = undefined
+        transfer.token = undefined
+        transfer.uploadUrl = undefined
+        transfer.endpoint = undefined
+        transfer.progress = 0
       }
     }
     if (!deps.storage.files.has(task.id)) {
@@ -92,7 +93,8 @@ export function createUploadRecovery(
 
   function duplicateFile(task: UploadTask) {
     return (
-      task.duplicateFile || deps.tasks.value.find((entry) => entry.id === task.duplicateOf)?.file
+      task.draft.duplicateFile ||
+      deps.tasks.value.find((entry) => entry.id === task.draft.duplicateOf)?.transfer.file
     )
   }
 
@@ -101,14 +103,14 @@ export function createUploadRecovery(
     if (!file) throw new Error('相同文件仍在处理中，请稍后再试。')
     if (
       task.batchId &&
-      task.sha256 &&
+      task.transfer.sha256 &&
       !file.upload_context?.some(
         (context) =>
           context.batch_id === task.batchId && context.relative_path === task.relativePath,
       )
     ) {
       const result = await uploadRepository.checkDuplicate({
-        sha256: task.sha256,
+        sha256: task.transfer.sha256,
         kind: task.kind,
         file_size: task.size,
         context: { batch_id: task.batchId, relative_path: task.relativePath },
@@ -116,13 +118,14 @@ export function createUploadRecovery(
       if (!result.file) throw new Error('已有文件已被删除，请重新上传。')
       file = result.file
     }
-    if (task.targetSongId && file.song_id && file.song_id !== task.targetSongId)
+    const { targetSongId } = task.metadata
+    if (targetSongId && file.song_id && file.song_id !== targetSongId)
       throw new Error('相同文件已关联其他歌曲，请到原歌曲页面移动音频。')
-    if (task.targetSongId && !file.song_id) {
+    if (targetSongId && !file.song_id) {
       deps.apply(task, { type: 'publishingStarted' })
       deps.publishing.add(task.id)
       try {
-        const result = await uploadRepository.publishFile(file.id, { song_id: task.targetSongId })
+        const result = await uploadRepository.publishFile(file.id, { song_id: targetSongId })
         deps.finish(task, { ...result.file, preview: file.preview }, true)
       } catch (error) {
         deps.apply(task, { type: 'checked', duplicate: true })
@@ -141,7 +144,7 @@ export function createUploadRecovery(
       .find((entry) => entry.kind === 'cover' && entry.fingerprint === fingerprint)
     if (!task) throw new Error('封面超出大小上限或格式不支持。')
     if (task.state === 'failed') await retry(task)
-    if (task.file) return task.file
+    if (task.transfer.file) return task.transfer.file
     return new Promise((resolve, reject) => {
       let reusing = false
       const timer = setInterval(() => {
@@ -152,17 +155,18 @@ export function createUploadRecovery(
             reject(error)
           })
         }
-        if (task.file) {
+        if (task.transfer.file) {
           clearInterval(timer)
-          resolve(task.file)
+          resolve(task.transfer.file)
         } else if (
           task.state === 'failed' ||
           task.state === 'paused' ||
           task.state === 'skipped' ||
           !deps.tasks.value.some((entry) => entry.id === task.id) ||
           deps.userId() === undefined ||
-          (task.duplicateOf &&
-            deps.tasks.value.find((entry) => entry.id === task.duplicateOf)?.state === 'failed')
+          (task.draft.duplicateOf &&
+            deps.tasks.value.find((entry) => entry.id === task.draft.duplicateOf)?.state ===
+              'failed')
         ) {
           clearInterval(timer)
           reject(new Error(task.error || '封面没有上传完成。'))

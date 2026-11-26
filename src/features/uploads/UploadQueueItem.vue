@@ -17,7 +17,8 @@ const emit = defineEmits<{
 const uploads = useUploadsStore()
 const done = computed(() => isUploadDone(props.task))
 const coverUrl = computed(() => {
-  const id = props.task.kind === 'cover' ? props.task.file?.id : props.task.file?.preview?.cover_id
+  const file = props.task.transfer.file
+  const id = props.task.kind === 'cover' ? file?.id : file?.preview?.cover_id
   return id ? fileUrl(id) : uploads.localCover(props.task)
 })
 </script>
@@ -46,24 +47,28 @@ const coverUrl = computed(() => {
       <strong :title="task.relativePath">{{ task.name }}</strong>
       <p class="hint">
         {{ bytes(task.size)
-        }}<span v-if="task.file?.quality && task.kind === 'audio'">
-          · {{ qualities[task.file.quality] }}</span
+        }}<span v-if="task.transfer.file?.quality && task.kind === 'audio'">
+          · {{ qualities[task.transfer.file.quality] }}</span
         ><span v-if="task.relativePath !== task.name"> · {{ task.relativePath }}</span>
-        <span v-if="task.duration"> · {{ duration(task.duration) }}</span
-        ><span v-if="task.file?.preview?.lyrics.length">
-          · {{ task.file.preview.lyrics.length }} 个歌词版本</span
+        <span v-if="task.metadata.duration"> · {{ duration(task.metadata.duration) }}</span
+        ><span v-if="task.transfer.file?.preview?.lyrics.length">
+          · {{ task.transfer.file.preview.lyrics.length }} 个歌词版本</span
         >
-        <span v-if="task.targetSongId">
+        <span v-if="task.metadata.targetSongId">
           · 加入
-          <RouterLink :to="`/songs/${task.targetSongId}`" class="text-link">{{
-            task.targetSongName || '目标歌曲'
+          <RouterLink :to="`/songs/${task.metadata.targetSongId}`" class="text-link">{{
+            task.metadata.targetSongName || '目标歌曲'
           }}</RouterLink></span
         >
       </p>
       <div
         v-if="TRANSMIT_STATES.includes(task.state)"
         :aria-label="`${task.name} 上传进度`"
-        :aria-valuenow="task.state === 'preparing' ? task.preparationProgress || 0 : task.progress"
+        :aria-valuenow="
+          task.state === 'preparing'
+            ? task.transfer.preparationProgress || 0
+            : task.transfer.progress
+        "
         aria-valuemax="100"
         aria-valuemin="0"
         class="progress-track"
@@ -71,7 +76,7 @@ const coverUrl = computed(() => {
       >
         <span
           :style="{
-            width: `${task.state === 'preparing' ? task.preparationProgress || 0 : task.progress}%`,
+            width: `${task.state === 'preparing' ? task.transfer.preparationProgress || 0 : task.transfer.progress}%`,
           }"
         ></span>
       </div>
@@ -88,14 +93,17 @@ const coverUrl = computed(() => {
           >查看已有歌曲</RouterLink
         >
       </p>
-      <p v-if="task.file?.preview?.warnings.length && task.state === 'ready'" class="task-warning">
-        {{ task.file.preview.warnings.join(' ') }}
+      <p
+        v-if="task.transfer.file?.preview?.warnings.length && task.state === 'ready'"
+        class="task-warning"
+      >
+        {{ task.transfer.file.preview.warnings.join(' ') }}
       </p>
       <p v-if="task.error" class="error-text">{{ task.error }}</p>
     </div>
     <span :class="['task-state', task.state]"
       >{{ task.kind === 'cover' && task.state === 'ready' ? '图片已上传' : states[task.state]
-      }}<span v-if="task.state === 'uploading'"> {{ task.progress }}%</span></span
+      }}<span v-if="task.state === 'uploading'"> {{ task.transfer.progress }}%</span></span
     >
     <UploadQueueItemActions
       :busy="busy"

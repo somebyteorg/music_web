@@ -53,12 +53,13 @@ export function useUploadImages(batch: UploadBatch) {
   function inspectTask(task: UploadTask) {
     imageAlbum.value = undefined
     imageTask.value = task
-    const id = task.kind === 'cover' ? task.file?.id : task.file?.preview?.cover_id
+    const file = task.transfer.file
+    const id = task.kind === 'cover' ? file?.id : file?.preview?.cover_id
     if (id)
       void images.inspect({
         id,
         name: task.name,
-        file: task.kind === 'cover' && task.file?.user_id === sign.user?.id ? task.file : undefined,
+        file: task.kind === 'cover' && file?.user_id === sign.user?.id ? file : undefined,
       })
     else if (uploads.localCover(task))
       void images.inspect({ id: task.id, name: task.name, url: uploads.localCover(task) })

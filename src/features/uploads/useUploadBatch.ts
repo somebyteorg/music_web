@@ -48,7 +48,7 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
     }),
   )
   const ready = computed(() =>
-    entries.value.filter(({ task }) => task.state === 'ready' && task.file),
+    entries.value.filter(({ task }) => task.state === 'ready' && task.transfer.file),
   )
   const done = computed(() => entries.value.filter(({ task }) => task.state === 'published').length)
   const groupOptions = computed(() =>

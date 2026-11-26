@@ -44,28 +44,28 @@ export function planNumbers(
     const { row, task } = entry
     const songId = row.choice.startsWith('track:')
       ? row.choice.slice(6)
-      : task.songId || task.file?.song_id || undefined
+      : task.metadata.songId || task.transfer.file?.song_id || undefined
     const disc = Number.isInteger(row.disc) && row.disc >= 1 && row.disc <= 999 ? row.disc : 1
     const key = row.choice.startsWith('track:')
       ? row.choice
       : JSON.stringify([
-          task.publicationGroup || row.albumKey,
+          task.draft.publicationGroup || row.albumKey,
           disc,
-          task.track,
+          task.metadata.track,
           row.title.trim() || task.id,
           artist(row).trim(),
           version(row).trim(),
           row.choice,
         ])
-    const duration = task.file?.duration || task.duration || 0
+    const duration = task.transfer.file?.duration || task.metadata.duration || 0
     const fixed =
-      task.state === 'published' || !!task.pendingPublish || fixedGroups.has(row.albumKey)
+      task.state === 'published' || !!task.draft.pendingPublish || fixedGroups.has(row.albumKey)
     const unit = units.find((candidate) => {
       if (songId && candidate.songId === songId) return true
       if (candidate.key !== key || (songId && candidate.songId && songId !== candidate.songId))
         return false
       const previous = candidate.entries[0]!.task
-      const previousDuration = previous.file?.duration || previous.duration || 0
+      const previousDuration = previous.transfer.file?.duration || previous.metadata.duration || 0
       return (
         Math.abs(previousDuration - duration) <=
         Math.max(5, Math.min(previousDuration, duration) * 0.02)
@@ -137,7 +137,7 @@ export function planNumbers(
     for (const { row, task } of unit.entries) {
       if (
         task.state === 'published' ||
-        task.pendingPublish ||
+        task.draft.pendingPublish ||
         fixedGroups.has(row.albumKey) ||
         (row.disc === after.disc && row.track === after.track)
       )

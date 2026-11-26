@@ -121,9 +121,9 @@ describe('上传任务编排冒烟', () => {
     expect(skipped).toBe(0)
     await wait(() => expect(uploads.tasks[0].state).toBe('ready'))
     const task = uploads.tasks[0]
-    expect(task.file?.id).toBe('file-1')
-    expect(task.progress).toBe(100)
-    expect(task.sessionId).toBe('session-1')
+    expect(task.transfer.file?.id).toBe('file-1')
+    expect(task.transfer.progress).toBe(100)
+    expect(task.transfer.sessionId).toBe('session-1')
     expect(vi.mocked(uploadRepository.getSession)).toHaveBeenCalledWith('session-1')
   })
 
@@ -133,7 +133,7 @@ describe('上传任务编排冒烟', () => {
     await wait(() => expect(uploads.tasks[0].state).toBe('ready'))
     await uploads.publish(uploads.tasks[0], { song_id: 'song-1' })
     expect(uploads.tasks[0].state).toBe('published')
-    expect(uploads.tasks[0].songId).toBe('song-1')
+    expect(uploads.tasks[0].metadata.songId).toBe('song-1')
     expect(vi.mocked(uploadRepository.publishFile)).toHaveBeenCalled()
   })
 

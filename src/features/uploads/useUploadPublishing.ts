@@ -14,27 +14,31 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
   }
 
   function published(task: UploadTask, result: { file: AudioFile; song_id: string }) {
-    const related = tasks.value.filter((entry) => entry.file?.id === result.file.id)
+    const related = tasks.value.filter((entry) => entry.transfer.file?.id === result.file.id)
     if (!related.includes(task)) related.push(task)
     for (const entry of related) {
-      entry.file = { ...result.file, preview: entry.file?.preview, metadata: null }
+      entry.transfer.file = {
+        ...result.file,
+        preview: entry.transfer.file?.preview,
+        metadata: null,
+      }
       apply(entry, {
         type: 'published',
-        file: entry.file,
+        file: entry.transfer.file,
         songId: result.song_id,
-        reused: entry.reused,
+        reused: entry.transfer.reused,
       })
     }
   }
 
   async function publish(task: UploadTask, data: PublishData) {
-    if (!task.file) throw new Error('文件还未解析完成。')
-    task.pendingPublish = data
+    if (!task.transfer.file) throw new Error('文件还未解析完成。')
+    task.draft.pendingPublish = data
     task.error = ''
     publishing.add(task.id)
     apply(task, { type: 'publishingStarted' })
     try {
-      const result = await uploadRepository.publishFile(task.file.id, data)
+      const result = await uploadRepository.publishFile(task.transfer.file.id, data)
       published(task, result)
       return result
     } catch (error) {
@@ -57,20 +61,20 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
         throw new Error('登录状态已改变，请重新打开上传队列。')
       const batch = items
         .slice(offset, offset + 100)
-        .filter((item) => item.task.state === 'ready' && item.task.file)
+        .filter((item) => item.task.state === 'ready' && item.task.transfer.file)
       if (!batch.length) continue
       batch.forEach(({ task, data }) => {
         publishing.add(task.id)
         task.error = ''
-        task.pendingPublish = data
+        task.draft.pendingPublish = data
         apply(task, { type: 'publishingStarted' })
       })
       try {
         const response = await uploadRepository.publishFiles(
-          batch.map(({ task, data }) => ({ ...data, file_id: task.file!.id })),
+          batch.map(({ task, data }) => ({ ...data, file_id: task.transfer.file!.id })),
         )
         for (const result of response.items) {
-          const entry = batch.find((item) => item.task.file?.id === result.file.id)
+          const entry = batch.find((item) => item.task.transfer.file?.id === result.file.id)
           if (entry) published(entry.task, result)
         }
       } catch (error) {

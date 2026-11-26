@@ -47,7 +47,7 @@ export function useBatchArtwork(entries: ComputedRef<BatchEntry[]>, albums: Ref<
       file?: AudioFile
     }[] = []
     for (const task of covers) {
-      const file = task.file || uploads.duplicateFile(task)
+      const file = task.transfer.file || uploads.duplicateFile(task)
       if (task.state === 'skipped') continue
       result.push({
         id: file?.id || task.id,
@@ -68,7 +68,7 @@ export function useBatchArtwork(entries: ComputedRef<BatchEntry[]>, albums: Ref<
         })
     }
     for (const { task } of groupEntries(album)) {
-      const id = task.file?.preview?.cover_id
+      const id = task.transfer.file?.preview?.cover_id
       if (id && !result.some((picture) => picture.id === id))
         result.push({ id, name: '音频内嵌封面', type: 'cover', waiting: false })
     }

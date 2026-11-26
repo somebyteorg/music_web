@@ -15,7 +15,7 @@ export function fingerprintOfFile(file: File) {
 
 /** tus 自己的断点续传指纹：按用户 + 会话隔离，避免跨账号串传 */
 export function uploadFingerprint(userId: number, task: UploadTask) {
-  return `music:${userId}:${task.sessionId}:${task.fingerprint}`
+  return `music:${userId}:${task.transfer.sessionId}:${task.fingerprint}`
 }
 
 /** 服务端恢复会话时，把 tus_id 还原成可续传的 uploadUrl */
@@ -45,11 +45,7 @@ export interface UploadRunner {
   stopActive(): void
 }
 
-/**
- * 任务传输层：文件校验 → 查重 → 建会话 → tus 传输 → 轮询解析。
- *
- * 只负责"把一份文件送进去并盯到出结果"，状态迁移一律通过 deps.apply 交给状态机。
- */
+/** 任务传输层：文件校验 → 查重 → 建会话 → tus 传输 → 轮询解析；状态迁移一律交给状态机 */
 export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
   const active = new Map<string, Upload>()
   const attempts = new Map<string, symbol>()
@@ -72,8 +68,11 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
         throw new DOMException('上传已暂停。', 'AbortError')
     }
     try {
-      if (task.sessionId) {
-        const response = await uploadRepository.getSession(task.sessionId, controller.signal)
+      if (task.transfer.sessionId) {
+        const response = await uploadRepository.getSession(
+          task.transfer.sessionId,
+          controller.signal,
+        )
         assertActive()
         const status = response.session.status
         if (['processing', 'publishing', 'complete'].includes(status)) {
@@ -93,11 +92,13 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
           })
           return
         }
-        if (status === 'uploading' && !task.uploadUrl && response.session.tus_id) {
-          task.uploadUrl = resumeUploadUrl(task.endpoint, response.session.tus_id)
-        }
+        if (status === 'uploading' && !task.transfer.uploadUrl && response.session.tus_id)
+          task.transfer.uploadUrl = resumeUploadUrl(task.transfer.endpoint, response.session.tus_id)
       }
-      if (!task.sha256 || (!task.sessionId && task.kind === 'audio' && !task.preparedLyrics)) {
+      if (
+        !task.transfer.sha256 ||
+        (!task.transfer.sessionId && task.kind === 'audio' && !task.transfer.preparedLyrics)
+      ) {
         const prepared = await prepareUpload(
           file,
           task.kind === 'audio',
@@ -117,12 +118,12 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
           preparedLyrics: prepared.metadata.preparedLyrics || [],
         })
       }
-      if (!task.sessionId) {
+      if (!task.transfer.sessionId) {
         if (task.state === 'preparing') deps.apply(task, { type: 'prepared' })
         const existing = await uploadRepository.checkDuplicate(
           {
-            sha256: task.sha256!,
-            prepared_lyrics: task.preparedLyrics,
+            sha256: task.transfer.sha256!,
+            prepared_lyrics: task.transfer.preparedLyrics,
             kind: task.kind,
             file_size: task.size,
             context: task.batchId
@@ -138,9 +139,9 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
           .slice(0, index)
           .find(
             (entry) =>
-              entry.sha256 === task.sha256 &&
+              entry.transfer.sha256 === task.transfer.sha256 &&
               entry.kind === task.kind &&
-              !entry.file &&
+              !entry.transfer.file &&
               TRANSMIT_STATES.includes(entry.state),
           )
         if (existing.file || source) {
@@ -160,9 +161,9 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
             kind: task.kind,
             file_name: task.name,
             file_size: task.size,
-            song_id: task.targetSongId,
-            prepared_lyrics: task.preparedLyrics,
-            sha256: task.sha256!,
+            song_id: task.metadata.targetSongId,
+            prepared_lyrics: task.transfer.preparedLyrics,
+            sha256: task.transfer.sha256!,
             context: task.batchId
               ? { batch_id: task.batchId, relative_path: task.relativePath }
               : undefined,
@@ -170,7 +171,7 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
           controller.signal,
         )
         assertActive()
-        delete task.preparedLyrics
+        delete task.transfer.preparedLyrics
         deps.apply(task, {
           type: 'sessionCreated',
           sessionId: response.session.id,
@@ -180,25 +181,25 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
       } else {
         deps.apply(task, {
           type: 'sessionCreated',
-          sessionId: task.sessionId,
-          token: task.token,
-          endpoint: task.endpoint,
-          uploadUrl: task.uploadUrl,
+          sessionId: task.transfer.sessionId,
+          token: task.transfer.token,
+          endpoint: task.transfer.endpoint,
+          uploadUrl: task.transfer.uploadUrl,
         })
       }
       assertActive()
       await new Promise<void>((resolve, reject) => {
         cancels.set(task.id, () => reject(new DOMException('上传已暂停。', 'AbortError')))
         const upload = new Upload(file, {
-          endpoint: task.endpoint!,
-          uploadUrl: task.uploadUrl,
+          endpoint: task.transfer.endpoint!,
+          uploadUrl: task.transfer.uploadUrl,
           chunkSize: deps.chunkSize(),
           retryDelays: [0, 1000, 3000, 5000, 10000],
           removeFingerprintOnSuccess: true,
           fingerprint: async () => uploadFingerprint(userId, task),
-          metadata: { session_id: task.sessionId!, token: task.token! },
+          metadata: { session_id: task.transfer.sessionId!, token: task.transfer.token! },
           onUploadUrlAvailable: () => {
-            task.uploadUrl = upload.url || undefined
+            task.transfer.uploadUrl = upload.url || undefined
           },
           onProgress: (sent, total) => {
             const time = Date.now()
@@ -212,7 +213,8 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
               speed: previous ? previous.speed * 0.65 + rate * 0.35 : 0,
             })
             const progress = Math.round((sent / total) * 100)
-            if (progress !== task.progress) deps.apply(task, { type: 'progress', progress })
+            if (progress !== task.transfer.progress)
+              deps.apply(task, { type: 'progress', progress })
           },
           onError: reject,
           onSuccess: () => resolve(),
@@ -244,12 +246,12 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
 
   /** 轮询服务端处理状态；不改变上传/暂停这些本地状态，只跟进解析、入库与失败 */
   async function poll(task: UploadTask) {
-    if (!task.sessionId || polling.has(task.id) || deps.isPublishing(task.id)) return
+    if (!task.transfer.sessionId || polling.has(task.id) || deps.isPublishing(task.id)) return
     const userId = deps.userId()
     if (userId === undefined) return
     polling.add(task.id)
     try {
-      const response = await uploadRepository.getSession(task.sessionId)
+      const response = await uploadRepository.getSession(task.transfer.sessionId)
       if (deps.userId() !== userId) return
       if (response.session.status === 'complete' && response.file) deps.finish(task, response.file)
       else if (response.session.status === 'failed') {

@@ -30,10 +30,14 @@ const uploads = useUploadsStore()
       @click="emit('retry', task)"
     >
       {{
-        task.errorStage === 'publishing' ? '重试入库' : task.progress === 100 ? '重新处理' : '继续'
+        task.errorStage === 'publishing'
+          ? '重试入库'
+          : task.transfer.progress === 100
+            ? '重新处理'
+            : '继续'
       }}</button
     ><button
-      v-if="task.state === 'failed' && !task.file"
+      v-if="task.state === 'failed' && !task.transfer.file"
       :disabled="busy"
       class="text-button"
       @click="uploads.restart(task)"
@@ -60,12 +64,15 @@ const uploads = useUploadsStore()
     >
       预览图片</button
     ><button
-      v-if="task.kind === 'audio' && task.file && task.state !== 'ready'"
+      v-if="task.kind === 'audio' && task.transfer.file && task.state !== 'ready'"
       class="text-button"
       @click="emit('preview', task, true)"
     >
       预览</button
-    ><RouterLink v-if="task.songId" :to="`/songs/${task.songId}`" class="text-link"
+    ><RouterLink
+      v-if="task.metadata.songId"
+      :to="`/songs/${task.metadata.songId}`"
+      class="text-link"
       >查看歌曲</RouterLink
     ><button
       v-if="!['processing', 'publishing'].includes(task.state)"

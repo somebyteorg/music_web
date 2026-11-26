@@ -12,7 +12,7 @@ export interface BatchRowFieldsDeps {
 export function createBatchRowFields(deps: BatchRowFieldsDeps) {
   function songArtist(row: BatchRow) {
     const task = deps.uploads.tasks.find((task) => task.id === row.taskId)
-    if (task?.state === 'published') return task.artist
+    if (task?.state === 'published') return task.metadata.artist
     if (row.choice.startsWith('track:')) return row.artist
     if (deps.form.value.applyArtist) return deps.form.value.artist.trim()
     const album = deps.albumFor(row)
@@ -20,7 +20,7 @@ export function createBatchRowFields(deps: BatchRowFieldsDeps) {
   }
   function songVersion(row: BatchRow) {
     const task = deps.uploads.tasks.find((task) => task.id === row.taskId)
-    if (task?.state === 'published') return task.version
+    if (task?.state === 'published') return task.metadata.version
     return !row.choice.startsWith('track:') && deps.form.value.applyVersion
       ? deps.form.value.version.trim()
       : row.version

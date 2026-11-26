@@ -69,19 +69,36 @@ import {
   createUploadRunner,
 } from './transport'
 import { reduceTask } from './machine'
-import { createUploadTask, type UploadTask } from './model'
+import {
+  createUploadTask,
+  type TaskDraft,
+  type TaskMetadata,
+  type TaskTransfer,
+  type UploadTask,
+} from './model'
 
-function task(overrides: Partial<UploadTask> = {}): UploadTask {
+interface Overrides {
+  fingerprint?: string
+  transfer?: Partial<TaskTransfer>
+  metadata?: Partial<TaskMetadata>
+  draft?: Partial<TaskDraft>
+}
+
+function task(overrides: Overrides = {}): UploadTask {
+  const base = createUploadTask({
+    id: 'task-1',
+    name: 'a.flac',
+    size: 1024,
+    relativePath: 'album/a.flac',
+    fingerprint: 'album/a.flac:1024:0',
+    kind: 'audio',
+  })
   return {
-    ...createUploadTask({
-      id: 'task-1',
-      name: 'a.flac',
-      size: 1024,
-      relativePath: 'album/a.flac',
-      fingerprint: 'album/a.flac:1024:0',
-      kind: 'audio',
-    }),
-    ...overrides,
+    ...base,
+    ...(overrides.fingerprint ? { fingerprint: overrides.fingerprint } : {}),
+    transfer: { ...base.transfer, ...overrides.transfer },
+    metadata: { ...base.metadata, ...overrides.metadata },
+    draft: { ...base.draft, ...overrides.draft },
   }
 }
 
@@ -145,8 +162,8 @@ describe('transport：tus 传输', () => {
     await running
 
     expect(current.state).toBe('processing')
-    expect(current.progress).toBe(100)
-    expect(current.sessionId).toBe('session-1')
+    expect(current.transfer.progress).toBe(100)
+    expect(current.transfer.sessionId).toBe('session-1')
     expect(events.map((event) => event.type)).toEqual([
       'started',
       'progress',
@@ -169,7 +186,7 @@ describe('transport：tus 传输', () => {
       file: null,
     })
     const { runner, current } = setup()
-    Object.assign(current, {
+    Object.assign(current.transfer, {
       sessionId: 'session-0',
       token: 'token-0',
       endpoint: '/upload',
@@ -226,9 +243,9 @@ describe('transport：指纹与续传地址', () => {
   })
 
   it('tus 指纹按用户与会话隔离', () => {
-    expect(uploadFingerprint(7, task({ sessionId: 's9', fingerprint: 'watch' }))).toBe(
-      'music:7:s9:watch',
-    )
+    expect(
+      uploadFingerprint(7, task({ fingerprint: 'watch', transfer: { sessionId: 's9' } })),
+    ).toBe('music:7:s9:watch')
   })
 
   it('tus_id 会按路径段编码拼回 uploadUrl', () => {

@@ -14,7 +14,9 @@ export function usePendingUploads() {
   const pendingTotal = ref(0)
   const pendingPageSize = ref(24)
   const remotePending = computed(() =>
-    pending.value.filter((file) => !uploads.tasks.some((task) => task.file?.id === file.id)),
+    pending.value.filter(
+      (file) => !uploads.tasks.some((task) => task.transfer.file?.id === file.id),
+    ),
   )
 
   async function loadPending() {

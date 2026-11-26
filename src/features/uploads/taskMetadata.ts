@@ -1,22 +1,25 @@
 import type { AudioFile, UploadDraftMetadata } from '@/types/uploads'
 import type { UploadTask } from './model'
 
+/** 解析得到的曲目信息落到 metadata，空值不覆盖已有内容 */
 export function applyTaskMetadata(task: UploadTask, metadata: UploadDraftMetadata) {
-  task.title = metadata.title || task.title
-  task.artist = metadata.artist || task.artist
-  task.album = metadata.album || task.album
-  task.albumArtist = metadata.albumArtist || task.albumArtist
-  task.year = metadata.year || task.year
-  task.label = metadata.label || task.label
-  task.catalogNumber = metadata.catalogNumber || task.catalogNumber
-  task.releaseCountry = metadata.releaseCountry || task.releaseCountry
-  task.musicbrainzId = metadata.musicbrainzId || task.musicbrainzId
-  task.trackTotal = metadata.trackTotal || task.trackTotal
-  task.discTotal = metadata.discTotal || task.discTotal
-  task.track = metadata.track || task.track
-  task.disc = metadata.disc || task.disc
-  task.duration = metadata.duration || task.duration
+  const next = task.metadata
+  next.title = metadata.title || next.title
+  next.artist = metadata.artist || next.artist
+  next.album = metadata.album || next.album
+  next.albumArtist = metadata.albumArtist || next.albumArtist
+  next.year = metadata.year || next.year
+  next.label = metadata.label || next.label
+  next.catalogNumber = metadata.catalogNumber || next.catalogNumber
+  next.releaseCountry = metadata.releaseCountry || next.releaseCountry
+  next.musicbrainzId = metadata.musicbrainzId || next.musicbrainzId
+  next.trackTotal = metadata.trackTotal || next.trackTotal
+  next.discTotal = metadata.discTotal || next.discTotal
+  next.track = metadata.track || next.track
+  next.disc = metadata.disc || next.disc
+  next.duration = metadata.duration || next.duration
 }
+
 /** 把已入库文件的标签与草稿合并进任务；状态与进度由状态机的 processed / published 事件负责 */
 export function applyUploadedFile(task: UploadTask, file: AudioFile) {
   const tags = file.metadata || {}
@@ -38,23 +41,24 @@ export function applyUploadedFile(task: UploadTask, file: AudioFile) {
     disc: Number((tags.disk as { no?: number })?.no),
     duration: file.duration,
   })
-  task.file = { ...file, metadata: null }
+  task.transfer.file = { ...file, metadata: null }
   if (file.upload_draft) {
     const { data, organize } = file.upload_draft
-    task.publicationGroup = data.publication_group
-    task.title = data.name || task.title
-    task.artist = data.artist_name ?? task.artist
-    task.version = data.recording_version || ''
-    task.disc = data.disc_number || 1
-    task.track = data.track_number || 1
-    task.libraryId = data.library_id
-    task.albumAssignment = {
+    const { metadata } = task
+    task.draft.publicationGroup = data.publication_group
+    metadata.title = data.name || metadata.title
+    metadata.artist = data.artist_name ?? metadata.artist
+    metadata.version = data.recording_version || ''
+    metadata.disc = data.disc_number || 1
+    metadata.track = data.track_number || 1
+    metadata.libraryId = data.library_id
+    task.draft.albumAssignment = {
       album: data.album,
       album_id: data.album_id,
       album_supplement: data.album_supplement,
     }
-    task.album = data.album?.name || task.album
-    task.organizeDraft = {
+    metadata.album = data.album?.name || metadata.album
+    task.draft.organizeDraft = {
       ...organize,
       choice: data.song_id
         ? `track:${data.song_id}`

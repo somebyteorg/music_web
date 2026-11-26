@@ -61,7 +61,7 @@ export function createUploadTaskOperations(deps: UploadOperationsDeps) {
       const existing = deps.tasks.value.find(
         (entry) =>
           entry.fingerprint === fingerprint &&
-          entry.targetSongId === options.song?.id &&
+          entry.metadata.targetSongId === options.song?.id &&
           !isUploadDone(entry),
       )
       if (existing) {
@@ -100,10 +100,10 @@ export function createUploadTaskOperations(deps: UploadOperationsDeps) {
   }
 
   function adopt(file: AudioFile): UploadTask {
-    const existing = deps.tasks.value.find((task) => task.file?.id === file.id)
+    const existing = deps.tasks.value.find((task) => task.transfer.file?.id === file.id)
     if (existing) {
-      if (!file.song_id) deps.finish(existing, file, existing.reused, 'reused')
-      existing.file = { ...file, metadata: null }
+      if (!file.song_id) deps.finish(existing, file, existing.transfer.reused, 'reused')
+      existing.transfer.file = { ...file, metadata: null }
       return existing
     }
     const task = saveTask(
@@ -127,10 +127,10 @@ export function createUploadTaskOperations(deps: UploadOperationsDeps) {
     if (TRANSMIT_STATES.includes(task.state)) await pause(task)
     deps.storage.drop(deps.userId(), task.id)
     for (const dependent of deps.tasks.value.filter(
-      (entry) => entry.state === 'duplicate' && entry.duplicateOf === task.id,
+      (entry) => entry.state === 'duplicate' && entry.draft.duplicateOf === task.id,
     )) {
-      dependent.duplicateOf = undefined
-      if (task.file) dependent.duplicateFile = task.file
+      dependent.draft.duplicateOf = undefined
+      if (task.transfer.file) dependent.draft.duplicateFile = task.transfer.file
       else if (deps.storage.files.has(dependent.id)) deps.apply(dependent, { type: 'retried' })
       else {
         deps.apply(dependent, { type: 'paused' })
@@ -145,8 +145,8 @@ export function createUploadTaskOperations(deps: UploadOperationsDeps) {
 
   async function forgetFile(id: string) {
     for (const task of [...deps.tasks.value]) {
-      if (task.file?.id === id) await remove(task)
-      else if (task.duplicateFile?.id === id) task.duplicateFile = undefined
+      if (task.transfer.file?.id === id) await remove(task)
+      else if (task.draft.duplicateFile?.id === id) task.draft.duplicateFile = undefined
     }
   }
 

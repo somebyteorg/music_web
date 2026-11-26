@@ -1,27 +1,50 @@
 import { describe, expect, it } from 'vitest'
 import { reduceTask } from './machine'
-import { createUploadTask, type UploadState, type UploadTask } from './model'
+import {
+  createUploadTask,
+  type TaskDraft,
+  type TaskMetadata,
+  type TaskTransfer,
+  type UploadErrorStage,
+  type UploadState,
+  type UploadTask,
+} from './model'
 import type { AudioFile } from '@/types/uploads'
 
 const audioFile = (overrides: Partial<AudioFile> = {}) =>
   ({ id: 'file-1', song_id: null, file_name: 'a.flac', ...overrides }) as AudioFile
 
-function task(overrides: Partial<UploadTask> = {}): UploadTask {
+interface Overrides {
+  state?: UploadState
+  error?: string
+  errorStage?: UploadErrorStage
+  transfer?: Partial<TaskTransfer>
+  metadata?: Partial<TaskMetadata>
+  draft?: Partial<TaskDraft>
+}
+
+function task(overrides: Overrides = {}): UploadTask {
+  const base = createUploadTask({
+    id: 'task-1',
+    name: 'a.flac',
+    size: 1024,
+    relativePath: 'album/a.flac',
+    fingerprint: 'album/a.flac:1024:0',
+    kind: 'audio',
+  })
   return {
-    ...createUploadTask({
-      id: 'task-1',
-      name: 'a.flac',
-      size: 1024,
-      relativePath: 'album/a.flac',
-      fingerprint: 'album/a.flac:1024:0',
-      kind: 'audio',
-    }),
-    ...overrides,
+    ...base,
+    ...(overrides.state ? { state: overrides.state } : {}),
+    ...(overrides.error === undefined ? {} : { error: overrides.error }),
+    ...(overrides.errorStage ? { errorStage: overrides.errorStage } : {}),
+    transfer: { ...base.transfer, ...overrides.transfer },
+    metadata: { ...base.metadata, ...overrides.metadata },
+    draft: { ...base.draft, ...overrides.draft },
   }
 }
 
-function at(state: UploadState, overrides: Partial<UploadTask> = {}) {
-  return task({ state, ...overrides })
+function at(state: UploadState, overrides: Overrides = {}) {
+  return task({ ...overrides, state })
 }
 
 describe('上传任务状态机：失败', () => {
@@ -44,7 +67,7 @@ describe('上传任务状态机：失败', () => {
 
   it('入库接口失败且可重试时退回待确认，保留待入库数据', () => {
     const pending = { song_id: 'song-1' }
-    const next = reduceTask(at('publishing', { pendingPublish: pending }), {
+    const next = reduceTask(at('publishing', { draft: { pendingPublish: pending } }), {
       type: 'failed',
       stage: 'publishing',
       error: '入库失败',
@@ -53,7 +76,7 @@ describe('上传任务状态机：失败', () => {
     expect(next.state).toBe('ready')
     expect(next.errorStage).toBe('publishing')
     expect(next.error).toBe('入库失败')
-    expect(next.pendingPublish).toBe(pending)
+    expect(next.draft.pendingPublish).toBe(pending)
   })
 
   it('服务端入库失败不可重试时进入 failed', () => {
@@ -106,25 +129,27 @@ describe('上传任务状态机：暂停 / 继续 / 重试', () => {
   it('reset 清空会话、校验和与进度，回到 queued', () => {
     const next = reduceTask(
       at('failed', {
-        sessionId: 's1',
-        token: 't1',
-        endpoint: '/upload',
-        uploadUrl: '/upload/s1',
-        sha256: 'sha',
-        progress: 80,
-        preparationProgress: 50,
+        transfer: {
+          sessionId: 's1',
+          token: 't1',
+          endpoint: '/upload',
+          uploadUrl: '/upload/s1',
+          sha256: 'sha',
+          progress: 80,
+          preparationProgress: 50,
+        },
         errorStage: 'transfer',
         error: '失败',
       }),
       { type: 'reset' },
     )
     expect(next.state).toBe('queued')
-    expect(next.sessionId).toBeUndefined()
-    expect(next.token).toBeUndefined()
-    expect(next.uploadUrl).toBeUndefined()
-    expect(next.sha256).toBeUndefined()
-    expect(next.progress).toBe(0)
-    expect(next.preparationProgress).toBe(0)
+    expect(next.transfer.sessionId).toBeUndefined()
+    expect(next.transfer.token).toBeUndefined()
+    expect(next.transfer.uploadUrl).toBeUndefined()
+    expect(next.transfer.sha256).toBeUndefined()
+    expect(next.transfer.progress).toBe(0)
+    expect(next.transfer.preparationProgress).toBe(0)
     expect(next.error).toBe('')
   })
 
@@ -136,12 +161,13 @@ describe('上传任务状态机：暂停 / 继续 / 重试', () => {
 
 describe('上传任务状态机：重复与跳过', () => {
   it('duplicate 跳过进入 skipped 并清空重复信息', () => {
-    const next = reduceTask(at('duplicate', { duplicateOf: 'x', duplicateFile: audioFile() }), {
-      type: 'skipped',
-    })
+    const next = reduceTask(
+      at('duplicate', { draft: { duplicateOf: 'x', duplicateFile: audioFile() } }),
+      { type: 'skipped' },
+    )
     expect(next.state).toBe('skipped')
-    expect(next.duplicateOf).toBeUndefined()
-    expect(next.duplicateFile).toBeUndefined()
+    expect(next.draft.duplicateOf).toBeUndefined()
+    expect(next.draft.duplicateFile).toBeUndefined()
   })
 
   it('非重复任务不能跳过', () => {

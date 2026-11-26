@@ -126,11 +126,12 @@ export function createBatchMatching(deps: BatchMatchingDeps) {
         row.disc = placement.disc_number
       }
     } else if (!row.choice) {
-      row.title = task.title
-      row.artist = task.artist
-      row.version = task.version
-      row.track = task.track
-      row.disc = task.disc
+      const { metadata } = task
+      row.title = metadata.title
+      row.artist = metadata.artist
+      row.version = metadata.version
+      row.track = metadata.track
+      row.disc = metadata.disc
     }
     if (renumber) void deps.numberTracks(deps.albumFor(row), false)
   }
@@ -143,15 +144,19 @@ export function createBatchMatching(deps: BatchMatchingDeps) {
   }
 
   async function hydratePreviews() {
-    const missing = deps.entries.value.filter(({ task }) => task.file && !task.file.preview)
+    const missing = deps.entries.value.filter(
+      ({ task }) => task.transfer.file && !task.transfer.file.preview,
+    )
     for (let offset = 0; offset < missing.length; offset += 100) {
       const batch = missing.slice(offset, offset + 100)
       try {
-        const response = await uploadRepository.previewFiles(batch.map(({ task }) => task.file!.id))
+        const response = await uploadRepository.previewFiles(
+          batch.map(({ task }) => task.transfer.file!.id),
+        )
         for (const { row, task } of batch) {
-          const file = response.files.find((file) => file.id === task.file?.id)
-          if (file && task.file) {
-            task.file.preview = file.preview
+          const file = response.files.find((item) => item.id === task.transfer.file?.id)
+          if (file && task.transfer.file) {
+            task.transfer.file.preview = file.preview
             if (!row.choice) row.matches = file.preview?.matches || []
           }
         }
@@ -175,12 +180,12 @@ export function createBatchMatching(deps: BatchMatchingDeps) {
         artists: song.artists || [],
         duration: song.duration ? Number(song.duration) : null,
         duration_difference: song.duration
-          ? Math.abs(task.file!.duration - Number(song.duration))
+          ? Math.abs(task.transfer.file!.duration - Number(song.duration))
           : null,
         different_recording:
           !!song.duration &&
-          Math.abs(task.file!.duration - Number(song.duration)) >
-            Math.max(5, task.file!.duration * 0.02),
+          Math.abs(task.transfer.file!.duration - Number(song.duration)) >
+            Math.max(5, task.transfer.file!.duration * 0.02),
       }))
       if (!row.matches.length) notify('没有找到对应歌曲，可以新建歌曲。')
       if (!row.matches.some((match) => row.choice.endsWith(match.id))) {

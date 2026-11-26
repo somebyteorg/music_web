@@ -39,21 +39,22 @@ export function createBatchDrafts(deps: BatchDraftsDeps) {
 
   function drafts() {
     for (const { row, task } of deps.ready.value) {
-      task.title = row.title.trim()
-      task.artist = deps.songArtist(row).trim()
-      task.track = row.track
-      task.disc = row.disc
-      task.version = deps.songVersion(row).trim()
+      const { metadata, draft } = task
+      metadata.title = row.title.trim()
+      metadata.artist = deps.songArtist(row).trim()
+      metadata.track = row.track
+      metadata.disc = row.disc
+      metadata.version = deps.songVersion(row).trim()
       const album = deps.albumFor(row)
       const selected = album.matches.find((match) => match.id === album.selection)
-      task.album = album.selection === 'none' ? '' : selected?.name || album.name.trim()
-      task.albumArtist =
+      metadata.album = album.selection === 'none' ? '' : selected?.name || album.name.trim()
+      metadata.albumArtist =
         album.selection === 'none'
           ? ''
           : selected?.artists?.map((a) => a.name).join(' / ') || album.artist_name.trim()
-      task.libraryId = deps.form.value.libraryId
-      task.albumAssignment = assignment(album)
-      task.organizeDraft = {
+      metadata.libraryId = deps.form.value.libraryId
+      draft.albumAssignment = assignment(album)
+      draft.organizeDraft = {
         choice: row.choice,
         coverChoice:
           album.coverChoice === 'auto' ? deps.assets(album).cover_id || '' : album.coverChoice,
@@ -68,16 +69,19 @@ export function createBatchDrafts(deps: BatchDraftsDeps) {
   async function persistDrafts(items: PublishItem[]) {
     for (let offset = 0; offset < items.length; offset += 100) {
       await uploadRepository.saveDrafts(
-        items.slice(offset, offset + 100).map(({ task, data }) => ({
-          file_id: task.file!.id,
-          data,
-          organize: {
-            coverChoice: task.organizeDraft!.coverChoice,
-            includeArtwork: task.organizeDraft!.includeArtwork,
-            excludedPictureIds: task.organizeDraft!.excludedPictureIds || [],
-            replaceCover: task.organizeDraft!.replaceCover || false,
-          },
-        })),
+        items.slice(offset, offset + 100).map(({ task, data }) => {
+          const organize = task.draft.organizeDraft!
+          return {
+            file_id: task.transfer.file!.id,
+            data,
+            organize: {
+              coverChoice: organize.coverChoice,
+              includeArtwork: organize.includeArtwork,
+              excludedPictureIds: organize.excludedPictureIds || [],
+              replaceCover: organize.replaceCover || false,
+            },
+          }
+        }),
       )
     }
   }
@@ -87,18 +91,18 @@ export function createBatchDrafts(deps: BatchDraftsDeps) {
       task,
       data: {
         ...assignment(deps.albumFor(row)),
-        publication_group: task.publicationGroup,
+        publication_group: task.draft.publicationGroup,
         library_id: deps.form.value.libraryId,
         disc_number: row.disc,
         track_number: row.track,
         ...(row.choice.startsWith('track:')
           ? { song_id: row.choice.slice(6) }
           : {
-              name: task.title,
-              artist_name: task.artist,
-              recording_version: task.version,
-              track_number: task.track,
-              disc_number: task.disc,
+              name: task.metadata.title,
+              artist_name: task.metadata.artist,
+              recording_version: task.metadata.version,
+              track_number: task.metadata.track,
+              disc_number: task.metadata.disc,
               ...(row.choice.startsWith('recording:')
                 ? { recording_song_id: row.choice.slice(10) }
                 : {}),

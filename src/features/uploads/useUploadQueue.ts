@@ -75,8 +75,8 @@ export function useUploadQueue() {
           (!q ||
             task.name.toLocaleLowerCase().includes(q) ||
             task.relativePath.toLocaleLowerCase().includes(q) ||
-            task.album.toLocaleLowerCase().includes(q) ||
-            task.artist.toLocaleLowerCase().includes(q)),
+            task.metadata.album.toLocaleLowerCase().includes(q) ||
+            task.metadata.artist.toLocaleLowerCase().includes(q)),
       )
       .sort(
         (a, b) =>
@@ -118,7 +118,8 @@ export function useUploadQueue() {
     })
   }
   function previewCover(task: UploadTask) {
-    const id = task.kind === 'cover' ? task.file?.id : task.file?.preview?.cover_id
+    const file = task.transfer.file
+    const id = task.kind === 'cover' ? file?.id : file?.preview?.cover_id
     return id ? fileUrl(id) : uploads.localCover(task)
   }
   async function retry(task: UploadTask) {

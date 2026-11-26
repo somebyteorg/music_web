@@ -23,8 +23,8 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
       >
         <div class="batch-file-heading">
           <strong>{{ entry.task.name }}</strong><span class="hint"
-            >{{ entry.task.file ? qualities[entry.task.file.quality] : '' }} ·
-            {{ duration(entry.task.duration || 0)
+            >{{ entry.task.transfer.file ? qualities[entry.task.transfer.file.quality] : '' }} ·
+            {{ duration(entry.task.metadata.duration || 0)
             }}<template v-if="entry.task.state === 'published'"> · 已加入</template></span
           ><button class="text-button" type="button" @click="emit('preview', entry.task)">
             解析预览
@@ -108,8 +108,8 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
         >
           所选歌曲的音频时长与本文件不同，请确认属于同一录音版本。
         </p>
-        <p v-else-if="entry.task.file?.preview?.warnings.length" class="hint">
-          {{ entry.task.file.preview.warnings.join(' ') }}
+        <p v-else-if="entry.task.transfer.file?.preview?.warnings.length" class="hint">
+          {{ entry.task.transfer.file.preview.warnings.join(' ') }}
         </p>
         <button
           :disabled="batch.busy || entry.row.searching"
