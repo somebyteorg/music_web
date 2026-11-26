@@ -32,7 +32,7 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
     task.pendingPublish = data
     task.error = ''
     publishing.add(task.id)
-    apply(task, { type: 'transferred', status: 'publishing' })
+    apply(task, { type: 'publishingStarted' })
     try {
       const result = await uploadRepository.publishFile(task.file.id, data)
       published(task, result)
@@ -63,7 +63,7 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
         publishing.add(task.id)
         task.error = ''
         task.pendingPublish = data
-        apply(task, { type: 'transferred', status: 'publishing' })
+        apply(task, { type: 'publishingStarted' })
       })
       try {
         const response = await uploadRepository.publishFiles(

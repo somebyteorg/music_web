@@ -15,7 +15,9 @@ import {
 import { reduceTask, type UploadEvent } from '@/features/uploads/machine'
 import { useUploadPersistence } from '@/features/uploads/persistence'
 import { createUploadRunner } from '@/features/uploads/transport'
-import { createUploadOperations } from '@/features/uploads/operations'
+import { createUploadTaskOperations } from '@/features/uploads/operations'
+import { createUploadRecovery } from '@/features/uploads/recovery'
+import type { UploadOperationsDeps } from '@/features/uploads/operationContext'
 
 export const useUploadsStore = defineStore('uploads', () => {
   const sign = useSignStore()
@@ -40,7 +42,7 @@ export const useUploadsStore = defineStore('uploads', () => {
     isPublishing: (id) => publishing.has(id),
     idle: () => pump(),
   })
-  const operations = createUploadOperations({
+  const operationDeps: UploadOperationsDeps = {
     tasks,
     storage,
     runner,
@@ -51,11 +53,21 @@ export const useUploadsStore = defineStore('uploads', () => {
     finish: finishWithFile,
     pump,
     publish,
-  })
+  }
+  const taskOperations = createUploadTaskOperations(operationDeps)
+  const operations = {
+    ...taskOperations,
+    ...createUploadRecovery(operationDeps, taskOperations.add),
+  }
 
-  function finishWithFile(task: UploadTask, file: AudioFile, reused = false) {
+  function finishWithFile(
+    task: UploadTask,
+    file: AudioFile,
+    reused = false,
+    kind: 'processed' | 'reused' = 'processed',
+  ) {
     applyUploadedFile(task, file)
-    apply(task, { type: 'processed', reused })
+    apply(task, kind === 'reused' ? { type: 'reused', reused } : { type: 'processed', reused })
     storage.files.delete(task.id)
     storage.release(task.id)
     runner.transfers.delete(task.id)

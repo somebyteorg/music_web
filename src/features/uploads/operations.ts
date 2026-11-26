@@ -1,39 +1,18 @@
-import type { ComputedRef } from 'vue'
 import { createUuid } from '@/utils/uuid'
 import { prepareArtwork } from '@/utils/albumArtwork'
 import type { Person } from '@/types/catalog'
-import type { ContributionConfig } from '@/types/session'
-import type { AudioFile, PublishData } from '@/types/uploads'
+import type { AudioFile } from '@/types/uploads'
 import { createUploadTask, isUploadDone, TRANSMIT_STATES, type UploadTask } from './model'
-import type { UploadEvent } from './machine'
-import { uploadRepository } from './repository'
-import { fingerprintOfFile, type UploadRunner } from './transport'
-import type { UploadPersistence } from './persistence'
-
-export interface UploadOperationsDeps {
-  tasks: ComputedRef<UploadTask[]>
-  storage: UploadPersistence
-  runner: UploadRunner
-  publishing: Set<string>
-  config(): ContributionConfig | null
-  userId(): number | undefined
-  apply(task: UploadTask, event: UploadEvent): void
-  finish(task: UploadTask, file: AudioFile, reused?: boolean): void
-  pump(): void
-  publish(task: UploadTask, data: PublishData): Promise<unknown>
-}
-
-function errorMessage(error: unknown, fallback = '暂时无法恢复任务，请重试。') {
-  return error instanceof Error ? error.message : fallback
-}
+import { fingerprintOfFile } from './transport'
+import { type UploadOperationsDeps } from './operationContext'
 
 /**
- * 任务级命令：把文件加入队列、暂停/继续/重试/移除、处理重复与封面等待。
+ * 任务集合类命令：入队、复用已有文件、移除、跳过、暂停。
  *
  * 只做编排：状态迁移交给状态机，网络交给 repository，传输交给 transport，
  * 快照与本地附件交给 persistence。
  */
-export function createUploadOperations(deps: UploadOperationsDeps) {
+export function createUploadTaskOperations(deps: UploadOperationsDeps) {
   function saveTask(task: UploadTask) {
     const userId = deps.userId()
     if (userId === undefined) throw new Error('请先登录再上传。')
@@ -113,126 +92,6 @@ export function createUploadOperations(deps: UploadOperationsDeps) {
     return deps.runner.pause(task)
   }
 
-  async function resumeTask(task: UploadTask) {
-    task.error = ''
-    if (task.file && task.pendingPublish && task.errorStage === 'publishing') {
-      await deps.publish(task, task.pendingPublish)
-      return
-    }
-    if (task.sessionId) {
-      const response = await uploadRepository.getSession(task.sessionId)
-      const status = response.session.status
-      if (['processing', 'publishing', 'complete'].includes(status)) {
-        deps.apply(task, {
-          type: 'transferred',
-          status: status === 'publishing' ? 'publishing' : 'processing',
-        })
-        if (status === 'complete' && response.file) deps.finish(task, response.file)
-        else await deps.runner.poll(task)
-        return
-      }
-      if (status === 'failed') {
-        await uploadRepository.retry(task.sessionId)
-        deps.apply(task, { type: 'transferred' })
-        return
-      }
-      if (new Date(response.session.expires_at || '').getTime() < Date.now()) {
-        task.sessionId = undefined
-        task.token = undefined
-        task.uploadUrl = undefined
-        task.endpoint = undefined
-        task.progress = 0
-      }
-    }
-    if (!deps.storage.files.has(task.id)) {
-      deps.apply(task, { type: 'paused' })
-      task.error = '重新选择原文件或原文件夹后，即可继续上传。'
-      return
-    }
-    deps.apply(task, { type: 'retried' })
-    deps.pump()
-  }
-
-  async function retry(task: UploadTask) {
-    try {
-      await resumeTask(task)
-    } catch (error) {
-      const message = errorMessage(error)
-      if (!['ready', 'processing', 'publishing'].includes(task.state))
-        deps.apply(task, {
-          type: 'failed',
-          stage: task.errorStage || 'preparation',
-          error: message,
-        })
-      task.error = message
-      throw error
-    }
-  }
-
-  function restart(task: UploadTask) {
-    if (!['failed', 'paused'].includes(task.state)) return
-    deps.apply(task, { type: 'reset' })
-    if (!deps.storage.files.has(task.id)) {
-      deps.apply(task, { type: 'paused' })
-      task.error = '请重新选择原文件或文件夹，开始重新上传。'
-    }
-    deps.pump()
-  }
-
-  async function retryAll(scope = deps.tasks.value, onlyFailed = false) {
-    const candidates = scope.filter(
-      (task) =>
-        task.state === 'failed' ||
-        (task.state === 'ready' && task.errorStage === 'publishing' && !!task.error) ||
-        (!onlyFailed && task.state === 'paused'),
-    )
-    const results = await Promise.allSettled(candidates.map(retry))
-    return results.filter((result) => result.status === 'rejected').length
-  }
-
-  function duplicateFile(task: UploadTask) {
-    return (
-      task.duplicateFile || deps.tasks.value.find((entry) => entry.id === task.duplicateOf)?.file
-    )
-  }
-
-  async function useDuplicate(task: UploadTask) {
-    let file = duplicateFile(task)
-    if (!file) throw new Error('相同文件仍在处理中，请稍后再试。')
-    if (
-      task.batchId &&
-      task.sha256 &&
-      !file.upload_context?.some(
-        (context) =>
-          context.batch_id === task.batchId && context.relative_path === task.relativePath,
-      )
-    ) {
-      const result = await uploadRepository.checkDuplicate({
-        sha256: task.sha256,
-        kind: task.kind,
-        file_size: task.size,
-        context: { batch_id: task.batchId, relative_path: task.relativePath },
-      })
-      if (!result.file) throw new Error('已有文件已被删除，请重新上传。')
-      file = result.file
-    }
-    if (task.targetSongId && file.song_id && file.song_id !== task.targetSongId)
-      throw new Error('相同文件已关联其他歌曲，请到原歌曲页面移动音频。')
-    if (task.targetSongId && !file.song_id) {
-      deps.apply(task, { type: 'transferred', status: 'publishing' })
-      deps.publishing.add(task.id)
-      try {
-        const result = await uploadRepository.publishFile(file.id, { song_id: task.targetSongId })
-        deps.finish(task, { ...result.file, preview: file.preview }, true)
-      } catch (error) {
-        deps.apply(task, { type: 'checked', duplicate: true })
-        throw error
-      } finally {
-        deps.publishing.delete(task.id)
-      }
-    } else deps.finish(task, file, true)
-  }
-
   function skip(task: UploadTask) {
     if (task.state !== 'duplicate') return
     deps.apply(task, { type: 'skipped' })
@@ -243,7 +102,7 @@ export function createUploadOperations(deps: UploadOperationsDeps) {
   function adopt(file: AudioFile): UploadTask {
     const existing = deps.tasks.value.find((task) => task.file?.id === file.id)
     if (existing) {
-      if (!file.song_id) deps.finish(existing, file, existing.reused)
+      if (!file.song_id) deps.finish(existing, file, existing.reused, 'reused')
       existing.file = { ...file, metadata: null }
       return existing
     }
@@ -256,6 +115,7 @@ export function createUploadOperations(deps: UploadOperationsDeps) {
         fingerprint: '',
         batchId: file.upload_context?.at(-1)?.batch_id,
         kind: file.kind,
+        state: 'processing',
       }),
     )
     deps.finish(task, file)
@@ -290,59 +150,5 @@ export function createUploadOperations(deps: UploadOperationsDeps) {
     }
   }
 
-  async function cover(file: File): Promise<AudioFile> {
-    const fingerprint = fingerprintOfFile(file)
-    await add([file], { kind: 'cover' })
-    const task = [...deps.tasks.value]
-      .reverse()
-      .find((entry) => entry.kind === 'cover' && entry.fingerprint === fingerprint)
-    if (!task) throw new Error('封面超出大小上限或格式不支持。')
-    if (task.state === 'failed') await retry(task)
-    if (task.file) return task.file
-    return new Promise((resolve, reject) => {
-      let reusing = false
-      const timer = setInterval(() => {
-        if (task.state === 'duplicate' && duplicateFile(task) && !reusing) {
-          reusing = true
-          void useDuplicate(task).catch((error) => {
-            clearInterval(timer)
-            reject(error)
-          })
-        }
-        if (task.file) {
-          clearInterval(timer)
-          resolve(task.file)
-        } else if (
-          task.state === 'failed' ||
-          task.state === 'paused' ||
-          task.state === 'skipped' ||
-          !deps.tasks.value.some((entry) => entry.id === task.id) ||
-          deps.userId() === undefined ||
-          (task.duplicateOf &&
-            deps.tasks.value.find((entry) => entry.id === task.duplicateOf)?.state === 'failed')
-        ) {
-          clearInterval(timer)
-          reject(new Error(task.error || '封面没有上传完成。'))
-        }
-      }, 500)
-    })
-  }
-
-  return {
-    add,
-    pause,
-    resumeTask,
-    retry,
-    restart,
-    retryAll,
-    duplicateFile,
-    useDuplicate,
-    skip,
-    adopt,
-    remove,
-    forgetFile,
-    cover,
-  }
+  return { add, pause, adopt, remove, forgetFile, skip }
 }
-
-export type UploadOperations = ReturnType<typeof createUploadOperations>

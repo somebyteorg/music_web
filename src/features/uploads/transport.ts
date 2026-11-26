@@ -30,7 +30,7 @@ export interface UploadRunnerDeps {
   tasks(): UploadTask[]
   file(taskId: string): File | undefined
   apply(task: UploadTask, event: UploadEvent): void
-  finish(task: UploadTask, file: AudioFile, reused?: boolean): void
+  finish(task: UploadTask, file: AudioFile, reused?: boolean, kind?: 'processed' | 'reused'): void
   isPublishing(taskId: string): boolean
   idle(): void
 }
@@ -78,7 +78,7 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
         const status = response.session.status
         if (['processing', 'publishing', 'complete'].includes(status)) {
           deps.apply(task, {
-            type: 'transferred',
+            type: 'sessionRestored',
             status: status === 'publishing' ? 'publishing' : 'processing',
           })
           if (status === 'complete' && response.file) deps.finish(task, response.file)
@@ -150,7 +150,8 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
             duplicateOf: source?.id,
             duplicateFile: existing.file || undefined,
           })
-          if (task.kind === 'cover' && existing.file) deps.finish(task, existing.file, true)
+          if (task.kind === 'cover' && existing.file)
+            deps.finish(task, existing.file, true, 'reused')
           return
         }
         deps.apply(task, { type: 'checked', duplicate: false })
@@ -258,7 +259,7 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
           error: response.session.error || '文件处理未完成，可以重试。',
         })
       } else if (response.session.status === 'publishing') {
-        deps.apply(task, { type: 'transferred', status: 'publishing' })
+        deps.apply(task, { type: 'sessionRestored', status: 'publishing' })
       }
     } catch (error) {
       task.error = error instanceof Error ? error.message : '获取处理状态失败，请重试。'
