@@ -227,3 +227,53 @@ describe('上传业务分支：封面与恢复', () => {
     expect(paused!.state).toBe('queued')
   })
 })
+describe('上传业务分支：刷新后恢复', () => {
+  const snapshot = {
+    id: 'task-1',
+    fingerprint: 'album/a.flac:3:0',
+    kind: 'audio',
+    state: 'uploading',
+    name: 'a.flac',
+    size: 3,
+    relativePath: 'album/a.flac',
+    sessionId: 'session-1',
+    token: 'token-1',
+    endpoint: '/upload',
+    uploadUrl: '/upload/tus-1',
+    error: '',
+    metadata: { title: 'a', artist: '', album: '', version: '', track: 1, disc: 1 },
+    savedAt: 1,
+  }
+
+  it('从 localStorage 恢复任务与会话，文件等内存字段不落盘', async () => {
+    memory.set('music-upload-tasks-v2', JSON.stringify({ '1': [snapshot] }))
+    setActivePinia(createPinia())
+    const uploads = useUploadsStore()
+    const sign = useSignStore()
+    sign.user = { id: 1, name: 'u', role: 'user' } as unknown as User
+    await nextTick()
+    expect(uploads.tasks).toHaveLength(1)
+    const task = uploads.tasks[0]!
+    expect(task.state).toBe('paused')
+    expect(task.transfer.sessionId).toBe('session-1')
+    expect(task.transfer.file).toBeUndefined()
+    expect(task.draft).toEqual({})
+  })
+
+  it('刷新后继续任务时仍提示重新选择原文件', async () => {
+    memory.set('music-upload-tasks-v2', JSON.stringify({ '1': [snapshot] }))
+    setActivePinia(createPinia())
+    const uploads = useUploadsStore()
+    const sign = useSignStore()
+    sign.user = { id: 1, name: 'u', role: 'user' } as unknown as User
+    await nextTick()
+    const task = uploads.tasks[0]!
+    vi.mocked(uploadRepository.getSession).mockResolvedValue({
+      session: { status: 'uploading' },
+      file: null,
+    })
+    await uploads.retry(task)
+    expect(task.state).toBe('paused')
+    expect(task.error).toBe('重新选择原文件或原文件夹后，即可继续上传。')
+  })
+})
