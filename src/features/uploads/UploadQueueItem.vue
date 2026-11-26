@@ -94,8 +94,7 @@ function previewCover() {
       <p v-if="task.error" class="error-text">{{ task.error }}</p>
     </div>
     <span :class="['task-state', task.state]"
-      >{{
-        task.kind === 'cover' && task.state === 'ready' ? '图片已上传' : states[task.state]
+      >{{ task.kind === 'cover' && task.state === 'ready' ? '图片已上传' : states[task.state]
       }}<span v-if="task.state === 'uploading'"> {{ task.progress }}%</span></span
     >
     <div class="task-actions">
@@ -169,29 +168,141 @@ function previewCover() {
   </article>
 </template>
 <style scoped>
-.task-thumbnail { width: 44px; height: 44px; flex-shrink: 0; border-radius: 5px; overflow: hidden; background: var(--soft); }
-.task-thumbnail img { width: 100%; height: 100%; object-fit: contain; }
-.upload-task { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid var(--line); }
-.task-icon { display: grid; place-items: center; width: 26px; height: 30px; flex-shrink: 0; color: var(--purple); background: var(--lilac); border-radius: 4px; font-size: 16px; }
-.task-icon.done { background: #eaf5ee; color: var(--success); }
-.task-body { min-width: 0; flex: 1; }
-.task-body strong { display: block; font-size: 13px; font-weight: 550; overflow-wrap: anywhere; }
-.task-body > .hint { margin-top: 2px; font-size: 11px; overflow-wrap: anywhere; }
-.task-state { width: 82px; flex-shrink: 0; color: var(--muted); font-size: 12px; white-space: nowrap; }
-.task-state.ready, .task-state.duplicate { color: #93601d; }
-.task-state.published { color: var(--success); }
-.task-state.failed { color: var(--danger); }
-.task-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 150px; max-width: 230px; }
-.progress-track { margin-top: 5px; height: 3px; max-width: 460px; overflow: hidden; border-radius: 2px; background: #ebe5f5; }
-.progress-track > span { display: block; height: 100%; background: var(--purple); transition: width 0.2s; }
-.duplicate-note, .task-warning { margin-top: 5px; color: #91632b; font-size: 12px; overflow-wrap: anywhere; }
-.task-select { display: grid; place-items: center; flex-shrink: 0; width: 26px; min-height: 30px; }
+.task-thumbnail {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--soft);
+}
+.task-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.upload-task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+}
+.task-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 30px;
+  flex-shrink: 0;
+  color: var(--purple);
+  background: var(--lilac);
+  border-radius: 4px;
+  font-size: 16px;
+}
+.task-icon.done {
+  background: #eaf5ee;
+  color: var(--success);
+}
+.task-body {
+  min-width: 0;
+  flex: 1;
+}
+.task-body strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
+}
+.task-body > .hint {
+  margin-top: 2px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.task-state {
+  width: 82px;
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.task-state.ready,
+.task-state.duplicate {
+  color: #93601d;
+}
+.task-state.published {
+  color: var(--success);
+}
+.task-state.failed {
+  color: var(--danger);
+}
+.task-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 150px;
+  max-width: 230px;
+}
+.progress-track {
+  margin-top: 5px;
+  height: 3px;
+  max-width: 460px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #ebe5f5;
+}
+.progress-track > span {
+  display: block;
+  height: 100%;
+  background: var(--purple);
+  transition: width 0.2s;
+}
+.duplicate-note,
+.task-warning {
+  margin-top: 5px;
+  color: #91632b;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.task-select {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  min-height: 30px;
+}
 @media (max-width: 680px) {
-  .upload-task { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 4px 10px; padding: 10px; }
-  .task-icon, .task-thumbnail, .task-select { grid-column: 1; grid-row: 1; }
-  .task-thumbnail { width: 26px; height: 30px; }
-  .task-body { grid-column: 2; grid-row: 1; }
-  .task-state { grid-column: 2; grid-row: 2; width: auto; }
-  .task-actions { grid-column: 2; grid-row: 3; justify-content: flex-start; min-width: 0; }
+  .upload-task {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 4px 10px;
+    padding: 10px;
+  }
+  .task-icon,
+  .task-thumbnail,
+  .task-select {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .task-thumbnail {
+    width: 26px;
+    height: 30px;
+  }
+  .task-body {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .task-state {
+    grid-column: 2;
+    grid-row: 2;
+    width: auto;
+  }
+  .task-actions {
+    grid-column: 2;
+    grid-row: 3;
+    justify-content: flex-start;
+    min-width: 0;
+  }
 }
 </style>

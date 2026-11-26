@@ -1,4 +1,5 @@
 import { catalogLabels as labels } from '@/features/catalog/config'
+import { catalogApi } from '@/lib/api/catalog'
 import { computed, reactive, ref, type Ref, watch } from 'vue'
 import type { AudioFile } from '@/types/uploads'
 import type { Entity, Person } from '@/types/catalog'
@@ -10,8 +11,6 @@ import { notify, report, useAction } from '@/composables/useFeedback'
 import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
 import { type AlbumEntry, buildEntityPayload, createEditorForm, type EditorProps } from './model'
-import { saveCatalogItem } from '@/features/catalog/api'
-import { catalogApi } from '@/lib/api/catalog'
 import { communityApi } from '@/lib/api/community'
 
 export function useEntityEditor(
@@ -228,7 +227,7 @@ export function useEntityEditor(
         },
         props.item,
       )
-      const result = await saveCatalogItem(props.type, body, props.item?.id)
+      const result = await catalogApi.save(props.type, body, props.item?.id)
       if (props.type === 'libraries') await libraries.load(true)
       notify('保存成功。')
       open.value = false

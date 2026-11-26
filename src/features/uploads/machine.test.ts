@@ -119,10 +119,12 @@ describe('上传任务状态机：入口与校验', () => {
 describe('上传任务状态机：传输进度', () => {
   it('校验进度会被夹到 0..100', () => {
     expect(
-      reduceTask(at('preparing'), { type: 'progress', preparationProgress: 150 }).preparationProgress,
+      reduceTask(at('preparing'), { type: 'progress', preparationProgress: 150 })
+        .preparationProgress,
     ).toBe(100)
     expect(
-      reduceTask(at('preparing'), { type: 'progress', preparationProgress: -3 }).preparationProgress,
+      reduceTask(at('preparing'), { type: 'progress', preparationProgress: -3 })
+        .preparationProgress,
     ).toBe(0)
   })
 

@@ -92,7 +92,11 @@ export const uploadRepository = {
     return request<void>(`uploads/${sessionId}/retry`, { method: 'POST' })
   },
   checkDuplicate(body: UploadCheckBody, signal?: AbortSignal) {
-    return request<{ file: AudioFile | null }>('uploads/check', { method: 'POST', json: body, signal })
+    return request<{ file: AudioFile | null }>('uploads/check', {
+      method: 'POST',
+      json: body,
+      signal,
+    })
   },
   saveDrafts(items: DraftItem[]) {
     return filesApi.saveDrafts(items)
@@ -101,12 +105,15 @@ export const uploadRepository = {
     return request<PublishFileResult>(`files/${fileId}/publish`, { method: 'POST', json: data })
   },
   publishFiles(items: (PublishData & { file_id: string })[]) {
-    return request<{ items: (PublishFileResult & { album_id: string | null })[] }>('files/publish', {
-      method: 'POST',
-      json: { items },
-      // 批量入库可能触发整批转码/写库，保持原有 120s 超时
-      timeoutMs: 120_000,
-    })
+    return request<{ items: (PublishFileResult & { album_id: string | null })[] }>(
+      'files/publish',
+      {
+        method: 'POST',
+        json: { items },
+        // 批量入库可能触发整批转码/写库，保持原有 120s 超时
+        timeoutMs: 120_000,
+      },
+    )
   },
   previewFiles(ids: string[], signal?: AbortSignal) {
     return request<{ files: AudioFile[] }>('files/preview', {

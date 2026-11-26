@@ -53,11 +53,7 @@ export type UploadEvent =
 
 const TRANSMITTING: UploadState[] = ['queued', 'preparing', 'checking', 'uploading']
 
-function move(
-  task: UploadTask,
-  state: UploadState,
-  patch: Partial<UploadTask> = {},
-): UploadTask {
+function move(task: UploadTask, state: UploadState, patch: Partial<UploadTask> = {}): UploadTask {
   return { ...task, ...patch, state }
 }
 
@@ -125,7 +121,17 @@ export function reduceTask(task: UploadTask, event: UploadEvent): UploadTask {
 
     case 'transferred': {
       const status = event.status ?? 'processing'
-      if (![...TRANSMITTING, 'duplicate', 'ready', 'paused', 'failed', 'processing', 'publishing'].includes(task.state))
+      if (
+        ![
+          ...TRANSMITTING,
+          'duplicate',
+          'ready',
+          'paused',
+          'failed',
+          'processing',
+          'publishing',
+        ].includes(task.state)
+      )
         return task
       return move(task, status, {
         ...(status === 'processing' ? { progress: 100 } : {}),

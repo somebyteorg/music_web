@@ -21,10 +21,7 @@ export function uploadFingerprint(userId: number, task: UploadTask) {
 /** 服务端恢复会话时，把 tus_id 还原成可续传的 uploadUrl */
 export function resumeUploadUrl(endpoint: string | undefined, tusId: string) {
   if (!endpoint) return undefined
-  return `${endpoint.replace(/\/$/, '')}/${tusId
-    .split('/')
-    .map(encodeURIComponent)
-    .join('/')}`
+  return `${endpoint.replace(/\/$/, '')}/${tusId.split('/').map(encodeURIComponent).join('/')}`
 }
 
 export interface UploadRunnerDeps {
@@ -109,7 +106,8 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
             if (!controller.signal.aborted) applyTaskMetadata(task, metadata)
           },
           (progress) => {
-            if (!controller.signal.aborted) deps.apply(task, { type: 'progress', preparationProgress: progress })
+            if (!controller.signal.aborted)
+              deps.apply(task, { type: 'progress', preparationProgress: progress })
           },
         )
         assertActive()

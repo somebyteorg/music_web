@@ -1,10 +1,10 @@
 import { computed, reactive, ref, useTemplateRef, watch } from 'vue'
+import { catalogApi } from '@/lib/api/catalog'
 import { useRoute } from 'vue-router'
 import { useDropZone } from '@vueuse/core'
 import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
 import type { Entity } from '@/types/catalog'
-import { getCatalogItem } from '@/features/catalog/api'
 import { notify, report, useAction } from '@/composables/useFeedback'
 import { useLatestRequest } from '@/composables/useLatestRequest'
 import { useFolderUpload } from './useFolderUpload'
@@ -91,7 +91,7 @@ export function useUploadSource() {
       targetSong.value = undefined
       if (typeof id !== 'string') return
       try {
-        const result = await getCatalogItem('songs', id, signal)
+        const result = await catalogApi.item('songs', id, signal)
         if (!signal.aborted) targetSong.value = result.item
       } catch (error) {
         if (!signal.aborted) report(error)

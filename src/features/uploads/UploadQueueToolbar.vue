@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { useUploadsStore } from '@/stores/uploads'
-import { isUploadDone, MAX_UPLOAD_CONCURRENCY, normalizeUploadConcurrency, type UploadTask } from './model'
+import {
+  isUploadDone,
+  MAX_UPLOAD_CONCURRENCY,
+  normalizeUploadConcurrency,
+  type UploadTask,
+} from './model'
 
 defineProps<{
   busy: boolean
@@ -99,13 +104,25 @@ function skipDuplicates() {
   </div>
   <div v-if="uploads.tasks.length" class="queue-bulk">
     <div class="button-group">
-      <button :disabled="busy || !canPause" class="button small secondary" @click="emit('pause-all')">
+      <button
+        :disabled="busy || !canPause"
+        class="button small secondary"
+        @click="emit('pause-all')"
+      >
         全部暂停
       </button>
-      <button :disabled="busy || !canResume" class="button small secondary" @click="emit('resume-all', false)">
+      <button
+        :disabled="busy || !canResume"
+        class="button small secondary"
+        @click="emit('resume-all', false)"
+      >
         全部继续
       </button>
-      <button :disabled="busy || !uploads.stats.failed" class="text-button" @click="emit('resume-all', true)">
+      <button
+        :disabled="busy || !uploads.stats.failed"
+        class="text-button"
+        @click="emit('resume-all', true)"
+      >
         重试失败 {{ uploads.stats.failed || '' }}
       </button>
       <button v-if="uploads.stats.duplicate" class="text-button" @click="skipDuplicates">
@@ -138,34 +155,198 @@ function skipDuplicates() {
   </div>
 </template>
 <style scoped>
-.queue-bulk, .queue-selection { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.queue-bulk > .button-group { gap: 10px; }
-.queue-grouping { display: flex; align-items: center; gap: 3px; font-size: 12px; margin-left: auto; }
-.queue-grouping > span { margin-right: 5px; }
-.queue-grouping button { padding: 5px 9px; border-radius: 5px; color: var(--muted); }
-.queue-grouping button.active { background: var(--lilac); color: var(--purple-dark); }
-.queue-selection { padding: 10px 12px; border: 1px solid #dfd4ef; border-radius: 8px; background: var(--lilac); color: var(--purple-dark); font-size: 12px; }
-.queue-tools { justify-content: space-between; gap: 12px 16px; }
-.queue-filters { display: flex; flex-wrap: wrap; gap: 4px; }
-.queue-filters > button { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 5px 9px; border-radius: 5px; font-size: 12px; color: var(--muted); }
-.queue-filters > button.active { color: var(--purple-dark); background: var(--lilac); font-weight: 550; }
-.queue-filters > button > span { font-size: 11px; font-variant-numeric: tabular-nums; }
-.queue-settings { display: flex; align-items: center; flex-shrink: 0; gap: 8px; margin-left: auto; }
-.concurrency-input { display: inline-flex; flex-direction: row; align-items: center; gap: 8px; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 400; white-space: nowrap; cursor: text; transition: border-color 0.15s, box-shadow 0.15s; }
-.concurrency-input:hover { border-color: #c9bddf; }
-.concurrency-input:focus-within { border-color: #ab91d9; box-shadow: 0 0 0 3px #7654bc12; }
-.concurrency-icon, .queue-clear svg { width: 16px; height: 16px; flex-shrink: 0; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-.concurrency-value { display: inline-flex; align-items: center; gap: 2px; padding-left: 7px; border-left: 1px solid var(--line); }
-.concurrency-input input[type='number'] { appearance: textfield; -moz-appearance: textfield; width: 30px; min-width: 0; height: 28px; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 4px; outline: 0; background: transparent; box-shadow: none; color: var(--purple-dark); font-size: 13px; font-weight: 650; font-variant-numeric: tabular-nums; text-align: center; }
-.concurrency-input input::-webkit-inner-spin-button, .concurrency-input input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
-.concurrency-limit { color: #99949f; font-size: 11px; font-variant-numeric: tabular-nums; }
-.queue-clear { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 0 8px; border: 1px solid transparent; border-radius: 8px; color: var(--muted); font-size: 12px; white-space: nowrap; transition: background-color 0.15s, color 0.15s; }
-.queue-clear:not(:disabled):hover { background: var(--lilac); color: var(--purple-dark); }
-.queue-search { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 10px; }
+.queue-bulk,
+.queue-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.queue-bulk > .button-group {
+  gap: 10px;
+}
+.queue-grouping {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  margin-left: auto;
+}
+.queue-grouping > span {
+  margin-right: 5px;
+}
+.queue-grouping button {
+  padding: 5px 9px;
+  border-radius: 5px;
+  color: var(--muted);
+}
+.queue-grouping button.active {
+  background: var(--lilac);
+  color: var(--purple-dark);
+}
+.queue-selection {
+  padding: 10px 12px;
+  border: 1px solid #dfd4ef;
+  border-radius: 8px;
+  background: var(--lilac);
+  color: var(--purple-dark);
+  font-size: 12px;
+}
+.queue-tools {
+  justify-content: space-between;
+  gap: 12px 16px;
+}
+.queue-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.queue-filters > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.queue-filters > button.active {
+  color: var(--purple-dark);
+  background: var(--lilac);
+  font-weight: 550;
+}
+.queue-filters > button > span {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.queue-settings {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 8px;
+  margin-left: auto;
+}
+.concurrency-input {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: text;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.concurrency-input:hover {
+  border-color: #c9bddf;
+}
+.concurrency-input:focus-within {
+  border-color: #ab91d9;
+  box-shadow: 0 0 0 3px #7654bc12;
+}
+.concurrency-icon,
+.queue-clear svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.concurrency-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding-left: 7px;
+  border-left: 1px solid var(--line);
+}
+.concurrency-input input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+  width: 30px;
+  min-width: 0;
+  height: 28px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  outline: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--purple-dark);
+  font-size: 13px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.concurrency-input input::-webkit-inner-spin-button,
+.concurrency-input input::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+.concurrency-limit {
+  color: #99949f;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.queue-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+.queue-clear:not(:disabled):hover {
+  background: var(--lilac);
+  color: var(--purple-dark);
+}
+.queue-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-bottom: 10px;
+}
 @media (max-width: 680px) {
-  .queue-settings { width: 100%; justify-content: space-between; margin-top: 2px; padding-top: 12px; border-top: 1px solid var(--line); }
-  .concurrency-input, .queue-clear { min-height: 40px; }
-  .concurrency-input input[type='number'] { font-size: 16px; }
-  .queue-search > .hint { font-size: 11px; }
+  .queue-settings {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 2px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  .concurrency-input,
+  .queue-clear {
+    min-height: 40px;
+  }
+  .concurrency-input input[type='number'] {
+    font-size: 16px;
+  }
+  .queue-search > .hint {
+    font-size: 11px;
+  }
 }
 </style>

@@ -41,10 +41,7 @@ export function createUploadOperations(deps: UploadOperationsDeps) {
     return deps.tasks.value.find((entry) => entry.id === task.id)!
   }
 
-  async function add(
-    files: FileList | File[],
-    options: { kind?: 'cover'; song?: Person } = {},
-  ) {
+  async function add(files: FileList | File[], options: { kind?: 'cover'; song?: Person } = {}) {
     const config = deps.config()
     if (!config || deps.userId() === undefined) throw new Error('请先登录再上传。')
     let skipped = 0
@@ -162,7 +159,11 @@ export function createUploadOperations(deps: UploadOperationsDeps) {
     } catch (error) {
       const message = errorMessage(error)
       if (!['ready', 'processing', 'publishing'].includes(task.state))
-        deps.apply(task, { type: 'failed', stage: task.errorStage || 'preparation', error: message })
+        deps.apply(task, {
+          type: 'failed',
+          stage: task.errorStage || 'preparation',
+          error: message,
+        })
       task.error = message
       throw error
     }
@@ -190,7 +191,9 @@ export function createUploadOperations(deps: UploadOperationsDeps) {
   }
 
   function duplicateFile(task: UploadTask) {
-    return task.duplicateFile || deps.tasks.value.find((entry) => entry.id === task.duplicateOf)?.file
+    return (
+      task.duplicateFile || deps.tasks.value.find((entry) => entry.id === task.duplicateOf)?.file
+    )
   }
 
   async function useDuplicate(task: UploadTask) {

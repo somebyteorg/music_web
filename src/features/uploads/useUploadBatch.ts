@@ -516,9 +516,7 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
     for (let offset = 0; offset < missing.length; offset += 100) {
       const batch = missing.slice(offset, offset + 100)
       try {
-        const response = await uploadRepository.previewFiles(
-          batch.map(({ task }) => task.file!.id),
-        )
+        const response = await uploadRepository.previewFiles(batch.map(({ task }) => task.file!.id))
         for (const { row, task } of batch) {
           const file = response.files.find((file) => file.id === task.file?.id)
           if (file && task.file) {

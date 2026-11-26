@@ -1,10 +1,10 @@
 import { ref, watch } from 'vue'
+import { catalogApi } from '@/lib/api/catalog'
 import { useRoute } from 'vue-router'
 import type { Entity } from '@/types/catalog'
 import { useUploadsStore } from '@/stores/uploads'
 import { notify, report, useAction } from '@/composables/useFeedback'
 import { useLatestRequest } from '@/composables/useLatestRequest'
-import { getCatalogItem, getCatalogPage } from '@/features/catalog/api'
 import { uploadRepository } from './repository'
 import type { UploadTask } from './model'
 
@@ -58,7 +58,7 @@ export function useUploadPreview(
     }
     if (signal.aborted || typeof route.query.song !== 'string') return
     try {
-      const result = await getCatalogItem('songs', route.query.song, signal)
+      const result = await catalogApi.item('songs', route.query.song, signal)
       if (!signal.aborted) song.value = result.item
     } catch (error) {
       if (!signal.aborted) report(error)
@@ -68,7 +68,7 @@ export function useUploadPreview(
   async function search() {
     const signal = searchRequest.start()
     try {
-      const result = await getCatalogPage('songs', { q: query.value, page_size: 20 }, signal)
+      const result = await catalogApi.page('songs', { q: query.value, page_size: 20 }, signal)
       if (!signal.aborted) candidates.value = result.items
     } catch (error) {
       if (!signal.aborted) report(error)

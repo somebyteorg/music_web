@@ -94,9 +94,7 @@ export const useUploadsStore = defineStore('uploads', () => {
 
   async function poll() {
     await Promise.all(
-      tasks.value
-        .filter((task) => ['processing', 'publishing'].includes(task.state))
-        .map(pollTask),
+      tasks.value.filter((task) => ['processing', 'publishing'].includes(task.state)).map(pollTask),
     )
   }
 
