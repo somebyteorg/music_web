@@ -51,6 +51,14 @@ export interface AlbumAssets {
   artwork: AlbumDraft['artwork']
 }
 
+export function setAlbumField<K extends keyof BatchAlbum>(
+  album: BatchAlbum,
+  key: K,
+  value: BatchAlbum[K],
+) {
+  album[key] = value
+}
+
 export function selectedBatchAlbum(album: BatchAlbum) {
   return album.matches.find((match) => match.id === album.selection)
 }

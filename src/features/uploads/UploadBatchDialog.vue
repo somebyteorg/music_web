@@ -9,6 +9,12 @@ import UploadBatchAlbum from './UploadBatchAlbum.vue'
 import UploadBatchPublish from './UploadBatchPublish.vue'
 
 const props = defineProps<{ batch: UploadBatch }>()
+const open = defineModel<boolean>('open', { required: true })
+const libraryId = defineModel<string>('libraryId', { required: true })
+const applyArtist = defineModel<boolean>('applyArtist', { required: true })
+const artist = defineModel<string>('artist', { required: true })
+const applyVersion = defineModel<boolean>('applyVersion', { required: true })
+const version = defineModel<string>('version', { required: true })
 const addingAlbum = ref(false)
 const albumName = ref('')
 const albumNameInput = useTemplateRef<HTMLInputElement>('albumNameInput')
@@ -33,13 +39,10 @@ function confirmAlbumGroup() {
     albumName.value = ''
   }
 }
-watch(
-  () => props.batch.open,
-  () => {
-    addingAlbum.value = false
-    albumName.value = ''
-  },
-)
+watch(open, () => {
+  addingAlbum.value = false
+  albumName.value = ''
+})
 const emit = defineEmits<{
   preview: [task: UploadTask]
   'browse-images': [album: BatchAlbum]
@@ -47,11 +50,11 @@ const emit = defineEmits<{
 }>()
 </script>
 <template>
-  <BaseDialog v-model="batch.open" :busy="batch.busy" title="批量整理音频" wide>
+  <BaseDialog v-model="open" :busy="batch.busy" title="批量整理音频" wide>
     <form class="form-stack" novalidate @submit.prevent @keydown.enter="preventUnexpectedEnter">
       <label
         >新建歌曲所属媒体库<BaseSelect
-          v-model="batch.form.libraryId"
+          v-model="libraryId"
           :disabled="batch.busy || batch.libraries.busy"
           :options="batch.libraries.options"
           label="上传歌曲所属媒体库"
@@ -76,9 +79,9 @@ const emit = defineEmits<{
       <fieldset :disabled="batch.busy" class="batch-common">
         <div>
           <label class="check-label"
-            ><input v-model="batch.form.applyArtist" type="checkbox" />统一歌曲演唱者</label
+            ><input v-model="applyArtist" type="checkbox" />统一歌曲演唱者</label
           ><input
-            v-model="batch.form.artist"
+            v-model="artist"
             :disabled="!batch.form.applyArtist"
             aria-label="批量填写歌曲演唱者"
             maxlength="255"
@@ -87,9 +90,9 @@ const emit = defineEmits<{
         </div>
         <div>
           <label class="check-label"
-            ><input v-model="batch.form.applyVersion" type="checkbox" />统一录音版本</label
+            ><input v-model="applyVersion" type="checkbox" />统一录音版本</label
           ><input
-            v-model="batch.form.version"
+            v-model="version"
             :disabled="!batch.form.applyVersion"
             aria-label="批量填写录音版本"
             maxlength="100"
@@ -149,7 +152,7 @@ const emit = defineEmits<{
       </p>
     </form>
     <template #footer>
-      <UploadBatchPublish :batch="batch" />
+      <UploadBatchPublish :batch="batch" @close="open = false" />
     </template>
   </BaseDialog>
 </template>

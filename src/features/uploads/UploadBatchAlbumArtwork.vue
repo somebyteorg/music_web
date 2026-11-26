@@ -3,8 +3,13 @@ import BaseSelect from '@/components/BaseSelect.vue'
 import { fileUrl } from '@/utils/file'
 import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
+import { useAlbumField } from './batchField'
 
-defineProps<{ batch: UploadBatch; album: BatchAlbum }>()
+const props = defineProps<{ batch: UploadBatch; album: BatchAlbum }>()
+const coverChoice = useAlbumField(props.batch, props.album, 'coverChoice')
+const replaceCover = useAlbumField(props.batch, props.album, 'replaceCover')
+const includeArtwork = useAlbumField(props.batch, props.album, 'includeArtwork')
+const excludedPictureIds = useAlbumField(props.batch, props.album, 'excludedPictureIds')
 const emit = defineEmits<{
   'browse-images': [album: BatchAlbum]
   inspect: [picture: ReturnType<UploadBatch['pictures']>[number], album: BatchAlbum]
@@ -17,7 +22,7 @@ const emit = defineEmits<{
       <label
         >{{ batch.selectedAlbum(album) && !album.replaceCover ? '补充图片中的正面图' : '专辑封面'
         }}<BaseSelect
-          v-model="album.coverChoice"
+          v-model="coverChoice"
           :disabled="batch.busy"
           :label="`${album.name} 的封面`"
           :options="batch.coverOptions(album)"
@@ -26,7 +31,7 @@ const emit = defineEmits<{
         v-if="batch.selectedAlbum(album)?.cover_id || batch.selectedAlbum(album)?.image_url"
         class="check-label"
         ><input
-          v-model="album.replaceCover"
+          v-model="replaceCover"
           :disabled="batch.busy"
           type="checkbox"
         />替换已有专辑封面</label
@@ -40,7 +45,7 @@ const emit = defineEmits<{
       </p>
       <label class="check-label"
         ><input
-          v-model="album.includeArtwork"
+          v-model="includeArtwork"
           :disabled="batch.busy"
           type="checkbox"
         />包含目录中的封底、碟面和内页</label
@@ -82,7 +87,7 @@ const emit = defineEmits<{
               :disabled="picture.waiting || batch.busy"
               class="text-button"
               type="button"
-              @click="album.coverChoice = picture.id"
+              @click="coverChoice = picture.id"
             >
               {{
                 batch.pictureId(album) === picture.id ? '已选正面图' : '选为正面图'
@@ -102,7 +107,7 @@ const emit = defineEmits<{
           :disabled="batch.busy"
           class="text-button"
           type="button"
-          @click="album.excludedPictureIds = []"
+          @click="excludedPictureIds = []"
         >
           恢复候选图
         </button>

@@ -4,8 +4,11 @@ import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
 import type { UploadTask } from './model'
 import UploadBatchTrackRows from './UploadBatchTrackRows.vue'
+import { useAlbumField } from './batchField'
 
-defineProps<{ batch: UploadBatch; album: BatchAlbum }>()
+const props = defineProps<{ batch: UploadBatch; album: BatchAlbum }>()
+const trackStart = useAlbumField(props.batch, props.album, 'trackStart')
+const moveTo = useAlbumField(props.batch, props.album, 'moveTo')
 const emit = defineEmits<{ preview: [task: UploadTask] }>()
 </script>
 <template>
@@ -21,7 +24,7 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
     <div class="track-numbering-actions">
       <label class="batch-number"
         >起始曲序<input
-          v-model.number="album.trackStart"
+          v-model.number="trackStart"
           type="number"
           min="1"
           max="9999"
@@ -84,7 +87,7 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
   <UploadBatchTrackRows :album="album" :batch="batch" @preview="emit('preview', $event)" />
   <div v-if="batch.albums.length > 1 && batch.groupEntries(album).length" class="group-move">
     <BaseSelect
-      v-model="album.moveTo"
+      v-model="moveTo"
       :options="[
         { value: '', label: '移入其他分组…' },
         ...batch.groupOptions.filter((option) => option.value !== album.key),

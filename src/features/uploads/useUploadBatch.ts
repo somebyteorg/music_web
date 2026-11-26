@@ -9,6 +9,7 @@ import {
   type BatchGrouping,
   type BatchRow,
   selectedBatchAlbum as selectedAlbum,
+  setAlbumField,
 } from './batchModel'
 import { createBatchDrafts } from './batchDrafts'
 import { createBatchGroups } from './batchGroups'
@@ -68,7 +69,6 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
   function groupEntries(album: BatchAlbum) {
     return entries.value.filter(({ row }) => row.albumKey === album.key)
   }
-
   const { songArtist, songVersion } = createBatchRowFields({ uploads, form, albumFor })
   const { numbering, numberingErrors, numberTracks, canUndoNumbers, undoNumbers } =
     useUploadTrackNumbers(open, albums, entries, busy, songArtist, songVersion)
@@ -180,6 +180,7 @@ export function useUploadBatch(onSaved: () => Promise<void>) {
     moveRow: groups.moveRow,
     groupOptions,
     groupEntries,
+    updateAlbum: setAlbumField,
     numbering,
     numberingErrors,
     numberTracks,

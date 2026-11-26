@@ -526,6 +526,12 @@ onMounted(loadPending)
     ></BaseDialog
   >
   <UploadBatchDialog
+    v-model:open="batch.open"
+    v-model:libraryId="batch.form.libraryId"
+    v-model:applyArtist="batch.form.applyArtist"
+    v-model:artist="batch.form.artist"
+    v-model:applyVersion="batch.form.applyVersion"
+    v-model:version="batch.form.version"
     :batch="batch"
     @inspect="inspectPicture"
     @preview="open($event, true)"

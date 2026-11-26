@@ -6,8 +6,22 @@ import type { BatchAlbum } from './batchModel'
 import type { UploadTask } from './model'
 import UploadBatchAlbumArtwork from './UploadBatchAlbumArtwork.vue'
 import UploadBatchTracks from './UploadBatchTracks.vue'
+import { useAlbumField } from './batchField'
 
-defineProps<{ batch: UploadBatch; album: BatchAlbum }>()
+const props = defineProps<{ batch: UploadBatch; album: BatchAlbum }>()
+const selection = useAlbumField(props.batch, props.album, 'selection')
+const applyArtist = useAlbumField(props.batch, props.album, 'applyArtist')
+const performer = useAlbumField(props.batch, props.album, 'performer')
+const name = useAlbumField(props.batch, props.album, 'name')
+const artistName = useAlbumField(props.batch, props.album, 'artist_name')
+const releaseYear = useAlbumField(props.batch, props.album, 'release_year')
+const edition = useAlbumField(props.batch, props.album, 'edition')
+const releaseCountry = useAlbumField(props.batch, props.album, 'release_country')
+const catalogNumber = useAlbumField(props.batch, props.album, 'catalog_number')
+const label = useAlbumField(props.batch, props.album, 'label')
+const totalDiscs = useAlbumField(props.batch, props.album, 'total_discs')
+const totalTracks = useAlbumField(props.batch, props.album, 'total_tracks')
+const musicbrainzId = useAlbumField(props.batch, props.album, 'musicbrainz_id')
 const emit = defineEmits<{
   preview: [task: UploadTask]
   'browse-images': [album: BatchAlbum]
@@ -47,7 +61,7 @@ const emit = defineEmits<{
     </div>
     <label
       >专辑归属<BaseSelect
-        v-model="album.selection"
+        v-model="selection"
         :disabled="batch.busy || album.loading"
         :label="`${album.name || '本组'} 的专辑归属`"
         :options="batch.albumOptions(album)"
@@ -61,14 +75,10 @@ const emit = defineEmits<{
     </p>
     <div v-if="batch.albums.length > 1 && !batch.form.applyArtist" class="group-performer">
       <label class="check-label"
-        ><input
-          v-model="album.applyArtist"
-          type="checkbox"
-          :disabled="batch.busy"
-        />统一本组演唱者</label
+        ><input v-model="applyArtist" type="checkbox" :disabled="batch.busy" />统一本组演唱者</label
       >
       <input
-        v-model="album.performer"
+        v-model="performer"
         :disabled="batch.busy || !album.applyArtist"
         :aria-label="`${batch.groupTitle(album)} 的统一演唱者`"
         maxlength="255"
@@ -89,13 +99,13 @@ const emit = defineEmits<{
       <div class="form-grid">
         <label
           >专辑名称<input
-            v-model="album.name"
+            v-model="name"
             :disabled="batch.busy"
             maxlength="255"
             placeholder="专辑名称" /></label
         ><label
           >专辑艺人<input
-            v-model="album.artist_name"
+            v-model="artistName"
             :disabled="batch.busy"
             maxlength="255"
             placeholder="专辑主艺人；合辑可填写 Various Artists"
@@ -110,38 +120,38 @@ const emit = defineEmits<{
           <div class="form-grid">
             <label
               >发行年份<input
-                v-model.number="album.release_year"
+                v-model.number="releaseYear"
                 max="9999"
                 min="1000"
                 placeholder="未知可留空"
                 type="number" /></label
             ><label
               >发行版本<input
-                v-model="album.edition"
+                v-model="edition"
                 maxlength="100"
                 placeholder="如：首版、重制版、豪华版" /></label
-            ><label>发行地区<input v-model="album.release_country" maxlength="100" /></label
-            ><label>唱片编号<input v-model="album.catalog_number" maxlength="100" /></label
-            ><label>厂牌<input v-model="album.label" maxlength="255" /></label>
+            ><label>发行地区<input v-model="releaseCountry" maxlength="100" /></label
+            ><label>唱片编号<input v-model="catalogNumber" maxlength="100" /></label
+            ><label>厂牌<input v-model="label" maxlength="255" /></label>
           </div>
           <div class="form-grid">
             <label
               >碟片总数<input
-                v-model.number="album.total_discs"
+                v-model.number="totalDiscs"
                 max="999"
                 min="1"
                 placeholder="未知可留空"
                 type="number" /></label
             ><label
               >曲目总数<input
-                v-model.number="album.total_tracks"
+                v-model.number="totalTracks"
                 max="9999"
                 min="1"
                 placeholder="整张专辑的总曲目数"
                 type="number" /></label
             ><label
               >MusicBrainz 发行 ID<input
-                v-model="album.musicbrainz_id"
+                v-model="musicbrainzId"
                 maxlength="36"
                 placeholder="未知可留空"
             /></label>

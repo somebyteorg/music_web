@@ -2,9 +2,10 @@
 import type { UploadBatch } from './useUploadBatch'
 
 defineProps<{ batch: UploadBatch }>()
+const emit = defineEmits<{ close: [] }>()
 </script>
 <template>
-  <button type="button" :disabled="batch.busy" class="button secondary" @click="batch.open = false">
+  <button type="button" :disabled="batch.busy" class="button secondary" @click="emit('close')">
     取消
   </button>
   <button
