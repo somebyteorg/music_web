@@ -55,6 +55,10 @@ export interface PublishData {
   recording_version?: string
   track_number?: number
   disc_number?: number
+  musicbrainz_id?: string | null
+  release_date?: string | null
+  genre?: string | null
+  artist_credits?: import('@/features/uploads/musicBrainz').MusicBrainzArtistCredit[]
 }
 export interface UploadDraft {
   data: PublishData
@@ -65,6 +69,7 @@ export interface UploadPreview {
   lyrics: { name: string; language: string; format: LyricFormat }[]
   warnings: string[]
   matches: (Person & {
+    musicbrainz_id?: string | null
     recording_id: string
     recording_version: string
     artists: Person[]

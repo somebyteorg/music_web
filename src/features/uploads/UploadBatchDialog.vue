@@ -6,8 +6,9 @@ import EntityCover from '@/components/EntityCover.vue'
 import { fileUrl } from '@/utils/file'
 import { duration, qualities } from '@/utils/format'
 import type { UploadBatch } from './useUploadBatch'
-import type { BatchAlbum } from './batchModel'
+import type { BatchAlbum, BatchRow } from './batchModel'
 import type { UploadTask } from './model'
+import { publicAlbumFields } from './publicAlbumPage'
 
 const props = defineProps<{ batch: UploadBatch }>()
 const addingAlbum = ref(false)
@@ -33,6 +34,11 @@ function confirmAlbumGroup() {
     addingAlbum.value = false
     albumName.value = ''
   }
+}
+function updateSongArtist(row: BatchRow, event: Event) {
+  if (!(event.target instanceof HTMLInputElement)) return
+  row.artist = event.target.value
+  props.batch.clearSongCredits(row)
 }
 watch(
   () => props.batch.open,
@@ -164,6 +170,349 @@ const emit = defineEmits<{
         <p v-if="!album.selection && album.matches.length" class="notice">
           存在多张候选或发行资料不同，请核对后选择。
         </p>
+        <details v-if="album.selection !== 'none'" class="batch-details musicbrainz-import">
+          <summary>从 MusicBrainz 获取专辑资料</summary>
+          <div class="form-stack">
+            <p class="hint">
+              搜索公开发行资料，预览后再填入本组。仅在曲名或曲序能唯一对应时更新曲目；其余保留原值。
+            </p>
+            <div class="form-grid">
+              <label
+                >专辑搜索词<input
+                  v-model="album.musicBrainzQuery"
+                  maxlength="255"
+                  placeholder="专辑名称"
+              /></label>
+              <label
+                >歌手筛选<input v-model="album.artist_name" maxlength="255" placeholder="可留空"
+              /></label>
+            </div>
+            <div class="button-group">
+              <button
+                class="button small secondary"
+                type="button"
+                :disabled="
+                  batch.busy ||
+                  album.musicBrainzLoading ||
+                  (!album.musicBrainzQuery.trim() && !album.name.trim())
+                "
+                @click="batch.searchMusicBrainz(album)"
+              >
+                {{ album.musicBrainzLoading ? '正在查询…' : '搜索发行版本' }}
+              </button>
+              <span class="hint">搜索受服务器限流；短时间重复查询会复用缓存。</span>
+            </div>
+            <p v-if="album.musicBrainzError" class="error-text" role="alert">
+              {{ album.musicBrainzError }}
+            </p>
+            <div v-if="album.musicBrainzResults.length" class="picker-results">
+              <button
+                v-for="release in album.musicBrainzResults"
+                :key="release.id"
+                :class="{ selected: album.musicBrainzPreview?.id === release.id }"
+                :disabled="batch.busy || album.musicBrainzLoading"
+                type="button"
+                @click="batch.selectMusicBrainz(album, release)"
+              >
+                <strong>{{ release.title }}</strong>
+                <small>
+                  {{ release.artist_name || '未知歌手' }} · {{ release.date || '日期未知' }}
+                  {{ release.country ? `· ${release.country}` : '' }}
+                  {{ release.track_count ? `· ${release.track_count} 首` : '' }} ·
+                  {{ release.status || '发行状态未知' }}
+                </small>
+              </button>
+            </div>
+            <article v-if="album.musicBrainzPreview" class="musicbrainz-preview">
+              <img
+                v-if="album.musicBrainzPreview.cover_preview_url"
+                :src="album.musicBrainzPreview.cover_preview_url"
+                :alt="`${album.musicBrainzPreview.title} 封面预览`"
+                loading="lazy"
+              />
+              <div class="musicbrainz-preview-content">
+                <strong>{{ album.musicBrainzPreview.title }}</strong>
+                <p class="hint">
+                  {{ album.musicBrainzPreview.artist_name || '未知歌手' }} ·
+                  {{ album.musicBrainzPreview.date || '日期未知' }}
+                  {{
+                    album.musicBrainzPreview.release_country
+                      ? `· ${album.musicBrainzPreview.release_country}`
+                      : ''
+                  }}
+                  · {{ album.musicBrainzPreview.total_tracks || 0 }} 首 /
+                  {{ album.musicBrainzPreview.total_discs || 0 }} 碟 ·
+                  {{ album.musicBrainzPreview.status || '状态未知' }}
+                </p>
+                <p class="hint">
+                  发行 MBID：{{ album.musicBrainzPreview.id }} · 厂牌：{{
+                    album.musicBrainzPreview.label || '未知'
+                  }}
+                  · 编号：{{ album.musicBrainzPreview.catalog_number || '未知' }} · 格式：{{
+                    album.musicBrainzPreview.formats?.join(' / ') || '未知'
+                  }}
+                  · 条码：{{ album.musicBrainzPreview.barcode || '未知' }} · 流派：{{
+                    album.musicBrainzPreview.genre || '未知'
+                  }}
+                </p>
+                <p class="hint">
+                  艺人署名：{{
+                    album.musicBrainzPreview.artist_credits
+                      ?.map((credit) => credit.credited_name + credit.joinphrase)
+                      .join('') || album.musicBrainzPreview.artist_name
+                  }}
+                </p>
+                <div v-if="album.musicBrainzPreview.artworks?.length" class="musicbrainz-artworks">
+                  <span v-for="art in album.musicBrainzPreview.artworks" :key="art.id"
+                    ><img
+                      v-if="art.preview_url"
+                      :src="art.preview_url"
+                      :alt="art.types.join(', ') || art.type"
+                      loading="lazy"
+                    /><small
+                      >{{ art.type }} · {{ art.types.join(', ') || '类型未知'
+                      }}{{ art.approved ? ' · 已审核' : '' }}</small
+                    ></span
+                  >
+                </div>
+                <p class="notice">
+                  完整发行曲目清单仅供比对；只有当前已选本地音频对应的歌曲会入库，不会为未选曲目创建歌曲。
+                </p>
+                <ol v-if="album.musicBrainzPreview.tracks.length" class="musicbrainz-tracklist">
+                  <li
+                    v-for="track in album.musicBrainzPreview.tracks"
+                    :key="`${track.disc}-${track.track}`"
+                  >
+                    <span>{{ track.disc }}-{{ track.track }}. {{ track.title }}</span>
+                    <small
+                      >{{ track.artist_name || '未知艺人' }} ·
+                      {{
+                        track.musicbrainz_id
+                          ? `Recording ${track.musicbrainz_id}`
+                          : '无 Recording ID'
+                      }}{{
+                        track.length_ms != null
+                          ? ` · ${Math.floor(track.length_ms / 60000)}:${String(Math.floor(track.length_ms / 1000) % 60).padStart(2, '0')}`
+                          : ''
+                      }}{{ track.isrcs?.length ? ` · ISRC ${track.isrcs.join(', ')}` : '' }}</small
+                    >
+                  </li>
+                </ol>
+                <p v-else class="hint">来源未提供曲目列表，现有曲目信息会保留。</p>
+                <div class="button-group">
+                  <button
+                    class="button small secondary"
+                    type="button"
+                    :disabled="batch.busy || album.musicBrainzLoading"
+                    @click="batch.applyMusicBrainz(album)"
+                  >
+                    应用发行资料
+                  </button>
+                  <button
+                    v-if="album.musicBrainzPreview.cover_preview_url"
+                    class="button small secondary"
+                    type="button"
+                    :disabled="batch.busy || album.musicBrainzCoverLoading"
+                    @click="batch.importMusicBrainzCover(album)"
+                  >
+                    {{ album.musicBrainzCoverLoading ? '正在导入封面…' : '明确确认后导入正面封面' }}
+                  </button>
+                </div>
+              </div>
+            </article>
+            <p class="hint">
+              资料来源：<a href="https://musicbrainz.org/" target="_blank" rel="noreferrer"
+                >MusicBrainz</a
+              >；封面来自
+              <a href="https://coverartarchive.org/" target="_blank" rel="noreferrer"
+                >Cover Art Archive</a
+              >。 封面导入到你的图片库前，请确认具备相应使用权限；已有专辑封面不会自动替换。
+            </p>
+          </div>
+        </details>
+        <details
+          v-if="album.selection !== 'none'"
+          class="batch-details musicbrainz-import public-album-import"
+        >
+          <summary>从 QQ 音乐、网易云音乐或酷狗公开专辑页获取资料</summary>
+          <div class="form-stack">
+            <p class="hint">
+              只读取无需登录的 HTTPS 专辑页可见资料、公开元数据和页面结构化数据；不调用平台
+              API、不登录、不绕过限制，也不下载音频。读不到或不完整时，可粘贴页面可见文字。只有本组已选本地音频会匹配/入库，其他曲目仅供核对。
+            </p>
+            <label
+              >公开专辑页链接<input
+                v-model="album.publicPageUrl"
+                :disabled="batch.busy || album.publicPageLoading"
+                maxlength="2048"
+                placeholder="粘贴 QQ 音乐、网易云音乐或酷狗的专辑详情/分享页链接"
+            /></label>
+            <div class="button-group">
+              <button
+                class="button small secondary"
+                type="button"
+                :disabled="batch.busy || album.publicPageLoading || !album.publicPageUrl.trim()"
+                @click="batch.previewPublicAlbum(album, 'url')"
+              >
+                {{ album.publicPageLoading ? '正在读取公开页面…' : '读取公开页面' }}
+              </button>
+              <button
+                class="text-button"
+                type="button"
+                :disabled="batch.busy || album.publicPageLoading"
+                @click="album.publicPageTextVisible = !album.publicPageTextVisible"
+              >
+                {{ album.publicPageTextVisible ? '收起文字粘贴区' : '页面打不开？粘贴页面文字' }}
+              </button>
+            </div>
+            <div v-if="album.publicPageTextVisible" class="form-stack">
+              <label
+                >粘贴页面可见的专辑资料和曲目清单<textarea
+                  v-model="album.publicPageText"
+                  :disabled="batch.busy || album.publicPageLoading"
+                  maxlength="50000"
+                  rows="7"
+                  placeholder="例如：专辑名、艺人、发行时间、唱片公司，以及按碟号/曲序排列的歌名"
+                />
+              </label>
+              <button
+                class="button small secondary"
+                type="button"
+                :disabled="batch.busy || album.publicPageLoading || !album.publicPageText.trim()"
+                @click="batch.previewPublicAlbum(album, 'text')"
+              >
+                {{ album.publicPageLoading ? '正在解析文字…' : '解析粘贴文字' }}
+              </button>
+            </div>
+            <p v-if="album.publicPageError" class="error-text" role="alert">
+              {{ album.publicPageError }}
+            </p>
+            <article
+              v-if="album.publicPagePreview"
+              class="musicbrainz-preview public-album-preview"
+            >
+              <img
+                v-if="album.publicPagePreview.cover_preview_url"
+                :src="album.publicPagePreview.cover_preview_url"
+                :alt="`${album.publicPagePreview.title || '专辑'}封面预览`"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+              />
+              <div class="musicbrainz-preview-content">
+                <strong>{{ album.publicPagePreview.title || '来源未提供专辑名称' }}</strong>
+                <p class="hint">
+                  {{ album.publicPagePreview.source_platform }} ·
+                  {{ album.publicPagePreview.method === 'pasted-text' ? '粘贴文字' : '公开页面' }}
+                  <a
+                    v-if="album.publicPagePreview.source_url"
+                    :href="album.publicPagePreview.source_url"
+                    target="_blank"
+                    rel="noreferrer"
+                    >打开来源页</a
+                  >
+                </p>
+                <p class="hint">
+                  {{ album.publicPagePreview.artist_name || '艺人未提供' }} ·
+                  {{
+                    album.publicPagePreview.release_date ||
+                    album.publicPagePreview.release_year ||
+                    '发行日期未知'
+                  }}
+                  {{
+                    album.publicPagePreview.release_country
+                      ? `· ${album.publicPagePreview.release_country}`
+                      : ''
+                  }}
+                  ·
+                  {{
+                    album.publicPagePreview.total_tracks ||
+                    album.publicPagePreview.tracks.length ||
+                    '曲目数未知'
+                  }}
+                  首
+                  {{
+                    album.publicPagePreview.total_discs
+                      ? `· ${album.publicPagePreview.total_discs} 碟`
+                      : ''
+                  }}
+                </p>
+                <p class="hint">
+                  厂牌：{{ album.publicPagePreview.label || '未提供' }} · 编号：{{
+                    album.publicPagePreview.catalog_number || '未提供'
+                  }}
+                  · 流派：{{ album.publicPagePreview.genre || '未提供' }}
+                </p>
+                <p class="hint">
+                  条码：{{ album.publicPagePreview.barcode || '未提供' }} · 格式：{{
+                    album.publicPagePreview.formats.join(' / ') || '未提供'
+                  }}
+                </p>
+                <p v-if="album.publicPagePreview.description" class="hint public-album-description">
+                  简介（仅预览）：{{ album.publicPagePreview.description }}
+                </p>
+                <p v-if="album.publicPagePreview.warning" class="notice">
+                  {{ album.publicPagePreview.warning }}
+                </p>
+                <ol
+                  v-if="album.publicPagePreview.tracks.length"
+                  class="musicbrainz-tracklist public-album-tracklist"
+                >
+                  <li
+                    v-for="track in album.publicPagePreview.tracks"
+                    :key="`${track.disc}-${track.track}`"
+                  >
+                    <span>{{ track.disc }}-{{ track.track }}. {{ track.title }}</span>
+                    <small>
+                      {{ track.artist_name || album.publicPagePreview.artist_name || '艺人未提供' }}
+                      {{
+                        track.length_ms != null
+                          ? ` · ${Math.floor(track.length_ms / 60000)}:${String(Math.floor(track.length_ms / 1000) % 60).padStart(2, '0')}`
+                          : ''
+                      }}
+                    </small>
+                  </li>
+                </ol>
+                <p v-else class="hint">来源未提供曲目清单；不会据此为未选本地音频创建歌曲。</p>
+                <p v-if="album.publicPagePreview.cover_preview_url" class="hint">
+                  封面仅为网页预览，不会自动下载或替换。若有权使用，请自行选择本地图片上传。
+                </p>
+                <p
+                  v-if="
+                    album.publicPagePreview.barcode ||
+                    album.publicPagePreview.formats.length ||
+                    album.publicPagePreview.description
+                  "
+                  class="hint"
+                >
+                  条码、格式和简介当前仅供核对；EmoS 目录没有对应可写字段。国内平台页面 ID 不会写入
+                  MusicBrainz ID。
+                </p>
+                <div class="button-group">
+                  <button
+                    class="button small secondary"
+                    type="button"
+                    :disabled="
+                      batch.busy ||
+                      album.publicPageLoading ||
+                      (!album.publicPagePreview.title && !album.publicPagePreview.tracks.length)
+                    "
+                    :aria-disabled="!album.publicPageFields.length"
+                    @click="batch.applyPublicAlbumPage(album)"
+                  >
+                    应用勾选资料并匹配本地音频
+                  </button>
+                </div>
+                <fieldset :disabled="batch.busy || album.publicPageLoading" class="form-grid">
+                  <legend>选择要填入的字段（来源为空时保留原值）</legend>
+                  <label v-for="field in publicAlbumFields" :key="field.key" class="check-label">
+                    <input v-model="album.publicPageFields" type="checkbox" :value="field.key" />
+                    {{ field.label }}
+                  </label>
+                </fieldset>
+              </div>
+            </article>
+          </div>
+        </details>
         <ul v-if="batch.selectedAlbum(album)?.conflicts.length" class="preview-warnings">
           <li v-for="conflict in batch.selectedAlbum(album)?.conflicts" :key="conflict">
             {{ conflict }}
@@ -180,6 +529,7 @@ const emit = defineEmits<{
             ><label
               >专辑艺人<input
                 v-model="album.artist_name"
+                @input="batch.clearAlbumCredits(album)"
                 :disabled="batch.busy"
                 maxlength="255"
                 placeholder="专辑主艺人；合辑可填写 Various Artists"
@@ -206,6 +556,8 @@ const emit = defineEmits<{
                     placeholder="如：首版、重制版、豪华版" /></label
                 ><label>发行地区<input v-model="album.release_country" maxlength="100" /></label
                 ><label>唱片编号<input v-model="album.catalog_number" maxlength="100" /></label
+                ><label>完整发行日期<input v-model="album.release_date" type="date" /></label
+                ><label>流派<input v-model="album.genre" maxlength="100" /></label
                 ><label>厂牌<input v-model="album.label" maxlength="255" /></label>
               </div>
               <div class="form-grid">
@@ -486,7 +838,7 @@ const emit = defineEmits<{
                 <label
                   >歌曲演唱者<input
                     :value="batch.songArtist(entry.row)"
-                    @input="entry.row.artist = ($event.target as HTMLInputElement).value"
+                    @input="updateSongArtist(entry.row, $event)"
                     :disabled="
                       batch.form.applyArtist ||
                       album.applyArtist ||
@@ -672,6 +1024,52 @@ const emit = defineEmits<{
 .batch-details[open] > summary {
   margin-bottom: 14px;
 }
+.musicbrainz-import {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface, white);
+}
+.musicbrainz-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.musicbrainz-preview > img {
+  width: 92px;
+  height: 92px;
+  flex: 0 0 92px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: var(--soft);
+}
+.musicbrainz-preview-content {
+  min-width: 0;
+  flex: 1;
+}
+.musicbrainz-tracklist {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-left: 22px;
+  font-size: 12px;
+}
+.musicbrainz-tracklist li {
+  padding: 2px 0;
+}
+.public-album-tracklist {
+  max-height: 280px;
+}
+.public-album-description {
+  max-height: 120px;
+  overflow-y: auto;
+}
+.musicbrainz-tracklist small {
+  display: block;
+  color: var(--muted);
+}
 .group-performer {
   display: grid;
   gap: 8px;
@@ -831,6 +1229,9 @@ const emit = defineEmits<{
   }
   .batch-file {
     padding: 12px;
+  }
+  .musicbrainz-preview {
+    flex-direction: column;
   }
 }
 </style>

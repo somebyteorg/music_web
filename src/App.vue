@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
 import PlayerBar from '@/components/PlayerBar.vue'
 import { notification, notificationTarget } from '@/composables/useFeedback'
 import { useAppShell } from '@/app/useAppShell'
+import api from '@/utils/ky'
 
 const {
   sign,
@@ -22,6 +24,28 @@ const {
   closeNavigation,
   signOut,
 } = useAppShell()
+const loginToken = ref('')
+const tokenLoginError = ref('')
+const tokenLoginBusy = ref(false)
+async function loginWithToken() {
+  const token = loginToken.value.trim()
+  if (!token) {
+    tokenLoginError.value = '请输入 EMOS 登录令牌。'
+    return
+  }
+  tokenLoginBusy.value = true
+  tokenLoginError.value = ''
+  try {
+    await api.post('login', { json: { token } })
+    await hydrate()
+    if (!sign.user) tokenLoginError.value = sign.loginError || '未能建立音乐库会话，请重试。'
+  } catch (error) {
+    tokenLoginError.value = error instanceof Error ? error.message : '登录失败，请检查令牌后重试。'
+  } finally {
+    loginToken.value = ''
+    tokenLoginBusy.value = false
+  }
+}
 </script>
 <template>
   <div v-if="booting || !sign.ready" class="boot">
@@ -43,6 +67,32 @@ const {
         />
         使用 EMOS 登录<span aria-hidden="true">↗</span>
       </a>
+      <form class="token-login" @submit.prevent="loginWithToken">
+        <label for="emos-login-token">或粘贴 EMOS 登录令牌</label>
+        <input
+          id="emos-login-token"
+          v-model="loginToken"
+          autocomplete="new-password"
+          autocapitalize="off"
+          maxlength="4096"
+          name="emos-token"
+          placeholder="令牌不会显示在屏幕上"
+          required
+          spellcheck="false"
+          type="password"
+        />
+        <p class="hint">
+          令牌只通过当前站点的登录请求交给已配置的 EMOS 服务验证，不会写入 URL 或浏览器存储。
+        </p>
+        <p v-if="tokenLoginError" class="error-text" role="alert">{{ tokenLoginError }}</p>
+        <button
+          class="button secondary sign-in-link"
+          :disabled="tokenLoginBusy || !loginToken.trim()"
+          type="submit"
+        >
+          {{ tokenLoginBusy ? '正在验证…' : '使用令牌登录' }}
+        </button>
+      </form>
       <a
         v-for="link in playbackLinks"
         :key="link.name"
@@ -521,6 +571,28 @@ const {
 }
 .sign-in-link > span {
   margin-left: auto;
+}
+.token-login {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.token-login > label {
+  font-size: 12px;
+  font-weight: 600;
+}
+.token-login > .hint,
+.token-login > .error-text {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.token-login > .button {
+  margin-top: 0;
+  justify-content: center;
 }
 .toast {
   position: fixed;
