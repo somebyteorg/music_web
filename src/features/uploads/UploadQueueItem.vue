@@ -4,6 +4,7 @@ import { useUploadsStore } from '@/stores/uploads'
 import { bytes, duration, qualities } from '@/utils/format'
 import { fileUrl } from '@/utils/file'
 import { isUploadDone, TRANSMIT_STATES, UPLOAD_STATES as states, type UploadTask } from './model'
+import UploadQueueItemActions from './UploadQueueItemActions.vue'
 
 const props = defineProps<{ task: UploadTask; busy: boolean; selected: boolean }>()
 const emit = defineEmits<{
@@ -15,11 +16,10 @@ const emit = defineEmits<{
 }>()
 const uploads = useUploadsStore()
 const done = computed(() => isUploadDone(props.task))
-
-function previewCover() {
+const coverUrl = computed(() => {
   const id = props.task.kind === 'cover' ? props.task.file?.id : props.task.file?.preview?.cover_id
   return id ? fileUrl(id) : uploads.localCover(props.task)
-}
+})
 </script>
 <template>
   <article class="upload-task">
@@ -31,13 +31,13 @@ function previewCover() {
         @change="emit('toggle-selection')"
     /></label>
     <button
-      v-else-if="previewCover()"
+      v-else-if="coverUrl"
       :aria-label="`预览 ${task.name}`"
       class="task-thumbnail"
       type="button"
       @click="emit('inspect', task)"
     >
-      <img :src="previewCover()" alt="" loading="lazy" />
+      <img :src="coverUrl" alt="" loading="lazy" />
     </button>
     <span v-else :class="['task-icon', { done }]">{{
       done ? '✓' : task.kind === 'cover' ? '▣' : '♫'
@@ -97,74 +97,15 @@ function previewCover() {
       >{{ task.kind === 'cover' && task.state === 'ready' ? '图片已上传' : states[task.state]
       }}<span v-if="task.state === 'uploading'"> {{ task.progress }}%</span></span
     >
-    <div class="task-actions">
-      <button
-        v-if="TRANSMIT_STATES.includes(task.state)"
-        class="text-button"
-        @click="uploads.pause(task)"
-      >
-        暂停</button
-      ><button
-        v-if="
-          task.state === 'failed' ||
-          task.state === 'paused' ||
-          (task.errorStage === 'publishing' && task.error)
-        "
-        :disabled="busy"
-        class="text-button"
-        @click="emit('retry', task)"
-      >
-        {{
-          task.errorStage === 'publishing'
-            ? '重试入库'
-            : task.progress === 100
-              ? '重新处理'
-              : '继续'
-        }}</button
-      ><button
-        v-if="task.state === 'failed' && !task.file"
-        :disabled="busy"
-        class="text-button"
-        @click="uploads.restart(task)"
-      >
-        重新上传</button
-      ><template v-if="task.state === 'duplicate'"
-        ><button
-          :disabled="busy || !uploads.duplicateFile(task)"
-          class="text-button"
-          @click="emit('use-duplicate')"
-        >
-          使用已有文件</button
-        ><button class="text-button" @click="uploads.skip(task)">跳过</button></template
-      ><button
-        v-if="task.state === 'ready' && task.kind === 'audio'"
-        class="button small primary"
-        @click="emit('preview', task, false)"
-      >
-        确认归属</button
-      ><button
-        v-if="task.kind === 'cover' && previewCover()"
-        class="text-button"
-        @click="emit('inspect', task)"
-      >
-        预览图片</button
-      ><button
-        v-if="task.kind === 'audio' && task.file && task.state !== 'ready'"
-        class="text-button"
-        @click="emit('preview', task, true)"
-      >
-        预览</button
-      ><RouterLink v-if="task.songId" :to="`/songs/${task.songId}`" class="text-link"
-        >查看歌曲</RouterLink
-      ><button
-        v-if="!['processing', 'publishing'].includes(task.state)"
-        :aria-label="`移除任务 ${task.name}`"
-        class="icon-button"
-        @click="uploads.remove(task)"
-      >
-        ×
-      </button>
-    </div>
+    <UploadQueueItemActions
+      :busy="busy"
+      :cover-url="coverUrl"
+      :task="task"
+      @inspect="emit('inspect', $event)"
+      @preview="(task, previewOnly) => emit('preview', task, previewOnly)"
+      @retry="emit('retry', $event)"
+      @use-duplicate="emit('use-duplicate')"
+    />
   </article>
 </template>
 <style scoped>
@@ -235,15 +176,6 @@ function previewCover() {
 .task-state.failed {
   color: var(--danger);
 }
-.task-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  min-width: 150px;
-  max-width: 230px;
-}
 .progress-track {
   margin-top: 5px;
   height: 3px;
@@ -297,12 +229,6 @@ function previewCover() {
     grid-column: 2;
     grid-row: 2;
     width: auto;
-  }
-  .task-actions {
-    grid-column: 2;
-    grid-row: 3;
-    justify-content: flex-start;
-    min-width: 0;
   }
 }
 </style>
