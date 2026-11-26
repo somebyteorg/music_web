@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
+import Card from '@/components/ui/Card.vue'
 import { computed, onMounted, reactive } from 'vue'
 import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
@@ -90,9 +92,9 @@ onMounted(loadPending)
       <h1>上传文件</h1>
       <span class="muted">{{ uploads.tasks.length }} 个任务</span>
     </div>
-    <button class="button secondary" type="button" @click="browseImages()">我的图片</button>
+    <Button variant="secondary" type="button" @click="browseImages()">我的图片</Button>
   </div>
-  <section v-if="targetSong" class="notice-panel panel">
+  <Card v-if="targetSong" as="section" class="notice-panel">
     <p>
       为
       <RouterLink :to="`/songs/${targetSong.id}`" class="text-link">{{
@@ -101,16 +103,16 @@ onMounted(loadPending)
       上传音频<span v-if="targetSong.recording_version"> · {{ targetSong.recording_version }}</span>
     </p>
     <p class="hint">所选音频完成解析后会直接加入这首歌曲，请核对录音版本。</p>
-  </section>
-  <section v-if="!hasNotice" class="notice-panel panel">
+  </Card>
+  <Card v-if="!hasNotice" as="section" class="notice-panel">
     <h2>上传须知</h2>
     <p class="preline">{{ sign.config?.notice.text }}</p>
     <label class="check-label"
       ><input v-model="accepted" type="checkbox" />我已阅读并同意上传须知</label
-    ><button :disabled="!accepted || busy" class="button primary" @click="acceptNotice">
+    ><Button :disabled="!accepted || busy" variant="primary" @click="acceptNotice">
       确认并开始上传
-    </button>
-  </section>
+    </Button>
+  </Card>
   <section
     v-else
     ref="dropZone"
@@ -129,16 +131,16 @@ onMounted(loadPending)
       </p>
     </div>
     <div class="button-group">
-      <label class="button primary"
+      <Button as="label" variant="primary"
         >＋ 添加文件<input
           :accept="accept"
           class="sr-only"
           multiple
           type="file"
-          @change="choose" /></label
-      ><label class="button secondary"
+          @change="choose" /></Button
+      ><Button as="label" variant="secondary"
         >添加文件夹<input class="sr-only" multiple type="file" webkitdirectory @change="choose"
-      /></label>
+      /></Button>
     </div>
   </section>
   <UploadQueue
@@ -154,12 +156,12 @@ onMounted(loadPending)
         <span class="muted">{{ pendingTotal }} 份音频</span>
       </div>
       <div class="button-group">
-        <button v-if="remotePending.length" class="button small secondary" @click="batchPending">
-          批量整理本页</button
+        <Button v-if="remotePending.length" variant="secondary" size="sm" @click="batchPending">
+          批量整理本页</Button
         ><button :disabled="pendingBusy" class="text-button" @click="loadPending">刷新</button>
       </div>
     </div>
-    <div :aria-busy="pendingBusy" class="panel">
+    <Card :aria-busy="pendingBusy">
       <article v-for="file in remotePending" :key="file.id" class="pending-row">
         <button
           v-if="file.preview?.cover_id"
@@ -174,12 +176,12 @@ onMounted(loadPending)
           <strong>{{ file.file_name }}</strong>
           <p class="hint">{{ qualities[file.quality] }} · {{ bytes(file.file_size) }}</p>
         </div>
-        <button class="button small secondary" @click="fromPending(file)">确认归属</button>
+        <Button variant="secondary" size="sm" @click="fromPending(file)">确认归属</Button>
       </article>
       <p v-if="!remotePending.length" class="pending-note hint">
         本页文件已显示在上传队列中，可直接确认归属。
       </p>
-    </div>
+    </Card>
     <Pagination
       :busy="pendingBusy"
       :page="pendingPage"
@@ -264,17 +266,17 @@ onMounted(loadPending)
       </div>
     </div>
     <template #footer>
-      <button
+      <Button
         :disabled="folderBusy"
-        class="button secondary"
+        variant="secondary"
         type="button"
         @click="folderUpload.open = false"
       >
         取消
-      </button>
-      <button
+      </Button>
+      <Button
         :disabled="folderBusy || (!folderUpload.audio.length && !folderUpload.selected.length)"
-        class="button primary"
+        variant="primary"
         type="button"
         @click="confirmFolder"
       >
@@ -283,7 +285,7 @@ onMounted(loadPending)
             ? '正在加入队列…'
             : `上传 ${folderUpload.audio.length} 份音频和 ${folderUpload.selected.length} 张图片`
         }}
-      </button>
+      </Button>
     </template>
   </BaseDialog>
   <BaseDialog
@@ -302,8 +304,8 @@ onMounted(loadPending)
       class="image-preview"
     />
     <template #footer
-      ><button class="button secondary" type="button" @click="folderUpload.preview = undefined">
-        关闭</button
+      ><Button variant="secondary" type="button" @click="folderUpload.preview = undefined">
+        关闭</Button
       ><button
         class="text-button danger"
         type="button"
@@ -324,7 +326,7 @@ onMounted(loadPending)
           v-model="images.query"
           aria-label="搜索我的图片"
           placeholder="搜索图片文件名"
-        /><button :disabled="images.busy" class="button secondary">搜索</button>
+        /><Button :disabled="images.busy" variant="secondary">搜索</Button>
       </form>
       <p class="hint">图片可重复使用。点击缩略图查看大图、使用情况或删除图片。</p>
       <p v-if="images.error" class="error-text" role="alert">{{ images.error }}</p>
@@ -363,9 +365,9 @@ onMounted(loadPending)
       />
     </div>
     <template #footer
-      ><button class="button secondary" type="button" @click="images.open = false">
-        关闭
-      </button></template
+      ><Button variant="secondary" type="button" @click="images.open = false"
+        >关闭</Button
+      ></template
     >
   </BaseDialog>
   <BaseDialog
@@ -385,14 +387,14 @@ onMounted(loadPending)
     <p v-if="images.previewError" class="error-text" role="alert">{{ images.previewError }}</p>
     <p v-if="images.confirmDelete" class="notice">确认删除这张已上传的图片？</p>
     <template #footer>
-      <button
+      <Button
         :disabled="images.previewBusy"
-        class="button secondary"
+        variant="secondary"
         type="button"
         @click="images.previewOpen = false"
       >
         关闭
-      </button>
+      </Button>
       <button
         v-if="images.preview?.file"
         :disabled="
@@ -412,15 +414,15 @@ onMounted(loadPending)
       >
         移除上传任务
       </button>
-      <button
+      <Button
         v-if="imageAlbum && images.preview"
         :disabled="images.previewBusy || batch.busy"
-        class="button primary"
+        variant="primary"
         type="button"
         @click="selectPreview"
       >
         选为正面图
-      </button>
+      </Button>
     </template>
   </BaseDialog>
   <BaseDialog v-model="confirm" :busy="busy" :title="previewOnly ? '解析结果预览' : '确认歌曲归属'"
@@ -481,22 +483,22 @@ onMounted(loadPending)
               时长相差约 {{ Math.round(match.duration_difference || 0) }} 秒，请核对录音版本。
             </p>
           </div>
-          <button v-if="!previewOnly" class="button small secondary" @click="chooseSong(match)">
+          <Button v-if="!previewOnly" variant="secondary" size="sm" @click="chooseSong(match)">
             关联这首
-          </button>
+          </Button>
         </article>
       </div>
       <template v-if="!previewOnly">
         <label
           >搜索已有歌曲
           <div class="search-inline">
-            <input v-model="query" @keydown.enter.prevent="search" /><button
+            <input v-model="query" @keydown.enter.prevent="search" /><Button
               :disabled="busy"
-              class="button secondary"
+              variant="secondary"
               @click="search"
             >
               搜索
-            </button>
+            </Button>
           </div></label
         >
         <div class="picker-results">
@@ -521,16 +523,11 @@ onMounted(loadPending)
       </template>
     </div>
     <template #footer
-      ><button :disabled="busy" class="button secondary" @click="confirm = false">
-        {{ previewOnly ? '关闭' : '稍后处理' }}</button
-      ><button
-        v-if="!previewOnly"
-        :disabled="busy || !song"
-        class="button primary"
-        @click="publish"
-      >
+      ><Button :disabled="busy" variant="secondary" @click="confirm = false">
+        {{ previewOnly ? '关闭' : '稍后处理' }}</Button
+      ><Button v-if="!previewOnly" :disabled="busy || !song" variant="primary" @click="publish">
         {{ busy ? '正在保存…' : '确认加入曲库' }}
-      </button></template
+      </Button></template
     ></BaseDialog
   >
   <UploadBatchDialog

@@ -123,7 +123,7 @@ const coverUrl = computed(() => {
   flex-shrink: 0;
   border-radius: 5px;
   overflow: hidden;
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .task-thumbnail img {
   width: 100%;
@@ -143,13 +143,13 @@ const coverUrl = computed(() => {
   width: 26px;
   height: 30px;
   flex-shrink: 0;
-  color: var(--purple);
-  background: var(--lilac);
+  color: var(--brand);
+  background: var(--brand-soft);
   border-radius: 4px;
   font-size: 16px;
 }
 .task-icon.done {
-  background: #eaf5ee;
+  background: var(--success-soft);
   color: var(--success);
 }
 .task-body {
@@ -170,13 +170,13 @@ const coverUrl = computed(() => {
 .task-state {
   width: 82px;
   flex-shrink: 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   white-space: nowrap;
 }
 .task-state.ready,
 .task-state.duplicate {
-  color: #93601d;
+  color: var(--warning);
 }
 .task-state.published {
   color: var(--success);
@@ -190,18 +190,18 @@ const coverUrl = computed(() => {
   max-width: 460px;
   overflow: hidden;
   border-radius: 2px;
-  background: #ebe5f5;
+  background: var(--brand-soft);
 }
 .progress-track > span {
   display: block;
   height: 100%;
-  background: var(--purple);
+  background: var(--brand);
   transition: width 0.2s;
 }
 .duplicate-note,
 .task-warning {
   margin-top: 5px;
-  color: #91632b;
+  color: var(--warning);
   font-size: 12px;
   overflow-wrap: anywhere;
 }

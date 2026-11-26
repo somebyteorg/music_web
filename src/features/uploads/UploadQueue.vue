@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
+import Card from '@/components/ui/Card.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
 import { useUploadsStore } from '@/stores/uploads'
 import { bytes } from '@/utils/format'
 import type { UploadTask } from './model'
@@ -50,7 +53,7 @@ const {
       @resume-all="resumeAll"
     />
     <div v-if="visibleTasks.length" class="upload-groups">
-      <section v-for="group in grouping.groups" :key="group.key" class="upload-queue panel">
+      <Card v-for="group in grouping.groups" :key="group.key" as="section" class="upload-queue">
         <div class="upload-group-heading">
           <label v-if="group.ready.length" class="group-select"
             ><input
@@ -75,14 +78,15 @@ const {
               >
             </div>
           </button>
-          <button
+          <Button
             v-if="group.ready.length"
             :disabled="organizing"
-            class="button small secondary"
+            variant="secondary"
+            size="sm"
             @click="emit('organize', group.ready)"
           >
             整理 {{ group.ready.length }} 份音频
-          </button>
+          </Button>
         </div>
         <template v-if="!grouping.collapsed[group.key]">
           <UploadQueueItem
@@ -98,18 +102,21 @@ const {
             @use-duplicate="run(() => uploads.useDuplicate(task))"
           />
         </template>
-      </section>
+      </Card>
     </div>
-    <div v-else class="empty panel compact">
-      <h3>{{ uploads.tasks.length ? '没有符合条件的任务' : '暂无上传任务' }}</h3>
-      <p>
-        {{
-          uploads.tasks.length
-            ? '选择其他状态或修改搜索关键词。'
-            : '添加文件后，在这里查看进度并确认歌曲归属。'
-        }}
-      </p>
-    </div>
+    <EmptyState
+      v-else
+      panel
+      compact
+      as="h3"
+      :title="uploads.tasks.length ? '没有符合条件的任务' : '暂无上传任务'"
+    >
+      {{
+        uploads.tasks.length
+          ? '选择其他状态或修改搜索关键词。'
+          : '添加文件后，在这里查看进度并确认歌曲归属。'
+      }}
+    </EmptyState>
   </section>
 </template>
 <style scoped>

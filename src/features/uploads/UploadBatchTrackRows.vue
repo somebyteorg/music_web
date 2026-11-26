@@ -127,7 +127,7 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
 <style scoped>
 .batch-details > summary {
   cursor: pointer;
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 12px;
   font-weight: 550;
 }
@@ -136,7 +136,7 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
 }
 .task-warning {
   margin-top: 5px;
-  color: #91632b;
+  color: var(--warning);
   font-size: 12px;
   overflow-wrap: anywhere;
 }

@@ -130,11 +130,11 @@ async function clearDone() {
   padding: 5px 9px;
   border-radius: 5px;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .queue-filters > button.active {
-  color: var(--purple-dark);
-  background: var(--lilac);
+  color: var(--brand-strong);
+  background: var(--brand-soft);
   font-weight: 550;
 }
 .queue-filters > button > span {
@@ -158,7 +158,7 @@ async function clearDone() {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 400;
   white-space: nowrap;
@@ -168,11 +168,11 @@ async function clearDone() {
     box-shadow 0.15s;
 }
 .concurrency-input:hover {
-  border-color: #c9bddf;
+  border-color: var(--brand-line);
 }
 .concurrency-input:focus-within {
-  border-color: #ab91d9;
-  box-shadow: 0 0 0 3px #7654bc12;
+  border-color: var(--brand-line-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 7%, transparent);
 }
 .concurrency-icon,
 .queue-clear svg {
@@ -205,7 +205,7 @@ async function clearDone() {
   outline: 0;
   background: transparent;
   box-shadow: none;
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 13px;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
@@ -217,7 +217,7 @@ async function clearDone() {
   -webkit-appearance: none;
 }
 .concurrency-limit {
-  color: #99949f;
+  color: var(--text-faint);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
@@ -230,7 +230,7 @@ async function clearDone() {
   padding: 0 8px;
   border: 1px solid transparent;
   border-radius: 8px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   white-space: nowrap;
   transition:
@@ -238,8 +238,8 @@ async function clearDone() {
     color 0.15s;
 }
 .queue-clear:not(:disabled):hover {
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
 }
 .queue-search {
   display: flex;

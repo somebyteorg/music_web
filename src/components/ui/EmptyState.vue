@@ -1,8 +1,9 @@
 <script setup lang="ts">
-/** 空状态：替代 .empty / .empty.compact 那套结构（符号 + 标题 + 描述 + 操作）。 */
+/** 空状态：替代 .empty / .empty.compact 那套结构（可选符号 + 标题 + 描述 + 操作）。 */
 withDefaults(
   defineProps<{
-    symbol: string
+    /** 符号/图标字符，省略时不渲染符号行（上传队列的空态原本就没有符号，保持视觉不变） */
+    symbol?: string
     title?: string
     as?: 'h1' | 'h2' | 'h3'
     compact?: boolean
@@ -14,7 +15,7 @@ withDefaults(
 
 <template>
   <div :class="['empty', { compact, panel }]">
-    <span class="empty-symbol">{{ symbol }}</span>
+    <span v-if="symbol" class="empty-symbol">{{ symbol }}</span>
     <component :is="as" v-if="title">{{ title }}</component>
     <p v-if="$slots.default"><slot /></p>
     <slot name="actions" />

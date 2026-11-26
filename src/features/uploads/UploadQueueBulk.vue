@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { useUploadsStore } from '@/stores/uploads'
 import type { UploadTask } from './model'
 
@@ -24,20 +25,22 @@ function skipDuplicates() {
 <template>
   <div v-if="uploads.tasks.length" class="queue-bulk">
     <div class="button-group">
-      <button
+      <Button
         :disabled="busy || !canPause"
-        class="button small secondary"
+        variant="secondary"
+        size="sm"
         @click="emit('pause-all')"
       >
         全部暂停
-      </button>
-      <button
+      </Button>
+      <Button
         :disabled="busy || !canResume"
-        class="button small secondary"
+        variant="secondary"
+        size="sm"
         @click="emit('resume-all', false)"
       >
         全部继续
-      </button>
+      </Button>
       <button
         :disabled="busy || !uploads.stats.failed"
         class="text-button"
@@ -70,7 +73,7 @@ function skipDuplicates() {
     <span>已选 {{ chosen.length }} 份待确认音频</span>
     <div class="button-group">
       <button class="text-button" @click="emit('clear-selection')">取消选择</button
-      ><button class="button small primary" @click="emit('organize', chosen)">批量整理</button>
+      ><Button variant="primary" size="sm" @click="emit('organize', chosen)">批量整理</Button>
     </div>
   </div>
 </template>
@@ -100,18 +103,18 @@ function skipDuplicates() {
 .queue-grouping button {
   padding: 5px 9px;
   border-radius: 5px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .queue-grouping button.active {
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
 }
 .queue-selection {
   padding: 10px 12px;
-  border: 1px solid #dfd4ef;
+  border: 1px solid var(--brand-line-soft);
   border-radius: 8px;
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
   font-size: 12px;
 }
 </style>

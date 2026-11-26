@@ -4,8 +4,8 @@
  * ⚠️ 这里的类名不是死样式，不要删：
  *   .button / .button.primary / .button.secondary / .button.small
  *     ← src/components/ui/Button.vue 直接渲染 this class（组件给语义与 API，基元给视觉）
- *     ← src/features/uploads/UploadBatchDialog.vue(7)、UploadQueue.vue(5)、
- *       src/views/UploadsView.vue(17) 仍直接写 class="button"，属上传域，尚未迁移
+ *     ← 上传域已全部改用 <Button>；直接写 class="button" 的只剩 RouterLink
+ *       （CatalogView / TracksSection / NotFoundView），链接需要 RouterLink 的导航语义
  *   .icon-button ← src/components/ui/IconButton.vue
  *   .text-button(62 处) / .text-link / .chip / .search-field / .button-group(15 处) 仍被页面直接使用
  *

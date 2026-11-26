@@ -133,22 +133,12 @@ const emit = defineEmits<{
 <style scoped>
 .batch-details > summary {
   cursor: pointer;
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 12px;
   font-weight: 550;
 }
 .batch-details[open] > summary {
   margin-bottom: 14px;
-}
-.album-artwork {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.album-artwork .badge {
-  max-width: 100%;
-  white-space: normal;
-  overflow-wrap: anywhere;
 }
 .album-cover-upload {
   position: relative;

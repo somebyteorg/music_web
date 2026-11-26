@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
 import EntityCover from '@/components/EntityCover.vue'
 import type { UploadBatch } from './useUploadBatch'
@@ -156,14 +157,15 @@ const emit = defineEmits<{
                 placeholder="未知可留空"
             /></label>
           </div>
-          <button
+          <Button
             :disabled="batch.busy || album.loading || !album.name.trim()"
-            class="button small secondary"
+            variant="secondary"
+            size="sm"
             type="button"
             @click="batch.searchAlbums(album)"
           >
             重新查找已有专辑
-          </button>
+          </Button>
         </div>
       </details>
     </div>
@@ -184,7 +186,7 @@ const emit = defineEmits<{
   display: flex;
   flex-direction: column;
   gap: 14px;
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .album-confirmation-heading {
   display: flex;
@@ -204,7 +206,7 @@ const emit = defineEmits<{
 }
 .batch-details > summary {
   cursor: pointer;
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 12px;
   font-weight: 550;
 }
@@ -218,10 +220,10 @@ const emit = defineEmits<{
 .preview-warnings {
   margin: 0;
   padding: 10px 12px 10px 28px;
-  border: 1px solid #eddfc8;
+  border: 1px solid var(--warning-line);
   border-radius: 8px;
-  background: #fffaf2;
-  color: #8d622c;
+  background: var(--warning-veil);
+  color: var(--warning);
   font-size: 12px;
   line-height: 1.7;
   list-style: disc;

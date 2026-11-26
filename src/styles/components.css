@@ -3,10 +3,10 @@
  *
  * ⚠️ 这里的类名不是死样式，不要删：
  *   .panel ← src/components/ui/Card.vue 渲染 this class（内边距由 ui-card--pad-* 或页面自己管）
- *            ← src/features/uploads/UploadQueue.vue(3)、src/views/UploadsView.vue(3) 仍直接写 class="panel"
+ *            ← 上传域已全部改用 <Card>
  *   .empty / .empty.compact / .empty-symbol / .empty h2 / .empty p
  *            ← src/components/ui/EmptyState.vue 渲染 .empty / .empty-symbol
- *            ← src/features/uploads/UploadQueue.vue 仍用 class="empty panel compact"
+ *            ← 上传队列的空态已改用 <EmptyState panel compact>（未传 symbol，符号行不渲染）
  *            ← src/components/QueuePanel.vue 复用 .empty-symbol（配 .queue-empty 自带间距）
  */
 

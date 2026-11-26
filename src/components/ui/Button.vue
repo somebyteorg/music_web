@@ -1,14 +1,14 @@
 <script setup lang="ts">
 /**
- * 按钮。primary / secondary / sm 复用全局 .button 规则（src/features/uploads/** 尚未迁移，
- * 仍在使用同一套类名，因此样式暂时保持全局单一来源）；ghost / danger 是组件层新增变体，
- * 样式内联在本组件里，只引用 token。
+ * 按钮。primary / secondary / sm 复用全局 .button 规则（样式保持全局单一来源）；
+ * ghost / danger 是组件层新增变体，样式内联在本组件里，只引用 token。
  */
 withDefaults(
   defineProps<{
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
     size?: 'sm' | 'md'
-    as?: 'button' | 'a'
+    /** label 用于「包裹隐藏 file input 的按钮」，页面里 class="button" 的 <label> 都是这个用法 */
+    as?: 'button' | 'a' | 'label'
     type?: 'button' | 'submit' | 'reset'
     href?: string
     disabled?: boolean
