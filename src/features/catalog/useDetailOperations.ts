@@ -1,12 +1,11 @@
 import { computed, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
 import { catalogApi } from '@/lib/api/catalog'
+import { useRouter } from 'vue-router'
 import { filesApi } from '@/lib/api/files'
 import type { Entity } from '@/types/catalog'
 import type { AudioFile } from '@/types/uploads'
 import { notify, useAction } from '@/composables/useFeedback'
 import { useSignStore } from '@/stores/sign'
-import { makePlaylistPrivate } from './api'
 import type { useEntityDetail } from './useEntityDetail'
 
 type DetailOperation =
@@ -64,7 +63,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
         notify(type === 'playlists' ? '歌单已删除。' : '已删除，可从操作记录中恢复。')
         await router.push(`/${type}`)
       } else if (operation.value === 'playlist-private') {
-        const result = await makePlaylistPrivate(id)
+        const result = await catalogApi.privatePlaylist(id)
         notify(result.message)
         await router.push(backTo)
       } else if (operation.value === 'merge' && target.value) {

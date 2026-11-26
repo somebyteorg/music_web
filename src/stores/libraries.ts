@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue'
+import { catalogApi } from '@/lib/api/catalog'
 import { defineStore } from 'pinia'
-import { getCatalogPage } from '@/features/catalog/api'
 import type { Entity } from '@/types/catalog'
 import { useSignStore } from './sign'
 
@@ -35,7 +35,7 @@ export const useLibrariesStore = defineStore('libraries', () => {
         let page = 1
         let total = 1
         while (result.length < total) {
-          const response = await getCatalogPage('libraries', { page, page_size: 60, sort: 'name' })
+          const response = await catalogApi.page('libraries', { page, page_size: 60, sort: 'name' })
           result.push(...response.items)
           total = response.total
           page++

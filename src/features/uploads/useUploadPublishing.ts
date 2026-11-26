@@ -1,45 +1,59 @@
 import type { ComputedRef } from 'vue'
-import api from '@/utils/ky'
 import { useSignStore } from '@/stores/sign'
 import type { AudioFile, PublishData } from '@/types/uploads'
+import { reduceTask, type UploadEvent } from './machine'
+import { uploadRepository } from './repository'
 import type { UploadTask } from './model'
 
 export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
   const sign = useSignStore()
   const publishing = new Set<string>()
+
+  function apply(task: UploadTask, event: UploadEvent) {
+    Object.assign(task, reduceTask(task, event))
+  }
+
   function published(task: UploadTask, result: { file: AudioFile; song_id: string }) {
-    const related = tasks.value.filter((entry) => entry.file?.id === result.file.id)
+    const related = tasks.value.filter((entry) => entry.transfer.file?.id === result.file.id)
     if (!related.includes(task)) related.push(task)
     for (const entry of related) {
-      entry.file = { ...result.file, preview: entry.file?.preview, metadata: null }
-      entry.songId = result.song_id
-      entry.state = 'published'
-      entry.error = ''
-      entry.errorStage = undefined
-      entry.pendingPublish = undefined
+      entry.transfer.file = {
+        ...result.file,
+        preview: entry.transfer.file?.preview,
+        metadata: null,
+      }
+      apply(entry, {
+        type: 'published',
+        file: entry.transfer.file,
+        songId: result.song_id,
+        reused: entry.transfer.reused,
+      })
     }
   }
+
   async function publish(task: UploadTask, data: PublishData) {
-    if (!task.file) throw new Error('文件还未解析完成。')
-    task.pendingPublish = data
-    task.error = ''
+    if (!task.transfer.file) throw new Error('文件还未解析完成。')
     publishing.add(task.id)
-    task.state = 'publishing'
+    // 待入库数据由状态机写入，发布流程不再直接改任务字段
+    apply(task, { type: 'publishingQueued', payload: data })
     try {
-      const result = await api
-        .post(`files/${task.file.id}/publish`, { json: data })
-        .json<{ file: AudioFile; song_id: string }>()
+      const result = await uploadRepository.publishFile(task.transfer.file.id, data)
       published(task, result)
       return result
     } catch (error) {
-      task.state = 'ready'
-      task.errorStage = 'publishing'
-      task.error = error instanceof Error ? error.message : '加入曲库失败，请重试。'
+      apply(task, {
+        type: 'failed',
+        stage: 'publishing',
+        error: error instanceof Error ? error.message : '加入曲库失败，请重试。',
+        retryable: true,
+        payload: data,
+      })
       throw error
     } finally {
       publishing.delete(task.id)
     }
   }
+
   async function publishMany(items: { task: UploadTask; data: PublishData }[]) {
     const userId = sign.user?.id
     for (let offset = 0; offset < items.length; offset += 100) {
@@ -47,33 +61,30 @@ export function useUploadPublishing(tasks: ComputedRef<UploadTask[]>) {
         throw new Error('登录状态已改变，请重新打开上传队列。')
       const batch = items
         .slice(offset, offset + 100)
-        .filter((item) => item.task.state === 'ready' && item.task.file)
+        .filter((item) => item.task.state === 'ready' && item.task.transfer.file)
       if (!batch.length) continue
       batch.forEach(({ task, data }) => {
         publishing.add(task.id)
-        task.state = 'publishing'
-        task.error = ''
-        task.pendingPublish = data
+        apply(task, { type: 'publishingQueued', payload: data })
       })
       try {
-        const response = await api
-          .post('files/publish', {
-            timeout: 120000,
-            json: { items: batch.map(({ task, data }) => ({ ...data, file_id: task.file!.id })) },
-          })
-          .json<{ items: { file: AudioFile; song_id: string; album_id: string | null }[] }>()
+        const response = await uploadRepository.publishFiles(
+          batch.map(({ task, data }) => ({ ...data, file_id: task.transfer.file!.id })),
+        )
         for (const result of response.items) {
-          const entry = batch.find((item) => item.task.file?.id === result.file.id)
-          if (entry) {
-            published(entry.task, result)
-          }
+          const entry = batch.find((item) => item.task.transfer.file?.id === result.file.id)
+          if (entry) published(entry.task, result)
         }
       } catch (error) {
-        batch.forEach(({ task }) => {
-          task.state = 'ready'
-          task.errorStage = 'publishing'
-          task.error = error instanceof Error ? error.message : '批量入库失败。'
-        })
+        batch.forEach(({ task, data }) =>
+          apply(task, {
+            type: 'failed',
+            stage: 'publishing',
+            error: error instanceof Error ? error.message : '批量入库失败。',
+            retryable: true,
+            payload: data,
+          }),
+        )
         throw error
       } finally {
         batch.forEach(({ task }) => publishing.delete(task.id))

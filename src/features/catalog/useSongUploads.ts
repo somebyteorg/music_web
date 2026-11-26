@@ -21,7 +21,9 @@ export function useSongUploads(detail: ReturnType<typeof useEntityDetail>) {
   const audioAccept = computed(() =>
     (sign.config?.audio_extensions ?? []).map((extension) => `.${extension}`).join(','),
   )
-  const songUploads = computed(() => uploads.tasks.filter((task) => task.targetSongId === id))
+  const songUploads = computed(() =>
+    uploads.tasks.filter((task) => task.metadata.targetSongId === id),
+  )
   const uploadingCount = computed(
     () => songUploads.value.filter((task) => ACTIVE_UPLOAD_STATES.includes(task.state)).length,
   )
@@ -33,7 +35,7 @@ export function useSongUploads(detail: ReturnType<typeof useEntityDetail>) {
     () =>
       songUploads.value
         .filter((task) => task.state === 'published')
-        .map((task) => task.file?.id)
+        .map((task) => task.transfer.file?.id)
         .join(','),
     () => {
       if (item.value && type === 'songs') void load()

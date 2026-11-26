@@ -5,8 +5,8 @@ import type { Activity, Message } from '@/types/community'
 import type { User } from '@/types/session'
 import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
+import { useLatest } from '@/lib/query'
 import { defaultHistoryCategory, fields, formatValue } from './activity'
-import { useLatestRequest } from '@/composables/useLatestRequest'
 
 export function useCommunity() {
   const route = useRoute()
@@ -21,8 +21,10 @@ export function useCommunity() {
   const pageSize = ref(section.value === 'history' ? 16 : 30)
   const loaded = ref(false)
   const total = ref(0)
-  const busy = ref(false)
-  const error = ref('')
+  // 三个栏目共用一次「只保留最新一次」的加载：busy / error 由查询层托管
+  const request = useLatest()
+  const busy = request.busy
+  const error = request.error
   const history = ref<Activity[]>([])
   const members = ref<(User & { created_at: string })[]>([])
   const messages = ref<Message[]>([])
@@ -74,7 +76,6 @@ export function useCommunity() {
   function showAllHistory() {
     updateQuery({ entity_type: undefined, entity_id: undefined, page: undefined })
   }
-  const request = useLatestRequest()
   const changes = computed(() => {
     const log = inspect.value
     if (!log) return []
@@ -87,10 +88,7 @@ export function useCommunity() {
       }))
   })
   async function load() {
-    const signal = request.start()
-    busy.value = true
-    error.value = ''
-    try {
+    const outcome = await request.run(async (signal) => {
       const params: Record<string, string | number> = { page: page.value }
       if (section.value === 'history') {
         for (const key of ['category', 'user', 'from', 'to'] as const) {
@@ -117,14 +115,9 @@ export function useCommunity() {
         total.value = r.total
         pageSize.value = r.page_size
       }
-    } catch (e) {
-      if (!signal.aborted) error.value = e instanceof Error ? e.message : '加载失败，请重试。'
-    } finally {
-      if (!signal.aborted) {
-        busy.value = false
-        loaded.value = true
-      }
-    }
+    })
+    // 被更新的一次取代时不写首屏标记（与原来 finally 里的判断一致）
+    if (outcome.status !== 'canceled') loaded.value = true
   }
   watch(
     () => route.fullPath,

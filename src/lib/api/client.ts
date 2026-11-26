@@ -67,6 +67,8 @@ export interface RequestOptions {
   json?: unknown
   searchParams?: Record<string, string | number | undefined>
   signal?: AbortSignal
+  /** 覆盖默认 30s 超时（批量入库等长任务用） */
+  timeoutMs?: number
 }
 
 /** 类型化请求：失败一律抛 ApiError（AbortError 除外） */
@@ -77,6 +79,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
       json: options.json as never,
       searchParams: options.searchParams as never,
       signal: options.signal,
+      ...(options.timeoutMs ? { timeout: options.timeoutMs } : {}),
     })
     if (response.status === 204) return undefined as T
     return (await response.json()) as T

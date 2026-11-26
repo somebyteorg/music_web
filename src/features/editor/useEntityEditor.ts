@@ -1,9 +1,8 @@
 import { catalogLabels as labels } from '@/features/catalog/config'
+import { catalogApi } from '@/lib/api/catalog'
 import { computed, reactive, ref, type Ref, watch } from 'vue'
-import api from '@/utils/ky'
 import type { AudioFile } from '@/types/uploads'
 import type { Entity, Person } from '@/types/catalog'
-import type { Page } from '@/types/common'
 import type { User } from '@/types/session'
 import { useImageLibrary } from '@/composables/useImageLibrary'
 import { fileUrl } from '@/utils/file'
@@ -12,7 +11,7 @@ import { notify, report, useAction } from '@/composables/useFeedback'
 import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
 import { type AlbumEntry, buildEntityPayload, createEditorForm, type EditorProps } from './model'
-import { saveCatalogItem } from '@/features/catalog/api'
+import { communityApi } from '@/lib/api/community'
 
 export function useEntityEditor(
   props: EditorProps,
@@ -132,16 +131,12 @@ export function useEntityEditor(
   async function search(kind: 'artists' | 'albums' | 'members') {
     try {
       if (kind === 'members') {
-        const r = await api
-          .get('members', { searchParams: { q: memberQuery.value } })
-          .json<Page<User>>()
+        const r = await communityApi.members<User>({ q: memberQuery.value })
         memberOptions.value = r.items.filter((m) => m.id !== sign.user?.id)
         return
       }
       const q = kind === 'artists' ? query.value : albumQuery.value
-      const r = await api
-        .get(`catalog/${kind}`, { searchParams: { q, page_size: 12 } })
-        .json<Page<Entity>>()
+      const r = await catalogApi.page(kind, { q, page_size: 12 })
       if (kind === 'artists') options.value = r.items
       else albumOptions.value = r.items
     } catch (e) {
@@ -172,9 +167,7 @@ export function useEntityEditor(
   async function searchRecordings() {
     try {
       recordingOptions.value = (
-        await api
-          .get('catalog/songs', { searchParams: { q: recordingQuery.value, page_size: 12 } })
-          .json<Page<Entity>>()
+        await catalogApi.page('songs', { q: recordingQuery.value, page_size: 12 })
       ).items.filter((song) => song.id !== props.item?.id)
     } catch (e) {
       report(e)
@@ -193,12 +186,10 @@ export function useEntityEditor(
     await run(async () => {
       if (props.libraryMode) {
         if (!form.value.library_id || !props.tracks?.length) throw new Error('请选择目标媒体库。')
-        await api.patch('songs/library', {
-          json: {
-            library_id: form.value.library_id,
-            items: props.tracks.map((song) => ({ id: song.id, version: song.version })),
-            reason: assignmentReason.value,
-          },
+        await catalogApi.assignLibrary({
+          library_id: form.value.library_id,
+          items: props.tracks.map((song) => ({ id: song.id, version: song.version })),
+          reason: assignmentReason.value,
         })
         open.value = false
         notify('歌曲所属媒体库已更新。')
@@ -208,18 +199,16 @@ export function useEntityEditor(
       if (trackMode.value) {
         if (!assignmentChosen.value || !trackRows.value.length)
           throw new Error('请选择专辑，或选择作为单曲。')
-        await api.patch('songs/album', {
-          json: {
-            album_id: form.value.album_id,
-            items: trackRows.value.map((row) => ({
-              id: row.song.id,
-              version: row.song.version,
-              disc_number: row.disc_number,
-              track_number: row.track_number,
-              remove: row.remove,
-            })),
-            reason: assignmentReason.value,
-          },
+        await catalogApi.assignAlbum({
+          album_id: form.value.album_id,
+          items: trackRows.value.map((row) => ({
+            id: row.song.id,
+            version: row.song.version,
+            disc_number: row.disc_number,
+            track_number: row.track_number,
+            remove: row.remove,
+          })),
+          reason: assignmentReason.value,
         })
         open.value = false
         notify('专辑归属和曲序已更新。')
@@ -238,7 +227,7 @@ export function useEntityEditor(
         },
         props.item,
       )
-      const result = await saveCatalogItem(props.type, body, props.item?.id)
+      const result = await catalogApi.save(props.type, body, props.item?.id)
       if (props.type === 'libraries') await libraries.load(true)
       notify('保存成功。')
       open.value = false

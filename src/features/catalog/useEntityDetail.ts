@@ -1,10 +1,10 @@
 import { computed, onMounted, ref, watch } from 'vue'
+import { catalogApi } from '@/lib/api/catalog'
 import { useRoute } from 'vue-router'
 import type { CatalogType, Entity } from '@/types/catalog'
 import { useQuery } from '@/lib/query'
 import { useSignStore } from '@/stores/sign'
 import { catalogReturnTo } from '@/router'
-import { getCatalogItem } from './api'
 import { DETAIL_SONG_PAGE_SIZE } from './limits'
 import { assertPage, getSongPage } from './songs'
 
@@ -21,7 +21,7 @@ export function useEntityDetail() {
 
   const detail = useQuery<{ item: Entity; can_edit?: boolean }>({
     key: () => (sign.user ? `${sign.user.id}:detail:${type}:${id}` : null),
-    fetcher: (signal) => getCatalogItem(type, id, signal),
+    fetcher: (signal) => catalogApi.item(type, id, signal),
     staleTime: 30_000,
   })
   const tracks = useQuery<{ items: Entity[]; total: number; page_size: number }>({

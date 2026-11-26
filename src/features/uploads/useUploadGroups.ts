@@ -14,10 +14,12 @@ export function useUploadGroups(tasks: Ref<UploadTask[]>) {
       const slash = task.relativePath.lastIndexOf('/')
       const folder = slash >= 0 ? task.relativePath.slice(0, slash) : ''
       const name =
-        groupBy.value === 'album' ? task.album || '未识别专辑' : folder || '单独选择的文件'
+        groupBy.value === 'album' ? task.metadata.album || '未识别专辑' : folder || '单独选择的文件'
       const subtitle =
         groupBy.value === 'album'
-          ? [task.albumArtist, task.year, task.catalogNumber].filter(Boolean).join(' · ')
+          ? [task.metadata.albumArtist, task.metadata.year, task.metadata.catalogNumber]
+              .filter(Boolean)
+              .join(' · ')
           : ''
       const key = `${groupBy.value}:${name}:${subtitle}`
       if (!map.has(key)) map.set(key, { key, name, subtitle, tasks: [] })
@@ -25,14 +27,17 @@ export function useUploadGroups(tasks: Ref<UploadTask[]>) {
     }
     return [...map.values()].map((group) => {
       const total = group.tasks.reduce((sum, task) => sum + task.size, 0)
-      const sent = group.tasks.reduce((sum, task) => sum + (task.size * task.progress) / 100, 0)
+      const sent = group.tasks.reduce(
+        (sum, task) => sum + (task.size * task.transfer.progress) / 100,
+        0,
+      )
       return {
         ...group,
         total,
         progress: total ? Math.round((sent / total) * 100) : 0,
         done: group.tasks.filter(isUploadDone).length,
         ready: group.tasks.filter(
-          (task) => task.kind === 'audio' && task.state === 'ready' && task.file,
+          (task) => task.kind === 'audio' && task.state === 'ready' && task.transfer.file,
         ),
       }
     })

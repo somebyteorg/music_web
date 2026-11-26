@@ -71,12 +71,18 @@ const {
           <strong>{{ task.name }}</strong>
           <span class="hint"
             >{{ uploadStates[task.state]
-            }}<template v-if="task.state === 'uploading'"> · {{ task.progress }}%</template></span
+            }}<template v-if="task.state === 'uploading'">
+              · {{ task.transfer.progress }}%</template
+            ></span
           >
           <progress
             v-if="ACTIVE_UPLOAD_STATES.includes(task.state)"
             :aria-label="`${task.name} 上传进度`"
-            :value="task.state === 'preparing' ? task.preparationProgress || 0 : task.progress"
+            :value="
+              task.state === 'preparing'
+                ? task.transfer.preparationProgress || 0
+                : task.transfer.progress
+            "
             max="100"
           ></progress>
           <p v-if="task.error" class="error-text">{{ task.error }}</p>
@@ -104,7 +110,7 @@ const {
               重试
             </button>
             <button
-              v-if="task.state === 'failed' && !task.file"
+              v-if="task.state === 'failed' && !task.transfer.file"
               class="text-button"
               @click="uploads.restart(task)"
             >
