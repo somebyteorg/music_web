@@ -17,6 +17,7 @@ import { useUploadPersistence } from '@/features/uploads/persistence'
 import { createUploadRunner } from '@/features/uploads/transport'
 import { createUploadTaskOperations } from '@/features/uploads/operations'
 import { createUploadRecovery } from '@/features/uploads/recovery'
+import { useUploadPolling } from '@/features/uploads/polling'
 import type { UploadOperationsDeps } from '@/features/uploads/operationContext'
 
 export const useUploadsStore = defineStore('uploads', () => {
@@ -83,6 +84,13 @@ export const useUploadsStore = defineStore('uploads', () => {
     }
   }
 
+  async function pollTask(task: UploadTask) {
+    await runner.poll(task)
+  }
+
+  // 轮询退避与页面隐藏暂停都在调度器里，这里只提供单个任务的轮询动作
+  const polling = useUploadPolling(() => tasks.value, pollTask)
+
   const activeCount = computed(
     () => tasks.value.filter((task) => ACTIVE_UPLOAD_STATES.includes(task.state)).length,
   )
@@ -100,16 +108,6 @@ export const useUploadsStore = defineStore('uploads', () => {
     }
   }
 
-  async function pollTask(task: UploadTask) {
-    await runner.poll(task)
-  }
-
-  async function poll() {
-    await Promise.all(
-      tasks.value.filter((task) => ['processing', 'publishing'].includes(task.state)).map(pollTask),
-    )
-  }
-
   function stop() {
     for (const list of storage.everyone())
       for (const task of list)
@@ -124,11 +122,10 @@ export const useUploadsStore = defineStore('uploads', () => {
       if (!sign.user) return
       for (const task of tasks.value)
         if (TRANSMIT_STATES.includes(task.state)) apply(task, { type: 'paused' })
-      void poll()
+      polling.pollNow()
     },
   )
   watch(storage.concurrency, pump)
-  useIntervalFn(() => void poll(), 3000)
   useIntervalFn(() => {
     now.value = Date.now()
   }, 1000)
