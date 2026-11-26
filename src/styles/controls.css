@@ -157,3 +157,16 @@
   flex-wrap: wrap;
   gap: 6px;
 }
+
+/* 过渡：仅 src/views/UploadsView.vue:450 的歌词标签还在用 .badge（上传域按约定未迁移）。
+   待上传域合并并改用 <Tag> 后，这段可删除。 */
+.badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  font-size: var(--font-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
