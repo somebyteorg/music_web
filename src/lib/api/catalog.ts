@@ -80,6 +80,12 @@ export const catalogApi = {
   removeLyric<T>(songId: string, lyricId: string, body: Record<string, unknown>) {
     return request<T>(`songs/${songId}/lyrics/${lyricId}`, { method: 'DELETE', json: body })
   },
+  assignLibrary(body: Record<string, unknown>) {
+    return request<void>('songs/library', { method: 'PATCH', json: body })
+  },
+  assignAlbum(body: Record<string, unknown>) {
+    return request<void>('songs/album', { method: 'PATCH', json: body })
+  },
   playlistAppend(id: string, songIds: string[]) {
     return request<void>(`playlists/${id}/tracks`, { method: 'POST', json: { song_ids: songIds } })
   },
