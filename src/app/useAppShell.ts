@@ -1,4 +1,4 @@
-import { computed, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEventListener } from '@vueuse/core'
 import { useSignStore } from '@/stores/sign'
@@ -11,7 +11,12 @@ import { displayName } from '@/utils/format'
 import { communityApi } from '@/lib/api/community'
 import { navigation } from './navigation'
 
-export function useAppShell() {
+interface AppShellOptions {
+  /** Esc 收起抽屉后把焦点交回汉堡按钮。按钮在 AppTopbar 里，用 defineExpose 回填到这里 */
+  focusMenuButton?: () => void
+}
+
+export function useAppShell(options: AppShellOptions = {}) {
   const sign = useSignStore()
   const uploads = useUploadsStore()
   const player = usePlayerStore()
@@ -22,7 +27,6 @@ export function useAppShell() {
   const bootError = ref('')
   const menu = ref(false)
   const unread = ref(0)
-  const menuButton = useTemplateRef<HTMLButtonElement>('menuButton')
   const { busy: signingOut, run: runSignOut } = useAction()
   const accountName = computed(() => displayName(sign.user || undefined))
   const playerVisible = computed(() => player.available || !!queue.current)
@@ -73,6 +77,9 @@ export function useAppShell() {
   function closeNavigation() {
     menu.value = false
   }
+  function toggleMenu() {
+    menu.value = !menu.value
+  }
   async function signOut() {
     closeNavigation()
     await runSignOut(() => sign.signOut())
@@ -82,7 +89,8 @@ export function useAppShell() {
     if (event.key === 'Escape') {
       if (menu.value) {
         menu.value = false
-        menuButton.value?.focus()
+        // 按钮在顶栏组件里：由 AppTopbar 通过 defineExpose 回填 focus 能力
+        options.focusMenuButton?.()
       }
       document.querySelectorAll<HTMLDetailsElement>('.action-menu[open]').forEach((element) => {
         element.open = false
@@ -131,6 +139,7 @@ export function useAppShell() {
     heading,
     hydrate,
     closeNavigation,
+    toggleMenu,
     signOut,
   }
 }
