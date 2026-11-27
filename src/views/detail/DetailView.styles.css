@@ -3,21 +3,6 @@
   padding: 9px;
 }
 
-.recording-releases {
-  margin-top: 14px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.recording-releases a {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px;
-}
-
 .follow-button.active {
   color: var(--brand-strong);
   border-color: var(--brand-line-follow);
@@ -176,22 +161,6 @@
 
 .detail-foot > a {
   color: var(--brand);
-}
-
-.track-editor > article {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.track-editor strong {
-  min-width: 0;
-  flex: 1;
-  font-size: 13px;
-  font-weight: 500;
-  overflow-wrap: anywhere;
 }
 
 .collaborators {

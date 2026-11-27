@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import IconButton from '@/components/ui/IconButton.vue'
 import Tabs from '@/components/ui/Tabs.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
-import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import { computed, provide, reactive, ref } from 'vue'
 import type { Entity } from '@/types/catalog'
@@ -23,8 +21,11 @@ import { tracksContextKey, uploadContextKey } from './detail/detailContext'
 import TracksSection from './detail/TracksSection.vue'
 import UploadDialog from './detail/UploadDialog.vue'
 import ResourcesPanel from './detail/ResourcesPanel.vue'
+import DetailAlbums from './detail/DetailAlbums.vue'
+import DetailRecording from './detail/DetailRecording.vue'
+import OperationDialog from './detail/OperationDialog.vue'
+import { operationContextKey } from './detail/operationContext'
 import EditorDialog from '@/components/EditorDialog.vue'
-import BaseDialog from '@/components/BaseDialog.vue'
 import MetadataDialog from '@/components/MetadataDialog.vue'
 import { date, displayName } from '@/utils/format'
 
@@ -49,25 +50,7 @@ async function playAll() {
   }
 }
 const options = useDetailOperations(detail)
-const {
-  busy: operationBusy,
-  operation,
-  reason,
-  targetQuery,
-  targets,
-  target,
-  selectedFile,
-  trackDraft,
-  movingEntry,
-  movePosition,
-  canEdit,
-  openOperation,
-  searchTargets,
-  apply,
-  setDefault,
-  reorder,
-  favorite,
-} = options
+const { busy: operationBusy, canEdit, openOperation, setDefault, favorite } = options
 const songUploadState = useSongUploads(detail)
 const {
   busy: uploadNoticeBusy,
@@ -78,6 +61,7 @@ const {
 const acting = computed(() => operationBusy.value || uploadNoticeBusy.value)
 provide(tracksContextKey, { detail, operations: options, queueLabel, acting })
 provide(uploadContextKey, { detail, uploads: songUploadState, acting })
+provide(operationContextKey, { detail, operations: options, acting })
 const lyrics = reactive(useSongLyrics(item))
 provide(songLyricsKey, lyrics)
 const editor = ref(false)
@@ -145,39 +129,11 @@ const tab = ref('resources')
         }
       "
     />
-    <section v-if="type === 'songs'" class="section">
-      <div class="section-heading">
-        <h2>
-          收录专辑 <span class="muted">{{ item.albums?.length || 0 }}</span>
-        </h2>
-        <Button variant="secondary" @click="editor = true">编辑专辑与媒体库</Button>
-      </div>
-      <Card class="recording-releases" v-if="item.albums?.length">
-        <RouterLink v-for="album in item.albums" :key="album.id" :to="`/albums/${album.id}`"
-          ><strong>{{ album.name }}</strong
-          ><span class="hint"
-            >{{ album.release_year || '' }} {{ album.edition || '' }} · 第
-            {{ album.pivot?.disc_number }} 碟 · 第 {{ album.pivot?.track_number }} 首</span
-          ></RouterLink
-        >
-      </Card>
-      <p v-else class="hint">暂未收录到专辑，可作为单曲保留。</p>
-    </section>
-    <section v-if="type === 'songs' && item.recording_tracks?.length" class="section">
-      <h2>关联的录音版本</h2>
-      <Card class="recording-releases">
-        <RouterLink
-          v-for="track in item.recording_tracks"
-          :key="track.id"
-          :to="`/songs/${track.id}`"
-          ><strong>{{ track.name }} {{ track.recording_version }}</strong
-          ><span class="hint"
-            >{{ track.albums?.map((album) => album.name).join(' / ') || '单曲' }} ·
-            {{ track.library?.name }}</span
-          ></RouterLink
-        >
-      </Card>
-    </section>
+    <DetailAlbums v-if="type === 'songs'" :albums="item.albums" @edit="editor = true" />
+    <DetailRecording
+      v-if="type === 'songs' && item.recording_tracks?.length"
+      :tracks="item.recording_tracks"
+    />
     <div class="detail-foot">
       <span
         >由 {{ displayName(item.creator || item.owner) }} 创建 · {{ date(item.created_at) }}</span
@@ -194,153 +150,9 @@ const tab = ref('resources')
       @saved="load"
     />
     <EditorDialog v-model="songEditor" :item="editingSong" type="songs" @saved="loadSongs" />
-    <EditorDialog v-model="editor" :item="item" :type="type" @saved="load" /><MetadataDialog
-      v-model="metadata"
-      :item="item"
-      :type="type"
-    /><BaseDialog
-      :busy="acting"
-      :model-value="!!operation"
-      :title="
-        operation === 'merge'
-          ? '合并重复资料'
-          : operation === 'tracks'
-            ? '添加歌曲'
-            : operation === 'playlist-move'
-              ? '调整曲序'
-              : operation === 'playlist-private'
-                ? '设为私密歌单'
-                : operation === 'file-move'
-                  ? '移动音频'
-                  : operation === 'file-delete'
-                    ? '删除资源'
-                    : `删除${labels[type]}`
-      "
-      :wide="operation === 'tracks'"
-      @update:model-value="
-        (v) => {
-          if (!v) operation = ''
-        }
-      "
-      ><div class="form-stack">
-        <p v-if="operation === 'playlist-private'">
-          将「{{ item.name }}」设为创建者的私密歌单，之后仅创建者和协作者可见。
-        </p>
-        <p v-if="operation === 'delete'" class="hint">
-          {{
-            type === 'playlists'
-              ? '删除后歌单将不可见，不提供曲目恢复。'
-              : '删除后可从操作记录中恢复。请先移出关联的歌曲或音频。'
-          }}
-        </p>
-        <p v-if="operation === 'file-delete'" class="hint">
-          {{ selectedFile?.file_name }}<br />确认删除这份资源？原文件会保留，可从操作记录中恢复。
-        </p>
-        <p v-if="operation === 'merge'" class="hint">
-          将「{{
-            item.name
-          }}」的音频和关联资料合并到所选条目，随后删除当前条目。请确认歌手和录音版本一致。
-        </p>
-        <template v-if="['merge', 'file-move', 'tracks'].includes(operation)"
-          ><label
-            >{{ operation === 'merge' ? '选择合并目标' : '搜索歌曲' }}
-            <div class="search-inline">
-              <input
-                v-model="targetQuery"
-                placeholder="输入名称搜索"
-                @keydown.enter.prevent="searchTargets"
-              /><Button variant="secondary" :disabled="acting" @click="searchTargets">
-                搜索
-              </Button>
-            </div></label
-          >
-          <div class="picker-results">
-            <button
-              v-for="t in targets"
-              :key="t.id"
-              :class="{ selected: target?.id === t.id }"
-              :disabled="operation === 'tracks' && trackDraft.some((s) => s.id === t.id)"
-              @click="operation === 'tracks' ? trackDraft.push(t) : (target = t)"
-            >
-              <span>{{ t.name }}</span><small>{{
-                t.artists?.map((a) => a.name).join(' / ') || t.recording_version || ''
-              }}</small
-              ><span v-if="target?.id === t.id">✓</span>
-            </button>
-          </div>
-          <p v-if="target" class="notice">
-            已选择：{{ target.name }}
-            <span v-if="target.recording_version">({{ target.recording_version }})</span>
-          </p></template
-        ><label v-if="['merge', 'delete', 'file-delete'].includes(operation)"
-          >写下原因<textarea
-            v-model="reason"
-            maxlength="1000"
-            placeholder="请说明操作原因。"
-            rows="3"
-          ></textarea>
-        </label>
-        <label v-if="operation === 'playlist-move'">
-          将「{{ movingEntry?.name }}」移到第几首
-          <input v-model.number="movePosition" :max="total" min="1" step="1" type="number" />
-          <span class="hint">共 {{ total }} 首，可直接移到其他页面的位置。</span>
-        </label>
-        <div v-if="operation === 'tracks'" class="track-editor">
-          <p class="hint">已选 {{ trackDraft.length }} 首 · 将按此顺序添加到歌单末尾。</p>
-          <article v-for="(s, index) in trackDraft" :key="s.id">
-            <span class="muted">{{ index + 1 }}</span><strong>{{ s.name }}</strong
-            ><IconButton
-              :label="`上移 ${s.name}`"
-              :disabled="index === 0"
-              @click="reorder(index, -1)"
-            >
-              ↑</IconButton
-            ><IconButton
-              :label="`下移 ${s.name}`"
-              :disabled="index === trackDraft.length - 1"
-              @click="reorder(index, 1)"
-            >
-              ↓</IconButton
-            ><IconButton
-              :label="`移除 ${s.name}`"
-              class="danger"
-              @click="trackDraft.splice(index, 1)"
-            >
-              ×
-            </IconButton>
-          </article>
-        </div>
-      </div>
-      <template #footer
-        ><Button variant="secondary" :disabled="acting" @click="operation = ''">取消</Button
-        ><Button
-          variant="primary"
-          :disabled="
-            acting ||
-            ((operation === 'merge' || operation === 'file-move') && !target) ||
-            (operation === 'merge' && !reason.trim()) ||
-            (operation === 'tracks' && !trackDraft.length) ||
-            (operation === 'playlist-move' &&
-              (!Number.isInteger(movePosition) || movePosition < 1 || movePosition > total))
-          "
-          @click="apply"
-        >
-          {{
-            acting
-              ? '正在处理…'
-              : operation === 'tracks'
-                ? '添加到歌单'
-                : operation === 'merge'
-                  ? '确认合并'
-                  : operation === 'playlist-private'
-                    ? '确认设为私密'
-                    : operation === 'file-move' || operation === 'playlist-move'
-                      ? '确认移动'
-                      : '确认删除'
-          }}
-        </Button></template
-      ></BaseDialog
-    ></template
-  >
+    <EditorDialog v-model="editor" :item="item" :type="type" @saved="load" />
+    <MetadataDialog v-model="metadata" :item="item" :type="type" />
+    <OperationDialog :item="item" />
+  </template>
 </template>
 <style scoped src="./detail/DetailView.styles.css"></style>
