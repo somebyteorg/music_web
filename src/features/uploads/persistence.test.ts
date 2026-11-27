@@ -162,12 +162,10 @@ function legacyTask(overrides: Record<string, unknown> = {}) {
     size: 1024,
     relativePath: 'album/a.flac',
     batchId: 'batch-1',
-    error: '',
     errorStage: 'transfer',
     transfer: {
       progress: 42,
       preparationProgress: 100,
-      sha256: 'sha-1',
       preparedLyrics: [{ name: 'a.lrc', format: 'lrc', content: '[00:00]一句' }],
       sessionId: 'session-legacy',
       token: 'token-legacy',
@@ -184,15 +182,10 @@ function legacyTask(overrides: Record<string, unknown> = {}) {
 
 const legacyStore = (tasks: unknown) => memory.set(LEGACY_KEY, JSON.stringify(tasks))
 
-function storedSnapshots() {
-  return JSON.parse(memory.get(SNAPSHOT_KEY) ?? '{}') as Record<string, UploadTaskSnapshot[]>
-}
-
 describe('上传任务存储 v1 → v2 迁移', () => {
   it('正常迁移：v1 任务变成 v2 快照，会话凭据保留、任务可读', () => {
     legacyStore({ '1': [legacyTask()] })
     const storage = useUploadPersistence()
-    expect(storage.list(1)).toHaveLength(1)
     expect(storage.list(1)[0]).toMatchObject({
       id: 'legacy-1',
       kind: 'audio',
@@ -219,7 +212,8 @@ describe('上传任务存储 v1 → v2 迁移', () => {
   it('字段裁剪：文件、objectURL、duplicateFile 与整份 draft 都不进 v2', () => {
     legacyStore({ '1': [legacyTask({ objectURL: 'blob:legacy' })] })
     useUploadPersistence()
-    const text = JSON.stringify(storedSnapshots()['1'])
+    const text = memory.get(SNAPSHOT_KEY) ?? ''
+    expect(text).toContain('"legacy-1"')
     for (const key of [
       'file',
       'objectURL',
@@ -256,35 +250,42 @@ describe('上传任务存储 v1 → v2 迁移', () => {
     await nextTick()
     expect(first.list(1).map((task) => task.id)).toEqual(['legacy-1'])
     expect(second.list(1).map((task) => task.id)).toEqual(['legacy-1'])
-    expect(storedSnapshots()['1']).toHaveLength(1)
+    expect(memory.get(SNAPSHOT_KEY)?.match(/"legacy-1"/g)).toHaveLength(1)
     expect(memory.has(LEGACY_KEY)).toBe(false)
   })
 
   it('v2 已有数据时以 v2 为准，残留的 v1 被清掉而不是覆盖', () => {
-    memory.set(SNAPSHOT_KEY, JSON.stringify({ '1': [toSnapshot(task())] }))
-    legacyStore({ '1': [legacyTask()] })
-    const storage = useUploadPersistence()
-    expect(storage.list(1).map((entry) => entry.id)).toEqual(['task-1'])
-    expect(memory.has(LEGACY_KEY)).toBe(false)
+    const cases: [UploadTaskSnapshot[], string[]][] = [
+      [[toSnapshot(task())], ['task-1']],
+      // 空数组也算"用户自己清空过"：不能让 v1 的旧任务复活
+      [[], []],
+    ]
+    for (const [snapshots, ids] of cases) {
+      memory.set(SNAPSHOT_KEY, JSON.stringify({ '1': snapshots }))
+      legacyStore({ '1': [legacyTask()] })
+      expect(
+        useUploadPersistence()
+          .list(1)
+          .map((entry) => entry.id),
+      ).toEqual(ids)
+      expect(memory.has(LEGACY_KEY)).toBe(false)
+    }
   })
 
-  it('坏数据（不是 JSON）不删 v1，并报告可读错误', () => {
-    memory.set(LEGACY_KEY, '{ 不是 JSON')
-    const storage = useUploadPersistence()
-    expect(storage.everyone()).toEqual([])
-    expect(memory.get(LEGACY_KEY)).toBe('{ 不是 JSON')
-    expect(notification.value).toMatchObject({ error: true })
-    expect(notification.value?.text).toContain('迁移失败')
-    expect(notification.value?.text).toContain('已保留原数据')
-  })
-
-  it('坏数据（结构不合规）同样保留 v1，并指出坏在哪一条', () => {
-    const broken = JSON.stringify({ '1': [{ id: 'legacy-1' }] })
-    memory.set(LEGACY_KEY, broken)
-    useUploadPersistence()
-    expect(memory.get(LEGACY_KEY)).toBe(broken)
-    expect(memory.get(SNAPSHOT_KEY)).toBe('{}')
-    expect(notification.value?.text).toContain('用户 1 的第 1 个任务')
+  it('坏数据不删 v1，并报告可读错误', () => {
+    const cases: [string, string][] = [
+      ['{ 不是 JSON', '已保留原数据'],
+      [JSON.stringify({ '1': [{ id: 'legacy-1' }] }), '用户 1 的第 1 个任务'],
+    ]
+    for (const [broken, detail] of cases) {
+      memory.set(LEGACY_KEY, broken)
+      expect(useUploadPersistence().everyone()).toEqual([])
+      expect(memory.get(LEGACY_KEY)).toBe(broken)
+      expect(memory.get(SNAPSHOT_KEY)).toBe('{}')
+      expect(notification.value).toMatchObject({ error: true })
+      expect(notification.value?.text).toContain('迁移失败')
+      expect(notification.value?.text).toContain(detail)
+    }
   })
 })
 

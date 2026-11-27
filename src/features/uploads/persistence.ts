@@ -94,8 +94,14 @@ export function fromSnapshot(snapshot: UploadTaskSnapshot): UploadTask {
 
 const EMPTY_TASKS: UploadTask[] = []
 
-function isEmptySnapshots(value: Record<string, UploadTaskSnapshot[]>) {
-  return Object.values(value).every((entries) => !Array.isArray(entries) || entries.length === 0)
+/**
+ * v2 里是否已经有数据。
+ *
+ * 只看有没有用户条目：已经是空数组的条目也算"用户自己清空过"，
+ * 不能拿 v1 的旧任务把它填回来（否则删掉的队列会在升级后复活）。
+ */
+function hasStoredSnapshots(value: Record<string, UploadTaskSnapshot[]>) {
+  return Object.keys(value).length > 0
 }
 
 function reasonOf(error: unknown) {
@@ -117,7 +123,7 @@ function migrateLegacySnapshots(
     // 读 v1 也放进 try：存储被禁用时不该连累整个队列的加载
     const legacy = store.getItem(LEGACY_STORAGE_KEY)
     if (!legacy) return
-    if (!isEmptySnapshots(saved.value)) {
+    if (hasStoredSnapshots(saved.value)) {
       store.removeItem(LEGACY_STORAGE_KEY)
       return
     }
