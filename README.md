@@ -50,3 +50,9 @@ pnpm test:contrast       # WCAG AA 对比度审计（浅/深），手动
 ```bash
 node e2e/stub-api.mjs --port 8000     # 需要让前端指向它时，用 vite.config.ts 的 proxy
 ```
+
+## 错误上报
+
+`VITE_ERROR_ENDPOINT` 决定前端错误发到哪：**配了这个变量才真的上报**（`navigator.sendBeacon`，不可用时退回 `keepalive` fetch），后端需提供接收 `POST` JSON 的端点。
+未配置时只写内存环形缓冲（最近 50 条，`src/lib/telemetry.ts` 的 `getRecentErrors` 可读），不是静默吞错。
+同一指纹（message + stack 前 40 字）10 分钟只发 1 次、每分钟最多 10 条；Vue 渲染错误经 `app.config.errorHandler` 汇入同一入口。
