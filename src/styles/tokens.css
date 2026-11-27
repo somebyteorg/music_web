@@ -5,7 +5,7 @@
  *   - tokens-light.css：浅色层，**全部是 8bit 字面量**（hex / hex8）；
  *   - tokens-dark.css ：深色层，只覆盖基础色，派生色用 color-mix 从基础色推。
  *
- * 为什么浅色层不能再用 color-mix 派生（本轮维修记录）：
+ * 为什么浅色层不能用 color-mix 派生：
  *   color-mix() 的计算值不会序列化成 rgb()，而是 color(srgb 0.567937 …)，精度 6 位小数、
  *   且不回落到 8bit。所以"用 color-mix 近似某个历史字面量"在 getComputedStyle 层面
  *   必然与重构前（5bd7a12）**逐字节不等**，哪怕差值只有 1/255。

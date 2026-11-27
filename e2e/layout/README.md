@@ -27,19 +27,20 @@
 ```bash
 pnpm test:layout:update   # 生成/更新基线（e2e/__layout__/<route>-<width>.json）
 pnpm test:layout          # 对比（需要先 pnpm exec vite build，脚本自己拉起 vite preview）
-pnpm test:layout:fonts    # 字体替换自检：font-family 换成 serif 后再采一次
 node e2e/layout-snapshot.mjs --ignore-raster   # 去掉 --disable-lcd-text 等抗锯齿参数再比对（应仍零差异）
 ```
 
-渲染参数与 `e2e/visual.mjs` 一致（stub-api + vite preview + 390/768/1280×900 + 关 LCD 次像素），
+渲染参数固定（stub-api + vite preview + 390/768/1280×900 + 关 LCD 次像素），
 额外用 `--hide-scrollbars` 让滚动条不占布局，避免 Linux runner 的滚动条宽度改变盒子。
 
 ## 字体依赖的边界（重要）
 
 颜色与字体完全无关；**几何对字体族有弱依赖**：文字宽度会渗进「宽度由内容撑开」的盒子
-（flex-basis:auto、inline-block、`margin: auto` 的已用值）。`pnpm test:layout:fonts` 的实测结果：
-15 个快照里 14 个零差异，只有 390px 目录页 23/188 个元素随字体族变化，最大 7px
-（换成 serif 属于*故意换成度量不兼容的字族*，比跨机器的真实字体回退更苛刻）。
+（flex-basis:auto、inline-block、`margin: auto` 的已用值）。实测把字体族换成度量不兼容的 serif 时，
+仅少数「内容撑开」的盒子会移动数 px，定宽盒子与栅格不动。
+
+因此**基线必须在与比对相同的环境生成**：本项目统一用 CI 的 ubuntu runner
+（`layout-baseline` job）。在 macOS 生成的基线在 runner 上会差 2~7px。
 
 若 CI runner 与本地字体的**度量**不一致（例如 Arial ↔ Liberation Sans 之外的字族），
 这类元素会出现同类差异，届时需要：在同一字体环境生成基线，或给测试注入固定字体。
