@@ -4,8 +4,8 @@ import type { PublishData } from '@/types/uploads'
 const ky = vi.hoisted(() => {
   const http = vi.fn()
   class HTTPError extends Error {
-    response: { status: number; clone: () => { json: () => Promise<unknown> } }
-    constructor(response: { status: number; clone: () => { json: () => Promise<unknown> } }) {
+    response: { status: number; clone: () => { json(): Promise<unknown> } }
+    constructor(response: { status: number; clone: () => { json(): Promise<unknown> } }) {
       super('HTTPError')
       this.response = response
     }
@@ -18,9 +18,21 @@ vi.mock('ky', () => ({ default: { create: () => ky.http }, HTTPError: ky.HTTPErr
 import { uploadRepository } from './repository'
 import { ApiError } from '@/lib/api/client'
 
-const ok = (data: unknown = {}, status = 200) => ({ status, json: async () => data })
+/** 与真实 Response 一致：request() 读 text() 再自行 JSON.parse，空串表示没有内容 */
+const ok = (data: unknown = {}, status = 200) => ({
+  status,
+  text: async () => JSON.stringify(data),
+  json: async () => data,
+})
 const fail = (status: number, data: unknown = null) =>
-  new ky.HTTPError({ status, clone: () => ({ json: async () => data }) })
+  new ky.HTTPError({
+    status,
+    clone: () => ({
+      async json() {
+        return data
+      },
+    }),
+  })
 const calls = () => ky.http.mock.calls
 const lastCall = () => calls()[calls().length - 1]!
 
