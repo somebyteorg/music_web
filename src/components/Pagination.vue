@@ -91,10 +91,15 @@ function jump() {
   font-weight: 400;
 }
 .pagination-jump input {
-  width: 58px !important;
-  min-height: 28px !important;
-  padding: 4px 6px !important;
-  font-size: 13px !important;
+  width: 58px;
+  padding: 4px 6px;
+}
+/* 跳转框要一直保持紧凑：responsive.css 的 @media (pointer: coarse) 会把输入框
+   顶到 (0,3,1) 的 38px / 16px，这里叠 .pagination 祖先与 [type='number']
+   提到 (0,4,1) 压回去，不再依赖提权。 */
+.pagination .pagination-jump input[type='number'] {
+  min-height: 28px;
+  font-size: 13px;
 }
 @media (max-width: 640px) {
   .pagination-tools {
@@ -108,7 +113,7 @@ function jump() {
     gap: 4px;
   }
   .pagination-jump input {
-    width: 46px !important;
+    width: 46px;
   }
 }
 </style>
