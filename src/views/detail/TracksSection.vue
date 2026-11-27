@@ -2,6 +2,7 @@
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import { computed, inject } from 'vue'
 import SongList from '@/components/SongList.vue'
@@ -30,7 +31,10 @@ const {
   tracks,
 } = context.operations
 const queueLabel = context.queueLabel
-const collaborators = computed(() => item.value?.collaborators ?? [])
+const collaborators = computed(() => item.value?.collaborators)
+const collaboratorNames = computed(() =>
+  collaborators.value?.map((member) => displayName(member)).join('、'),
+)
 </script>
 
 <template>
@@ -40,7 +44,7 @@ const collaborators = computed(() => item.value?.collaborators ?? [])
         {{ type === 'playlists' ? '歌单曲目' : '收录的歌曲' }}
         <span class="muted">{{ total }}</span>
       </h2>
-      <div v-if="type === 'playlists' && editable" class="button-group">
+      <ButtonGroup v-if="type === 'playlists' && editable">
         <Button variant="primary" :disabled="acting" @click="tracks">添加歌曲</Button>
         <Button variant="secondary" :disabled="acting" @click="managingTracks = !managingTracks">
           {{ managingTracks ? '完成管理' : '管理本页曲目' }}
@@ -53,15 +57,15 @@ const collaborators = computed(() => item.value?.collaborators ?? [])
         >
           移除已选 {{ selectedEntries.length }} 首
         </Button>
-      </div>
-      <div v-else-if="type === 'albums'" class="button-group">
+      </ButtonGroup>
+      <ButtonGroup v-else-if="type === 'albums'">
         <Button variant="secondary" v-if="songs.length" @click="emit('manageAlbum')">
           管理本页曲目</Button
         ><Button to="/songs" variant="secondary">选择歌曲 →</Button>
-      </div>
+      </ButtonGroup>
     </div>
-    <p v-if="type === 'playlists' && collaborators.length" class="muted collaborators">
-      协作者：{{ collaborators.map((m) => displayName(m)).join('、') }}
+    <p v-if="type === 'playlists' && collaboratorNames" class="muted collaborators">
+      协作者：{{ collaboratorNames }}
     </p>
     <Card>
       <SongList

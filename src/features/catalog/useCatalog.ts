@@ -100,8 +100,15 @@ export function useCatalog() {
     staleTime: 60_000,
   })
 
-  const items = computed<Entity[]>(() => query.data.value?.items ?? [])
-  const total = computed(() => Number(query.data.value?.total ?? 0))
+  /** 列表页数据只在 query.data 就绪后才有意义；未就绪时访问是调用方的时序错误 */
+  function catalogPage() {
+    const data = query.data.value
+    if (!data) throw new Error('catalog 数据未就绪时访问了列表数据')
+    return data
+  }
+
+  const items = computed<Entity[]>(() => catalogPage().items)
+  const total = computed(() => Number(catalogPage().total))
   const loaded = computed(() => query.data.value !== null)
 
   // 页码越界（例如筛选后总数变少）时收敛到最后一页

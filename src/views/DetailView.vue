@@ -99,7 +99,7 @@ const tab = ref('resources')
     ><DetailHero
       :acting="acting"
       :can-edit="canEdit"
-      :has-songs="songs.length > 0"
+      :has-songs="type === 'songs' ? false : songs.length > 0"
       :item="item"
       :label="labels[type]"
       :playing-all="playingAll"

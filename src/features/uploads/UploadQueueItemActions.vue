@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { useUploadsStore } from '@/stores/uploads'
 import { TRANSMIT_STATES, type UploadTask } from './model'
 
@@ -14,20 +15,15 @@ const uploads = useUploadsStore()
 </script>
 <template>
   <div class="task-actions">
-    <button
-      v-if="TRANSMIT_STATES.includes(task.state)"
-      class="text-button"
-      @click="uploads.pause(task)"
-    >
-      暂停</button
-    ><button
+    <TextButton v-if="TRANSMIT_STATES.includes(task.state)" @click="uploads.pause(task)">
+      暂停</TextButton
+    ><TextButton
       v-if="
         task.state === 'failed' ||
         task.state === 'paused' ||
         (task.errorStage === 'publishing' && task.error)
       "
       :disabled="busy"
-      class="text-button"
       @click="emit('retry', task)"
     >
       {{
@@ -36,22 +32,17 @@ const uploads = useUploadsStore()
           : task.transfer.progress === 100
             ? '重新处理'
             : '继续'
-      }}</button
-    ><button
+      }}</TextButton
+    ><TextButton
       v-if="task.state === 'failed' && !task.transfer.file"
       :disabled="busy"
-      class="text-button"
       @click="uploads.restart(task)"
     >
-      重新上传</button
+      重新上传</TextButton
     ><template v-if="task.state === 'duplicate'"
-      ><button
-        :disabled="busy || !uploads.duplicateFile(task)"
-        class="text-button"
-        @click="emit('use-duplicate')"
-      >
-        使用已有文件</button
-      ><button class="text-button" @click="uploads.skip(task)">跳过</button></template
+      ><TextButton :disabled="busy || !uploads.duplicateFile(task)" @click="emit('use-duplicate')">
+        使用已有文件</TextButton
+      ><TextButton @click="uploads.skip(task)">跳过</TextButton></template
     ><Button
       v-if="task.state === 'ready' && task.kind === 'audio'"
       variant="primary"
@@ -59,18 +50,13 @@ const uploads = useUploadsStore()
       @click="emit('preview', task, false)"
     >
       确认归属</Button
-    ><button
-      v-if="task.kind === 'cover' && coverUrl"
-      class="text-button"
-      @click="emit('inspect', task)"
-    >
-      预览图片</button
-    ><button
+    ><TextButton v-if="task.kind === 'cover' && coverUrl" @click="emit('inspect', task)">
+      预览图片</TextButton
+    ><TextButton
       v-if="task.kind === 'audio' && task.transfer.file && task.state !== 'ready'"
-      class="text-button"
       @click="emit('preview', task, true)"
     >
-      预览</button
+      预览</TextButton
     ><RouterLink
       v-if="task.metadata.songId"
       :to="`/songs/${task.metadata.songId}`"

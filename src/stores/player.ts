@@ -60,7 +60,9 @@ export const usePlayerStore = defineStore('player', () => {
 
   /** 按用户音质偏好挑文件；入参可能是残缺载荷，函数本身保证不抛错 */
   function pickFile(full: Entity | null | undefined): AudioFile | null {
-    const files = full?.files ?? []
+    if (!full) return null
+    const files = full.files
+    if (!files?.length) return null
     const quality = sign.user?.quality
     return (
       files.find((item) => item.quality === quality && item.is_default) ||

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import { inject } from 'vue'
 import { uploadsContextKey } from './uploadsContext'
@@ -33,22 +35,14 @@ const { folderUpload, folderBusy, confirmFolder } = source
           </li>
         </ul>
       </details>
-      <div v-if="folderUpload.pictures.length" class="button-group">
-        <button
-          class="text-button"
-          type="button"
-          @click="folderUpload.pictures.forEach((picture) => (picture.selected = true))"
-        >
+      <ButtonGroup v-if="folderUpload.pictures.length">
+        <TextButton @click="folderUpload.pictures.forEach((picture) => (picture.selected = true))">
           全选图片
-        </button>
-        <button
-          class="text-button"
-          type="button"
-          @click="folderUpload.pictures.forEach((picture) => (picture.selected = false))"
-        >
+        </TextButton>
+        <TextButton @click="folderUpload.pictures.forEach((picture) => (picture.selected = false))">
           取消全选
-        </button>
-      </div>
+        </TextButton>
+      </ButtonGroup>
       <div class="image-grid">
         <article
           v-for="(picture, index) in folderUpload.pictures"
@@ -67,13 +61,11 @@ const { folderUpload, folderBusy, confirmFolder } = source
           <span :title="picture.file.webkitRelativePath">{{
             picture.file.webkitRelativePath || picture.file.name
           }}</span>
-          <div class="button-group">
+          <ButtonGroup>
             <label class="check-label"
               ><input v-model="picture.selected" type="checkbox" />上传</label
-            ><button class="text-button" type="button" @click="folderUpload.remove(index)">
-              移除
-            </button>
-          </div>
+            ><TextButton @click="folderUpload.remove(index)"> 移除 </TextButton>
+          </ButtonGroup>
         </article>
       </div>
     </div>
@@ -118,9 +110,8 @@ const { folderUpload, folderBusy, confirmFolder } = source
     <template #footer
       ><Button variant="secondary" type="button" @click="folderUpload.preview = undefined">
         关闭</Button
-      ><button
-        class="text-button danger"
-        type="button"
+      ><TextButton
+        variant="danger"
         @click="
           folderUpload.remove(
             folderUpload.pictures.findIndex((picture) => picture.url === folderUpload.preview?.url),
@@ -128,7 +119,7 @@ const { folderUpload, folderBusy, confirmFolder } = source
         "
       >
         从本次上传移除
-      </button></template
+      </TextButton></template
     >
   </BaseDialog>
 </template>

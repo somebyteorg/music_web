@@ -1,21 +1,8 @@
 /*
- * 组合层：面板、页面骨架、提示、骨架屏与图片网格
+ * 组合层：页面骨架、提示、骨架屏与图片网格
  *
- * ⚠️ 这里的类名不是死样式，不要删：
- *   .panel ← src/components/ui/Card.vue 渲染 this class（内边距由 ui-card--pad-* 或页面自己管）
- *            ← 上传域已全部改用 <Card>
- *   .empty / .empty.compact / .empty-symbol / .empty h2 / .empty p
- *            ← src/components/ui/EmptyState.vue 渲染 .empty / .empty-symbol
- *            ← 上传队列的空态已改用 <EmptyState panel compact>（未传 symbol，符号行不渲染）
- *            ← src/components/QueuePanel.vue 复用 .empty-symbol（配 .queue-empty 自带间距）
+ * 卡片与空态的视觉分别收在 src/components/ui/Card.vue、EmptyState.vue 的 scoped 样式里。
  */
-
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
 
 .page-heading {
   display: flex;
@@ -67,36 +54,6 @@
   color: var(--text-muted);
   font-size: 12px;
   white-space: nowrap;
-}
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  padding: 56px 24px;
-  text-align: center;
-}
-
-.empty.compact {
-  padding: 32px 20px;
-}
-
-.empty-symbol {
-  color: var(--text-muted);
-  font-size: 26px;
-  line-height: 1.2;
-}
-
-.empty h2 {
-  font-size: var(--font-lg);
-}
-
-.empty p {
-  max-width: 440px;
-  color: var(--text-muted);
-  font-size: 13px;
 }
 
 .notice {

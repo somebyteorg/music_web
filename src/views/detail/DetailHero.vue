@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Tag from '@/components/ui/Tag.vue'
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import { computed, ref } from 'vue'
 import EntityCover from '@/components/EntityCover.vue'
@@ -83,7 +84,7 @@ function togglePlay() {
           {{ descriptionOpen ? '收起简介' : '展开简介' }}
         </TextButton>
       </div>
-      <div class="button-group">
+      <ButtonGroup>
         <Button
           variant="primary"
           class="detail-play"
@@ -148,7 +149,7 @@ function togglePlay() {
             </button>
           </div>
         </details>
-      </div>
+      </ButtonGroup>
     </div>
   </section>
 </template>

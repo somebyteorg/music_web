@@ -42,7 +42,8 @@ export function useUploadPolling(
 
   async function runOne(task: UploadTask) {
     const before = task.state
-    const attempt = attempts.get(task.id) ?? 0
+    const attempt = attempts.get(task.id)
+    if (attempt === undefined) throw new Error(`轮询任务 ${task.id} 缺少退避计数`)
     try {
       await poll(task)
     } catch {
@@ -80,6 +81,7 @@ export function useUploadPolling(
     let at = Infinity
     for (const task of watched()) {
       ids.add(task.id)
+      if (!attempts.has(task.id)) attempts.set(task.id, 0)
       if (!due.has(task.id)) due.set(task.id, now)
       at = Math.min(at, due.get(task.id)!)
     }
@@ -92,6 +94,7 @@ export function useUploadPolling(
   /** 立即补一轮（登录切换、页面恢复可见时用），并清掉已有退避 */
   function pollNow() {
     attempts.clear()
+    for (const task of watched()) attempts.set(task.id, 0)
     for (const id of [...due.keys()]) due.set(id, Date.now())
     void tick()
   }

@@ -1,73 +1,10 @@
 /*
- * 控件层：按钮、表单与菜单
+ * 控件层：图标按钮、文字链接、搜索与筛选
  *
- * ⚠️ 这里的类名不是死样式，不要删：
- *   .button / .button.primary / .button.secondary / .button.small
- *     ← src/components/ui/Button.vue 直接渲染 this class（组件给语义与 API，基元给视觉）
- *     ← 页面已不再直接写 class="button"；原来的 3 处 RouterLink 改成了 <Button to>
- *       （由组件内部用 <RouterLink custom> 渲染真实的 <a href>）
- *   .icon-button ← src/components/ui/IconButton.vue
- *   .text-button / .text-button:hover
- *     ← src/components/ui/TextButton.vue 直接渲染 this class（与 .button 同一口径：
- *        组件给 API，基元给视觉；页面还会依赖 .history-list .text-button 之类的上下文微调）
- *     ← 未迁移的仅剩上传域（UploadsView / features/uploads，另一分支在改）
- *   .text-link / .chip / .search-field / .button-group(15 处) 仍被页面直接使用
- *
- * 历史：.badge / .badge.quiet / .badge.warning 已删除，改由 src/components/ui/Tag.vue 的
- *       .ui-tag / .ui-tag--* 提供（内联在组件里，视觉等价）。
+ * 按钮 / 卡片 / 空态 / 文字按钮的视觉已各自收进组件（Button.vue / Card.vue /
+ * EmptyState.vue / TextButton.vue / ButtonGroup.vue）；这里只保留尚未组件化的
+ * 页面级控件类。
  */
-
-.button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 9px 16px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 550;
-  line-height: 1.5;
-  white-space: nowrap;
-  transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.button.primary {
-  background: var(--brand);
-  color: var(--on-brand);
-}
-
-.button.primary:hover:not(:disabled) {
-  background: var(--brand-strong);
-  box-shadow: var(--shadow-brand);
-}
-
-.button.secondary {
-  background: var(--surface);
-  border-color: var(--line);
-}
-
-.button.secondary:hover:not(:disabled) {
-  background: var(--surface-muted);
-  border-color: var(--line-strong);
-}
-
-.button.small {
-  min-height: 34px;
-  padding: 6px 12px;
-  font-size: 12px;
-}
-
-.button-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
 
 .icon-button {
   display: inline-grid;
@@ -85,7 +22,6 @@
   color: var(--brand);
 }
 
-.text-button,
 .text-link {
   padding: 4px 0;
   color: var(--brand);
@@ -93,7 +29,6 @@
   line-height: 1.6;
 }
 
-.text-button:hover,
 .text-link:hover {
   text-decoration: underline;
 }

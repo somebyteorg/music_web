@@ -7,6 +7,7 @@ import { usePlayerStore } from '@/stores/player'
 import { useQueueStore } from '@/stores/queue'
 import { catalogApi } from '@/lib/api/catalog'
 import { notify, report } from '@/composables/useFeedback'
+import { audioFileCount, audioLabel } from '@/utils/audio'
 import EntityCover from './EntityCover.vue'
 
 const props = withDefaults(
@@ -43,7 +44,8 @@ function rowKey(song: Entity) {
   return song.entry_id || song.id
 }
 function hasAudio(song: Entity) {
-  return song.available !== false && (song.files_count ?? song.files?.length ?? 0) > 0
+  const count = audioFileCount(song)
+  return song.available !== false && count !== undefined && count > 0
 }
 function position(song: Entity) {
   return song.albums?.find((album) => album.id === props.albumContextId)?.pivot
@@ -81,7 +83,6 @@ function playNext(song: Entity) {
   notify(`下一首播放：${song.name}`)
 }
 </script>
-
 <template>
   <div :class="['song-list', { selectable }]">
     <div class="song-label song-grid">
@@ -158,7 +159,7 @@ function playNext(song: Entity) {
               :to="hasAudio(song) ? `/songs/${song.id}` : `/uploads?song=${song.id}`"
               class="mobile-resource"
               ><Tag :variant="!hasAudio(song) ? 'warning' : 'default'">{{
-                hasAudio(song) ? `${song.files_count ?? song.files?.length} 份音频` : '缺少音频'
+                hasAudio(song) ? audioLabel(song) : '缺少音频'
               }}</Tag></RouterLink
             >
           </div>
@@ -190,7 +191,7 @@ function playNext(song: Entity) {
         :to="hasAudio(song) ? `/songs/${song.id}` : `/uploads?song=${song.id}`"
         class="song-resources"
         ><Tag :variant="!hasAudio(song) ? 'warning' : 'default'">{{
-          hasAudio(song) ? `${song.files_count ?? song.files?.length} 份音频` : '缺少音频'
+          hasAudio(song) ? audioLabel(song) : '缺少音频'
         }}</Tag></RouterLink
       >
       <div class="song-actions">
@@ -243,7 +244,6 @@ function playNext(song: Entity) {
     </article>
   </div>
 </template>
-
 <style scoped>
 .song-library {
   display: block;

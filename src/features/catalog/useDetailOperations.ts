@@ -19,7 +19,7 @@ type DetailOperation =
   | 'playlist-private'
 
 export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) {
-  const { type, id, backTo, item, songs, page, total, songPageSize, load } = detail
+  const { type, id, backTo, item, songs, tracksLoaded, page, total, songPageSize, load } = detail
   const router = useRouter()
   const sign = useSignStore()
   const { busy, run } = useAction()
@@ -37,9 +37,13 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
   const canEdit = computed(() =>
     type === 'libraries' ? sign.isAdmin : type !== 'playlists' || !!item.value?.can_edit_metadata,
   )
-  watch(songs, () => {
-    selectedEntries.value = []
-  })
+  // 曲目数据就绪后才读 songs；首帧与切页加载中不触发清空
+  watch(
+    () => (tracksLoaded.value ? songs.value : null),
+    () => {
+      selectedEntries.value = []
+    },
+  )
   function openOperation(mode: typeof operation.value, file?: AudioFile) {
     operation.value = mode
     selectedFile.value = file

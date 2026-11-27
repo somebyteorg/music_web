@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import Card from '@/components/ui/Card.vue'
 import { inject, onBeforeUnmount, useTemplateRef, watchEffect } from 'vue'
 import { useSignStore } from '@/stores/sign'
@@ -33,7 +34,7 @@ onBeforeUnmount(() => {
     </div>
     <Button variant="secondary" type="button" @click="images.browseImages()">我的图片</Button>
   </div>
-  <Card v-if="targetSong" as="section" class="notice-panel">
+  <Card v-if="targetSong" as="section" class="notice-card">
     <p>
       为
       <RouterLink :to="`/songs/${targetSong.id}`" class="text-link">{{
@@ -43,7 +44,7 @@ onBeforeUnmount(() => {
     </p>
     <p class="hint">所选音频完成解析后会直接加入这首歌曲，请核对录音版本。</p>
   </Card>
-  <Card v-if="!hasNotice" as="section" class="notice-panel">
+  <Card v-if="!hasNotice" as="section" class="notice-card">
     <h2>上传须知</h2>
     <p class="preline">{{ sign.config?.notice.text }}</p>
     <label class="check-label"
@@ -69,7 +70,7 @@ onBeforeUnmount(() => {
         {{ bytes(sign.config?.max_cover_size || 0) }} · 支持断点续传
       </p>
     </div>
-    <div class="button-group">
+    <ButtonGroup>
       <Button as="label" variant="primary"
         >＋ 添加文件<input
           :accept="accept"
@@ -80,20 +81,20 @@ onBeforeUnmount(() => {
       ><Button as="label" variant="secondary"
         >添加文件夹<input class="sr-only" multiple type="file" webkitdirectory @change="choose"
       /></Button>
-    </div>
+    </ButtonGroup>
   </section>
 </template>
 <style scoped>
-.notice-panel {
+.notice-card {
   padding: 20px;
   margin-bottom: 16px;
 }
-.notice-panel .preline {
+.notice-card .preline {
   margin: 12px 0;
   color: var(--text-muted);
   font-size: 13px;
 }
-.notice-panel > .button {
+.notice-card > .button {
   margin-top: 12px;
 }
 .upload-drop {

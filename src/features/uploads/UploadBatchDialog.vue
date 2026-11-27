@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -63,7 +65,7 @@ const emit = defineEmits<{
       <p class="hint">关联已有歌曲时保留其媒体库，新增的专辑收录不会移除其他专辑关联。</p>
       <p v-if="batch.libraries.error" class="error-text">
         {{ batch.libraries.error }}
-        <button type="button" class="text-button" @click="batch.libraries.load(true)">重试</button>
+        <TextButton @click="batch.libraries.load(true)">重试</TextButton>
       </p>
       <label
         >音频分组<BaseSelect
@@ -120,7 +122,7 @@ const emit = defineEmits<{
             :disabled="batch.busy"
             placeholder="填写专辑名称，再确认添加"
         /></label>
-        <div class="button-group">
+        <ButtonGroup>
           <Button
             type="button"
             variant="secondary"
@@ -139,17 +141,11 @@ const emit = defineEmits<{
           >
             确认添加分组
           </Button>
-        </div>
+        </ButtonGroup>
       </div>
-      <button
-        v-else
-        :disabled="batch.busy"
-        class="text-button"
-        type="button"
-        @click="startAlbumGroup"
-      >
+      <TextButton v-else :disabled="batch.busy" @click="startAlbumGroup">
         ＋ 添加专辑分组
-      </button>
+      </TextButton>
       <p v-if="batch.busy" class="notice" role="status">
         正在加入曲库：{{ batch.done }} / {{ batch.entries.length }} 份音频已完成。
       </p>

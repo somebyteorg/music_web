@@ -17,10 +17,12 @@ export function useSongUploads(detail: ReturnType<typeof useEntityDetail>) {
   const hasNotice = computed(
     () => !!sign.config && sign.user?.notice_version === sign.config.notice.version,
   )
-  // 后端配置缺字段时不能让整页渲染崩掉（dev 下会中断整棵子树）
-  const audioAccept = computed(() =>
-    (sign.config?.audio_extensions ?? []).map((extension) => `.${extension}`).join(','),
-  )
+  // 页面只在登录与配置就绪后渲染；此时 config 必须存在，缺字段是契约错误而不是可忽略的空值
+  const audioAccept = computed(() => {
+    const config = sign.config
+    if (!config) throw new Error('上传配置未就绪时读取了音频扩展名')
+    return config.audio_extensions.map((extension) => `.${extension}`).join(',')
+  })
   const songUploads = computed(() =>
     uploads.tasks.filter((task) => task.metadata.targetSongId === id),
   )

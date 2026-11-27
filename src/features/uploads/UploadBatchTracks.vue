@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
 import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
@@ -40,22 +41,15 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
       >
         {{ batch.numbering.includes(album.key) ? '正在检查曲序…' : '从此曲序重新递增' }}
       </Button>
-      <button
-        type="button"
-        class="text-button"
+      <TextButton
         :disabled="batch.busy || batch.numbering.includes(album.key)"
         @click="batch.numberTracks(album, false)"
       >
         只补齐缺失和重复
-      </button>
-      <button
-        v-if="batch.canUndoNumbers(album)"
-        type="button"
-        class="text-button"
-        @click="batch.undoNumbers(album)"
-      >
+      </TextButton>
+      <TextButton v-if="batch.canUndoNumbers(album)" @click="batch.undoNumbers(album)">
         撤销本次编号
-      </button>
+      </TextButton>
     </div>
     <p class="hint">重新编号按下方文件顺序排列，每张碟分别递增，并跳过已有位置。</p>
   </div>
@@ -97,24 +91,20 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
       :disabled="batch.busy || batch.done > 0"
       :label="`${batch.groupTitle(album)} 的目标分组`"
     />
-    <button
-      type="button"
-      class="text-button"
+    <TextButton
       :disabled="batch.busy || batch.done > 0 || !album.moveTo"
       @click="batch.moveGroup(album)"
     >
       移动整组音频
-    </button>
+    </TextButton>
   </div>
-  <button
+  <TextButton
     v-if="!batch.groupEntries(album).length"
-    type="button"
-    class="text-button"
     :disabled="batch.busy"
     @click="batch.removeEmptyGroup(album)"
   >
     移除空分组
-  </button>
+  </TextButton>
 </template>
 <style scoped>
 .track-numbering {

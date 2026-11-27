@@ -21,11 +21,13 @@ export function usePendingUploads() {
     staleTime: 0,
     onError: report,
   })
-  const remotePending = computed(() =>
-    (pending.data.value?.items ?? []).filter(
+  const remotePending = computed(() => {
+    const page = pending.data.value
+    if (!page) throw new Error('待入库数据未就绪时访问了 remotePending')
+    return page.items.filter(
       (file) => !uploads.tasks.some((task) => task.transfer.file?.id === file.id),
-    ),
-  )
+    )
+  })
   // 页码越界（例如入库后总数变少）时收敛到最后一页，再取一次
   watch(pending.data, (page) => {
     if (!page) return

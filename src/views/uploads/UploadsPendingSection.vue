@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import Card from '@/components/ui/Card.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import Pagination from '@/components/Pagination.vue'
 import { inject } from 'vue'
 import { fileUrl } from '@/utils/file'
@@ -30,11 +32,11 @@ function batchPending() {
         <h2>已上传、待确认的音频</h2>
         <span class="muted">{{ pendingTotal }} 份音频</span>
       </div>
-      <div class="button-group">
+      <ButtonGroup>
         <Button v-if="remotePending.length" variant="secondary" size="sm" @click="batchPending">
           批量整理本页</Button
-        ><button :disabled="pendingBusy" class="text-button" @click="loadPending">刷新</button>
-      </div>
+        ><TextButton :disabled="pendingBusy" @click="loadPending">刷新</TextButton>
+      </ButtonGroup>
     </div>
     <Card :aria-busy="pendingBusy">
       <article v-for="file in remotePending" :key="file.id" class="pending-row">

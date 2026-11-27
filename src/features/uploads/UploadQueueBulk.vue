@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { useUploadsStore } from '@/stores/uploads'
 import type { UploadTask } from './model'
 
@@ -24,7 +26,7 @@ function skipDuplicates() {
 </script>
 <template>
   <div v-if="uploads.tasks.length" class="queue-bulk">
-    <div class="button-group">
+    <ButtonGroup>
       <Button
         :disabled="busy || !canPause"
         variant="secondary"
@@ -41,17 +43,13 @@ function skipDuplicates() {
       >
         全部继续
       </Button>
-      <button
-        :disabled="busy || !uploads.stats.failed"
-        class="text-button"
-        @click="emit('resume-all', true)"
-      >
+      <TextButton :disabled="busy || !uploads.stats.failed" @click="emit('resume-all', true)">
         重试失败 {{ uploads.stats.failed || '' }}
-      </button>
-      <button v-if="uploads.stats.duplicate" class="text-button" @click="skipDuplicates">
+      </TextButton>
+      <TextButton v-if="uploads.stats.duplicate" @click="skipDuplicates">
         跳过重复 {{ uploads.stats.duplicate }}
-      </button>
-    </div>
+      </TextButton>
+    </ButtonGroup>
     <div class="queue-grouping">
       <span class="hint">分组</span
       ><button
@@ -71,10 +69,10 @@ function skipDuplicates() {
   </div>
   <div v-if="chosen.length" class="queue-selection">
     <span>已选 {{ chosen.length }} 份待确认音频</span>
-    <div class="button-group">
-      <button class="text-button" @click="emit('clear-selection')">取消选择</button
+    <ButtonGroup>
+      <TextButton @click="emit('clear-selection')">取消选择</TextButton
       ><Button variant="primary" size="sm" @click="emit('organize', chosen)">批量整理</Button>
-    </div>
+    </ButtonGroup>
   </div>
 </template>
 <style scoped>

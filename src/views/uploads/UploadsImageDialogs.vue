@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import Pagination from '@/components/Pagination.vue'
 import { inject } from 'vue'
@@ -39,15 +40,13 @@ const { images, imageAlbum, imageTask, selectImage, removePreviewTask, selectPre
             <img :src="fileUrl(file.id)" alt="" loading="lazy" />
           </button>
           <span :title="file.file_name">{{ file.file_name }}</span>
-          <button
+          <TextButton
             v-if="imageAlbum"
             :disabled="images.busy || batch.busy"
-            class="text-button"
-            type="button"
             @click="selectImage(file)"
           >
             选为正面图
-          </button>
+          </TextButton>
         </article>
       </div>
       <Pagination
@@ -89,25 +88,23 @@ const { images, imageAlbum, imageTask, selectImage, removePreviewTask, selectPre
       >
         关闭
       </Button>
-      <button
+      <TextButton
         v-if="images.preview?.file"
         :disabled="
           images.previewBusy || !!images.previewError || !!images.references.length || batch.busy
         "
-        class="text-button danger"
-        type="button"
+        variant="danger"
         @click="images.confirmDelete ? images.remove() : (images.confirmDelete = true)"
       >
         {{ images.confirmDelete ? '确认删除' : '删除图片' }}
-      </button>
-      <button
+      </TextButton>
+      <TextButton
         v-if="imageTask && !imageTask.transfer.file && images.preview?.url"
-        class="text-button danger"
-        type="button"
+        variant="danger"
         @click="removePreviewTask"
       >
         移除上传任务
-      </button>
+      </TextButton>
       <Button
         v-if="imageAlbum && images.preview"
         :disabled="images.previewBusy || batch.busy"

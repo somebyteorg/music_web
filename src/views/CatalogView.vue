@@ -4,6 +4,7 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import Tag from '@/components/ui/Tag.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import { useCatalog } from '@/features/catalog/useCatalog'
 import { useCatalogActions } from '@/features/catalog/useCatalogActions'
@@ -71,7 +72,7 @@ const {
     <div>
       <div class="heading-title">
         <h1>{{ labels[type] }}</h1>
-        <span class="muted"
+        <span v-if="loaded" class="muted"
           >{{ total.toLocaleString() }}
           {{
             type === 'songs' ? '首' : type === 'artists' ? '位' : type === 'libraries' ? '个' : '张'
@@ -80,12 +81,12 @@ const {
       </div>
       <p class="catalog-intro">{{ introductions[type] }}</p>
     </div>
-    <div class="button-group">
+    <ButtonGroup>
       <Button v-if="type === 'songs'" to="/uploads" variant="secondary">↑ 上传音频</Button
       ><Button variant="primary" v-if="canCreate" @click="newItem">
         ＋ 新建{{ labels[type] }}
       </Button>
-    </div>
+    </ButtonGroup>
   </div>
   <div :aria-label="`筛选${labels[type]}`" class="filter-bar" role="search">
     <div class="search-field">
@@ -142,7 +143,7 @@ const {
       我参与的
     </button>
     <TextButton v-if="filtered" @click="reset">重置</TextButton>
-    <span class="filter-count" role="status">{{
+    <span v-if="loaded || busy" class="filter-count" role="status">{{
       busy ? '正在更新…' : `共 ${total.toLocaleString()} 条`
     }}</span>
     <div v-if="type !== 'songs'" aria-label="显示方式" class="view-toggle">
@@ -180,7 +181,7 @@ const {
   <Card class="loading-list" v-if="busy && !loaded" aria-busy="true" aria-label="正在加载">
     <div v-for="n in 12" :key="n" class="skeleton"></div>
   </Card>
-  <div v-else :aria-busy="busy">
+  <div v-else-if="loaded" :aria-busy="busy">
     <Card v-if="items.length && type === 'songs'">
       <SongList
         :disabled="acting"
@@ -316,7 +317,6 @@ const {
     </template>
   </BaseDialog>
 </template>
-
 <style scoped>
 .catalog-intro {
   margin-top: 10px;
