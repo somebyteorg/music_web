@@ -107,31 +107,33 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
   </TextButton>
 </template>
 <style scoped>
-.track-numbering {
-  display: grid;
-  gap: 8px;
-}
-.track-numbering-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: 10px;
-}
-.track-numbering-actions > label {
-  width: 100px;
-  font-size: 12px;
-}
-.group-move {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-.group-move > .select-control {
-  flex: 1;
-  min-width: min(100%, 180px);
-}
-.group-track-preview {
-  overflow-wrap: anywhere;
+@layer components {
+  .track-numbering {
+    display: grid;
+    gap: 8px;
+  }
+  .track-numbering-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 10px;
+  }
+  .track-numbering-actions > label {
+    width: 100px;
+    font-size: 12px;
+  }
+  .group-move {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  .group-move > .select-control {
+    flex: 1;
+    min-width: min(100%, 180px);
+  }
+  .group-track-preview {
+    overflow-wrap: anywhere;
+  }
 }
 </style>

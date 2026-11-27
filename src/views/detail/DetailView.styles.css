@@ -1,77 +1,79 @@
-.follow-button.active {
-  color: var(--brand-strong);
-  border-color: var(--brand-line-follow);
-  background: var(--brand-soft);
-}
-
-.follow-button.active .ui-icon {
-  fill: var(--follow-fill);
-}
-
-.back-link {
-  display: inline-block;
-  margin-bottom: 24px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.back-link:hover {
-  color: var(--brand);
-}
-
-.detail-tabs {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  border-bottom: 1px solid var(--line);
-}
-
-.detail-tabs > button {
-  padding: 12px 0;
-  border-bottom: 2px solid transparent;
-  color: var(--text-muted);
-  font-size: 14px;
-}
-
-.detail-tabs > button.active {
-  color: var(--brand-strong);
-  border-color: var(--brand);
-}
-
-.detail-tabs > button > span {
-  margin-left: 4px;
-  font-size: 11px;
-}
-
-.detail-tabs > a {
-  margin-left: auto;
-  color: var(--brand);
-  font-size: 12px;
-}
-
-.detail-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 24px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-  color: var(--text-muted);
-  font-size: 12px;
-}
-
-.detail-foot > a {
-  color: var(--brand);
-}
-
-@media (max-width: 680px) {
-  .detail-copy .button {
-    font-size: 12px;
-    padding-inline: 8px;
+@layer components {
+  .follow-button.active {
+    color: var(--brand-strong);
+    border-color: var(--brand-line-follow);
+    background: var(--brand-soft);
   }
+
+  .follow-button.active .ui-icon {
+    fill: var(--follow-fill);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .back-link:hover {
+    color: var(--brand);
+  }
+
   .detail-tabs {
-    gap: 18px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .detail-tabs > button {
+    padding: 12px 0;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .detail-tabs > button.active {
+    color: var(--brand-strong);
+    border-color: var(--brand);
+  }
+
+  .detail-tabs > button > span {
+    margin-left: 4px;
+    font-size: 11px;
+  }
+
+  .detail-tabs > a {
+    margin-left: auto;
+    color: var(--brand);
+    font-size: 12px;
+  }
+
+  .detail-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .detail-foot > a {
+    color: var(--brand);
+  }
+
+  @media (max-width: 680px) {
+    .detail-copy .button {
+      font-size: 12px;
+      padding-inline: 8px;
+    }
+    .detail-tabs {
+      gap: 18px;
+    }
   }
 }

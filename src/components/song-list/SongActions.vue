@@ -57,29 +57,31 @@ const { props: listProps, favorite, isFavoriting, enqueue, playNext, edit } = us
 </template>
 
 <style scoped>
-.song-actions .icon-button {
-  font-size: 17px;
-}
-.follow {
-  color: var(--text-muted);
-}
-.follow.active {
-  color: var(--brand-strong);
-}
-.follow.active .ui-icon {
-  fill: var(--brand-soft);
-}
-@container (max-width: 620px) {
-  .edit,
-  .queue-action {
-    display: none;
-  }
-}
-@media (pointer: coarse) {
+@layer components {
   .song-actions .icon-button {
-    width: 32px;
-    min-width: 32px;
-    height: 36px;
+    font-size: 17px;
+  }
+  .follow {
+    color: var(--text-muted);
+  }
+  .follow.active {
+    color: var(--brand-strong);
+  }
+  .follow.active .ui-icon {
+    fill: var(--brand-soft);
+  }
+  @container (max-width: 620px) {
+    .edit,
+    .queue-action {
+      display: none;
+    }
+  }
+  @media (pointer: coarse) {
+    .song-actions .icon-button {
+      width: 32px;
+      min-width: 32px;
+      height: 36px;
+    }
   }
 }
 </style>

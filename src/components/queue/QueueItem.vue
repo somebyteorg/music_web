@@ -67,104 +67,106 @@ function remove() {
   </li>
 </template>
 <style scoped>
-.queue-row {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  border-radius: 10px;
-}
-.queue-row:hover {
-  background: var(--surface-hover);
-}
-.queue-row.current {
-  background: var(--brand-tint);
-}
-.queue-row.muted {
-  opacity: 0.55;
-}
-.queue-main {
-  display: grid;
-  grid-template-columns: 22px 36px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  min-width: 0;
-  padding: 7px 6px;
-  text-align: left;
-}
-.queue-index {
-  color: var(--text-muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-}
-.queue-main > .cover {
-  width: 36px;
-}
-.queue-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-.queue-text strong {
-  overflow: hidden;
-  font-size: 13px;
-  font-weight: 550;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.queue-text small {
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: 11px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.queue-time {
-  color: var(--text-muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-.queue-remove {
-  flex-shrink: 0;
-  opacity: 0;
-}
-.queue-row:hover .queue-remove,
-.queue-remove:focus-visible {
-  opacity: 1;
-}
-/* 触屏没有 hover：删除按钮常显，否则手机上无法移除曲目 */
-@media (pointer: coarse), (max-width: 760px) {
+@layer components {
+  .queue-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    border-radius: 10px;
+  }
+  .queue-row:hover {
+    background: var(--surface-hover);
+  }
+  .queue-row.current {
+    background: var(--brand-tint);
+  }
+  .queue-row.muted {
+    opacity: 0.55;
+  }
+  .queue-main {
+    display: grid;
+    grid-template-columns: 22px 36px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+    padding: 7px 6px;
+    text-align: left;
+  }
+  .queue-index {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  .queue-main > .cover {
+    width: 36px;
+  }
+  .queue-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .queue-text strong {
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 550;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .queue-text small {
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: 11px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .queue-time {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
   .queue-remove {
+    flex-shrink: 0;
+    opacity: 0;
+  }
+  .queue-row:hover .queue-remove,
+  .queue-remove:focus-visible {
     opacity: 1;
   }
-}
-.queue-bars {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 12px;
-}
-.queue-bars i {
-  width: 2px;
-  height: 100%;
-  background: var(--brand);
-  animation: queue-bar 0.9s ease-in-out infinite;
-}
-.queue-bars i:nth-child(2) {
-  animation-delay: 0.15s;
-}
-.queue-bars i:nth-child(3) {
-  animation-delay: 0.3s;
-}
-@keyframes queue-bar {
-  0%,
-  100% {
-    transform: scaleY(0.35);
+  /* 触屏没有 hover：删除按钮常显，否则手机上无法移除曲目 */
+  @media (pointer: coarse), (max-width: 760px) {
+    .queue-remove {
+      opacity: 1;
+    }
   }
-  50% {
-    transform: scaleY(1);
+  .queue-bars {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 12px;
+  }
+  .queue-bars i {
+    width: 2px;
+    height: 100%;
+    background: var(--brand);
+    animation: queue-bar 0.9s ease-in-out infinite;
+  }
+  .queue-bars i:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+  .queue-bars i:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  @keyframes queue-bar {
+    0%,
+    100% {
+      transform: scaleY(0.35);
+    }
+    50% {
+      transform: scaleY(1);
+    }
   }
 }
 </style>

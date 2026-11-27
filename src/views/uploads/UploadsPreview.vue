@@ -130,80 +130,82 @@ function previewCover(task: UploadTask) {
   >
 </template>
 <style scoped>
-.parsed-preview {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-}
-.parsed-cover {
-  width: 96px;
-  height: 96px;
-  flex-shrink: 0;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  object-fit: cover;
-}
-.parsed-cover.placeholder {
-  display: grid;
-  place-items: center;
-  background: var(--brand-soft);
-  color: var(--brand);
-  font-size: 30px;
-}
-.parsed-details {
-  min-width: 0;
-}
-.parsed-details > strong {
-  display: block;
-  margin-bottom: 5px;
-  overflow-wrap: anywhere;
-}
-.parsed-lyrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 8px;
-}
-.preview-warnings {
-  margin: 0;
-  padding: 10px 12px 10px 28px;
-  border: 1px solid var(--warning-line);
-  border-radius: 8px;
-  background: var(--warning-veil);
-  color: var(--warning-note);
-  font-size: 12px;
-  line-height: 1.7;
-  list-style: disc;
-}
-.recording-matches {
-  display: grid;
-  gap: 8px;
-}
-.recording-matches article {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 10px 12px;
-}
-.recording-matches article > div {
-  min-width: 0;
-}
-.task-warning {
-  margin-top: 5px;
-  color: var(--warning-task);
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-@media (max-width: 680px) {
+@layer components {
   .parsed-preview {
-    gap: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
   }
   .parsed-cover {
-    width: 72px;
-    height: 72px;
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  .parsed-cover.placeholder {
+    display: grid;
+    place-items: center;
+    background: var(--brand-soft);
+    color: var(--brand);
+    font-size: 30px;
+  }
+  .parsed-details {
+    min-width: 0;
+  }
+  .parsed-details > strong {
+    display: block;
+    margin-bottom: 5px;
+    overflow-wrap: anywhere;
+  }
+  .parsed-lyrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .preview-warnings {
+    margin: 0;
+    padding: 10px 12px 10px 28px;
+    border: 1px solid var(--warning-line);
+    border-radius: 8px;
+    background: var(--warning-veil);
+    color: var(--warning-note);
+    font-size: 12px;
+    line-height: 1.7;
+    list-style: disc;
+  }
+  .recording-matches {
+    display: grid;
+    gap: 8px;
+  }
+  .recording-matches article {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .recording-matches article > div {
+    min-width: 0;
+  }
+  .task-warning {
+    margin-top: 5px;
+    color: var(--warning-task);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 680px) {
+    .parsed-preview {
+      gap: 12px;
+    }
+    .parsed-cover {
+      width: 72px;
+      height: 72px;
+    }
   }
 }
 </style>

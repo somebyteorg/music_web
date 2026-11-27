@@ -57,85 +57,87 @@ const signedIn = computed(() => !booting.value && sign.ready && !!sign.user)
 </template>
 
 <style scoped>
-.app-shell {
-  min-height: 100dvh;
-}
-.main-shell {
-  margin-left: var(--sidebar-width);
-  min-height: 100dvh;
-}
-.main-content {
-  width: 100%;
-  max-width: 1680px;
-  margin-inline: auto;
-  padding: 36px var(--page-gutter) 48px;
-}
-.player-visible .main-content {
-  padding-bottom: 120px;
-}
-.sidebar-backdrop {
-  display: none;
-}
-.toast {
-  position: fixed;
-  z-index: 200;
-  bottom: 104px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: max-content;
-  max-width: min(680px, calc(100% - 24px));
-  padding: 14px 20px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow-md);
-  font-size: 13px;
-  line-height: 1.6;
-}
-.toast > span {
-  color: var(--success);
-  font-weight: 700;
-}
-.toast.error > span {
-  color: var(--danger);
-}
-.toast > button {
-  margin-left: 8px;
-  font-size: 18px;
-}
-.toast-enter-active,
-.toast-leave-active {
-  transition: opacity 0.15s;
-}
-.toast-enter-from,
-.toast-leave-to {
-  opacity: 0;
-}
-@media (max-width: 760px) {
-  .sidebar-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 35;
-    background: var(--scrim-sidebar);
-    backdrop-filter: blur(3px);
+@layer components {
+  .app-shell {
+    min-height: 100dvh;
   }
   .main-shell {
-    margin-left: 0;
+    margin-left: var(--sidebar-width);
+    min-height: 100dvh;
   }
   .main-content {
-    padding: 28px 24px 36px;
-  }
-}
-@media (max-width: 540px) {
-  .main-content {
-    padding: 24px 18px 32px;
+    width: 100%;
+    max-width: 1680px;
+    margin-inline: auto;
+    padding: 36px var(--page-gutter) 48px;
   }
   .player-visible .main-content {
-    padding-bottom: 140px;
+    padding-bottom: 120px;
+  }
+  .sidebar-backdrop {
+    display: none;
+  }
+  .toast {
+    position: fixed;
+    z-index: 200;
+    bottom: 104px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: max-content;
+    max-width: min(680px, calc(100% - 24px));
+    padding: 14px 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow-md);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .toast > span {
+    color: var(--success);
+    font-weight: 700;
+  }
+  .toast.error > span {
+    color: var(--danger);
+  }
+  .toast > button {
+    margin-left: 8px;
+    font-size: 18px;
+  }
+  .toast-enter-active,
+  .toast-leave-active {
+    transition: opacity 0.15s;
+  }
+  .toast-enter-from,
+  .toast-leave-to {
+    opacity: 0;
+  }
+  @media (max-width: 760px) {
+    .sidebar-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 35;
+      background: var(--scrim-sidebar);
+      backdrop-filter: blur(3px);
+    }
+    .main-shell {
+      margin-left: 0;
+    }
+    .main-content {
+      padding: 28px 24px 36px;
+    }
+  }
+  @media (max-width: 540px) {
+    .main-content {
+      padding: 24px 18px 32px;
+    }
+    .player-visible .main-content {
+      padding-bottom: 140px;
+    }
   }
 }
 </style>

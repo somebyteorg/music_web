@@ -62,25 +62,27 @@ function navigateTo(event: MouseEvent, navigate: (event?: MouseEvent) => unknown
 </template>
 
 <style scoped>
-.text-button {
-  padding: 4px 0;
-  color: var(--brand);
-  font-size: 13px;
-  line-height: 1.6;
-}
+@layer components {
+  .text-button {
+    padding: 4px 0;
+    color: var(--brand);
+    font-size: 13px;
+    line-height: 1.6;
+  }
 
-.text-button:hover {
-  text-decoration: underline;
-}
+  .text-button:hover {
+    text-decoration: underline;
+  }
 
-/* danger 变体：与 Button.vue 的 .button.danger 同一套路，在本组件内加权到 (0,3,0) */
-.text-button.danger {
-  color: var(--danger);
-}
+  /* danger 变体：与 Button.vue 的 .button.danger 同一套路，在本组件内加权到 (0,3,0) */
+  .text-button.danger {
+    color: var(--danger);
+  }
 
-/* 链接形态没有 :disabled；用与 base.css 中 button:disabled 一致的 0.5 透明度 */
-.text-button.is-disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
+  /* 链接形态没有 :disabled；用与 base.css 中 button:disabled 一致的 0.5 透明度 */
+  .text-button.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 }
 </style>

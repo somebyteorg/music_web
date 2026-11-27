@@ -65,7 +65,7 @@ const emit = defineEmits<{
       <p class="hint">关联已有歌曲时保留其媒体库，新增的专辑收录不会移除其他专辑关联。</p>
       <p v-if="batch.libraries.error" class="error-text">
         {{ batch.libraries.error }}
-        <TextButton @click="batch.libraries.load(true)">重试</TextButton>
+        <TextButton @click="batch.libraries.reload()">重试</TextButton>
       </p>
       <label
         >音频分组<BaseSelect
@@ -156,26 +156,28 @@ const emit = defineEmits<{
   </BaseDialog>
 </template>
 <style scoped>
-.batch-common {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.batch-common > div {
-  display: grid;
-  gap: 8px;
-}
-.new-group {
-  padding: 16px;
-  border: 1px dashed var(--line);
-  border-radius: 10px;
-}
-@media (max-width: 680px) {
+@layer components {
   .batch-common {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .batch-common > div {
+    display: grid;
+    gap: 8px;
+  }
+  .new-group {
+    padding: 16px;
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+  }
+  @media (max-width: 680px) {
+    .batch-common {
+      grid-template-columns: 1fr;
+    }
   }
 }
 </style>

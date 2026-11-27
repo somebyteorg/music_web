@@ -80,88 +80,90 @@ function navigateTo(event: MouseEvent, navigate: (event?: MouseEvent) => unknown
 </template>
 
 <style scoped>
-.button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 9px 16px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 550;
-  line-height: 1.5;
-  white-space: nowrap;
-  transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.button.primary {
-  background: var(--brand);
-  color: var(--on-brand);
-}
-
-.button.primary:hover:not(:disabled) {
-  background: var(--brand-strong);
-  box-shadow: var(--shadow-brand);
-}
-
-.button.secondary {
-  background: var(--surface);
-  border-color: var(--line);
-}
-
-.button.secondary:hover:not(:disabled) {
-  background: var(--surface-muted);
-  border-color: var(--line-strong);
-}
-
-.button.small {
-  min-height: 34px;
-  padding: 6px 12px;
-  font-size: 12px;
-}
-
-@media (max-width: 680px) {
+@layer components {
   .button {
-    padding-inline: 10px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 550;
+    line-height: 1.5;
+    white-space: nowrap;
+    transition:
+      background var(--transition-fast),
+      border-color var(--transition-fast),
+      box-shadow var(--transition-fast);
   }
-}
 
-@media (pointer: coarse) {
-  .button {
-    min-height: 38px;
+  .button.primary {
+    background: var(--brand);
+    color: var(--on-brand);
   }
-}
 
-.button.ghost {
-  color: var(--text-soft);
-}
+  .button.primary:hover:not(:disabled) {
+    background: var(--brand-strong);
+    box-shadow: var(--shadow-brand);
+  }
 
-.button.ghost:hover:not(:disabled) {
-  background: var(--surface-muted);
-  color: var(--brand-strong);
-}
+  .button.secondary {
+    background: var(--surface);
+    border-color: var(--line);
+  }
 
-.button.danger {
-  color: var(--danger);
-}
+  .button.secondary:hover:not(:disabled) {
+    background: var(--surface-muted);
+    border-color: var(--line-strong);
+  }
 
-.button.danger:hover:not(:disabled) {
-  background: var(--danger-soft);
-  color: var(--danger-ink);
-}
+  .button.small {
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 12px;
+  }
 
-.button.is-busy {
-  opacity: 0.6;
-}
+  @media (max-width: 680px) {
+    .button {
+      padding-inline: 10px;
+    }
+  }
 
-/* 链接形态没有 :disabled，disabled/busy 时用同一份视觉（与 .is-busy 的 0.6 对齐） */
-.button.is-inactive {
-  cursor: not-allowed;
-  opacity: 0.6;
+  @media (pointer: coarse) {
+    .button {
+      min-height: 38px;
+    }
+  }
+
+  .button.ghost {
+    color: var(--text-soft);
+  }
+
+  .button.ghost:hover:not(:disabled) {
+    background: var(--surface-muted);
+    color: var(--brand-strong);
+  }
+
+  .button.danger {
+    color: var(--danger);
+  }
+
+  .button.danger:hover:not(:disabled) {
+    background: var(--danger-soft);
+    color: var(--danger-ink);
+  }
+
+  .button.is-busy {
+    opacity: 0.6;
+  }
+
+  /* 链接形态没有 :disabled，disabled/busy 时用同一份视觉（与 .is-busy 的 0.6 对齐） */
+  .button.is-inactive {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 </style>

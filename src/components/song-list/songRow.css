@@ -1,183 +1,185 @@
-.song-library {
-  display: block;
-  margin-top: 3px;
-  color: var(--text-muted);
-  font-size: 10px;
-}
-.song-row {
-  min-height: 68px;
-  border-top: 1px solid var(--line);
-}
-.song-row:hover {
-  background: var(--surface-hover);
-}
-.song-row:last-child {
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-}
-.song-row.playing,
-.song-row.selected {
-  background: var(--brand-tint);
-}
-.song-row.playing .song-name {
-  color: var(--brand-strong);
-}
-.song-row > input {
-  margin: 0;
-}
-.song-play {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 30px;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-.play-icon {
-  display: none;
-  color: var(--brand);
-}
-.song-row:hover .song-index,
-.playing .song-index,
-.song-play:focus-visible .song-index {
-  display: none;
-}
-.song-row:hover .play-icon,
-.playing .play-icon,
-.song-play:focus-visible .play-icon {
-  display: block;
-}
-.song-title {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  min-width: 0;
-}
-.song-title > .cover {
-  width: 42px;
-  flex-shrink: 0;
-  border-radius: 7px;
-}
-.song-info {
-  min-width: 0;
-  flex: 1;
-}
-.song-name {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 14px;
-  font-weight: 550;
-}
-.song-name:hover,
-.song-artists a:hover,
-.song-album:hover {
-  color: var(--brand);
-}
-.song-name small {
-  margin-left: 6px;
-  font-size: 11px;
-  color: var(--text-muted);
-  font-weight: 400;
-}
-.song-artists,
-.song-album {
-  color: var(--text-muted);
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.mobile-meta,
-.mobile-resource {
-  display: none;
-}
-.mobile-artist {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.song-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 2px;
-}
-@container (max-width: 800px) {
-  .song-artists {
-    display: none;
-  }
-  .mobile-meta {
+@layer components {
+  .song-library {
     display: block;
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 10px;
   }
   .song-row {
     min-height: 68px;
+    border-top: 1px solid var(--line);
   }
-}
-@container (max-width: 620px) {
-  .song-album {
-    display: none;
+  .song-row:hover {
+    background: var(--surface-hover);
   }
-}
-@container (max-width: 460px) {
-  .song-row {
-    padding-block: 12px;
+  .song-row:last-child {
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+  .song-row.playing,
+  .song-row.selected {
+    background: var(--brand-tint);
+  }
+  .song-row.playing .song-name {
+    color: var(--brand-strong);
   }
   .song-row > input {
-    grid-column: 1;
-    grid-row: 1;
+    margin: 0;
   }
-  .song-row .song-play {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  .selectable .song-play {
-    grid-column: 2;
-  }
-  .song-title {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .selectable .song-title {
-    grid-column: 3;
-  }
-  .song-title > .cover {
-    display: none;
-  }
-  .song-resources {
-    display: none;
-  }
-  .mobile-meta {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .mobile-artist {
-    min-width: 0;
-  }
-  .mobile-resource {
-    display: inline;
-    flex-shrink: 0;
-  }
-  .song-actions {
-    grid-column: 3;
-    grid-row: 1;
-  }
-  .selectable .song-actions {
-    grid-column: 4;
-  }
-}
-@media (pointer: coarse) {
   .song-play {
-    min-height: 36px;
-  }
-  .song-index {
-    display: none;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 30px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
   }
   .play-icon {
+    display: none;
+    color: var(--brand);
+  }
+  .song-row:hover .song-index,
+  .playing .song-index,
+  .song-play:focus-visible .song-index {
+    display: none;
+  }
+  .song-row:hover .play-icon,
+  .playing .play-icon,
+  .song-play:focus-visible .play-icon {
     display: block;
+  }
+  .song-title {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-width: 0;
+  }
+  .song-title > .cover {
+    width: 42px;
+    flex-shrink: 0;
+    border-radius: 7px;
+  }
+  .song-info {
+    min-width: 0;
+    flex: 1;
+  }
+  .song-name {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 550;
+  }
+  .song-name:hover,
+  .song-artists a:hover,
+  .song-album:hover {
+    color: var(--brand);
+  }
+  .song-name small {
+    margin-left: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .song-artists,
+  .song-album {
+    color: var(--text-muted);
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .mobile-meta,
+  .mobile-resource {
+    display: none;
+  }
+  .mobile-artist {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .song-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2px;
+  }
+  @container (max-width: 800px) {
+    .song-artists {
+      display: none;
+    }
+    .mobile-meta {
+      display: block;
+    }
+    .song-row {
+      min-height: 68px;
+    }
+  }
+  @container (max-width: 620px) {
+    .song-album {
+      display: none;
+    }
+  }
+  @container (max-width: 460px) {
+    .song-row {
+      padding-block: 12px;
+    }
+    .song-row > input {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .song-row .song-play {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .selectable .song-play {
+      grid-column: 2;
+    }
+    .song-title {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .selectable .song-title {
+      grid-column: 3;
+    }
+    .song-title > .cover {
+      display: none;
+    }
+    .song-resources {
+      display: none;
+    }
+    .mobile-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mobile-artist {
+      min-width: 0;
+    }
+    .mobile-resource {
+      display: inline;
+      flex-shrink: 0;
+    }
+    .song-actions {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .selectable .song-actions {
+      grid-column: 4;
+    }
+  }
+  @media (pointer: coarse) {
+    .song-play {
+      min-height: 36px;
+    }
+    .song-index {
+      display: none;
+    }
+    .play-icon {
+      display: block;
+    }
   }
 }

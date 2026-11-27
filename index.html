@@ -6,6 +6,15 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="theme-color" content="#7954cb" />
   <title>EMOS · 音乐服</title>
+  <style>
+    /*
+     * 级联层序（与 src/style.css 顶部同一份声明，两边必须一致）：
+     * 组件 CSS 会被拆成比入口样式更早加载的 chunk，若等到 style.css 再声明层序，
+     * 最先出现的 components 层会被当成最低优先级，base 反而压过组件样式。
+     * 所以这里在任何外部样式表之前先声明一次，style.css 里那句是同一份的兜底。
+     */
+    @layer reset, theme, tokens, base, components, utilities, a11y;
+  </style>
   <script>
     // 首屏防闪烁：Vue 挂载前按 localStorage + 系统偏好先写好 data-theme（与 useTheme 同一套规则）
     ;(function () {

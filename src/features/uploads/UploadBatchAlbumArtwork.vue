@@ -114,27 +114,29 @@ const emit = defineEmits<{
   </details>
 </template>
 <style scoped>
-.batch-details > summary {
-  cursor: pointer;
-  color: var(--brand-strong);
-  font-size: 12px;
-  font-weight: 550;
-}
-.batch-details[open] > summary {
-  margin-bottom: 14px;
-}
-.album-cover-upload {
-  position: relative;
-  width: fit-content;
-  cursor: pointer;
-  font-size: 12px;
-}
-.album-cover-upload input {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
+@layer components {
+  .batch-details > summary {
+    cursor: pointer;
+    color: var(--brand-strong);
+    font-size: 12px;
+    font-weight: 550;
+  }
+  .batch-details[open] > summary {
+    margin-bottom: 14px;
+  }
+  .album-cover-upload {
+    position: relative;
+    width: fit-content;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .album-cover-upload input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
 }
 </style>

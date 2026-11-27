@@ -14,16 +14,18 @@ const sign = useSignStore()
   </details>
 </template>
 <style scoped>
-.notice-details {
-  margin-top: 18px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-.notice-details summary {
-  width: fit-content;
-  cursor: pointer;
-}
-.notice-details p {
-  margin-top: 10px;
+@layer components {
+  .notice-details {
+    margin-top: 18px;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .notice-details summary {
+    width: fit-content;
+    cursor: pointer;
+  }
+  .notice-details p {
+    margin-top: 10px;
+  }
 }
 </style>

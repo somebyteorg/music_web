@@ -75,12 +75,10 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
         await router.push(backTo)
       } else if (operation.value === 'merge' && target.value) {
         await catalogApi.merge(type, id, {
-          json: {
-            target_id: target.value.id,
-            version: item.value.version,
-            target_version: target.value.version,
-            reason: reason.value,
-          },
+          target_id: target.value.id,
+          version: item.value.version,
+          target_version: target.value.version,
+          reason: reason.value,
         })
         notify('合并成功。')
         invalidateScopes(sign.user?.id, ['catalog', 'detail'])

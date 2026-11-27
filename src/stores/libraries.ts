@@ -4,6 +4,14 @@ import { defineStore } from 'pinia'
 import type { Entity } from '@/types/catalog'
 import { useSignStore } from './sign'
 
+/**
+ * 媒体库列表：下拉选项的唯一来源。
+ *
+ * 缓存语义拆成三个具名动作，不再用布尔参数区分「是否强制」：
+ *   load()       读一次；缓存有效就直接返回（组件挂载、选项读取都走这里）
+ *   invalidate() 只标脏、不发请求；写操作成功后调用，下一次 load() 自动重取
+ *   reload()     忽略缓存立即重取；「重试」按钮用（对应原先的强制刷新那一支）
+ */
 export const useLibrariesStore = defineStore('libraries', () => {
   const sign = useSignStore()
   const items = ref<Entity[]>([])
@@ -23,9 +31,11 @@ export const useLibrariesStore = defineStore('libraries', () => {
       error.value = ''
     },
   )
-  function load(refresh = false): Promise<void> {
+
+  /** 读取：缓存有效时直接命中，否则（含 invalidate 之后）拉一次。 */
+  function load(): Promise<void> {
     if (pending) return pending
-    if (loaded && !refresh) return Promise.resolve()
+    if (loaded) return Promise.resolve()
     const userId = sign.user?.id
     busy.value = true
     error.value = ''
@@ -57,5 +67,17 @@ export const useLibrariesStore = defineStore('libraries', () => {
     })()
     return pending
   }
-  return { items, options, defaultId, busy, error, load }
+
+  /** 标脏：写操作成功后调用，读路径下一次 load() 会重新拉取。 */
+  function invalidate() {
+    loaded = false
+  }
+
+  /** 强制重取：不动缓存判断，供「重试」按钮使用。 */
+  function reload(): Promise<void> {
+    loaded = false
+    return load()
+  }
+
+  return { items, options, defaultId, busy, error, load, reload, invalidate }
 })

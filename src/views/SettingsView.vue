@@ -157,75 +157,77 @@ async function save() {
 </template>
 
 <style scoped>
-.settings-card {
-  width: 100%;
-  padding: 20px;
-}
-.settings-card h2 {
-  margin-top: 6px;
-}
-.settings-card h2:first-child {
-  margin-top: 0;
-}
-.settings-card > .button {
-  align-self: flex-start;
-  margin-top: 4px;
-}
-.library-settings,
-.appearance-settings {
-  margin-top: 20px;
-}
-.quality-options.appearance-options {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.quality-options.library-options {
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.quality-options {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-.quality-options label {
-  position: relative;
-  cursor: pointer;
-  gap: 5px;
-  padding: 12px 10px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-.quality-options label.selected {
-  border-color: var(--brand-line-quality);
-  background: var(--brand-tint-quality);
-}
-.quality-options input {
-  position: absolute;
-  top: 8px;
-  right: 7px;
-  width: 12px;
-  height: 12px;
-}
-.quality-options strong {
-  font-size: 12px;
-  padding-right: 12px;
-}
-.quality-options span {
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 400;
-}
-@media (max-width: 540px) {
+@layer components {
   .settings-card {
-    padding: 16px;
+    width: 100%;
+    padding: 20px;
+  }
+  .settings-card h2 {
+    margin-top: 6px;
+  }
+  .settings-card h2:first-child {
+    margin-top: 0;
+  }
+  .settings-card > .button {
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .library-settings,
+  .appearance-settings {
+    margin-top: 20px;
+  }
+  .quality-options.appearance-options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .quality-options.library-options {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
   .quality-options {
-    grid-template-columns: 1fr 1fr;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .quality-options label {
+    position: relative;
+    cursor: pointer;
+    gap: 5px;
+    padding: 12px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .quality-options label.selected {
+    border-color: var(--brand-line-quality);
+    background: var(--brand-tint-quality);
+  }
+  .quality-options input {
+    position: absolute;
+    top: 8px;
+    right: 7px;
+    width: 12px;
+    height: 12px;
+  }
+  .quality-options strong {
+    font-size: 12px;
+    padding-right: 12px;
+  }
+  .quality-options span {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 400;
+  }
+  @media (max-width: 540px) {
+    .settings-card {
+      padding: 16px;
+    }
+    .quality-options {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 }
 </style>
