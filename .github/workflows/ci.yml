@@ -19,3 +19,7 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+      # 布局快照门禁：只比布局盒子（整像素）与颜色，不受字体抗锯齿影响，可跨机器稳定。
+      # 浏览器由脚本自己拉起 vite preview（需要 dist/，所以排在 build 之后）。
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:layout
