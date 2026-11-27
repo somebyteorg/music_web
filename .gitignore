@@ -3,6 +3,7 @@ dist/
 e2e/__shots__/actual/
 e2e/__shots__/diff/
 e2e/__shots__/detail-tracks/
+e2e/__smoke__/
 
 .idea
 

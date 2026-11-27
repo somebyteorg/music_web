@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "pnpm run typecheck && vite build",
     "preview": "vite preview",
+    "test:smoke": "node e2e/smoke/run.mjs",
     "test:layout": "node e2e/layout-snapshot.mjs",
     "test:layout:update": "node e2e/layout-snapshot.mjs --update",
     "test:contrast": "node e2e/contrast-audit.mjs",
