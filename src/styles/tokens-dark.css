@@ -105,7 +105,8 @@
 
   /* —— 阴影 / 遮罩 —— */
   --shadow-sm: 0 2px 8px color-mix(in srgb, var(--ink) 0.8%, transparent);
-  --shadow-md: 0 12px 48px color-mix(in srgb, var(--ink) 8.6%, transparent);
+  /* 与浅色同档位几何（sm 2/8、md 8/32、lg 12/48），深色只改墨色与 alpha */
+  --shadow-md: 0 8px 32px color-mix(in srgb, var(--ink) 8.6%, transparent);
   --shadow-lg: 0 12px 48px color-mix(in srgb, var(--ink) 12.2%, transparent);
   --shadow-brand: 0 4px 14px color-mix(in srgb, var(--brand) 12.5%, transparent);
   --shadow-modal: 0 15px 70px color-mix(in srgb, var(--ink) 15%, transparent);
