@@ -192,7 +192,7 @@ async function main() {
     maxDiffRatio: numberArg('max-diff-ratio', 0.005),
     maxChannelDelta: numberArg('max-channel-delta', 20),
   }
-  const apiPort = numberArg('api-port', 8000)
+  const apiPort = numberArg('api-port', Number(process.env.STUB_API_PORT) || 8000)
   const previewPort = numberArg('preview-port', 4173)
   const routeFilter = arg('routes')
   const widthFilter = arg('widths')
