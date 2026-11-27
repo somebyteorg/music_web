@@ -195,6 +195,11 @@ async function run() {
   let browser
   try {
     await waitForHttp(origin, 60000, preview.child, 'vite preview')
+    // 端口被别的进程占着时 vite 会立刻退出，而 waitForHttp 可能已经连上「别人的」服务，
+    // 那等于拿旧构建做对比：这里再确认一次子进程确实还活着。
+    if (preview.child.exitCode !== null) {
+      throw new Error(`vite preview 未能在本进程内启动（端口 ${previewPort} 可能被占用）`)
+    }
     // 固定渲染环境：CI（macOS runner）与本机的字体抗锯齿/子像素渲染不同，
     // 不加这些参数会整页出现 1~2% 的文本像素差异、通道差可达 200+。
     browser = await chromium.launch({
