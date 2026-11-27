@@ -20,7 +20,7 @@ withDefaults(
   display: flex;
   gap: 2px;
   padding: 3px;
-  background: var(--surface-sunken);
+  background: var(--segmented-bg);
   border-radius: var(--radius-sm);
 }
 
@@ -36,6 +36,6 @@ withDefaults(
 .ui-tabs--segmented > :deep(button.active) {
   background: var(--surface);
   color: var(--brand-strong);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 6.3%, transparent);
+  box-shadow: var(--shadow-segmented);
 }
 </style>

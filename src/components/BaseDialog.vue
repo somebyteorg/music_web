@@ -60,7 +60,7 @@ onBeforeUnmount(() => {
   border-radius: 14px;
   background: var(--surface);
   color: var(--text);
-  box-shadow: 0 15px 70px color-mix(in srgb, var(--ink) 15%, transparent);
+  box-shadow: var(--shadow-modal);
   overflow: hidden;
 }
 .modal[open] {
@@ -75,7 +75,7 @@ onBeforeUnmount(() => {
   max-height: calc(100dvh - 32px);
 }
 .modal::backdrop {
-  background: var(--scrim);
+  background: var(--scrim-modal);
   backdrop-filter: blur(4px);
 }
 .modal-heading {

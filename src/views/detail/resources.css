@@ -30,7 +30,7 @@
 }
 
 .resource-table tr.current td {
-  background: var(--brand-tint);
+  background: var(--brand-tint-pick);
 }
 
 .resource-table small {

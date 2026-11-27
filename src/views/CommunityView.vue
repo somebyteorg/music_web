@@ -333,7 +333,7 @@ const {
   text-align: center;
 }
 .ranking.top {
-  color: var(--warning);
+  color: var(--warning-rank);
 }
 .member-name {
   display: flex;
@@ -363,7 +363,7 @@ const {
   line-height: 1.6;
 }
 .member-role :deep(.select-trigger:hover:not(:disabled)) {
-  background: var(--brand-veil);
+  background: var(--veil-hover);
 }
 .member-contribution {
   display: flex;
@@ -391,8 +391,8 @@ const {
   padding: 14px;
 }
 .message.unread {
-  background: var(--surface-hover);
-  border-color: var(--brand-line);
+  background: var(--surface-unread);
+  border-color: var(--brand-line-unread);
 }
 .message-icon {
   font-size: 22px;
@@ -437,11 +437,11 @@ const {
   overflow-wrap: anywhere;
 }
 .history-diff .before {
-  background: var(--danger-soft);
+  background: var(--danger-diff);
   color: var(--danger-ink);
 }
 .history-diff .after {
-  background: var(--success-soft);
+  background: var(--success-diff);
   color: var(--success-ink);
 }
 @media (max-width: 680px) {

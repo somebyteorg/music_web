@@ -198,8 +198,8 @@ async function save() {
   border-radius: 6px;
 }
 .quality-options label.selected {
-  border-color: var(--brand-line-strong);
-  background: var(--brand-tint);
+  border-color: var(--brand-line-quality);
+  background: var(--brand-tint-quality);
 }
 .quality-options input {
   position: absolute;

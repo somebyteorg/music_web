@@ -148,7 +148,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   background: var(--surface-glass-strong);
   border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 8px 40px color-mix(in srgb, var(--ink) 7.8%, transparent);
+  box-shadow: var(--shadow-player);
   backdrop-filter: blur(20px);
 }
 .player > .cover {
@@ -243,7 +243,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   gap: 10px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--ink) 7.1%, transparent);
+  box-shadow: var(--shadow-player-collapsed);
 }
 .collapsed .player-title {
   flex: 1;
