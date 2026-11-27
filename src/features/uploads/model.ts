@@ -20,6 +20,13 @@ export type UploadState = keyof typeof UPLOAD_STATES
 export const TRANSMIT_STATES: UploadState[] = ['queued', 'preparing', 'checking', 'uploading']
 export const ACTIVE_UPLOAD_STATES: UploadState[] = [...TRANSMIT_STATES, 'processing', 'publishing']
 
+/** 刷新或迁移后任务丢了本地文件时的统一提示：需要用户重新选择原文件 */
+export const RESELECT_FILE_HINT = '重新选择原文件或原文件夹后，即可继续上传。'
+
+export function isUploadState(value: unknown): value is UploadState {
+  return typeof value === 'string' && Object.hasOwn(UPLOAD_STATES, value)
+}
+
 export function normalizeUploadConcurrency(value: unknown): number {
   const number = Number(value)
   return Math.min(

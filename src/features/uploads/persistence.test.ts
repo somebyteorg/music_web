@@ -1,6 +1,9 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { nextTick } from 'vue'
 import { createUploadTask, type UploadTask } from './model'
-import { fromSnapshot, toSnapshot } from './persistence'
+import { fromSnapshot, toSnapshot, useUploadPersistence } from './persistence'
+import type { UploadTaskSnapshot } from './persistence'
+import { notification } from '@/composables/useFeedback'
 import type { AudioFile } from '@/types/uploads'
 
 const audioFile = (overrides: Partial<AudioFile> = {}) =>
@@ -123,5 +126,174 @@ describe('上传任务持久化快照', () => {
   it('快照可以 JSON 往返', () => {
     const restored = fromSnapshot(JSON.parse(JSON.stringify(toSnapshot(task()))))
     expect(restored).toEqual(fromSnapshot(toSnapshot(task())))
+  })
+})
+
+const LEGACY_KEY = 'music-upload-tasks-v1'
+const SNAPSHOT_KEY = 'music-upload-tasks-v2'
+const HINT = '重新选择原文件或原文件夹后，即可继续上传。'
+
+const memory = new Map<string, string>()
+
+beforeEach(() => {
+  vi.useFakeTimers()
+  memory.clear()
+  notification.value = null
+  vi.stubGlobal('localStorage', {
+    getItem: (key: string) => memory.get(key) ?? null,
+    setItem: (key: string, value: string) => memory.set(key, value),
+    removeItem: (key: string) => memory.delete(key),
+  })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
+  vi.unstubAllGlobals()
+})
+
+/** v1 存的是整份 UploadTask：file 落盘后被 JSON 序列化成 {}，草稿也整份存着 */
+function legacyTask(overrides: Record<string, unknown> = {}) {
+  return {
+    id: 'legacy-1',
+    fingerprint: 'album/a.flac:1024:0',
+    kind: 'audio',
+    state: 'uploading',
+    name: 'a.flac',
+    size: 1024,
+    relativePath: 'album/a.flac',
+    batchId: 'batch-1',
+    errorStage: 'transfer',
+    transfer: {
+      progress: 42,
+      preparationProgress: 100,
+      preparedLyrics: [{ name: 'a.lrc', format: 'lrc', content: '[00:00]一句' }],
+      sessionId: 'session-legacy',
+      token: 'token-legacy',
+      endpoint: '/upload',
+      uploadUrl: '/upload/tus-legacy',
+      file: {},
+      reused: false,
+    },
+    metadata: { title: '一首歌', artist: '歌手', album: '专辑', track: 2, disc: 1, duration: 100 },
+    draft: { pendingPublish: { song_id: 'song-1' }, duplicateFile: {}, organizeDraft: {} },
+    ...overrides,
+  }
+}
+
+const legacyStore = (tasks: unknown) => memory.set(LEGACY_KEY, JSON.stringify(tasks))
+
+describe('上传任务存储 v1 → v2 迁移', () => {
+  it('正常迁移：v1 任务变成 v2 快照，会话凭据保留、任务可读', () => {
+    legacyStore({ '1': [legacyTask()] })
+    const storage = useUploadPersistence()
+    expect(storage.list(1)[0]).toMatchObject({
+      id: 'legacy-1',
+      kind: 'audio',
+      state: 'paused',
+      name: 'a.flac',
+      size: 1024,
+      relativePath: 'album/a.flac',
+      batchId: 'batch-1',
+      error: HINT,
+      errorStage: 'transfer',
+      transfer: {
+        progress: 0,
+        sessionId: 'session-legacy',
+        token: 'token-legacy',
+        endpoint: '/upload',
+        uploadUrl: '/upload/tus-legacy',
+      },
+      metadata: { title: '一首歌', artist: '歌手', album: '专辑', track: 2, duration: 100 },
+      draft: {},
+    })
+    expect(memory.has(LEGACY_KEY)).toBe(false)
+  })
+
+  it('字段裁剪：文件、objectURL、duplicateFile 与整份 draft 都不进 v2', () => {
+    legacyStore({ '1': [legacyTask({ objectURL: 'blob:legacy' })] })
+    useUploadPersistence()
+    const text = memory.get(SNAPSHOT_KEY) ?? ''
+    expect(text).toContain('"legacy-1"')
+    for (const key of [
+      'file',
+      'objectURL',
+      'duplicateFile',
+      'pendingPublish',
+      'organizeDraft',
+      'draft',
+      'progress',
+      'preparedLyrics',
+    ])
+      expect(text).not.toContain(`"${key}"`)
+  })
+
+  it('状态归一：需要本地文件的状态回落 paused 并提示重选，其余状态不变', () => {
+    const states = ['queued', 'preparing', 'checking', 'uploading', 'processing', 'ready', 'failed']
+    legacyStore({
+      '1': states.map((state, index) =>
+        legacyTask({ id: `legacy-${index}`, state, error: state === 'failed' ? '服务端失败' : '' }),
+      ),
+    })
+    const tasks = useUploadPersistence().list(1)
+    expect(tasks.slice(0, 4).map((task) => [task.state, task.error])).toEqual(
+      Array(4).fill(['paused', HINT]),
+    )
+    expect(tasks.slice(4).map((task) => task.state)).toEqual(['processing', 'ready', 'failed'])
+    expect(tasks[6]!.error).toBe('服务端失败')
+  })
+
+  it('幂等：重复初始化不重复迁移，迁移后 v1 已删除', async () => {
+    legacyStore({ '1': [legacyTask()] })
+    const first = useUploadPersistence()
+    await nextTick()
+    const second = useUploadPersistence()
+    await nextTick()
+    expect(first.list(1).map((task) => task.id)).toEqual(['legacy-1'])
+    expect(second.list(1).map((task) => task.id)).toEqual(['legacy-1'])
+    expect(memory.get(SNAPSHOT_KEY)?.match(/"legacy-1"/g)).toHaveLength(1)
+    expect(memory.has(LEGACY_KEY)).toBe(false)
+  })
+
+  it('v2 已有数据时以 v2 为准，残留的 v1 被清掉而不是覆盖', () => {
+    const cases: [UploadTaskSnapshot[], string[]][] = [
+      [[toSnapshot(task())], ['task-1']],
+      // 空数组也算"用户自己清空过"：不能让 v1 的旧任务复活
+      [[], []],
+    ]
+    for (const [snapshots, ids] of cases) {
+      memory.set(SNAPSHOT_KEY, JSON.stringify({ '1': snapshots }))
+      legacyStore({ '1': [legacyTask()] })
+      expect(
+        useUploadPersistence()
+          .list(1)
+          .map((entry) => entry.id),
+      ).toEqual(ids)
+      expect(memory.has(LEGACY_KEY)).toBe(false)
+    }
+  })
+
+  it('坏数据不删 v1，并报告可读错误', () => {
+    const cases: [string, string][] = [
+      ['{ 不是 JSON', '已保留原数据'],
+      [JSON.stringify({ '1': [{ id: 'legacy-1' }] }), '用户 1 的第 1 个任务'],
+    ]
+    for (const [broken, detail] of cases) {
+      memory.set(LEGACY_KEY, broken)
+      expect(useUploadPersistence().everyone()).toEqual([])
+      expect(memory.get(LEGACY_KEY)).toBe(broken)
+      expect(memory.get(SNAPSHOT_KEY)).toBe('{}')
+      expect(notification.value).toMatchObject({ error: true })
+      expect(notification.value?.text).toContain('迁移失败')
+      expect(notification.value?.text).toContain(detail)
+    }
+  })
+})
+
+describe('上传任务的其它存储 key', () => {
+  it('并发数读到脏值会被归一，不需要给 music-upload-concurrency 升版本', () => {
+    memory.set('music-upload-concurrency', '0')
+    expect(useUploadPersistence().concurrency.value).toBe(1)
+    memory.set('music-upload-concurrency', '爆')
+    expect(useUploadPersistence().concurrency.value).toBe(8)
   })
 })

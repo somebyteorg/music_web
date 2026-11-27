@@ -3,7 +3,11 @@ import { useStorage } from '@vueuse/core'
 import { isUploadDone, type UploadTask } from '@/features/uploads/model'
 
 export function useUploadGroups(tasks: Ref<UploadTask[]>) {
-  const groupBy = useStorage<'folder' | 'album'>('music-upload-grouping', 'folder')
+  // 与 persistence 一致：显式拿 localStorage，SSR / 单测里没有 window 时退回纯内存
+  const store = typeof localStorage === 'undefined' ? undefined : localStorage
+  const groupBy = useStorage<'folder' | 'album'>('music-upload-grouping', 'folder', store)
+  // 单值枚举，内容不随版本变：读到脏值只回落到按文件夹分组，不必给 key 升版本
+  if (groupBy.value !== 'folder' && groupBy.value !== 'album') groupBy.value = 'folder'
   const collapsed = ref<Record<string, boolean>>({})
   const groups = computed(() => {
     const map = new Map<

@@ -1,4 +1,4 @@
-import { computed, reactive, ref, useTemplateRef, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { catalogApi } from '@/lib/api/catalog'
 import { useRoute } from 'vue-router'
 import { useDropZone } from '@vueuse/core'
@@ -15,7 +15,8 @@ export function useUploadSource() {
   const sign = useSignStore()
   const route = useRoute()
   const { busy, run } = useAction()
-  const dropZone = useTemplateRef<HTMLElement>('dropZone')
+  // 拖拽区元素由 UploadsHeader 渲染，模板 ref 通过这个返回值回填（见其 watchEffect）
+  const dropZone = ref<HTMLElement | null>(null)
   const accepted = ref(false)
   const folderUpload = reactive(useFolderUpload())
   const folderBusy = ref(false)
@@ -106,6 +107,7 @@ export function useUploadSource() {
 
   return {
     busy,
+    dropZone,
     accepted,
     targetSong,
     hasNotice,

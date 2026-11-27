@@ -7,6 +7,7 @@ import {
   type UploadTask,
 } from './model'
 import UploadQueueBulk from './UploadQueueBulk.vue'
+import UploadQueueTabs from './UploadQueueTabs.vue'
 
 defineProps<{
   busy: boolean
@@ -37,17 +38,7 @@ async function clearDone() {
 </script>
 <template>
   <div class="filter-bar queue-tools">
-    <div aria-label="上传状态" class="queue-filters">
-      <button
-        v-for="filter in filters"
-        :key="filter.value"
-        :aria-pressed="taskFilter === filter.value"
-        :class="{ active: taskFilter === filter.value }"
-        @click="taskFilter = filter.value"
-      >
-        {{ filter.label }}<span>{{ filter.count }}</span>
-      </button>
-    </div>
+    <UploadQueueTabs v-model:taskFilter="taskFilter" :filters="filters" />
     <div class="queue-settings">
       <label :title="`最多同时上传 ${MAX_UPLOAD_CONCURRENCY} 个文件`" class="concurrency-input">
         <svg aria-hidden="true" class="concurrency-icon" fill="none" viewBox="0 0 20 20">
@@ -116,30 +107,6 @@ async function clearDone() {
 .queue-tools {
   justify-content: space-between;
   gap: 12px 16px;
-}
-.queue-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-.queue-filters > button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 32px;
-  padding: 5px 9px;
-  border-radius: 5px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.queue-filters > button.active {
-  color: var(--brand-strong);
-  background: var(--brand-soft);
-  font-weight: 550;
-}
-.queue-filters > button > span {
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
 }
 .queue-settings {
   display: flex;

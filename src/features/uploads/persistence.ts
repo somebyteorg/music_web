@@ -1,5 +1,6 @@
-import { markRaw, reactive, watch } from 'vue'
+import { markRaw, reactive, watch, type Ref } from 'vue'
 import { useStorage } from '@vueuse/core'
+import { report } from '@/composables/useFeedback'
 import {
   createTaskMetadata,
   normalizeUploadConcurrency,
@@ -9,6 +10,7 @@ import {
   type UploadState,
   type UploadTask,
 } from './model'
+import { LEGACY_STORAGE_KEY, migrateLegacyTasks } from './persistenceMigration'
 
 /**
  * 上传任务的持久化与本地附件。
@@ -92,12 +94,57 @@ export function fromSnapshot(snapshot: UploadTaskSnapshot): UploadTask {
 
 const EMPTY_TASKS: UploadTask[] = []
 
+/**
+ * v2 里是否已经有数据。
+ *
+ * 只看有没有用户条目：已经是空数组的条目也算"用户自己清空过"，
+ * 不能拿 v1 的旧任务把它填回来（否则删掉的队列会在升级后复活）。
+ */
+function hasStoredSnapshots(value: Record<string, UploadTaskSnapshot[]>) {
+  return Object.keys(value).length > 0
+}
+
+function reasonOf(error: unknown) {
+  return error instanceof Error ? error.message : '未知错误'
+}
+
+/**
+ * 首次读入时把 v1 的整份任务迁成 v2 快照。
+ *
+ * - 幂等：v2 已有数据就不再迁移，只清掉没删干净的 v1，避免用户清空队列后旧任务"复活"
+ * - 可失败回滚：先写 v2 再删 v1；解析或写盘任一步失败，v1 原样保留并提示用户
+ */
+function migrateLegacySnapshots(
+  store: Storage | undefined,
+  saved: Ref<Record<string, UploadTaskSnapshot[]>>,
+) {
+  if (!store) return
+  try {
+    // 读 v1 也放进 try：存储被禁用时不该连累整个队列的加载
+    const legacy = store.getItem(LEGACY_STORAGE_KEY)
+    if (!legacy) return
+    if (hasStoredSnapshots(saved.value)) {
+      store.removeItem(LEGACY_STORAGE_KEY)
+      return
+    }
+    const migrated = migrateLegacyTasks(JSON.parse(legacy))
+    // 先落 v2 再删 v1：写盘失败时 v1 还在，下次启动还能再迁一次
+    if (Object.keys(migrated).length) store.setItem(STORAGE_KEY, JSON.stringify(migrated))
+    saved.value = migrated
+    store.removeItem(LEGACY_STORAGE_KEY)
+  } catch (error) {
+    report(new Error(`旧版上传任务数据迁移失败，已保留原数据：${reasonOf(error)}`))
+  }
+}
+
 export function useUploadPersistence() {
   // 显式拿 localStorage：SSR / 单测里没有 window 时退回纯内存
   const store = typeof localStorage === 'undefined' ? undefined : localStorage
   const saved = useStorage<Record<string, UploadTaskSnapshot[]>>(STORAGE_KEY, {}, store)
   const concurrency = useStorage('music-upload-concurrency', 8, store)
   concurrency.value = normalizeUploadConcurrency(concurrency.value)
+  // v2 为空时先把 v1 的任务迁过来，迁移完成的快照才进内存
+  migrateLegacySnapshots(store, saved)
   const tasks = reactive<Record<string, UploadTask[]>>({})
   const files = new Map<string, File>()
   const artwork = reactive(new Map<string, string>())
