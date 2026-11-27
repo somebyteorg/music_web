@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import Chip from '@/components/ui/Chip.vue'
 import Field from '@/components/ui/Field.vue'
 import { useEditorContext } from './editorContext'
 
@@ -19,15 +20,14 @@ const { form, artists, options, query, search } = editor
       </div>
     </Field>
     <div class="chips">
-      <button
+      <Chip
         v-for="a in artists"
         :key="a.id"
-        class="chip selected"
-        type="button"
+        selected
         @click="artists = artists.filter((i) => i.id !== a.id)"
       >
         {{ a.name }} ×
-      </button>
+      </Chip>
     </div>
     <div v-if="options.length" class="picker-results">
       <button

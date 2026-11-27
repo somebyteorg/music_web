@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Chip from '@/components/ui/Chip.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -59,31 +60,26 @@ const { libraries, layout } = actions
       :options="qualityOptions"
       label="音质筛选"
     />
-    <button
+    <Chip
       v-if="type === 'songs'"
       :aria-pressed="favorites"
-      :class="['chip', { selected: favorites }]"
+      :selected="favorites"
       title="只看已收藏的歌曲"
       @click="favorites = !favorites"
     >
       已收藏
-    </button>
-    <button
+    </Chip>
+    <Chip
       v-if="type === 'songs'"
       :aria-pressed="missing"
-      :class="['chip', { selected: missing }]"
+      :selected="missing"
       @click="missing = !missing"
     >
       缺少音频
-    </button>
-    <button
-      v-if="type === 'playlists'"
-      :aria-pressed="mine"
-      :class="['chip', { selected: mine }]"
-      @click="mine = !mine"
-    >
+    </Chip>
+    <Chip v-if="type === 'playlists'" :aria-pressed="mine" :selected="mine" @click="mine = !mine">
       我参与的
-    </button>
+    </Chip>
     <TextButton v-if="filtered" @click="reset">重置</TextButton>
     <span v-if="loaded || busy" class="filter-count" role="status">{{
       busy ? '正在更新…' : `共 ${total.toLocaleString()} 条`

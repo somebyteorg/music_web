@@ -1,9 +1,9 @@
 /*
  * 控件层：图标按钮、文字链接、搜索与筛选
  *
- * 按钮 / 卡片 / 空态 / 文字按钮的视觉已各自收进组件（Button.vue / Card.vue /
- * EmptyState.vue / TextButton.vue / ButtonGroup.vue）；这里只保留尚未组件化的
- * 页面级控件类。
+ * 按钮 / 卡片 / 空态 / 文字按钮 / 胶囊（Chip.vue）的视觉已各自收进组件
+ * （Button.vue / Card.vue / EmptyState.vue / TextButton.vue / ButtonGroup.vue /
+ * Chip.vue）；这里只保留尚未组件化的页面级控件类。
  */
 
 .icon-button {
@@ -69,31 +69,4 @@
   width: 24px;
   min-width: 24px;
   height: 24px;
-}
-
-.chip {
-  padding: 8px 13px;
-  min-height: 40px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.chip.selected {
-  background: var(--brand-soft);
-  color: var(--brand-strong);
-  border-color: var(--brand-line);
-}
-
-.chip:hover {
-  border-color: var(--brand-line-hover);
-}
-
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
 }
