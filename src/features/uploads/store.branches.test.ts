@@ -276,4 +276,17 @@ describe('上传业务分支：刷新后恢复', () => {
     expect(task.state).toBe('paused')
     expect(task.error).toBe('重新选择原文件或原文件夹后，即可继续上传。')
   })
+
+  it('从 v1 迁移后 store 里能看到任务，且已回落 paused', async () => {
+    memory.set('music-upload-tasks-v1', JSON.stringify({ '1': [snapshot] }))
+    setActivePinia(createPinia())
+    const uploads = useUploadsStore()
+    const sign = useSignStore()
+    sign.user = { id: 1, name: 'u', role: 'user' } as unknown as User
+    await nextTick()
+    expect(uploads.tasks).toHaveLength(1)
+    expect(uploads.tasks[0]!.state).toBe('paused')
+    expect(uploads.tasks[0]!.error).toBe('重新选择原文件或原文件夹后，即可继续上传。')
+    expect(memory.has('music-upload-tasks-v1')).toBe(false)
+  })
 })
