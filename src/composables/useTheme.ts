@@ -116,6 +116,8 @@ function start() {
   watch(preference, persist)
   watch(resolved, applyTheme, { immediate: true })
   repairStoredPreference()
+  // dev 下样式表由 JS 注入，首帧前可能还读不到 token，补一次 theme-color 同步
+  window.requestAnimationFrame?.(() => syncThemeColor(resolved.value))
 }
 
 if (typeof window !== 'undefined') start()
