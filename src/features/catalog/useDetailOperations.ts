@@ -19,7 +19,7 @@ type DetailOperation =
   | 'playlist-private'
 
 export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) {
-  const { type, id, backTo, item, songs, tracksLoaded, page, total, songPageSize, load } = detail
+  const { type, id, backTo, item, songs, tracksStatus, page, total, songPageSize, load } = detail
   const router = useRouter()
   const sign = useSignStore()
   const { busy, run } = useAction()
@@ -37,9 +37,9 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
   const canEdit = computed(() =>
     type === 'libraries' ? sign.isAdmin : type !== 'playlists' || !!item.value?.can_edit_metadata,
   )
-  // 曲目数据就绪后才读 songs；首帧与切页加载中不触发清空
+  // 曲目 ready 后才读 songs；首帧、加载中与错误态都不触发清空
   watch(
-    () => (tracksLoaded.value ? songs.value : null),
+    () => (tracksStatus.value === 'ready' ? songs.value : null),
     () => {
       selectedEntries.value = []
     },
@@ -105,11 +105,14 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
           Math.ceil((total.value + trackDraft.value.length) / songPageSize.value),
         )
         notify('已添加到歌单。')
+        // 先关对话框再刷新：曲目刷新失败时不应让 operation 仍处于会读 total 的状态
+        operation.value = ''
         await load()
       } else if (operation.value === 'playlist-move' && movingEntry.value?.entry_id) {
         await catalogApi.playlistMove(id, movingEntry.value.entry_id, movePosition.value)
         page.value = Math.ceil(Math.min(movePosition.value, total.value) / songPageSize.value)
         notify('曲序已调整。')
+        operation.value = ''
         await load()
       }
       operation.value = ''

@@ -7,6 +7,7 @@ import { useSignStore } from '@/stores/sign'
 import { catalogReturnTo } from '@/router'
 import { DETAIL_SONG_PAGE_SIZE } from './limits'
 import { assertPage, getSongPage } from './songs'
+import { readTracksPage, resolveTracksStatus, type TracksStatus } from './tracksStatus'
 
 export function useEntityDetail() {
   const route = useRoute()
@@ -47,25 +48,28 @@ export function useEntityDetail() {
     if (data) songPageSize.value = data.page_size
   })
 
-  /** 曲目查询就绪后才允许读 songs / total，避免用默认空列表掩盖时序错误 */
+  const tracksStatus = computed<TracksStatus>(() =>
+    resolveTracksStatus({
+      type,
+      hasData: tracks.data.value !== null,
+      busy: tracks.busy.value,
+      error: tracks.error.value,
+    }),
+  )
+  const tracksError = computed(() => tracks.error.value)
+
+  /** 只有曲目 ready 才允许读 songs / total；其它状态由调用方按 tracksStatus 分支 */
   function tracksPage() {
-    const data = tracks.data.value
-    if (!data) throw new Error('曲目数据未就绪时访问了歌曲列表')
-    return data
+    return readTracksPage(tracksStatus.value, tracks.data.value)
   }
 
-  const tracksLoaded = computed(() => tracks.data.value !== null)
-  // 非歌曲详情（专辑/歌单/艺人/媒体库）必须等详情与曲目都就绪再渲染，避免半页数据
-  const item = computed<Entity | undefined>(() => {
-    const data = detail.data.value
-    if (!data) return undefined
-    if (type !== 'songs' && !tracks.data.value) return undefined
-    return data.item
-  })
+  // 详情与曲目解耦：详情成功就先渲染 hero，曲目失败只在曲目区显示错误
+  const item = computed<Entity | undefined>(() => detail.data.value?.item)
   const songs = computed<Entity[]>(() => tracksPage().items)
   const total = computed(() => tracksPage().total)
-  const busy = computed(() => detail.busy.value || tracks.busy.value)
-  const error = computed(() => detail.error.value || tracks.error.value)
+  // 整页 busy / error 只反映详情，曲目状态走 tracksStatus / tracksError
+  const busy = computed(() => detail.busy.value)
+  const error = computed(() => detail.error.value)
 
   /** 曲目分页刷新（切页、写操作后调用） */
   async function loadSongs() {
@@ -91,7 +95,8 @@ export function useEntityDetail() {
     backTo,
     item,
     songs,
-    tracksLoaded,
+    tracksStatus,
+    tracksError,
     page,
     total,
     songPageSize,

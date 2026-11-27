@@ -31,6 +31,7 @@ import { date, displayName } from '@/utils/format'
 const player = usePlayerStore()
 const detail = useEntityDetail()
 const { type, id, backTo, item, songs, page, total, busy, error, load, loadSongs } = detail
+const tracksStatus = detail.tracksStatus
 const queueLabel = type === 'albums' ? '专辑' : type === 'playlists' ? '歌单' : ''
 const playingAll = ref(false)
 async function playAll() {
@@ -99,7 +100,7 @@ const tab = ref('resources')
     ><DetailHero
       :acting="acting"
       :can-edit="canEdit"
-      :has-songs="type === 'songs' ? false : songs.length > 0"
+      :has-songs="tracksStatus === 'ready' && total > 0"
       :item="item"
       :label="labels[type]"
       :playing-all="playingAll"
@@ -184,7 +185,7 @@ const tab = ref('resources')
     <UploadDialog />
     <LyricsDialogs :type="type" />
     <EditorDialog
-      v-if="type === 'albums'"
+      v-if="type === 'albums' && tracksStatus === 'ready'"
       v-model="albumEditor"
       :album="item"
       :tracks="songs"
@@ -341,5 +342,4 @@ const tab = ref('resources')
     ></template
   >
 </template>
-
 <style scoped src="./detail/DetailView.styles.css"></style>
