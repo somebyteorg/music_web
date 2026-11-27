@@ -50,7 +50,6 @@ function onKeydown(event: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', onKeydown))
 onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 </script>
-
 <template>
   <Teleport to="body">
     <div v-if="queue.open" class="queue-backdrop" @click.self="queue.open = false" />
@@ -69,7 +68,6 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
           </svg>
         </IconButton>
       </header>
-
       <div class="queue-tools">
         <Button variant="secondary" size="sm" @click="queue.cycleMode()">
           <PlayModeIcon :mode="queue.mode" />{{ playModeLabels[queue.mode] }}
@@ -78,7 +76,6 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
           清空
         </Button>
       </div>
-
       <ol v-if="rows.length" class="queue-list">
         <li
           v-for="(entry, index) in rows"
@@ -128,7 +125,6 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
           </IconButton>
         </li>
       </ol>
-
       <div v-else class="queue-blank">
         <span aria-hidden="true" class="queue-blank-symbol">♫</span>
         <p>队列还是空的</p>
@@ -137,7 +133,6 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
     </section>
   </Teleport>
 </template>
-
 <style scoped>
 .queue-backdrop {
   position: fixed;

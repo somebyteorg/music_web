@@ -31,7 +31,10 @@ const {
   tracks,
 } = context.operations
 const queueLabel = context.queueLabel
-const collaborators = computed(() => item.value?.collaborators ?? [])
+const collaborators = computed(() => item.value?.collaborators)
+const collaboratorNames = computed(() =>
+  collaborators.value?.map((member) => displayName(member)).join('、'),
+)
 </script>
 
 <template>
@@ -61,8 +64,8 @@ const collaborators = computed(() => item.value?.collaborators ?? [])
         ><Button to="/songs" variant="secondary">选择歌曲 →</Button>
       </ButtonGroup>
     </div>
-    <p v-if="type === 'playlists' && collaborators.length" class="muted collaborators">
-      协作者：{{ collaborators.map((m) => displayName(m)).join('、') }}
+    <p v-if="type === 'playlists' && collaboratorNames" class="muted collaborators">
+      协作者：{{ collaboratorNames }}
     </p>
     <Card>
       <SongList

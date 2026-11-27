@@ -16,8 +16,9 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
   const assignLibrary = ref(false)
   onMounted(() => libraries.load())
   const assignAlbum = ref(false)
+  // 列表未就绪时没有可选项（对话框常驻，但不能因此去读未就绪的 items）
   const selectedSongs = computed(() =>
-    items.value.filter((song) => selected.value.includes(song.id)),
+    catalog.loaded.value ? items.value.filter((song) => selected.value.includes(song.id)) : [],
   )
   const create = ref(false)
   const editing = ref<Entity>()
@@ -31,9 +32,13 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
       views.value[type.value] = value
     },
   })
-  watch(items, () => {
-    selected.value = []
-  })
+  // 数据就绪后才读 items；加载中的切换（null → 列表）与翻页一样会清空选择
+  watch(
+    () => (catalog.loaded.value ? items.value : null),
+    () => {
+      selected.value = []
+    },
+  )
   function edit(item: Entity) {
     editing.value = item
     create.value = true

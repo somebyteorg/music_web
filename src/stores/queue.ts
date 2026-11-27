@@ -1,6 +1,7 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { Entity } from '@/types/catalog'
+import { audioFileCount } from '@/utils/audio'
 
 export type PlayMode = 'order' | 'repeat-all' | 'repeat-one' | 'shuffle'
 
@@ -32,6 +33,7 @@ const storageKey = (userId: number) => `music.queue.v1.${userId}`
 
 export function entryFromSong(song: Entity, index: number): QueueEntry {
   const album = song.albums?.[0]
+  const audioCount = audioFileCount(song)
   return {
     key: song.entry_id || `${song.id}#${index}`,
     songId: song.id,
@@ -41,7 +43,7 @@ export function entryFromSong(song: Entity, index: number): QueueEntry {
     coverId: song.cover_id ?? album?.cover_id ?? null,
     imageUrl: song.image_url ?? album?.image_url ?? null,
     duration: song.duration ?? song.files?.[0]?.duration ?? null,
-    playable: song.available !== false && (song.files_count ?? song.files?.length ?? 0) > 0,
+    playable: song.available !== false && audioCount !== undefined && audioCount > 0,
   }
 }
 

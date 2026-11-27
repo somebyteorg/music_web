@@ -47,9 +47,23 @@ export function useEntityDetail() {
     if (data) songPageSize.value = data.page_size
   })
 
-  const item = computed<Entity | undefined>(() => detail.data.value?.item)
-  const songs = computed<Entity[]>(() => tracks.data.value?.items ?? [])
-  const total = computed(() => Number(tracks.data.value?.total ?? 0))
+  /** 曲目查询就绪后才允许读 songs / total，避免用默认空列表掩盖时序错误 */
+  function tracksPage() {
+    const data = tracks.data.value
+    if (!data) throw new Error('曲目数据未就绪时访问了歌曲列表')
+    return data
+  }
+
+  const tracksLoaded = computed(() => tracks.data.value !== null)
+  // 非歌曲详情（专辑/歌单/艺人/媒体库）必须等详情与曲目都就绪再渲染，避免半页数据
+  const item = computed<Entity | undefined>(() => {
+    const data = detail.data.value
+    if (!data) return undefined
+    if (type !== 'songs' && !tracks.data.value) return undefined
+    return data.item
+  })
+  const songs = computed<Entity[]>(() => tracksPage().items)
+  const total = computed(() => tracksPage().total)
   const busy = computed(() => detail.busy.value || tracks.busy.value)
   const error = computed(() => detail.error.value || tracks.error.value)
 
@@ -77,6 +91,7 @@ export function useEntityDetail() {
     backTo,
     item,
     songs,
+    tracksLoaded,
     page,
     total,
     songPageSize,
