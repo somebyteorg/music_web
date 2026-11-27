@@ -178,22 +178,6 @@
   color: var(--brand);
 }
 
-.track-editor > article {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.track-editor strong {
-  min-width: 0;
-  flex: 1;
-  font-size: 13px;
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
-
 .collaborators {
   margin-bottom: 10px;
 }
