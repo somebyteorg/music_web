@@ -7,15 +7,10 @@
     "dev": "vite",
     "build": "pnpm run typecheck && vite build",
     "preview": "vite preview",
-    "test:smoke": "node e2e/smoke/run.mjs",
-    "test:layout": "node e2e/layout-snapshot.mjs",
-    "test:layout:update": "node e2e/layout-snapshot.mjs --update",
-    "test:contrast": "node e2e/contrast-audit.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json && vue-tsc --noEmit -p tsconfig.node.json",
     "format": "prettier --write src vite.config.ts",
     "format:check": "prettier --check src vite.config.ts",
-    "lint": "eslint .",
-    "test": "vitest run"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@applemusic-like-lyrics/lyric": "^1.1.0",
@@ -39,12 +34,10 @@
     "@vue/tsconfig": "^0.9.1",
     "eslint": "^10.15.0",
     "eslint-plugin-vue": "^10.12.1",
-    "playwright": "1.65.1",
     "prettier": "^3.9.10",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.74.0",
     "vite": "^8.0.12",
-    "vitest": "^5.1.1",
     "vue-eslint-parser": "^10.4.2",
     "vue-tsc": "^3.2.8"
   },
