@@ -33,10 +33,6 @@
   text-decoration: underline;
 }
 
-.danger {
-  color: var(--danger) !important;
-}
-
 .search-field {
   display: flex;
   align-items: center;
@@ -54,13 +50,19 @@
   font-size: 20px;
 }
 
-.search-field input {
+/*
+ * 搜索框把边框与阴影收进外层 .search-field，输入框本身不要 chrome。
+ * forms.css 的 input:focus 会补回边框色和聚焦阴影，所以 :focus 也列进来，
+ * 用 (0,2,1) 压过 input:focus 的 (0,1,1)——不需要提权。
+ */
+.search-field input,
+.search-field input:focus {
   min-width: 0;
-  border: 0 !important;
-  box-shadow: none !important;
-  min-height: 38px !important;
-  padding: 5px 2px !important;
-  background: transparent !important;
+  border: 0;
+  box-shadow: none;
+  min-height: 38px;
+  padding: 5px 2px;
+  background: transparent;
 }
 
 .search-field .icon-button {
