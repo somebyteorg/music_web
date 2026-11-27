@@ -225,13 +225,13 @@ importers:
         specifier: ^10.12.1
         version: 10.12.1(@typescript-eslint/parser@8.74.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.15.0(jiti@2.7.0))(vue-eslint-parser@10.4.2(eslint@10.15.0(jiti@2.7.0)))
       pixelmatch:
-        specifier: ^8.0.0
+        specifier: 8.0.0
         version: 8.0.0
       playwright:
-        specifier: ^1.65.1
+        specifier: 1.65.1
         version: 1.65.1
       pngjs:
-        specifier: ^7.0.0
+        specifier: 7.0.0
         version: 7.0.0
       prettier:
         specifier: ^3.9.10
