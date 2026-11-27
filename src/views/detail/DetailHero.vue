@@ -163,7 +163,7 @@ function togglePlay() {
   padding: 32px;
   margin-bottom: 32px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-xl, 16px);
+  border-radius: 16px;
   background: linear-gradient(125deg, #f0eaf6, #fcfbfd 75%);
 }
 .detail-hero > .cover {
@@ -178,7 +178,7 @@ function togglePlay() {
 .detail-kind {
   margin-bottom: 12px;
   color: var(--purple);
-  font-size: var(--font-sm, 12px);
+  font-size: 12px;
   letter-spacing: 1px;
 }
 .detail-copy h1 {
@@ -193,7 +193,7 @@ function togglePlay() {
   gap: 5px 12px;
   margin: 14px 0 20px;
   color: var(--muted);
-  font-size: var(--font-base, 13px);
+  font-size: 13px;
 }
 .detail-meta a:hover {
   color: var(--purple);
@@ -208,7 +208,7 @@ function togglePlay() {
   -webkit-line-clamp: 2;
   overflow: hidden;
   color: var(--muted);
-  font-size: var(--font-base, 13px);
+  font-size: 13px;
   white-space: pre-line;
   overflow-wrap: anywhere;
 }

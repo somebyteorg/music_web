@@ -75,8 +75,10 @@ function fromPending(file: AudioFile) {
 function batchPending() {
   batch.show(remotePending.value.map((file) => uploads.adopt(file)))
 }
+const selectedFile = computed(() => selected.value?.transfer.file)
 function previewCover(task: UploadTask) {
-  const id = task.kind === 'cover' ? task.file?.id : task.file?.preview?.cover_id
+  const file = task.transfer.file
+  const id = task.kind === 'cover' ? file?.id : file?.preview?.cover_id
   return id ? fileUrl(id) : uploads.localCover(task)
 }
 onMounted(loadPending)
@@ -402,7 +404,7 @@ onMounted(loadPending)
         {{ images.confirmDelete ? '确认删除' : '删除图片' }}
       </button>
       <button
-        v-if="imageTask && !imageTask.file && images.preview?.url"
+        v-if="imageTask && !imageTask.transfer.file && images.preview?.url"
         class="text-button danger"
         type="button"
         @click="removePreviewTask"
@@ -424,30 +426,33 @@ onMounted(loadPending)
     ><div v-if="selected" class="form-stack">
       <p class="hint">
         {{ selected.name }}
-        <span v-if="selected.file">· {{ qualities[selected.file.quality] }}</span>
+        <span v-if="selectedFile">· {{ qualities[selectedFile.quality] }}</span>
       </p>
-      <div v-if="selected.file" class="parsed-preview">
+      <div v-if="selectedFile" class="parsed-preview">
         <img
           v-if="previewCover(selected)"
-          :alt="`${selected.title} 封面`"
+          :alt="`${selected.metadata.title} 封面`"
           :src="previewCover(selected)"
           class="parsed-cover"
         />
         <div v-else aria-hidden="true" class="parsed-cover placeholder">♫</div>
         <div class="parsed-details">
-          <strong>{{ selected.title }}</strong>
+          <strong>{{ selected.metadata.title }}</strong>
           <p class="hint">
-            {{ selected.artist || '未识别歌手' }} · {{ selected.album || '未识别专辑' }}
+            {{ selected.metadata.artist || '未识别歌手' }} ·
+            {{ selected.metadata.album || '未识别专辑' }}
           </p>
           <p v-if="selected.kind === 'audio'" class="hint">
-            {{ selected.file.codec.toUpperCase() }} ·
-            {{ selected.file.sample_rate / 1000 }} kHz<span v-if="selected.file.bit_depth">
-              / {{ selected.file.bit_depth }} bit</span
+            {{ selectedFile.codec.toUpperCase() }} · {{ selectedFile.sample_rate / 1000 }} kHz<span
+              v-if="selectedFile.bit_depth"
             >
-            · {{ duration(selected.file.duration) }} · {{ bytes(selected.file.file_size) }}
+              / {{ selectedFile.bit_depth }} bit</span
+            >
+            · {{ duration(selectedFile.duration) }} ·
+            {{ bytes(selectedFile.file_size) }}
           </p>
-          <div v-if="selected.file.preview?.lyrics.length" class="parsed-lyrics">
-            <span v-for="(lyric, index) in selected.file.preview.lyrics" :key="index" class="badge"
+          <div v-if="selectedFile.preview?.lyrics.length" class="parsed-lyrics">
+            <span v-for="(lyric, index) in selectedFile.preview.lyrics" :key="index" class="badge"
               >{{ lyricFormats.find((format) => format.value === lyric.format)?.label }} ·
               {{ lyric.language }}</span
             >
@@ -455,12 +460,14 @@ onMounted(loadPending)
           <p v-else-if="selected.kind === 'audio'" class="hint">没有内嵌歌词，可在歌曲页补充。</p>
         </div>
       </div>
-      <ul v-if="selected.file?.preview?.warnings.length" class="preview-warnings">
-        <li v-for="warning in selected.file.preview.warnings" :key="warning">{{ warning }}</li>
+      <ul v-if="selectedFile?.preview?.warnings.length" class="preview-warnings">
+        <li v-for="warning in selectedFile.preview.warnings" :key="warning">
+          {{ warning }}
+        </li>
       </ul>
-      <div v-if="selected.file?.preview?.matches.length" class="recording-matches">
+      <div v-if="selectedFile?.preview?.matches.length" class="recording-matches">
         <h3>同名歌曲</h3>
-        <article v-for="match in selected.file.preview.matches" :key="match.id">
+        <article v-for="match in selectedFile.preview.matches" :key="match.id">
           <div>
             <RouterLink :to="`/songs/${match.id}`" class="text-link">{{ match.name }}</RouterLink>
             <p class="hint">
@@ -526,6 +533,12 @@ onMounted(loadPending)
     ></BaseDialog
   >
   <UploadBatchDialog
+    v-model:open="batch.open"
+    v-model:libraryId="batch.form.libraryId"
+    v-model:applyArtist="batch.form.applyArtist"
+    v-model:artist="batch.form.artist"
+    v-model:applyVersion="batch.form.applyVersion"
+    v-model:version="batch.form.version"
     :batch="batch"
     @inspect="inspectPicture"
     @preview="open($event, true)"

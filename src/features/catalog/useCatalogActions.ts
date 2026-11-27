@@ -1,4 +1,5 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { catalogApi } from '@/lib/api/catalog'
 import { useStorage } from '@vueuse/core'
 import { favoriteSongs } from '@/lib/api/catalog'
 import { useLibrariesStore } from '@/stores/libraries'
@@ -6,7 +7,6 @@ import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
 import type { Entity } from '@/types/catalog'
 import type { useCatalog } from './useCatalog'
-import { makePlaylistPrivate } from './api'
 
 export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
   const { type, items, favorites, load } = catalog
@@ -49,7 +49,7 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
   async function makePrivate() {
     if (!privatePlaylist.value || !canMakePrivate(privatePlaylist.value)) return
     await run(async () => {
-      const result = await makePlaylistPrivate(privatePlaylist.value!.id)
+      const result = await catalogApi.privatePlaylist(privatePlaylist.value!.id)
       privatePlaylist.value = undefined
       notify(result.message)
       await load()

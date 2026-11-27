@@ -1,11 +1,11 @@
 import { computed, ref, watch } from 'vue'
+import { catalogApi } from '@/lib/api/catalog'
 import { type LocationQueryRaw, useRoute, useRouter } from 'vue-router'
 import { useDebounceFn } from '@vueuse/core'
 import type { Page } from '@/types/common'
 import type { CatalogType, Entity } from '@/types/catalog'
 import { useQuery } from '@/lib/query'
 import { useSignStore } from '@/stores/sign'
-import { getCatalogPage } from './api'
 import { PAGE_SIZES } from './limits'
 
 export function useCatalog() {
@@ -96,7 +96,7 @@ export function useCatalog() {
 
   const query = useQuery<Page<Entity>>({
     key: () => (sign.user ? `${sign.user.id}:catalog:${route.fullPath}` : null),
-    fetcher: (signal) => getCatalogPage(type.value, params(), signal),
+    fetcher: (signal) => catalogApi.page(type.value, params(), signal),
     staleTime: 60_000,
   })
 

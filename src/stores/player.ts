@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
+import { catalogApi } from '@/lib/api/catalog'
 import { defineStore } from 'pinia'
-import { getCatalogItem } from '@/features/catalog/api'
 import { useSignStore } from './sign'
 import { entryFromSong, useQueueStore, type QueueEntry } from './queue'
 import { report } from '@/composables/useFeedback'
@@ -125,7 +125,7 @@ export const usePlayerStore = defineStore('player', () => {
       const full =
         cached && cached.id === entry.songId && cached.files?.length
           ? cached
-          : (await getCatalogItem('songs', entry.songId)).item
+          : (await catalogApi.item('songs', entry.songId)).item
       // 详情接口异常（例如返回空对象）时给出可读提示
       if (!full) throw new Error('歌曲信息加载失败，请检查网络或稍后重试。')
       const selected = pickFile(full)

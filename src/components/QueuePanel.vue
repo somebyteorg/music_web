@@ -308,7 +308,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 }
 .queue-empty p {
   margin: 6px 0 4px;
-  color: var(--text, #2a2438);
+  color: #2a2438;
   font-size: 14px;
 }
 .queue-empty small {

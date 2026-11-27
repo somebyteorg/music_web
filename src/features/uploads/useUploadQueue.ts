@@ -2,14 +2,7 @@ import { computed, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUploadsStore } from '@/stores/uploads'
 import { notify, useAction } from '@/composables/useFeedback'
-import { fileUrl } from '@/utils/file'
-import {
-  ACTIVE_UPLOAD_STATES,
-  isUploadDone,
-  normalizeUploadConcurrency,
-  TRANSMIT_STATES,
-  type UploadTask,
-} from './model'
+import { ACTIVE_UPLOAD_STATES, isUploadDone, TRANSMIT_STATES, type UploadTask } from './model'
 import { useUploadGroups } from './useUploadGroups'
 
 export function useUploadQueue() {
@@ -27,11 +20,6 @@ export function useUploadQueue() {
       })
     },
   })
-  function changeConcurrency(event: Event) {
-    const input = event.target as HTMLInputElement
-    uploads.concurrency = normalizeUploadConcurrency(input.valueAsNumber)
-    input.value = String(uploads.concurrency)
-  }
   function inGroup(task: UploadTask, group: string) {
     if (group === 'active') return ACTIVE_UPLOAD_STATES.includes(task.state)
     if (group === 'ready') return task.state === 'ready' && task.kind === 'audio'
@@ -75,8 +63,8 @@ export function useUploadQueue() {
           (!q ||
             task.name.toLocaleLowerCase().includes(q) ||
             task.relativePath.toLocaleLowerCase().includes(q) ||
-            task.album.toLocaleLowerCase().includes(q) ||
-            task.artist.toLocaleLowerCase().includes(q)),
+            task.metadata.album.toLocaleLowerCase().includes(q) ||
+            task.metadata.artist.toLocaleLowerCase().includes(q)),
       )
       .sort(
         (a, b) =>
@@ -117,15 +105,8 @@ export function useUploadQueue() {
       if (failed) notify(`${failed} 个任务暂未恢复，请查看对应任务的错误提示。`, true)
     })
   }
-  function previewCover(task: UploadTask) {
-    const id = task.kind === 'cover' ? task.file?.id : task.file?.preview?.cover_id
-    return id ? fileUrl(id) : uploads.localCover(task)
-  }
   async function retry(task: UploadTask) {
     await run(() => uploads.retry(task))
-  }
-  async function clearDone() {
-    for (const task of [...uploads.tasks]) if (isUploadDone(task)) await uploads.remove(task)
   }
 
   return {
@@ -134,8 +115,6 @@ export function useUploadQueue() {
     taskQuery,
     selectedIds,
     taskFilter,
-    changeConcurrency,
-    inGroup,
     filters,
     visibleTasks,
     grouping,
@@ -145,8 +124,6 @@ export function useUploadQueue() {
     toggleSelection,
     selectGroup,
     resumeAll,
-    previewCover,
     retry,
-    clearDone,
   }
 }

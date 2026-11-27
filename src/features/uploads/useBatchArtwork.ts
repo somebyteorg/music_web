@@ -1,8 +1,7 @@
 import { type ComputedRef, onBeforeUnmount, ref, type Ref } from 'vue'
-import api from '@/utils/ky'
 import type { ArtworkType } from '@/types/catalog'
 import type { AudioFile } from '@/types/uploads'
-import type { Page } from '@/types/common'
+import { filesApi } from '@/lib/api/files'
 import { useUploadsStore } from '@/stores/uploads'
 import { artworkType } from '@/utils/albumArtwork'
 import {
@@ -48,7 +47,7 @@ export function useBatchArtwork(entries: ComputedRef<BatchEntry[]>, albums: Ref<
       file?: AudioFile
     }[] = []
     for (const task of covers) {
-      const file = task.file || uploads.duplicateFile(task)
+      const file = task.transfer.file || uploads.duplicateFile(task)
       if (task.state === 'skipped') continue
       result.push({
         id: file?.id || task.id,
@@ -69,7 +68,7 @@ export function useBatchArtwork(entries: ComputedRef<BatchEntry[]>, albums: Ref<
         })
     }
     for (const { task } of groupEntries(album)) {
-      const id = task.file?.preview?.cover_id
+      const id = task.transfer.file?.preview?.cover_id
       if (id && !result.some((picture) => picture.id === id))
         result.push({ id, name: '音频内嵌封面', type: 'cover', waiting: false })
     }
@@ -156,12 +155,10 @@ export function useBatchArtwork(entries: ComputedRef<BatchEntry[]>, albums: Ref<
       )) {
         let page = 1
         while (true) {
-          const response = await api
-            .get('files', {
-              signal: request.signal,
-              searchParams: { kind: 'cover', active: 1, batch_id: batchId, page, page_size: 60 },
-            })
-            .json<Page<AudioFile>>()
+          const response = await filesApi.page(
+            { kind: 'cover', active: 1, batch_id: batchId, page, page_size: 60 },
+            request.signal,
+          )
           remotePictures.value.push(...response.items)
           if (page * response.page_size >= response.total) break
           page++
