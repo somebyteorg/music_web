@@ -4,9 +4,19 @@ on:
   pull_request:
   push:
     branches: [main]
+  # 布局基线必须在 CI（ubuntu）内生成：文字撑开的盒子随字体度量变化，
+  # macOS 生成的基线在 runner 上会有 2~7px 差异（颜色 0 差异）。
+  # 用法：workflow_dispatch + layout_baseline=true → 上传 e2e/__layout__ artifact。
+  workflow_dispatch:
+    inputs:
+      layout_baseline:
+        description: "true = 只跑布局基线生成并上传 artifact"
+        required: false
+        default: "false"
 
 jobs:
   verify:
+    if: ${{ github.event.inputs.layout_baseline != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,3 +29,27 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+      # 布局快照门禁（待启用）：基线需先在 ubuntu 生成后才是跨机器可比的。
+      # 拿到 layout-baseline artifact 并提交后，取消下面两行注释即可。
+      # - run: pnpm exec playwright install --with-deps chromium
+      # - run: pnpm test:layout
+
+  layout-baseline:
+    if: ${{ github.event.inputs.layout_baseline == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:layout:update
+      - uses: actions/upload-artifact@v4
+        with:
+          name: layout-baseline
+          path: e2e/__layout__
+          retention-days: 7
