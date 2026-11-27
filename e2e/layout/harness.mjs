@@ -1,6 +1,6 @@
 /**
  * 布局快照的浏览器脚手架：mock 后端、vite preview、稳定渲染参数、路由就绪判定。
- * 渲染环境与 e2e/visual.mjs 保持一致（同 5 条路由、同 3 个宽度），所以两类基线描述的是同一批页面。
+ * 渲染环境固定（同 5 条路由、同 3 个宽度），基线统一由 CI 的 ubuntu runner 生成。
  */
 
 import { spawn } from 'node:child_process'

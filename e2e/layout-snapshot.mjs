@@ -4,7 +4,7 @@
  *   pnpm test:layout:update                     # 生成/更新基线 e2e/__layout__/<route>-<width>.json
  *   pnpm test:layout                            # 与基线对比，有差异退出码 1
  *
- * 与 e2e/visual.mjs 的分工：像素基线绑定渲染机器（同一提交在别的机器上会有 1~2% 字体抗锯齿差异），
+ * 为什么不用像素基线：像素绑定渲染机器（同一提交在别的机器上会有 1~2% 字体抗锯齿差异），
  * 本脚本记录的是布局盒子（整像素）与颜色（rgb()），换机器、换字体都应稳定，所以能当 CI 门禁。
  */
 
@@ -27,11 +27,7 @@ import {
   stopChild,
   waitForHttp,
 } from './layout/harness.mjs'
-import {
-  formatDiffLines,
-  formatSnapshotLine,
-  formatSummary,
-} from './layout/report.mjs'
+import { formatDiffLines, formatSnapshotLine, formatSummary } from './layout/report.mjs'
 import {
   formatBytes,
   readSnapshotFile,
@@ -152,7 +148,6 @@ async function runCompare(page, origin, routes, widths) {
   }
   return 0
 }
-
 
 async function main() {
   if (process.argv.includes('--help')) {
