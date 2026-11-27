@@ -1,5 +1,8 @@
 dist/
 
+e2e/__shots__/actual/
+e2e/__shots__/diff/
+
 .idea
 
 node_modules/
