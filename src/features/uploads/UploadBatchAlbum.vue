@@ -223,7 +223,7 @@ const emit = defineEmits<{
   border: 1px solid var(--warning-line);
   border-radius: 8px;
   background: var(--warning-veil);
-  color: var(--warning);
+  color: var(--warning-note);
   font-size: 12px;
   line-height: 1.7;
   list-style: disc;
