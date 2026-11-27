@@ -7,9 +7,17 @@ import type { PlaybackLibrarySettings, User } from '@/types/session'
 import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
 import { displayName, qualities } from '@/utils/format'
+import { useTheme, type ThemePreference } from '@/composables/useTheme'
 
 const sign = useSignStore()
 const { busy, run } = useAction()
+// 与顶栏按钮共享同一份主题状态
+const { preference: themePreference, labels: themeNames, setPreference } = useTheme()
+const themeOptions: { value: ThemePreference; hint: string }[] = [
+  { value: 'system', hint: '随操作系统深浅色偏好自动切换' },
+  { value: 'light', hint: '始终使用浅色' },
+  { value: 'dark', hint: '始终使用深色' },
+]
 const pseudonym = ref(sign.user?.pseudonym || '')
 const quality = ref(sign.user?.quality || 'high')
 const libraries = ref<PlaybackLibrarySettings['libraries']>([])
@@ -121,6 +129,27 @@ async function save() {
       {{ savingLibraries ? '正在保存…' : '保存播放媒体库' }}
     </Button>
   </Card>
+  <Card class="settings-card form-stack appearance-settings">
+    <h2 id="appearance-heading">外观</h2>
+    <p class="hint">「跟随系统」会按操作系统的深浅色偏好自动切换。选择会保存在本机浏览器。</p>
+    <fieldset aria-labelledby="appearance-heading" class="quality-options appearance-options">
+      <label
+        v-for="option in themeOptions"
+        :key="option.value"
+        :class="{ selected: themePreference === option.value }"
+      >
+        <input
+          :checked="themePreference === option.value"
+          :value="option.value"
+          name="appearance"
+          type="radio"
+          @change="setPreference(option.value)"
+        />
+        <strong>{{ themeNames[option.value] }}</strong>
+        <span>{{ option.hint }}</span>
+      </label>
+    </fieldset>
+  </Card>
 </template>
 
 <style scoped>
@@ -138,8 +167,15 @@ async function save() {
   align-self: flex-start;
   margin-top: 4px;
 }
-.library-settings {
+.library-settings,
+.appearance-settings {
   margin-top: 20px;
+}
+.quality-options.appearance-options {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 .quality-options.library-options {
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));

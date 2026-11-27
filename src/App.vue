@@ -3,6 +3,8 @@ import IconButton from '@/components/ui/IconButton.vue'
 import Button from '@/components/ui/Button.vue'
 import PlayerBar from '@/components/PlayerBar.vue'
 import { notification, notificationTarget } from '@/composables/useFeedback'
+import { useTheme } from '@/composables/useTheme'
+import { computed } from 'vue'
 import { useAppShell } from '@/app/useAppShell'
 
 const {
@@ -24,6 +26,17 @@ const {
   closeNavigation,
   signOut,
 } = useAppShell()
+
+// 顶栏主题按钮与设置页「外观」共享同一份状态
+const {
+  preference: themePreference,
+  labels: themeNames,
+  next: themeNext,
+  cycle: cycleTheme,
+} = useTheme()
+const themeTitle = computed(
+  () => `主题：${themeNames[themePreference.value]}，点击切换到${themeNames[themeNext.value]}`,
+)
 </script>
 <template>
   <div v-if="booting || !sign.ready" class="boot">
@@ -157,6 +170,36 @@ const {
             </svg>
             <span v-if="unread" class="unread-dot"></span>
           </RouterLink>
+          <IconButton
+            :label="themeTitle"
+            :title="themeTitle"
+            class="theme-toggle"
+            @click="cycleTheme"
+          >
+            <svg
+              v-if="themePreference === 'light'"
+              aria-hidden="true"
+              class="ui-icon"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"
+              />
+            </svg>
+            <svg
+              v-else-if="themePreference === 'dark'"
+              aria-hidden="true"
+              class="ui-icon"
+              viewBox="0 0 24 24"
+            >
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" />
+            </svg>
+            <svg v-else aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
+              <rect height="12" rx="2" width="18" x="3" y="4" />
+              <path d="M8 20h8M12 16v4" />
+            </svg>
+          </IconButton>
           <div aria-label="当前账户" class="account">
             <div :title="accountName" class="account-profile">
               <img v-if="sign.user.avatar" :src="sign.user.avatar" alt="" class="avatar" />
@@ -456,6 +499,16 @@ const {
     color 0.15s;
 }
 .inbox-link:hover {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+.theme-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  color: var(--text-faint);
+}
+.theme-toggle:hover:not(:disabled) {
   background: var(--brand-soft);
   color: var(--brand);
 }
