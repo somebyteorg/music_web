@@ -56,7 +56,7 @@ const collaborators = computed(() => item.value?.collaborators ?? [])
       <div v-else-if="type === 'albums'" class="button-group">
         <Button variant="secondary" v-if="songs.length" @click="emit('manageAlbum')">
           管理本页曲目</Button
-        ><RouterLink class="button secondary" to="/songs">选择歌曲 →</RouterLink>
+        ><Button to="/songs" variant="secondary">选择歌曲 →</Button>
       </div>
     </div>
     <p v-if="type === 'playlists' && collaborators.length" class="muted collaborators">

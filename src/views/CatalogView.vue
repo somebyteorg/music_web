@@ -80,8 +80,7 @@ const {
       <p class="catalog-intro">{{ introductions[type] }}</p>
     </div>
     <div class="button-group">
-      <RouterLink v-if="type === 'songs'" class="button secondary" to="/uploads"
-        >↑ 上传音频</RouterLink
+      <Button v-if="type === 'songs'" to="/uploads" variant="secondary">↑ 上传音频</Button
       ><Button variant="primary" v-if="canCreate" @click="newItem">
         ＋ 新建{{ labels[type] }}
       </Button>
