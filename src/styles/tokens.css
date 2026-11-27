@@ -90,22 +90,30 @@
   --scrim-strong: color-mix(in srgb, var(--ink) 14.9%, transparent);
   --ring-highlight: color-mix(in srgb, var(--surface) 3.9%, transparent);
 
-  /* —— 封面占位色（按实体类型区分） —— */
-  --cover-0: #a892c1;
+  /* —— 封面占位色（按实体类型区分） ——
+   * --cover-N-base 是封面本色：浅色主题原样使用，深色主题从它派生压暗的封面与提亮的字色，
+   * 避免深色页面里出现整块浅色。
+   */
+  --cover-0-base: #a892c1;
+  --cover-0: var(--cover-0-base);
   --cover-0-ink: #69517f;
-  --cover-0-tint: color-mix(in srgb, var(--cover-0) 46.2%, var(--surface));
-  --cover-1: #b8b18d;
+  --cover-0-tint: color-mix(in srgb, var(--cover-0-base) 46.2%, var(--surface));
+  --cover-1-base: #b8b18d;
+  --cover-1: var(--cover-1-base);
   --cover-1-ink: #726c47;
-  --cover-1-tint: color-mix(in srgb, var(--cover-1) 44.8%, var(--surface));
-  --cover-2: #c59c89;
+  --cover-1-tint: color-mix(in srgb, var(--cover-1-base) 44.8%, var(--surface));
+  --cover-2-base: #c59c89;
+  --cover-2: var(--cover-2-base);
   --cover-2-ink: #91604c;
-  --cover-2-tint: color-mix(in srgb, var(--cover-2) 40.9%, var(--surface));
-  --cover-3: #99b8ab;
+  --cover-2-tint: color-mix(in srgb, var(--cover-2-base) 40.9%, var(--surface));
+  --cover-3-base: #99b8ab;
+  --cover-3: var(--cover-3-base);
   --cover-3-ink: #4b7967;
-  --cover-3-tint: color-mix(in srgb, var(--cover-3) 40.6%, var(--surface));
-  --cover-4: #95a9ca;
+  --cover-3-tint: color-mix(in srgb, var(--cover-3-base) 40.6%, var(--surface));
+  --cover-4-base: #95a9ca;
+  --cover-4: var(--cover-4-base);
   --cover-4-ink: #526d97;
-  --cover-4-tint: color-mix(in srgb, var(--cover-4) 42.2%, var(--surface));
+  --cover-4-tint: color-mix(in srgb, var(--cover-4-base) 42.2%, var(--surface));
 
   /* —— 圆角 —— */
   --radius-sm: 6px;
@@ -167,4 +175,24 @@
   --danger-soft: color-mix(in srgb, var(--danger) 16%, var(--surface));
   --success-soft: color-mix(in srgb, var(--success) 16%, var(--surface));
   --brand-veil-ink: #efe6ff;
+
+  /* 品牌色在深色下变浅，品牌底上的文字必须转成墨色，白字对比只有 3.2:1 */
+  --on-brand: #17111f;
+
+  /* 封面占位色：本色与表面混合压暗（白字改墨色后也要保证封面字可读） */
+  --cover-0: color-mix(in srgb, var(--cover-0-base) 38%, var(--surface));
+  --cover-0-tint: color-mix(in srgb, var(--cover-0-base) 58%, var(--surface));
+  --cover-0-ink: color-mix(in srgb, var(--cover-0-base) 30%, var(--text));
+  --cover-1: color-mix(in srgb, var(--cover-1-base) 38%, var(--surface));
+  --cover-1-tint: color-mix(in srgb, var(--cover-1-base) 58%, var(--surface));
+  --cover-1-ink: color-mix(in srgb, var(--cover-1-base) 30%, var(--text));
+  --cover-2: color-mix(in srgb, var(--cover-2-base) 38%, var(--surface));
+  --cover-2-tint: color-mix(in srgb, var(--cover-2-base) 58%, var(--surface));
+  --cover-2-ink: color-mix(in srgb, var(--cover-2-base) 30%, var(--text));
+  --cover-3: color-mix(in srgb, var(--cover-3-base) 38%, var(--surface));
+  --cover-3-tint: color-mix(in srgb, var(--cover-3-base) 58%, var(--surface));
+  --cover-3-ink: color-mix(in srgb, var(--cover-3-base) 30%, var(--text));
+  --cover-4: color-mix(in srgb, var(--cover-4-base) 38%, var(--surface));
+  --cover-4-tint: color-mix(in srgb, var(--cover-4-base) 58%, var(--surface));
+  --cover-4-ink: color-mix(in srgb, var(--cover-4-base) 30%, var(--text));
 }
