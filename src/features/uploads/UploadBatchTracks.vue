@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
 import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
@@ -30,14 +31,15 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
           max="9999"
           :disabled="batch.busy || batch.numbering.includes(album.key)"
       /></label>
-      <button
+      <Button
         type="button"
-        class="button small secondary"
+        variant="secondary"
+        size="sm"
         :disabled="batch.busy || batch.numbering.includes(album.key)"
         @click="batch.numberTracks(album)"
       >
         {{ batch.numbering.includes(album.key) ? '正在检查曲序…' : '从此曲序重新递增' }}
-      </button>
+      </Button>
       <button
         type="button"
         class="text-button"
@@ -128,15 +130,6 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
 .track-numbering-actions > label {
   width: 100px;
   font-size: 12px;
-}
-.batch-details > summary {
-  cursor: pointer;
-  color: var(--purple-dark);
-  font-size: 12px;
-  font-weight: 550;
-}
-.batch-details[open] > summary {
-  margin-bottom: 14px;
 }
 .group-move {
   display: flex;

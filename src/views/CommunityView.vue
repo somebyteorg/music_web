@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import EmptyState from '@/components/ui/EmptyState.vue'
+import Tag from '@/components/ui/Tag.vue'
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
 import Pagination from '@/components/Pagination.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -48,11 +52,16 @@ const {
       <h1>{{ titles[section] }}</h1>
       <span class="muted">{{ total }} 条</span>
     </div>
-    <button v-if="section === 'inbox'" :disabled="acting" class="button secondary" @click="read()">
+    <Button variant="secondary" v-if="section === 'inbox'" :disabled="acting" @click="read()">
       全部标为已读
-    </button>
+    </Button>
   </div>
-  <form v-if="section === 'history'" class="panel history-filters" @submit.prevent="searchHistory">
+  <Card
+    as="form"
+    class="history-filters"
+    v-if="section === 'history'"
+    @submit.prevent="searchHistory"
+  >
     <label>
       操作分类
       <BaseSelect
@@ -70,19 +79,19 @@ const {
     <label
       >到哪一天<input v-model="historyFilters.to" :min="historyFilters.from" type="date"
     /></label>
-    <button :aria-busy="busy" :disabled="busy" class="button primary">
+    <Button variant="primary" :aria-busy="busy" :disabled="busy">
       {{ busy ? '正在查找…' : '找找记录' }}
-    </button>
-    <button
+    </Button>
+    <Button
+      variant="secondary"
       v-if="scopedHistory"
       :disabled="busy"
-      class="button secondary"
       type="button"
       @click="showAllHistory"
     >
       查看全部记录
-    </button>
-  </form>
+    </Button>
+  </Card>
   <div v-else-if="section === 'members'" class="filter-bar">
     <form class="search-inline" @submit.prevent="searchMembers">
       <input
@@ -90,7 +99,7 @@ const {
         aria-label="搜索成员"
         maxlength="100"
         placeholder="搜索用户名或昵称"
-      /><button class="button secondary">搜索</button>
+      /><Button variant="secondary">搜索</Button>
     </form>
     <span class="filter-count">共 {{ total }} 条</span
     ><button :disabled="busy" class="text-button" @click="load">刷新</button>
@@ -100,7 +109,7 @@ const {
   </div>
   <div v-if="busy && !loaded" class="skeleton list-skeleton"></div>
   <template v-else
-    ><div v-if="section === 'history' && history.length" class="panel history-list">
+    ><Card class="history-list" v-if="section === 'history' && history.length">
       <article v-for="log in history" :key="log.id">
         <span class="avatar small">{{ displayName(log.user).slice(0, 1) }}</span>
         <div class="history-body">
@@ -131,8 +140,8 @@ const {
           查看变更
         </button>
       </article>
-    </div>
-    <div v-if="section === 'members' && members.length" class="panel member-list">
+    </Card>
+    <Card class="member-list" v-if="section === 'members' && members.length">
       <article v-for="(member, index) in members" :key="member.id">
         <span :class="['ranking', { top: page === 1 && index < 3 }]">{{
           (page - 1) * 30 + index + 1
@@ -153,18 +162,19 @@ const {
             class="member-role"
             @update:model-value="changeRole(member, $event)"
           />
-          <span v-else class="badge quiet member-role">{{ roleLabel(member.role) }}</span>
+          <Tag variant="default" class="member-role" v-else>{{ roleLabel(member.role) }}</Tag>
         </div>
         <div class="member-contribution">
           <strong>{{ bytes(member.size_upload) }}</strong><span class="hint">累计上传</span>
         </div>
       </article>
-    </div>
+    </Card>
     <div v-if="section === 'inbox' && messages.length" class="message-list">
-      <article
+      <Card
         v-for="message in messages"
         :key="message.id"
-        :class="['panel message', { unread: !message.read_at }]"
+        as="article"
+        :class="['message', { unread: !message.read_at }]"
       >
         <span class="message-icon">✉</span>
         <div>
@@ -186,13 +196,16 @@ const {
         >
           标为已读
         </button>
-      </article>
+      </Card>
     </div>
-    <div v-if="!total && !error" class="empty panel">
-      <span class="empty-symbol">{{ section === 'inbox' ? '✉' : '✧' }}</span>
-      <h2>{{ emptyStates[section].title }}</h2>
-      <p>{{ emptyStates[section].description }}</p>
-    </div>
+    <EmptyState
+      v-if="!total && !error"
+      panel
+      :symbol="section === 'inbox' ? '✉' : '✧'"
+      :title="emptyStates[section].title"
+    >
+      {{ emptyStates[section].description }}
+    </EmptyState>
     <Pagination
       :busy="busy"
       :page="page"
@@ -226,19 +239,19 @@ const {
       </p>
     </div>
     <template #footer
-      ><button :disabled="acting" class="button secondary" @click="dialog = false">关闭</button
-      ><button
+      ><Button variant="secondary" :disabled="acting" @click="dialog = false">关闭</Button
+      ><Button
+        variant="primary"
         v-if="
           inspect?.before &&
           ['songs', 'albums', 'artists', 'files'].includes(inspect.entity_type) &&
           (inspect.user_id === sign.user?.id || sign.canModerate)
         "
         :disabled="acting"
-        class="button primary"
         @click="restore"
       >
         {{ acting ? '正在恢复…' : '恢复修改前的版本' }}
-      </button></template
+      </Button></template
     ></BaseDialog
   >
   <BaseDialog v-model="roleDialog" :busy="acting" title="确认修改角色">
@@ -251,10 +264,10 @@ const {
       <p class="hint">修改后将按新角色授予权限，并写入操作记录。</p>
     </div>
     <template #footer>
-      <button :disabled="acting" class="button secondary" @click="roleDialog = false">取消</button>
-      <button :disabled="acting" class="button primary" @click="confirmRoleChange">
+      <Button variant="secondary" :disabled="acting" @click="roleDialog = false">取消</Button>
+      <Button variant="primary" :disabled="acting" @click="confirmRoleChange">
         {{ acting ? '正在修改…' : '确认修改' }}
-      </button>
+      </Button>
     </template>
   </BaseDialog>
 </template>
@@ -271,7 +284,7 @@ const {
 .history-filters > label {
   width: 180px;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .history-list > article,
 .member-list > article {
@@ -299,11 +312,11 @@ const {
   margin-inline: 4px;
 }
 .history-body > p > a {
-  color: var(--purple);
+  color: var(--brand);
 }
 .history-reason {
   margin-top: 5px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px !important;
 }
 .history-body .hint {
@@ -320,12 +333,12 @@ const {
 .ranking {
   width: 22px;
   flex-shrink: 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   text-align: center;
 }
 .ranking.top {
-  color: #956323;
+  color: var(--warning);
 }
 .member-name {
   display: flex;
@@ -348,14 +361,14 @@ const {
   padding: 2px 6px;
   border: 0;
   border-radius: 4px;
-  background: var(--lilac);
-  color: var(--purple-dark);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
   font-size: 11px;
   font-weight: 500;
   line-height: 1.6;
 }
 .member-role :deep(.select-trigger:hover:not(:disabled)) {
-  background: #e5d9f7;
+  background: var(--brand-veil);
 }
 .member-contribution {
   display: flex;
@@ -383,12 +396,12 @@ const {
   padding: 14px;
 }
 .message.unread {
-  background: #fcfaff;
-  border-color: #cdbce9;
+  background: var(--surface-hover);
+  border-color: var(--brand-line);
 }
 .message-icon {
   font-size: 22px;
-  color: var(--purple);
+  color: var(--brand);
 }
 .message > div {
   min-width: 0;
@@ -399,7 +412,7 @@ const {
 }
 .message p {
   margin: 6px 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 13px;
   white-space: pre-line;
 }
@@ -429,12 +442,12 @@ const {
   overflow-wrap: anywhere;
 }
 .history-diff .before {
-  background: #fff0f1;
-  color: #9a3544;
+  background: var(--danger-soft);
+  color: var(--danger-ink);
 }
 .history-diff .after {
-  background: #edf7ef;
-  color: #286840;
+  background: var(--success-soft);
+  color: var(--success-ink);
 }
 @media (max-width: 680px) {
   .history-filters {

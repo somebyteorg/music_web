@@ -7,12 +7,12 @@
 
 .resource-table th {
   padding: 9px 12px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   font-weight: 450;
   text-align: left;
   white-space: nowrap;
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 
 .resource-table th:first-child {
@@ -30,13 +30,13 @@
 }
 
 .resource-table tr.current td {
-  background: #f7f3fd;
+  background: var(--brand-tint);
 }
 
 .resource-table small {
   display: block;
   margin-top: 3px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
 }
 
@@ -62,7 +62,7 @@
   font-weight: 550;
 }
 
-.resource-file .badge,
+.resource-file .ui-tag,
 .unsupported {
   display: inline-block;
   margin-top: 5px;
@@ -75,8 +75,8 @@
   height: 28px;
   flex-shrink: 0;
   border-radius: 4px;
-  background: var(--lilac);
-  color: var(--purple);
+  background: var(--brand-soft);
+  color: var(--brand);
   font-size: 11px;
 }
 

@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import EmptyState from '@/components/ui/EmptyState.vue'
+import Tag from '@/components/ui/Tag.vue'
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
 import { usePlayerStore } from '@/stores/player'
 import { useSignStore } from '@/stores/sign'
 import { bytes, date, displayName, duration, qualities } from '@/utils/format'
@@ -26,7 +30,7 @@ const sign = useSignStore()
   <section class="section">
     <div class="section-heading">
       <p class="hint">试听使用个人设置中的音质，没有对应音质时播放默认音频。</p>
-      <button class="button primary" @click="emit('upload')">＋ 上传音频</button>
+      <Button variant="primary" @click="emit('upload')">＋ 上传音频</Button>
     </div>
     <p v-if="unfinishedUploadCount" class="notice">
       <template v-if="uploadingCount"
@@ -35,7 +39,7 @@ const sign = useSignStore()
       <template v-else>{{ unfinishedUploadCount }} 个上传任务需要处理。</template>
       <button class="text-button" @click="emit('upload')">查看进度</button>
     </p>
-    <div v-if="item.files?.length" class="panel resources-panel">
+    <Card class="resources-panel" v-if="item.files?.length">
       <table class="resource-table">
         <thead>
           <tr>
@@ -74,7 +78,7 @@ const sign = useSignStore()
                   </svg></button
                 ><strong :title="file.file_name">{{ file.file_name }}</strong>
               </div>
-              <span v-if="file.is_default" class="badge">默认</span
+              <Tag variant="brand" v-if="file.is_default">默认</Tag
               ><span v-if="!player.supported(file)" class="hint unsupported">浏览器不支持试听</span>
             </td>
             <td>
@@ -136,13 +140,13 @@ const sign = useSignStore()
           </tr>
         </tbody>
       </table>
-    </div>
-    <div v-else class="empty panel">
-      <span class="empty-symbol">≋</span>
-      <h3>暂无音频</h3>
-      <p>上传音频后即可试听。</p>
-      <button class="button primary" @click="emit('upload')">＋ 上传音频</button>
-    </div>
+    </Card>
+    <EmptyState v-else panel symbol="≋" as="h3" title="暂无音频">
+      上传音频后即可试听。
+      <template #actions>
+        <Button variant="primary" @click="emit('upload')">＋ 上传音频</Button>
+      </template>
+    </EmptyState>
   </section>
 </template>
 

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Tag from '@/components/ui/Tag.vue'
+import IconButton from '@/components/ui/IconButton.vue'
 import { computed, ref } from 'vue'
 import type { Entity } from '@/types/catalog'
 import { usePlayerStore } from '@/stores/player'
@@ -155,9 +157,9 @@ function playNext(song: Entity) {
             <span class="mobile-artist">{{ artistNames(song) }}</span><RouterLink
               :to="hasAudio(song) ? `/songs/${song.id}` : `/uploads?song=${song.id}`"
               class="mobile-resource"
-              ><span :class="['badge', { warning: !hasAudio(song), quiet: hasAudio(song) }]">{{
+              ><Tag :variant="!hasAudio(song) ? 'warning' : 'default'">{{
                 hasAudio(song) ? `${song.files_count ?? song.files?.length} 份音频` : '缺少音频'
-              }}</span></RouterLink
+              }}</Tag></RouterLink
             >
           </div>
         </div>
@@ -187,58 +189,55 @@ function playNext(song: Entity) {
       <RouterLink
         :to="hasAudio(song) ? `/songs/${song.id}` : `/uploads?song=${song.id}`"
         class="song-resources"
-        ><span :class="['badge', { warning: !hasAudio(song), quiet: hasAudio(song) }]">{{
+        ><Tag :variant="!hasAudio(song) ? 'warning' : 'default'">{{
           hasAudio(song) ? `${song.files_count ?? song.files?.length} 份音频` : '缺少音频'
-        }}</span></RouterLink
+        }}</Tag></RouterLink
       >
       <div class="song-actions">
         <slot :index="index" :song="song" name="actions">
-          <button
-            :aria-label="song.is_favorite ? `取消收藏 ${song.name}` : `收藏 ${song.name}`"
+          <IconButton
+            :label="song.is_favorite ? `取消收藏 ${song.name}` : `收藏 ${song.name}`"
             :aria-pressed="!!song.is_favorite"
-            :class="{ active: song.is_favorite }"
+            :class="['follow', { active: song.is_favorite }]"
             :disabled="disabled || favoriting.has(song.id)"
             :title="song.is_favorite ? '取消收藏' : '收藏歌曲'"
-            class="icon-button follow"
             @click="favorite(song)"
           >
             <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-              <path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1Z" />
-            </svg></button
-          ><button
+              <path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1Z" /></svg></IconButton
+          ><IconButton
+            :label="`编辑 ${song.name}`"
             v-if="editable"
-            :aria-label="`编辑 ${song.name}`"
             :disabled="disabled"
-            class="icon-button edit"
             title="编辑资料"
             @click="emit('edit', song)"
+            class="edit"
           >
-            ✎</button
+            ✎</IconButton
           ><RouterLink
             :aria-label="`为 ${song.name} 上传音频`"
             :to="`/uploads?song=${song.id}`"
             class="icon-button"
             title="上传音频"
             >↑</RouterLink
-          ><button
-            :aria-label="`把 ${song.name} 加入队列`"
-            class="icon-button queue-action"
+          ><IconButton
+            :label="`把 ${song.name} 加入队列`"
             title="加入队列"
             @click="enqueue(song)"
+            class="queue-action"
           >
             <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-              <path d="M4 6h11M4 11h11M4 16h7M18 9v8M14 13h8" />
-            </svg></button
-          ><button
-            :aria-label="`下一首播放 ${song.name}`"
-            class="icon-button queue-action"
+              <path d="M4 6h11M4 11h11M4 16h7M18 9v8M14 13h8" /></svg></IconButton
+          ><IconButton
+            :label="`下一首播放 ${song.name}`"
             title="下一首播放"
             @click="playNext(song)"
+            class="queue-action"
           >
             <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
               <path d="M4 6h9M4 11h9M4 16h6M16 8v7M16 8l4 2.5-4 2.5" />
             </svg>
-          </button>
+          </IconButton>
         </slot>
       </div>
     </article>
@@ -249,7 +248,7 @@ function playNext(song: Entity) {
 .song-library {
   display: block;
   margin-top: 3px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 10px;
 }
 .song-list {
@@ -269,9 +268,9 @@ function playNext(song: Entity) {
 }
 .song-label {
   min-height: 44px;
-  background: var(--soft);
-  border-radius: var(--radius) var(--radius) 0 0;
-  color: var(--muted);
+  background: var(--surface-muted);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  color: var(--text-muted);
   font-size: 12px;
 }
 .number-label {
@@ -286,17 +285,17 @@ function playNext(song: Entity) {
   border-top: 1px solid var(--line);
 }
 .song-row:hover {
-  background: #faf9fd;
+  background: var(--surface-hover);
 }
 .song-row:last-child {
-  border-radius: 0 0 var(--radius) var(--radius);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
 .song-row.playing,
 .song-row.selected {
-  background: #f5f1fc;
+  background: var(--brand-tint);
 }
 .song-row.playing .song-name {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
 }
 .song-row > input {
   margin: 0;
@@ -306,13 +305,13 @@ function playNext(song: Entity) {
   place-items: center;
   width: 28px;
   height: 30px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 .play-icon {
   display: none;
-  color: var(--purple);
+  color: var(--brand);
 }
 .song-row:hover .song-index,
 .playing .song-index,
@@ -350,17 +349,17 @@ function playNext(song: Entity) {
 .song-name:hover,
 .song-artists a:hover,
 .song-album:hover {
-  color: var(--purple);
+  color: var(--brand);
 }
 .song-name small {
   margin-left: 6px;
   font-size: 11px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-weight: 400;
 }
 .song-artists,
 .song-album {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -375,7 +374,7 @@ function playNext(song: Entity) {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .song-actions {
   display: flex;
@@ -387,13 +386,13 @@ function playNext(song: Entity) {
   font-size: 17px;
 }
 .follow {
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .follow.active {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
 }
 .follow.active .ui-icon {
-  fill: var(--lilac);
+  fill: var(--brand-soft);
 }
 @container (max-width: 800px) {
   .song-grid {

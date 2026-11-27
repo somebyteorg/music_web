@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import EmptyState from '@/components/ui/EmptyState.vue'
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
 import { computed, inject } from 'vue'
 import SongList from '@/components/SongList.vue'
 import Pagination from '@/components/Pagination.vue'
@@ -37,33 +40,29 @@ const collaborators = computed(() => item.value?.collaborators ?? [])
         <span class="muted">{{ total }}</span>
       </h2>
       <div v-if="type === 'playlists' && editable" class="button-group">
-        <button :disabled="acting" class="button primary" @click="tracks">添加歌曲</button>
-        <button
-          :disabled="acting"
-          class="button secondary"
-          @click="managingTracks = !managingTracks"
-        >
+        <Button variant="primary" :disabled="acting" @click="tracks">添加歌曲</Button>
+        <Button variant="secondary" :disabled="acting" @click="managingTracks = !managingTracks">
           {{ managingTracks ? '完成管理' : '管理本页曲目' }}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="secondary"
           v-if="managingTracks && selectedEntries.length"
           :disabled="acting"
-          class="button secondary"
           @click="removeEntries(selectedEntries)"
         >
           移除已选 {{ selectedEntries.length }} 首
-        </button>
+        </Button>
       </div>
       <div v-else-if="type === 'albums'" class="button-group">
-        <button v-if="songs.length" class="button secondary" @click="emit('manageAlbum')">
-          管理本页曲目</button
+        <Button variant="secondary" v-if="songs.length" @click="emit('manageAlbum')">
+          管理本页曲目</Button
         ><RouterLink class="button secondary" to="/songs">选择歌曲 →</RouterLink>
       </div>
     </div>
     <p v-if="type === 'playlists' && collaborators.length" class="muted collaborators">
       协作者：{{ collaborators.map((m) => displayName(m)).join('、') }}
     </p>
-    <div class="panel">
+    <Card>
       <SongList
         v-if="songs.length"
         :album-context-id="type === 'albums' ? id : undefined"
@@ -100,12 +99,8 @@ const collaborators = computed(() => item.value?.collaborators ?? [])
           </button>
         </template>
       </SongList>
-      <div v-else class="empty">
-        <span class="empty-symbol">♫</span>
-        <h3>暂无歌曲</h3>
-        <p>添加歌曲后会显示在这里。</p>
-      </div>
-    </div>
+      <EmptyState v-else symbol="♫" as="h3" title="暂无歌曲"> 添加歌曲后会显示在这里。 </EmptyState>
+    </Card>
     <Pagination
       :page="page"
       :page-size="songPageSize"

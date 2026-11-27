@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { useUploadsStore } from '@/stores/uploads'
 import { TRANSMIT_STATES, type UploadTask } from './model'
 
@@ -51,12 +52,13 @@ const uploads = useUploadsStore()
       >
         使用已有文件</button
       ><button class="text-button" @click="uploads.skip(task)">跳过</button></template
-    ><button
+    ><Button
       v-if="task.state === 'ready' && task.kind === 'audio'"
-      class="button small primary"
+      variant="primary"
+      size="sm"
       @click="emit('preview', task, false)"
     >
-      确认归属</button
+      确认归属</Button
     ><button
       v-if="task.kind === 'cover' && coverUrl"
       class="text-button"

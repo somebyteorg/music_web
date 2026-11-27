@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import Card from '@/components/ui/Card.vue'
+import Tabs from '@/components/ui/Tabs.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
+import Button from '@/components/ui/Button.vue'
 import { inject } from 'vue'
 import BaseSelect from '@/components/BaseSelect.vue'
 import { useSignStore } from '@/stores/sign'
@@ -12,33 +16,29 @@ const sign = useSignStore()
 </script>
 
 <template>
-  <section class="panel lyrics-panel">
+  <Card as="section" class="lyrics-panel">
     <div class="section-heading">
       <h2>
         歌词 <span class="muted">{{ lyrics.versions.length }} 个版本</span>
       </h2>
-      <button class="button primary" @click="lyrics.edit()">＋ 添加版本</button>
+      <Button variant="primary" @click="lyrics.edit()">＋ 添加版本</Button>
     </div>
     <template v-if="lyrics.selected">
       <div class="lyric-toolbar">
         <BaseSelect v-model="lyrics.selectedId" :options="lyrics.options" label="选择歌词版本" />
         <div class="button-group">
-          <button
-            :disabled="lyrics.busy"
-            class="button secondary"
-            @click="lyrics.edit(lyrics.selected)"
-          >
+          <Button variant="secondary" :disabled="lyrics.busy" @click="lyrics.edit(lyrics.selected)">
             编辑
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="secondary"
             v-if="!lyrics.selected.is_default"
             :disabled="lyrics.busy"
-            class="button secondary"
             @click="lyrics.setDefault"
           >
             设为默认
-          </button>
-          <button class="button secondary" @click="lyrics.download">下载</button>
+          </Button>
+          <Button variant="secondary" @click="lyrics.download">下载</Button>
           <button
             v-if="lyrics.selected.user_id === sign.user?.id || sign.canModerate"
             :disabled="lyrics.busy"
@@ -56,19 +56,19 @@ const sign = useSignStore()
         <span v-if="lyrics.selected.source"> · 来源：{{ lyrics.selected.source }}</span>
         · {{ date(lyrics.selected.updated_at) }}
       </p>
-      <div class="segmented lyric-display">
+      <Tabs variant="segmented" class="lyric-display">
         <button :class="{ active: !lyrics.raw }" @click="lyrics.raw = false">阅读</button>
         <button :class="{ active: lyrics.raw }" @click="lyrics.raw = true">原文与时间标签</button>
-      </div>
+      </Tabs>
       <pre>{{ lyrics.raw ? lyrics.selected.content : lyrics.preview }}</pre>
     </template>
-    <div v-else class="empty compact">
-      <span class="empty-symbol">♩</span>
-      <h3>暂无歌词</h3>
-      <p>可以添加纯文本、逐行或逐字同步歌词，也可以保留不同语言的版本。</p>
-      <button class="button secondary" @click="lyrics.edit()">添加歌词</button>
-    </div>
-  </section>
+    <EmptyState v-else compact symbol="♩" as="h3" title="暂无歌词">
+      可以添加纯文本、逐行或逐字同步歌词，也可以保留不同语言的版本。
+      <template #actions>
+        <Button variant="secondary" @click="lyrics.edit()">添加歌词</Button>
+      </template>
+    </EmptyState>
+  </Card>
 </template>
 
 <style scoped src="./lyrics.css"></style>

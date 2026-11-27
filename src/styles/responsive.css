@@ -1,0 +1,91 @@
+/*
+ * 断点策略：**以基线为准逐个保留，不做跨档合并**。
+ *
+ * 本轮的改造价值在「颜色/尺寸收敛成 token」与「style.css 分层」，不在减少断点档数；
+ * 只要某个断点被合并会让某个宽度区间的布局/可见性发生变化，就保留原值。
+ * 当前全站 max-width 取值与基线完全一致（9 个）：
+ *
+ * · 1100 —— App.vue：顶栏账号动作文字收起（981–1100 之间文字保持显示，与基线一致）
+ * · 1150 —— resources.css：资源表「上传者」列隐藏
+ * ·  980 —— PlayerBar：模式按钮隐藏
+ * ·  900 —— resources.css：资源表「音频参数」列隐藏
+ * ·  760 —— App.vue 侧栏抽屉+汉堡 / PlayerBar 边距与音量 / QueuePanel 移动面板
+ *            （含 `(pointer: coarse), (max-width: 760px)` 一条组合查询）
+ * ·  680 —— 本文件的基础排版；CatalogView / CommunityView / DetailHero /
+ *            DetailView / resources / UploadsView 与 uploads 目录
+ * ·  640 —— BaseDialog 弹窗宽度、Pagination 工具条
+ * ·  540 —— App.vue 面包屑与账号紧凑 / PlayerBar 紧凑换行 / SettingsView
+ * ·  480 —— EditorDialog
+ *
+ * 调整这些值时，请先用 660 / 700 / 950 / 1050 / 1200 等「断点两侧」宽度与基线截图对比，
+ * 确认可见性没有变化。
+ */
+@media (max-width: 680px) {
+  .page-heading {
+    margin-bottom: 22px;
+  }
+
+  .page-heading > .button-group {
+    gap: 6px;
+  }
+
+  .heading-title {
+    gap: 6px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  .button {
+    padding-inline: 10px;
+  }
+
+  .search-field {
+    width: 100%;
+  }
+
+  .filter-bar {
+    gap: 6px;
+  }
+
+  .filter-bar select {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .section {
+    margin-top: 26px;
+  }
+}
+
+@media (pointer: coarse) {
+  .icon-button {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .button,
+  .chip,
+  .action-menu > summary {
+    min-height: 38px;
+  }
+
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea {
+    min-height: 38px;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

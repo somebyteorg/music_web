@@ -1,11 +1,12 @@
 <script lang="ts" setup>
+import Card from '@/components/ui/Card.vue'
 import { useUploadsStore } from '@/stores/uploads'
 import { bytes, duration } from '@/utils/format'
 
 const uploads = useUploadsStore()
 </script>
 <template>
-  <div v-if="uploads.tasks.length" aria-label="队列整体进度" class="queue-summary panel">
+  <Card v-if="uploads.tasks.length" aria-label="队列整体进度" class="queue-summary">
     <div class="summary-heading">
       <div>
         <span class="hint">文件传输</span
@@ -66,7 +67,7 @@ const uploads = useUploadsStore()
         >已完成 <b>{{ uploads.stats.done }}</b></span
       >
     </div>
-  </div>
+  </Card>
 </template>
 <style scoped>
 .queue-summary {
@@ -84,7 +85,7 @@ const uploads = useUploadsStore()
   justify-content: space-between;
 }
 .summary-heading > div:first-child > strong {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-size: 28px;
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
@@ -107,20 +108,20 @@ const uploads = useUploadsStore()
   margin: 15px 0;
   border-radius: 4px;
   overflow: hidden;
-  background: var(--lilac);
+  background: var(--brand-soft);
 }
 .summary-progress > span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--purple);
+  background: var(--brand);
   transition: width 0.2s;
 }
 .summary-stages {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 22px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 .summary-stages b {
@@ -129,7 +130,7 @@ const uploads = useUploadsStore()
   font-variant-numeric: tabular-nums;
 }
 .summary-stages .current {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
 }
 @media (max-width: 680px) {
   .queue-summary {

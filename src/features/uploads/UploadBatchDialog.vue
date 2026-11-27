@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -120,22 +121,24 @@ const emit = defineEmits<{
             placeholder="填写专辑名称，再确认添加"
         /></label>
         <div class="button-group">
-          <button
+          <Button
             type="button"
-            class="button small secondary"
+            variant="secondary"
+            size="sm"
             :disabled="batch.busy"
             @click="addingAlbum = false"
           >
             取消添加
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            class="button small primary"
+            variant="primary"
+            size="sm"
             :disabled="batch.busy || !albumName.trim()"
             @click="confirmAlbumGroup"
           >
             确认添加分组
-          </button>
+          </Button>
         </div>
       </div>
       <button

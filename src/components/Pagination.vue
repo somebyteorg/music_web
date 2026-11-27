@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import Button from '@/components/ui/Button.vue'
 import { computed, ref, watch } from 'vue'
 
 const props = defineProps<{ page: number; pageSize: number; total: number; busy?: boolean }>()
@@ -22,14 +23,15 @@ function jump() {
   <nav v-if="total > 0" aria-label="分页" class="pagination">
     <span>共 {{ total }} 条 · {{ page }} / {{ pages }}</span>
     <div class="pagination-tools">
-      <button
+      <Button
+        variant="secondary"
+        size="sm"
         :disabled="page <= 1 || busy"
-        class="button small secondary"
         type="button"
         @click="$emit('change', page - 1)"
       >
         ← 上一页
-      </button>
+      </Button>
       <div v-if="pages > 2" class="pagination-jump">
         <label
           >第
@@ -43,18 +45,19 @@ function jump() {
             @keydown.enter.prevent="jump"
           />
           页</label
-        ><button :disabled="busy" class="button small secondary" type="button" @click="jump">
+        ><Button variant="secondary" size="sm" :disabled="busy" type="button" @click="jump">
           跳转
-        </button>
+        </Button>
       </div>
-      <button
+      <Button
+        variant="secondary"
+        size="sm"
         :disabled="page >= pages || busy"
-        class="button small secondary"
         type="button"
         @click="$emit('change', page + 1)"
       >
         下一页 →
-      </button>
+      </Button>
     </div>
   </nav>
 </template>
@@ -67,7 +70,7 @@ function jump() {
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 12px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 .pagination-tools {

@@ -48,24 +48,24 @@ watch(src, () => (failed.value = false))
   border-radius: 50%;
 }
 .color-0 {
-  background: linear-gradient(145deg, #d5c9e6, #a892c1);
-  color: #69517f;
+  background: linear-gradient(145deg, var(--cover-0-tint), var(--cover-0));
+  color: var(--cover-0-ink);
 }
 .color-1 {
-  background: linear-gradient(145deg, #e2dfc9, #b8b18d);
-  color: #726c47;
+  background: linear-gradient(145deg, var(--cover-1-tint), var(--cover-1));
+  color: var(--cover-1-ink);
 }
 .color-2 {
-  background: linear-gradient(145deg, #edd8c9, #c59c89);
-  color: #91604c;
+  background: linear-gradient(145deg, var(--cover-2-tint), var(--cover-2));
+  color: var(--cover-2-ink);
 }
 .color-3 {
-  background: linear-gradient(145deg, #d6e4db, #99b8ab);
-  color: #4b7967;
+  background: linear-gradient(145deg, var(--cover-3-tint), var(--cover-3));
+  color: var(--cover-3-ink);
 }
 .color-4 {
-  background: linear-gradient(145deg, #d1dbea, #95a9ca);
-  color: #526d97;
+  background: linear-gradient(145deg, var(--cover-4-tint), var(--cover-4));
+  color: var(--cover-4-ink);
 }
 .cover-ring {
   position: absolute;
@@ -83,7 +83,7 @@ watch(src, () => (failed.value = false))
   inset: 12%;
   border: 1px solid currentColor;
   border-radius: 50%;
-  box-shadow: 0 0 0 8cqw #ffffff0a;
+  box-shadow: 0 0 0 8cqw var(--ring-highlight);
 }
 .cover-note {
   position: absolute;

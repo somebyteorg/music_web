@@ -206,18 +206,18 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   padding: 9px 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff;
-  color: #484551;
+  background: var(--surface);
+  color: var(--text-soft);
   text-align: left;
   font-size: 13px;
   white-space: nowrap;
 }
 .select-trigger:hover:not(:disabled) {
-  border-color: #b8a8d3;
+  border-color: var(--brand-line-strong);
 }
 .select-trigger[aria-expanded='true'] {
-  border-color: var(--purple);
-  box-shadow: 0 0 0 2px #7048c610;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 6.3%, transparent);
 }
 .select-trigger > span {
   min-width: 0;
@@ -226,7 +226,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
 }
 .select-trigger svg {
   flex-shrink: 0;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .select-dropdown {
   position: fixed;
@@ -236,8 +236,8 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
-  box-shadow: 0 8px 28px #28233520;
+  background: var(--surface);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--ink) 12.5%, transparent);
   overflow: hidden;
   outline: none;
 }
@@ -247,7 +247,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
 }
 .select-search input {
   min-height: 32px;
-  background: var(--soft);
+  background: var(--surface-muted);
   font-size: 13px;
 }
 .select-options {
@@ -263,22 +263,22 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   width: 100%;
   padding: 8px 10px;
   border-radius: 4px;
-  color: #484551;
+  color: var(--text-soft);
   text-align: left;
   font-size: 13px;
 }
 .select-options > button.active {
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .select-options > button.selected {
-  color: var(--purple-dark);
+  color: var(--brand-strong);
   font-weight: 550;
-  background: var(--lilac);
+  background: var(--brand-soft);
 }
 .select-empty {
   padding: 18px 10px;
   text-align: center;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 @media (pointer: coarse) {

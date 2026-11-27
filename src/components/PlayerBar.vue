@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import IconButton from '@/components/ui/IconButton.vue'
 import { computed } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import { playModeLabels, useQueueStore } from '@/stores/queue'
@@ -41,16 +42,14 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
       <strong>{{ displayItem?.name }}</strong><span>{{ subtitle }}</span>
     </div>
     <div class="player-controls">
-      <button
+      <IconButton
+        label="上一首"
         :disabled="!queue.length"
-        aria-label="上一首"
-        class="icon-button"
         title="上一首"
         @click="player.previous()"
       >
         <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-          <path d="M7 5v14M19 5l-9 7 9 7Z" />
-        </svg></button
+          <path d="M7 5v14M19 5l-9 7 9 7Z" /></svg></IconButton
       ><button
         :aria-busy="player.loading"
         :aria-label="player.playing ? '暂停' : '播放'"
@@ -61,17 +60,11 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         <svg aria-hidden="true" class="ui-icon playback-icon" viewBox="0 0 24 24">
           <path :d="player.playing ? 'M6 5h4v14H6zM14 5h4v14h-4z' : 'm8 5 11 7-11 7Z'" />
         </svg></button
-      ><button
-        :disabled="!queue.length"
-        aria-label="下一首"
-        class="icon-button"
-        title="下一首"
-        @click="player.next()"
-      >
+      ><IconButton label="下一首" :disabled="!queue.length" title="下一首" @click="player.next()">
         <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
           <path d="M17 5v14M5 5l9 7-9 7Z" />
         </svg>
-      </button>
+      </IconButton>
     </div>
     <template v-if="!player.collapsed"
       ><span class="time">{{ duration(player.time) }}</span
@@ -97,21 +90,21 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         @input="player.setVolume(Number(($event.target as HTMLInputElement).value))"
     /></template>
     <div class="player-extra">
-      <button
-        :aria-label="modeLabel"
+      <IconButton
+        :label="modeLabel"
         :title="modeLabel"
-        class="icon-button mode-button"
         @click="queue.cycleMode()"
+        class="mode-button"
       >
         <PlayModeIcon :mode="queue.mode" />
-      </button>
-      <button
+      </IconButton>
+      <IconButton
+        :label="`播放队列，共 ${queue.length} 首`"
         :aria-expanded="queue.open"
         aria-controls="queue-panel"
-        :aria-label="`播放队列，共 ${queue.length} 首`"
         :title="`播放队列（${queue.length}）`"
-        class="icon-button queue-button"
         @click="queue.open = !queue.open"
+        class="queue-button"
       >
         <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
           <path d="M4 6h11M4 11h11M4 16h7M17 10l4 3-4 3Z" />
@@ -119,23 +112,22 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         <span v-if="queue.length" class="queue-count">{{
           queue.length > 99 ? '99+' : queue.length
         }}</span>
-      </button>
-      <button
+      </IconButton>
+      <IconButton
+        :label="player.collapsed ? '展开播放器' : '收起播放器'"
         :aria-expanded="!player.collapsed"
-        :aria-label="player.collapsed ? '展开播放器' : '收起播放器'"
         :title="player.collapsed ? '展开播放器' : '收起播放器'"
-        class="icon-button"
         @click="player.collapsed = !player.collapsed"
       >
         <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
           <path :d="player.collapsed ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6'" />
         </svg>
-      </button>
-      <button aria-label="关闭播放器" class="icon-button" title="关闭播放器" @click="closeAll">
+      </IconButton>
+      <IconButton label="关闭播放器" title="关闭播放器" @click="closeAll">
         <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
           <path d="m6 6 12 12M6 18 18 6" />
         </svg>
-      </button>
+      </IconButton>
     </div>
   </aside>
   <QueuePanel />
@@ -153,10 +145,10 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   gap: 14px;
   min-height: var(--player-height);
   padding: 14px 20px;
-  background: #fffffff5;
+  background: var(--surface-glass-strong);
   border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 8px 40px #29203514;
+  box-shadow: 0 8px 40px color-mix(in srgb, var(--ink) 7.8%, transparent);
   backdrop-filter: blur(20px);
 }
 .player > .cover {
@@ -178,7 +170,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 }
 .player-title span {
   font-size: 11px;
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .player-controls {
   display: flex;
@@ -187,7 +179,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   flex-shrink: 0;
 }
 .player-controls .icon-button {
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .play-button {
   display: grid;
@@ -196,8 +188,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   height: 40px;
   flex-shrink: 0;
   border-radius: 50%;
-  color: #fff;
-  background: var(--purple);
+  color: var(--on-brand);
+  background: var(--brand);
 }
 .play-button[aria-busy='true'] {
   opacity: 0.6;
@@ -205,14 +197,14 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 .seek {
   flex: 1;
   min-width: 60px;
-  accent-color: var(--purple);
+  accent-color: var(--brand);
 }
 .volume {
   width: 75px;
-  accent-color: var(--purple);
+  accent-color: var(--brand);
 }
 .time {
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
@@ -223,7 +215,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   flex-shrink: 0;
 }
 .player-extra .icon-button {
-  color: var(--muted);
+  color: var(--text-muted);
 }
 .queue-button {
   position: relative;
@@ -235,8 +227,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   min-width: 15px;
   padding: 0 3px;
   border-radius: 8px;
-  background: var(--purple);
-  color: #fff;
+  background: var(--brand);
+  color: var(--on-brand);
   font-size: 9px;
   line-height: 15px;
   font-variant-numeric: tabular-nums;
@@ -251,7 +243,7 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   gap: 10px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 4px 16px #28233512;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--ink) 7.1%, transparent);
 }
 .collapsed .player-title {
   flex: 1;

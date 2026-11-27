@@ -19,13 +19,13 @@
 }
 
 .follow-button.active {
-  color: var(--purple-dark);
-  border-color: #d6c7eb;
-  background: var(--lilac);
+  color: var(--brand-strong);
+  border-color: var(--brand-line);
+  background: var(--brand-soft);
 }
 
 .follow-button.active .ui-icon {
-  fill: #dfd2f3;
+  fill: var(--brand-veil);
 }
 
 .song-upload-list {
@@ -48,18 +48,18 @@
 
 .song-upload-list progress {
   width: 100%;
-  accent-color: var(--purple);
+  accent-color: var(--brand);
 }
 
 .back-link {
   display: inline-block;
   margin-bottom: 24px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 
 .back-link:hover {
-  color: var(--purple);
+  color: var(--brand);
 }
 
 .detail-hero {
@@ -69,14 +69,14 @@
   padding: 32px;
   margin-bottom: 32px;
   border: 1px solid var(--line);
-  border-radius: 16px;
-  background: linear-gradient(125deg, #f0eaf6, #fcfbfd 75%);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(125deg, var(--brand-soft), var(--surface-hover) 75%);
 }
 
 .detail-hero > .cover {
   width: clamp(160px, 15vw, 220px);
   flex-shrink: 0;
-  box-shadow: 0 12px 28px #35234018;
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 9.4%, transparent);
 }
 
 .detail-copy {
@@ -86,7 +86,7 @@
 
 .detail-kind {
   margin-bottom: 12px;
-  color: var(--purple);
+  color: var(--brand);
   font-size: 12px;
   letter-spacing: 1px;
 }
@@ -103,12 +103,12 @@
   flex-wrap: wrap;
   gap: 5px 12px;
   margin: 14px 0 20px;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 13px;
 }
 
 .detail-meta a:hover {
-  color: var(--purple);
+  color: var(--brand);
 }
 
 .description {
@@ -121,7 +121,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 13px;
   white-space: pre-line;
   overflow-wrap: anywhere;
@@ -141,13 +141,13 @@
 .detail-tabs > button {
   padding: 12px 0;
   border-bottom: 2px solid transparent;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 14px;
 }
 
 .detail-tabs > button.active {
-  color: var(--purple-dark);
-  border-color: var(--purple);
+  color: var(--brand-strong);
+  border-color: var(--brand);
 }
 
 .detail-tabs > button > span {
@@ -157,7 +157,7 @@
 
 .detail-tabs > a {
   margin-left: auto;
-  color: var(--purple);
+  color: var(--brand);
   font-size: 12px;
 }
 
@@ -170,12 +170,12 @@
   margin-top: 24px;
   padding-top: 12px;
   border-top: 1px solid var(--line);
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 12px;
 }
 
 .detail-foot > a {
-  color: var(--purple);
+  color: var(--brand);
 }
 
 .track-editor > article {

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Tag from '@/components/ui/Tag.vue'
+import Button from '@/components/ui/Button.vue'
 import { computed, ref } from 'vue'
 import EntityCover from '@/components/EntityCover.vue'
 import { usePlayerStore } from '@/stores/player'
@@ -66,9 +68,9 @@ function togglePlay() {
         ><RouterLink v-if="item.library" :to="`/libraries/${item.library.id}`">{{
           item.library.name
         }}</RouterLink
-        ><span v-if="item.is_default" class="badge">默认媒体库</span
+        ><Tag variant="brand" v-if="item.is_default">默认媒体库</Tag
         ><span v-if="item.genre">{{ item.genre }}</span
-        ><span v-if="item.recording_version" class="badge">{{ item.recording_version }}</span>
+        ><Tag variant="brand" v-if="item.recording_version">{{ item.recording_version }}</Tag>
       </div>
       <div v-if="item.description" class="description">
         <p :class="{ expanded: descriptionOpen }">{{ item.description }}</p>
@@ -82,45 +84,41 @@ function togglePlay() {
         </button>
       </div>
       <div class="button-group">
-        <button
+        <Button
+          variant="primary"
+          class="detail-play"
           v-if="type === 'songs' && item.files?.length"
           :aria-label="`${playing ? '暂停' : '试听'} ${item.name}`"
           :title="playing ? '暂停' : '试听'"
-          class="button primary detail-play"
           @click="togglePlay"
         >
           <svg aria-hidden="true" class="ui-icon playback-icon" viewBox="0 0 24 24">
-            <path :d="playing ? 'M6 5h4v14H6zM14 5h4v14h-4z' : 'm8 5 11 7-11 7Z'" />
-          </svg></button
-        ><button
+            <path :d="playing ? 'M6 5h4v14H6zM14 5h4v14h-4z' : 'm8 5 11 7-11 7Z'" /></svg></Button
+        ><Button
+          variant="secondary"
           v-if="type === 'songs'"
           :aria-label="item.is_favorite ? `取消收藏 ${item.name}` : `收藏 ${item.name}`"
           :aria-pressed="!!item.is_favorite"
-          :class="['button secondary follow-button', { active: item.is_favorite }]"
+          :class="['follow-button', { active: item.is_favorite }]"
           :title="item.is_favorite ? '取消收藏' : '收藏歌曲'"
           @click="emit('favorite')"
         >
           <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
             <path d="M7 3h10a1 1 0 0 1 1 1v17l-6-4-6 4V4a1 1 0 0 1 1-1Z" />
           </svg>
-          {{ item.is_favorite ? '已收藏' : '收藏' }}</button
-        ><button v-if="canEdit" class="button secondary" @click="emit('edit')">✎ 编辑资料</button>
-        <button
-          v-if="hasSongs"
-          :disabled="playingAll"
-          class="button secondary"
-          @click="emit('playAll')"
-        >
+          {{ item.is_favorite ? '已收藏' : '收藏' }}</Button
+        ><Button variant="secondary" v-if="canEdit" @click="emit('edit')">✎ 编辑资料</Button>
+        <Button variant="secondary" v-if="hasSongs" :disabled="playingAll" @click="emit('playAll')">
           {{ playingAll ? '正在读取…' : '播放全部' }}
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="secondary"
           v-if="type === 'playlists' && item.is_public && sign.canModerate"
           :disabled="acting"
-          class="button secondary"
           @click="emit('operation', 'playlist-private')"
         >
           设为私密
-        </button>
+        </Button>
         <details class="action-menu">
           <summary>更多 ⋯</summary>
           <div
@@ -163,13 +161,13 @@ function togglePlay() {
   padding: 32px;
   margin-bottom: 32px;
   border: 1px solid var(--line);
-  border-radius: 16px;
-  background: linear-gradient(125deg, #f0eaf6, #fcfbfd 75%);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(125deg, var(--brand-soft), var(--surface-hover) 75%);
 }
 .detail-hero > .cover {
   width: clamp(160px, 15vw, 220px);
   flex-shrink: 0;
-  box-shadow: 0 12px 28px #35234018;
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 9.4%, transparent);
 }
 .detail-copy {
   min-width: 0;
@@ -177,8 +175,8 @@ function togglePlay() {
 }
 .detail-kind {
   margin-bottom: 12px;
-  color: var(--purple);
-  font-size: 12px;
+  color: var(--brand);
+  font-size: var(--font-sm, 12px);
   letter-spacing: 1px;
 }
 .detail-copy h1 {
@@ -192,11 +190,11 @@ function togglePlay() {
   flex-wrap: wrap;
   gap: 5px 12px;
   margin: 14px 0 20px;
-  color: var(--muted);
-  font-size: 13px;
+  color: var(--text-muted);
+  font-size: var(--font-base, 13px);
 }
 .detail-meta a:hover {
-  color: var(--purple);
+  color: var(--brand);
 }
 .description {
   margin-bottom: 18px;
@@ -207,8 +205,8 @@ function togglePlay() {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  color: var(--muted);
-  font-size: 13px;
+  color: var(--text-muted);
+  font-size: var(--font-base, 13px);
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
@@ -220,12 +218,12 @@ function togglePlay() {
   padding: 9px;
 }
 .follow-button.active {
-  color: var(--purple-dark);
-  border-color: #d6c7eb;
-  background: var(--lilac);
+  color: var(--brand-strong);
+  border-color: var(--brand-line);
+  background: var(--brand-soft);
 }
 .follow-button.active .ui-icon {
-  fill: #dfd2f3;
+  fill: var(--brand-veil);
 }
 @media (max-width: 680px) {
   .detail-hero {

@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+import IconButton from '@/components/ui/IconButton.vue'
+import Tabs from '@/components/ui/Tabs.vue'
+import EmptyState from '@/components/ui/EmptyState.vue'
+import Card from '@/components/ui/Card.vue'
+import Button from '@/components/ui/Button.vue'
 import { computed, provide, reactive, ref } from 'vue'
 import type { Entity } from '@/types/catalog'
 import { usePlayerStore } from '@/stores/player'
@@ -84,12 +89,12 @@ const tab = ref('resources')
 <template>
   <RouterLink :to="backTo" class="back-link">← 回到{{ labels[type] }}列表</RouterLink>
   <div v-if="busy && !item" class="skeleton detail-skeleton"></div>
-  <div v-if="error" class="empty panel">
-    <span class="empty-symbol">♩</span>
-    <h2>未找到资料</h2>
-    <p>{{ error }}</p>
-    <button class="button secondary" @click="load">重新加载</button>
-  </div>
+  <EmptyState v-if="error" panel symbol="♩" title="未找到资料">
+    {{ error }}
+    <template #actions>
+      <Button variant="secondary" @click="load">重新加载</Button>
+    </template>
+  </EmptyState>
   <template v-else-if="item"
     ><DetailHero
       :acting="acting"
@@ -105,12 +110,12 @@ const tab = ref('resources')
       @operation="openOperation($event)"
       @play-all="playAll"
     />
-    <div v-if="type === 'songs'" class="detail-tabs">
+    <Tabs v-if="type === 'songs'" variant="underline" class="detail-tabs">
       <button :class="{ active: tab === 'resources' }" @click="tab = 'resources'">
         音频文件 <span>{{ item.files?.length || 0 }}</span></button
       ><button :class="{ active: tab === 'lyrics' }" @click="tab = 'lyrics'">歌词</button
       ><RouterLink :to="`/history?entity_type=songs&entity_id=${id}`">操作记录 ↗</RouterLink>
-    </div>
+    </Tabs>
     <ResourcesPanel
       v-if="type === 'songs' && tab === 'resources'"
       :acting="acting"
@@ -143,9 +148,9 @@ const tab = ref('resources')
         <h2>
           收录专辑 <span class="muted">{{ item.albums?.length || 0 }}</span>
         </h2>
-        <button class="button secondary" @click="editor = true">编辑专辑与媒体库</button>
+        <Button variant="secondary" @click="editor = true">编辑专辑与媒体库</Button>
       </div>
-      <div v-if="item.albums?.length" class="panel recording-releases">
+      <Card class="recording-releases" v-if="item.albums?.length">
         <RouterLink v-for="album in item.albums" :key="album.id" :to="`/albums/${album.id}`"
           ><strong>{{ album.name }}</strong
           ><span class="hint"
@@ -153,12 +158,12 @@ const tab = ref('resources')
             {{ album.pivot?.disc_number }} 碟 · 第 {{ album.pivot?.track_number }} 首</span
           ></RouterLink
         >
-      </div>
+      </Card>
       <p v-else class="hint">暂未收录到专辑，可作为单曲保留。</p>
     </section>
     <section v-if="type === 'songs' && item.recording_tracks?.length" class="section">
       <h2>关联的录音版本</h2>
-      <div class="panel recording-releases">
+      <Card class="recording-releases">
         <RouterLink
           v-for="track in item.recording_tracks"
           :key="track.id"
@@ -169,7 +174,7 @@ const tab = ref('resources')
             {{ track.library?.name }}</span
           ></RouterLink
         >
-      </div>
+      </Card>
     </section>
     <div class="detail-foot">
       <span
@@ -242,9 +247,9 @@ const tab = ref('resources')
                 v-model="targetQuery"
                 placeholder="输入名称搜索"
                 @keydown.enter.prevent="searchTargets"
-              /><button :disabled="acting" class="button secondary" @click="searchTargets">
+              /><Button variant="secondary" :disabled="acting" @click="searchTargets">
                 搜索
-              </button>
+              </Button>
             </div></label
           >
           <div class="picker-results">
@@ -282,33 +287,32 @@ const tab = ref('resources')
           <p class="hint">已选 {{ trackDraft.length }} 首 · 将按此顺序添加到歌单末尾。</p>
           <article v-for="(s, index) in trackDraft" :key="s.id">
             <span class="muted">{{ index + 1 }}</span><strong>{{ s.name }}</strong
-            ><button
-              :aria-label="`上移 ${s.name}`"
+            ><IconButton
+              :label="`上移 ${s.name}`"
               :disabled="index === 0"
-              class="icon-button"
               @click="reorder(index, -1)"
             >
-              ↑</button
-            ><button
-              :aria-label="`下移 ${s.name}`"
+              ↑</IconButton
+            ><IconButton
+              :label="`下移 ${s.name}`"
               :disabled="index === trackDraft.length - 1"
-              class="icon-button"
               @click="reorder(index, 1)"
             >
-              ↓</button
-            ><button
-              :aria-label="`移除 ${s.name}`"
-              class="icon-button danger"
+              ↓</IconButton
+            ><IconButton
+              :label="`移除 ${s.name}`"
+              class="danger"
               @click="trackDraft.splice(index, 1)"
             >
               ×
-            </button>
+            </IconButton>
           </article>
         </div>
       </div>
       <template #footer
-        ><button :disabled="acting" class="button secondary" @click="operation = ''">取消</button
-        ><button
+        ><Button variant="secondary" :disabled="acting" @click="operation = ''">取消</Button
+        ><Button
+          variant="primary"
           :disabled="
             acting ||
             ((operation === 'merge' || operation === 'file-move') && !target) ||
@@ -317,7 +321,6 @@ const tab = ref('resources')
             (operation === 'playlist-move' &&
               (!Number.isInteger(movePosition) || movePosition < 1 || movePosition > total))
           "
-          class="button primary"
           @click="apply"
         >
           {{
@@ -333,7 +336,7 @@ const tab = ref('resources')
                       ? '确认移动'
                       : '确认删除'
           }}
-        </button></template
+        </Button></template
       ></BaseDialog
     ></template
   >

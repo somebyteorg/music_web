@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import IconButton from '@/components/ui/IconButton.vue'
 import { nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import { registerFeedbackDialog, unregisterFeedbackDialog } from '@/composables/useFeedback'
 
@@ -41,15 +42,7 @@ onBeforeUnmount(() => {
   >
     <div class="modal-heading">
       <h2 :id="titleId">{{ title }}</h2>
-      <button
-        :disabled="busy"
-        aria-label="关闭弹窗"
-        class="icon-button"
-        type="button"
-        @click="close"
-      >
-        ×
-      </button>
+      <IconButton label="关闭弹窗" :disabled="busy" type="button" @click="close"> × </IconButton>
     </div>
     <div class="modal-body"><slot /></div>
     <footer v-if="$slots.footer" class="modal-footer"><slot name="footer" /></footer>
@@ -65,9 +58,9 @@ onBeforeUnmount(() => {
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #fff;
-  color: #292733;
-  box-shadow: 0 15px 70px #172d2326;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 15px 70px color-mix(in srgb, var(--ink) 15%, transparent);
   overflow: hidden;
 }
 .modal[open] {
@@ -82,7 +75,7 @@ onBeforeUnmount(() => {
   max-height: calc(100dvh - 32px);
 }
 .modal::backdrop {
-  background: #201a2d66;
+  background: var(--scrim);
   backdrop-filter: blur(4px);
 }
 .modal-heading {
@@ -114,7 +107,7 @@ onBeforeUnmount(() => {
   gap: 12px 18px;
   padding: 16px 24px;
   border-top: 1px solid var(--line);
-  background: var(--soft);
+  background: var(--surface-muted);
 }
 .modal-footer > :deep(.hint) {
   margin-right: auto;
