@@ -1,240 +1,38 @@
 <script lang="ts" setup>
-import IconButton from '@/components/ui/IconButton.vue'
-import Button from '@/components/ui/Button.vue'
+import { computed, provide, useTemplateRef } from 'vue'
+import AppGate from '@/app/AppGate.vue'
+import AppSidebar from '@/app/AppSidebar.vue'
+import AppTopbar from '@/app/AppTopbar.vue'
+import { appShellKey } from '@/app/appShellContext'
+import type { AppTopbarExpose } from '@/app/appShellContext'
+import { useAppShell } from '@/app/useAppShell'
 import PlayerBar from '@/components/PlayerBar.vue'
 import { notification, notificationTarget } from '@/composables/useFeedback'
-import { useTheme } from '@/composables/useTheme'
-import { computed } from 'vue'
-import { useAppShell } from '@/app/useAppShell'
 
-const {
-  sign,
-  uploads,
-  route,
-  booting,
-  bootError,
-  menu,
-  unread,
-  signingOut,
-  accountName,
-  playerVisible,
-  playbackLinks,
-  navigation,
-  isActive,
-  heading,
-  hydrate,
-  closeNavigation,
-  signOut,
-} = useAppShell()
+/**
+ * 应用骨架：只做全局接线（useAppShell → provide）、路由出口、播放器与全局提示。
+ * 启动/登录门、侧栏、顶栏分别从 appShellContext 取状态与动作，骨架不再持有它们的模板。
+ */
+const topbar = useTemplateRef<AppTopbarExpose>('topbar')
+const shell = useAppShell({ focusMenuButton: () => topbar.value?.focusMenuButton() })
+provide(appShellKey, shell)
 
-// 顶栏主题按钮与设置页「外观」共享同一份状态
-const {
-  preference: themePreference,
-  labels: themeNames,
-  next: themeNext,
-  cycle: cycleTheme,
-} = useTheme()
-const themeTitle = computed(
-  () => `主题：${themeNames[themePreference.value]}，点击切换到${themeNames[themeNext.value]}`,
-)
+const { sign, booting, menu, playerVisible, route, closeNavigation } = shell
+const signedIn = computed(() => !booting.value && sign.ready && !!sign.user)
 </script>
+
 <template>
-  <div v-if="booting || !sign.ready" class="boot">
-    <img alt="跃律" height="56" src="/favicon.svg" width="56" />
-    <p>{{ bootError || '正在加载…' }}</p>
-    <Button variant="primary" v-if="bootError" @click="hydrate">重试</Button>
-  </div>
-  <div v-else-if="!sign.user" class="sign-in-screen">
-    <main class="sign-in-card">
-      <img alt="" class="sign-in-logo" height="56" src="/favicon.svg" width="56" />
-      <h1>跃律</h1>
-      <p v-if="bootError" class="notice error">{{ bootError }}</p>
-      <Button as="a" variant="primary" class="sign-in-link" :href="sign.signUrl">
-        <img
-          alt=""
-          height="24"
-          src="https://files.emos.best/files/base/logo/logo_1.jpg"
-          width="24"
-        />
-        使用 EMOS 登录<span aria-hidden="true">↗</span>
-      </Button>
-      <Button
-        as="a"
-        variant="secondary"
-        class="sign-in-link"
-        v-for="link in playbackLinks"
-        :key="link.name"
-        :aria-label="`新窗口打开 ${link.name} 播放器`"
-        :href="link.href"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <img :src="link.icon" alt="" height="24" width="24" />
-        {{ link.name }}<span aria-hidden="true">↗</span>
-      </Button>
-    </main>
-  </div>
+  <AppGate v-if="!signedIn" />
   <div v-else :class="['app-shell', { 'player-visible': playerVisible }]">
-    <aside id="app-navigation" :class="['sidebar', { expanded: menu }]" aria-label="主导航">
-      <div class="sidebar-brand">
-        <RouterLink class="brand" to="/" @click="closeNavigation">
-          <img alt="" height="40" src="/favicon.svg" width="40" />
-          <span>跃律<small>EMOS MUSIC</small></span>
-        </RouterLink>
-        <IconButton label="关闭导航" class="mobile-menu" @click="menu = false">
-          <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-            <path d="m6 6 12 12M6 18 18 6" />
-          </svg>
-        </IconButton>
-      </div>
-      <div v-for="group in navigation" :key="group.label" class="nav-group">
-        <p class="nav-label">{{ group.label }}</p>
-        <nav :aria-label="group.label">
-          <RouterLink
-            v-for="item in group.items"
-            :key="item.to"
-            :aria-current="isActive(item.to) ? 'page' : undefined"
-            :class="{ 'is-active': isActive(item.to) }"
-            :to="item.to"
-            @click="closeNavigation"
-          >
-            <svg aria-hidden="true" class="ui-icon nav-icon" viewBox="0 0 24 24">
-              <path :d="item.icon" />
-            </svg>
-            <span>{{ item.label }}</span>
-            <span
-              v-if="item.to === '/uploads' && uploads.activeCount"
-              :title="`${uploads.activeCount} 个上传任务进行中`"
-              class="nav-count"
-              >{{ uploads.activeCount > 99 ? '99+' : uploads.activeCount }}</span
-            >
-          </RouterLink>
-        </nav>
-      </div>
-      <div class="nav-group">
-        <p class="nav-label">播放</p>
-        <nav aria-label="播放">
-          <a
-            v-for="link in playbackLinks"
-            :key="link.name"
-            :aria-label="`新窗口打开 ${link.name} 播放器`"
-            :href="link.href"
-            class="server-link"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            <img :src="link.icon" alt="" class="nav-icon" height="19" width="19" />
-            <span>{{ link.name }}</span>
-            <svg aria-hidden="true" class="ui-icon nav-external" viewBox="0 0 24 24">
-              <path d="M7 17 17 7M7 7h10v10" />
-            </svg>
-          </a>
-        </nav>
-      </div>
-    </aside>
+    <AppSidebar />
     <button
       v-if="menu"
       aria-label="收起菜单"
       class="sidebar-backdrop"
-      @click="menu = false"
+      @click="closeNavigation"
     ></button>
     <div class="main-shell">
-      <header class="topbar">
-        <!-- 模板 ref 必须落在原生元素上（useAppShell 里直接调 .focus()），故此处不用 IconButton -->
-        <button
-          ref="menuButton"
-          :aria-expanded="menu"
-          aria-controls="app-navigation"
-          aria-label="打开导航"
-          class="icon-button mobile-menu"
-          @click="menu = !menu"
-        >
-          <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <div class="breadcrumb">
-          <span class="breadcrumb-parent">跃律 <span aria-hidden="true">/</span></span
-          ><strong>{{ heading }}</strong>
-        </div>
-        <div class="topbar-actions">
-          <RouterLink
-            :aria-label="unread ? `消息，${unread} 条未读消息` : '消息'"
-            class="inbox-link"
-            title="消息"
-            to="/inbox"
-          >
-            <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-              <rect height="14" rx="3" width="18" x="3" y="5" />
-              <path d="m3 7 9 6 9-6" />
-            </svg>
-            <span v-if="unread" class="unread-dot"></span>
-          </RouterLink>
-          <IconButton
-            :label="themeTitle"
-            :title="themeTitle"
-            class="theme-toggle"
-            @click="cycleTheme"
-          >
-            <svg
-              v-if="themePreference === 'light'"
-              aria-hidden="true"
-              class="ui-icon"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="12" r="4" />
-              <path
-                d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"
-              />
-            </svg>
-            <svg
-              v-else-if="themePreference === 'dark'"
-              aria-hidden="true"
-              class="ui-icon"
-              viewBox="0 0 24 24"
-            >
-              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" />
-            </svg>
-            <svg v-else aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-              <rect height="12" rx="2" width="18" x="3" y="4" />
-              <path d="M8 20h8M12 16v4" />
-            </svg>
-          </IconButton>
-          <div aria-label="当前账户" class="account">
-            <div :title="accountName" class="account-profile">
-              <img v-if="sign.user.avatar" :src="sign.user.avatar" alt="" class="avatar" />
-              <span v-else class="avatar">{{ accountName.slice(0, 1) }}</span>
-              <strong class="account-name">{{ accountName }}</strong>
-            </div>
-            <div class="account-actions">
-              <RouterLink
-                aria-label="个人设置"
-                class="account-action"
-                title="个人设置"
-                to="/settings"
-                @click="closeNavigation"
-              >
-                <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-                  <path d="M4 7h9m4 0h3M4 17h3m4 0h9M13 4v6M7 14v6" />
-                </svg>
-                <span class="account-action-label">设置</span>
-              </RouterLink>
-              <button
-                :aria-label="signingOut ? '正在退出' : '退出登录'"
-                :disabled="signingOut"
-                class="account-action account-logout"
-                title="退出登录"
-                @click="signOut"
-              >
-                <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-                  <path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5m5-13 5 5-5 5m-6-5h11" />
-                </svg>
-                <span class="account-action-label">{{ signingOut ? '退出中…' : '退出' }}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppTopbar ref="topbar" />
       <main id="main" class="main-content">
         <RouterView v-slot="{ Component }"
           ><component :is="Component" :key="route.path"
@@ -262,265 +60,9 @@ const themeTitle = computed(
 .app-shell {
   min-height: 100dvh;
 }
-.sidebar {
-  position: fixed;
-  inset: 0 auto 0 0;
-  z-index: 40;
-  display: flex;
-  flex-direction: column;
-  width: var(--sidebar-width);
-  padding: 30px 16px 18px;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
-  overflow-y: auto;
-}
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 40px;
-  padding-inline: 12px;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.brand > img {
-  width: 40px;
-  height: 40px;
-}
-.brand > span {
-  font-size: 26px;
-  font-weight: 750;
-  letter-spacing: 2px;
-  line-height: 1.2;
-}
-.brand small {
-  display: block;
-  color: var(--text-muted);
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 1.8px;
-  margin-top: 5px;
-}
-.nav-group + .nav-group {
-  margin-top: 28px;
-  padding-top: 24px;
-  border-top: 1px solid var(--line);
-}
-.nav-label {
-  margin: 0 14px 12px;
-  color: var(--text-faint);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2px;
-}
-.sidebar nav {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.sidebar nav a {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  min-height: 46px;
-  padding: 11px 14px;
-  border-radius: 9px;
-  color: var(--nav-item);
-  font-size: 14px;
-  transition:
-    background 0.15s,
-    color 0.15s;
-}
-.sidebar nav a:hover {
-  background: var(--surface-muted);
-  color: var(--brand-strong);
-}
-.sidebar nav a.is-active {
-  color: var(--brand-strong);
-  background: var(--brand-soft);
-  font-weight: 600;
-}
-.sidebar nav a.is-active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 15px;
-  bottom: 15px;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--brand);
-}
-.nav-icon {
-  width: 19px;
-  height: 19px;
-  flex-shrink: 0;
-}
-.nav-external {
-  width: 15px;
-  height: 15px;
-  margin-left: auto;
-  color: var(--text-ghost);
-}
-.nav-count {
-  margin-left: auto;
-  padding: 1px 7px;
-  border-radius: 6px;
-  color: var(--brand-strong);
-  background: var(--brand-soft);
-  font-size: 10px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
 .main-shell {
   margin-left: var(--sidebar-width);
   min-height: 100dvh;
-}
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  height: 72px;
-  padding: 0 var(--page-gutter);
-  background: var(--surface-glass);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px);
-}
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-  color: var(--text-breadcrumb);
-  font-size: 12px;
-  white-space: nowrap;
-}
-.breadcrumb-parent {
-  flex-shrink: 0;
-}
-.breadcrumb-parent > span {
-  margin-left: 14px;
-  color: var(--line-faint);
-}
-.breadcrumb strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text-subtle);
-  font-size: 13px;
-  font-weight: 500;
-}
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 12px;
-  margin-left: auto;
-}
-.account {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 5px 6px 5px 12px;
-}
-.account-profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.account-profile .avatar {
-  width: 32px;
-  height: 32px;
-  background: var(--brand-tint-strong);
-  font-size: 13px;
-  font-weight: 600;
-}
-.account-name {
-  min-width: 0;
-  max-width: 128px;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-  font-weight: 600;
-}
-.account-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.account-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 34px;
-  padding: 7px 9px;
-  border-radius: 9px;
-  color: var(--text-meta);
-  font-size: 12px;
-  white-space: nowrap;
-  transition:
-    background 0.15s,
-    color 0.15s;
-}
-.account-action:hover:not(:disabled) {
-  color: var(--brand-strong);
-  background: var(--brand-soft);
-}
-.account-action.router-link-active {
-  color: var(--brand-strong);
-}
-.account-logout:hover:not(:disabled) {
-  color: var(--danger-hover);
-  background: var(--danger-soft-hover);
-}
-.account-action .ui-icon {
-  width: 18px;
-  height: 18px;
-}
-.inbox-link {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  color: var(--text-link-muted);
-  transition:
-    background 0.15s,
-    color 0.15s;
-}
-.inbox-link:hover {
-  background: var(--brand-soft);
-  color: var(--brand);
-}
-.theme-toggle {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  color: var(--text-faint);
-}
-.theme-toggle:hover:not(:disabled) {
-  background: var(--brand-soft);
-  color: var(--brand);
-}
-.unread-dot {
-  position: absolute;
-  top: 6px;
-  right: 5px;
-  width: 6px;
-  height: 6px;
-  border: 1px solid var(--surface);
-  border-radius: 50%;
-  background: var(--danger);
 }
 .main-content {
   width: 100%;
@@ -531,54 +73,8 @@ const themeTitle = computed(
 .player-visible .main-content {
   padding-bottom: 120px;
 }
-.mobile-menu,
 .sidebar-backdrop {
   display: none;
-}
-.boot {
-  display: flex;
-  min-height: 100dvh;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  color: var(--text-muted);
-}
-.sign-in-screen {
-  display: grid;
-  min-height: 100dvh;
-  place-items: center;
-  padding: 20px;
-}
-.sign-in-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 32px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  text-align: center;
-}
-.sign-in-logo {
-  margin: 0 auto 16px;
-}
-.sign-in-card h1 {
-  font-size: 26px;
-  margin-bottom: 24px;
-}
-.sign-in-link {
-  justify-content: flex-start;
-  width: 100%;
-  min-height: 44px;
-  gap: 10px;
-  margin-top: 10px;
-}
-.sign-in-link img {
-  border-radius: 4px;
-  object-fit: contain;
-}
-.sign-in-link > span {
-  margin-left: auto;
 }
 .toast {
   position: fixed;
@@ -618,30 +114,7 @@ const themeTitle = computed(
 .toast-leave-to {
   opacity: 0;
 }
-@media (max-width: 1100px) {
-  .account-action-label {
-    display: none;
-  }
-  .account-action {
-    width: 34px;
-    padding: 8px;
-  }
-  .account {
-    gap: 12px;
-  }
-  .topbar {
-    gap: 14px;
-  }
-}
 @media (max-width: 760px) {
-  .sidebar {
-    transform: translateX(-100%);
-    width: 240px;
-    transition: transform var(--transition-base);
-  }
-  .sidebar.expanded {
-    transform: translateX(0);
-  }
   .sidebar-backdrop {
     display: block;
     position: fixed;
@@ -656,47 +129,10 @@ const themeTitle = computed(
   .main-content {
     padding: 28px 24px 36px;
   }
-  .mobile-menu {
-    display: inline-grid;
-  }
-  .topbar {
-    height: 64px;
-    padding-inline: 20px;
-  }
 }
 @media (max-width: 540px) {
-  .breadcrumb-parent {
-    display: none;
-  }
-  .topbar-actions {
-    gap: 8px;
-  }
-  .account {
-    gap: 8px;
-    padding-left: 8px;
-  }
-  .account-profile {
-    gap: 8px;
-  }
-  .account-name {
-    max-width: 64px;
-  }
-  .account-actions {
-    gap: 4px;
-  }
-  .account-action {
-    width: 32px;
-    padding-inline: 7px;
-  }
   .main-content {
     padding: 24px 18px 32px;
-  }
-  .topbar {
-    padding-inline: 12px;
-    gap: 8px;
-  }
-  .sign-in-card {
-    padding: 32px 24px;
   }
   .player-visible .main-content {
     padding-bottom: 140px;
