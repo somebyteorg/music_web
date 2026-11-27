@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test:visual": "node e2e/visual.mjs",
     "test:visual:update": "node e2e/visual.mjs --update",
+    "test:contrast": "node e2e/contrast-audit.mjs",
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json && vue-tsc --noEmit -p tsconfig.node.json",
     "format": "prettier --write src vite.config.ts",
     "format:check": "prettier --check src vite.config.ts",
