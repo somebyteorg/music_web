@@ -7,6 +7,7 @@ import { useSignStore } from '@/stores/sign'
 import type { Entity } from '@/types/catalog'
 import { notify, report, useAction } from '@/composables/useFeedback'
 import { useQuery } from '@/lib/query'
+import { detailKeys } from '@/lib/query/keys'
 import { useFolderUpload } from './useFolderUpload'
 import { droppedFiles } from './droppedFiles'
 
@@ -22,7 +23,7 @@ export function useUploadSource() {
   const folderBusy = ref(false)
   // 目标歌曲是「按 id 取一条」的读：key、取消、缓存都交给查询层
   const target = useQuery<{ item: Entity }>({
-    key: () => (sign.user && songId() ? `${sign.user.id}:upload-target:songs:${songId()}` : null),
+    key: () => (sign.user && songId() ? detailKeys(sign.user.id).item('songs', songId()) : null),
     fetcher: (signal) => catalogApi.item('songs', songId(), signal),
     staleTime: 30_000,
     onError: report,

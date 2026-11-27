@@ -3,6 +3,7 @@ import { catalogApi } from '@/lib/api/catalog'
 import { useRoute } from 'vue-router'
 import type { CatalogType, Entity } from '@/types/catalog'
 import { useQuery } from '@/lib/query'
+import { detailKeys, invalidateScopes } from '@/lib/query/keys'
 import { useSignStore } from '@/stores/sign'
 import { catalogReturnTo } from '@/router'
 import { DETAIL_SONG_PAGE_SIZE } from './limits'
@@ -21,15 +22,13 @@ export function useEntityDetail() {
   const editable = ref(true)
 
   const detail = useQuery<{ item: Entity; can_edit?: boolean }>({
-    key: () => (sign.user ? `${sign.user.id}:detail:${type}:${id}` : null),
+    key: () => (sign.user ? detailKeys(sign.user.id).item(type, id) : null),
     fetcher: (signal) => catalogApi.item(type, id, signal),
     staleTime: 30_000,
   })
   const tracks = useQuery<{ items: Entity[]; total: number; page_size: number }>({
     key: () =>
-      sign.user
-        ? `${sign.user.id}:detail-songs:${type}:${id}:${page.value}:${songPageSize.value}`
-        : null,
+      sign.user ? detailKeys(sign.user.id).songs(type, id, page.value, songPageSize.value) : null,
     fetcher: async (signal) => {
       const result = assertPage(await getSongPage(type, id, page.value, songPageSize.value, signal))
       return {
@@ -71,15 +70,19 @@ export function useEntityDetail() {
   const busy = computed(() => detail.busy.value)
   const error = computed(() => detail.error.value)
 
-  /** 曲目分页刷新（切页、写操作后调用） */
+  /** 曲目分页刷新（切页、重试）：新页码本来就是 miss，回到 30s 内看过的页则直接吃缓存 */
   async function loadSongs() {
     if (type === 'songs') return
-    await tracks.run(true)
+    await tracks.run(false)
   }
 
-  /** 详情刷新：无参数，视图里可直接当事件处理器用 */
+  /**
+   * 详情写操作之后的刷新：详情与曲目按前缀失效，再由 query 自己重取（无参数，可直接当事件处理器）。
+   * 写点通常已经失效过 detail，这里再失效一次是幂等兜底：漏失效的代价是旧数据，重复失效只是删几个 Map 项。
+   */
   async function load() {
-    await detail.run(true)
+    invalidateScopes(sign.user?.id, ['detail'])
+    await detail.run(false)
     if (detail.data.value?.item && type !== 'songs') await loadSongs()
   }
 

@@ -5,6 +5,7 @@ import { favoriteSongs } from '@/lib/api/catalog'
 import { useLibrariesStore } from '@/stores/libraries'
 import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
+import { invalidateScopes } from '@/lib/query/keys'
 import type { Entity } from '@/types/catalog'
 import type { useCatalog } from './useCatalog'
 
@@ -57,6 +58,7 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
       const result = await catalogApi.privatePlaylist(privatePlaylist.value!.id)
       privatePlaylist.value = undefined
       notify(result.message)
+      invalidateScopes(sign.user?.id, ['detail'])
       await load()
     })
   }
@@ -83,6 +85,7 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
         count < ids.length,
       )
       selected.value = []
+      invalidateScopes(sign.user?.id, ['detail'])
       await load()
       await nextTick()
       selected.value = failed.filter((id) => items.value.some((item) => item.id === id))
@@ -91,6 +94,8 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
   function favorite(id: string, value: boolean) {
     const song = items.value.find((item) => item.id === id)
     if (song) song.is_favorite = value
+    // 当前列表已经就地改过，只失效不重取；详情页的收藏按钮靠失效回到新鲜数据
+    invalidateScopes(sign.user?.id, ['catalog', 'detail'])
     if (favorites.value && !value) void load()
   }
   async function saved() {

@@ -4,6 +4,8 @@ import type { Person } from '@/types/catalog'
 import { fileUrl } from '@/utils/file'
 
 const props = defineProps<{ item?: Person; round?: boolean; source?: string | null }>()
+/** 容器用 CSS 定尺寸（aspect-ratio: 1）；宽高属性只提供 1:1 的固有比例，解码前不撑开布局 */
+const COVER_EDGE = 96
 const failed = ref(false)
 const src = computed(() =>
   props.source !== undefined
@@ -19,8 +21,17 @@ watch(src, () => (failed.value = false))
 </script>
 <template>
   <div :class="['cover', `color-${hue}`, { round }]" aria-hidden="true">
-    <img v-if="src && !failed" :src="src" alt="" loading="lazy" @error="failed = true" /><template
-      v-else
+    <img
+      v-if="src && !failed"
+      :src="src"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      fetchpriority="low"
+      :width="COVER_EDGE"
+      :height="COVER_EDGE"
+      @error="failed = true"
+    /><template v-else
       ><span class="cover-ring"></span><span class="cover-note">{{ round ? '♫' : '♪' }}</span
       ><span class="cover-caption">{{ item?.name?.slice(0, 9) || '跃律' }}</span></template
     >

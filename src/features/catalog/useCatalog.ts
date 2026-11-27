@@ -5,6 +5,7 @@ import { useDebounceFn } from '@vueuse/core'
 import type { Page } from '@/types/common'
 import type { CatalogType, Entity } from '@/types/catalog'
 import { useQuery } from '@/lib/query'
+import { catalogKeys, invalidateScopes } from '@/lib/query/keys'
 import { useSignStore } from '@/stores/sign'
 import { PAGE_SIZES } from './limits'
 
@@ -95,7 +96,7 @@ export function useCatalog() {
   }
 
   const query = useQuery<Page<Entity>>({
-    key: () => (sign.user ? `${sign.user.id}:catalog:${route.fullPath}` : null),
+    key: () => (sign.user ? catalogKeys(sign.user.id).page(route.fullPath) : null),
     fetcher: (signal) => catalogApi.page(type.value, params(), signal),
     staleTime: 60_000,
   })
@@ -133,9 +134,10 @@ export function useCatalog() {
     { immediate: true },
   )
 
-  /** 显式刷新：写操作之后调用，强制回源（不接收事件参数，便于直接当 @click 处理器） */
+  /** 列表写操作之后调用：先按前缀失效，再让 query 自己重取（不接收事件参数，便于直接当 @click 处理器） */
   function load() {
-    return query.run(true)
+    invalidateScopes(sign.user?.id, ['catalog'])
+    return query.run(false)
   }
   function reset() {
     q.value = ''

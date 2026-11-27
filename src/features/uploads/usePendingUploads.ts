@@ -6,6 +6,7 @@ import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
 import { report } from '@/composables/useFeedback'
 import { useQuery } from '@/lib/query'
+import { invalidateScopes, pendingUploadKeys } from '@/lib/query/keys'
 
 export function usePendingUploads() {
   const uploads = useUploadsStore()
@@ -15,7 +16,7 @@ export function usePendingUploads() {
   const pendingPageSize = ref(24)
   // 待入库是「按页取一页」的读：key 带用户与页码；staleTime 0 表示每次进入都回源
   const pending = useQuery<Page<AudioFile>>({
-    key: () => (sign.user ? `${sign.user.id}:uploads-pending:${pendingPage.value}` : null),
+    key: () => (sign.user ? pendingUploadKeys(sign.user.id).page(pendingPage.value) : null),
     fetcher: (signal) =>
       filesApi.page({ pending: 1, kind: 'audio', page: pendingPage.value }, signal),
     staleTime: 0,
@@ -36,14 +37,16 @@ export function usePendingUploads() {
     const last = Math.max(1, Math.ceil(pendingTotal.value / pendingPageSize.value))
     if (pendingPage.value <= last) return
     pendingPage.value = last
-    void pending.run(true)
+    void pending.run(false)
   })
+  /** 待入库表刷新（入库完成、手动刷新）：按前缀失效后再取 */
   function loadPending() {
-    return pending.run(true)
+    invalidateScopes(sign.user?.id, ['pending-uploads'])
+    return pending.run(false)
   }
   function changePendingPage(page: number) {
     pendingPage.value = page
-    void loadPending()
+    void pending.run(false)
   }
 
   return {

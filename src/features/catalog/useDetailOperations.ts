@@ -6,6 +6,7 @@ import type { Entity } from '@/types/catalog'
 import type { AudioFile } from '@/types/uploads'
 import { notify, useAction } from '@/composables/useFeedback'
 import { useSignStore } from '@/stores/sign'
+import { invalidateScopes } from '@/lib/query/keys'
 import type { useEntityDetail } from './useEntityDetail'
 
 type DetailOperation =
@@ -65,10 +66,12 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
       if (operation.value === 'delete') {
         await catalogApi.remove(type, id, { version: item.value.version, reason: reason.value })
         notify(type === 'playlists' ? '歌单已删除。' : '已删除，可从操作记录中恢复。')
+        invalidateScopes(sign.user?.id, ['catalog', 'detail'])
         await router.push(`/${type}`)
       } else if (operation.value === 'playlist-private') {
         const result = await catalogApi.privatePlaylist(id)
         notify(result.message)
+        invalidateScopes(sign.user?.id, ['catalog', 'detail'])
         await router.push(backTo)
       } else if (operation.value === 'merge' && target.value) {
         await catalogApi.merge(type, id, {
@@ -80,6 +83,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
           },
         })
         notify('合并成功。')
+        invalidateScopes(sign.user?.id, ['catalog', 'detail'])
         await router.push(`/${type}/${target.value.id}`)
       } else if (operation.value === 'file-delete' && selectedFile.value) {
         await filesApi.remove(selectedFile.value.id, {
@@ -87,6 +91,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
           updated_at: selectedFile.value.updated_at,
         })
         notify('资源已删除，原文件保留，可从操作记录中恢复。')
+        invalidateScopes(sign.user?.id, ['detail', 'pending-uploads'])
         await load()
       } else if (operation.value === 'file-move' && selectedFile.value && target.value) {
         await filesApi.update(selectedFile.value.id, {
@@ -94,6 +99,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
           updated_at: selectedFile.value.updated_at,
         })
         notify('音频已移动到所选歌曲。')
+        invalidateScopes(sign.user?.id, ['detail', 'pending-uploads'])
         await load()
       } else if (operation.value === 'tracks') {
         await catalogApi.playlistAppend(
@@ -105,6 +111,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
           Math.ceil((total.value + trackDraft.value.length) / songPageSize.value),
         )
         notify('已添加到歌单。')
+        invalidateScopes(sign.user?.id, ['catalog', 'detail', 'pending-uploads'])
         // 先关对话框再刷新：曲目刷新失败时不应让 operation 仍处于会读 total 的状态
         operation.value = ''
         await load()
@@ -112,6 +119,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
         await catalogApi.playlistMove(id, movingEntry.value.entry_id, movePosition.value)
         page.value = Math.ceil(Math.min(movePosition.value, total.value) / songPageSize.value)
         notify('曲序已调整。')
+        invalidateScopes(sign.user?.id, ['detail', 'pending-uploads'])
         operation.value = ''
         await load()
       }
@@ -122,6 +130,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
     await run(async () => {
       await filesApi.update(file.id, { song_id: id, is_default: true, updated_at: file.updated_at })
       notify('系统默认音质已更新。')
+      invalidateScopes(sign.user?.id, ['detail', 'pending-uploads'])
       await load()
     })
   }
@@ -152,6 +161,7 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
         Math.max(1, Math.ceil((total.value - entryIds.length) / songPageSize.value)),
       )
       notify('已从歌单移除。')
+      invalidateScopes(sign.user?.id, ['catalog', 'detail', 'pending-uploads'])
       await load()
     })
   }
@@ -166,6 +176,8 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
     await run(async () => {
       await catalogApi.favorite(id, !item.value!.is_favorite)
       item.value!.is_favorite = !item.value!.is_favorite
+      // 页面上的按钮已经就地改过，失效只为让列表页回来时看到新状态
+      invalidateScopes(sign.user?.id, ['catalog', 'detail'])
     })
   }
 
