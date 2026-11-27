@@ -4,6 +4,7 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import Tag from '@/components/ui/Tag.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { useCatalog } from '@/features/catalog/useCatalog'
 import { useCatalogActions } from '@/features/catalog/useCatalogActions'
 import {
@@ -80,8 +81,7 @@ const {
       <p class="catalog-intro">{{ introductions[type] }}</p>
     </div>
     <div class="button-group">
-      <RouterLink v-if="type === 'songs'" class="button secondary" to="/uploads"
-        >↑ 上传音频</RouterLink
+      <Button v-if="type === 'songs'" to="/uploads" variant="secondary">↑ 上传音频</Button
       ><Button variant="primary" v-if="canCreate" @click="newItem">
         ＋ 新建{{ labels[type] }}
       </Button>
@@ -141,7 +141,7 @@ const {
     >
       我参与的
     </button>
-    <button v-if="filtered" class="text-button" @click="reset">重置</button>
+    <TextButton v-if="filtered" @click="reset">重置</TextButton>
     <span class="filter-count" role="status">{{
       busy ? '正在更新…' : `共 ${total.toLocaleString()} 条`
     }}</span>
@@ -162,7 +162,7 @@ const {
     </div>
   </div>
   <div v-if="error" class="notice error">
-    {{ error }} <button class="text-button" @click="load">重新加载</button>
+    {{ error }} <TextButton @click="load">重新加载</TextButton>
   </div>
   <div v-if="selected.length" class="selection-bar">
     <span>已选 {{ selected.length }} 首</span
@@ -174,7 +174,7 @@ const {
       收藏</Button
     ><Button variant="secondary" size="sm" :disabled="acting" @click="bulkFavorite(false)">
       取消收藏</Button
-    ><button :disabled="acting" class="text-button" @click="selected = []">清空选择</button
+    ><TextButton :disabled="acting" @click="selected = []">清空选择</TextButton
     ><span v-if="acting" class="hint" role="status">正在处理…</span>
   </div>
   <Card class="loading-list" v-if="busy && !loaded" aria-busy="true" aria-label="正在加载">
@@ -240,14 +240,13 @@ const {
         >
         <div class="entity-actions">
           <RouterLink :to="`/${type}/${item.id}`" class="text-link">查看</RouterLink>
-          <button
+          <TextButton
             v-if="canMakePrivate(item)"
             :disabled="acting"
-            class="text-button"
             @click="privatePlaylist = item"
           >
             设为私密
-          </button>
+          </TextButton>
         </div>
       </article>
     </div>

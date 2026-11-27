@@ -4,10 +4,14 @@
  * ⚠️ 这里的类名不是死样式，不要删：
  *   .button / .button.primary / .button.secondary / .button.small
  *     ← src/components/ui/Button.vue 直接渲染 this class（组件给语义与 API，基元给视觉）
- *     ← 上传域已全部改用 <Button>；直接写 class="button" 的只剩 RouterLink
- *       （CatalogView / TracksSection / NotFoundView），链接需要 RouterLink 的导航语义
+ *     ← 页面已不再直接写 class="button"；原来的 3 处 RouterLink 改成了 <Button to>
+ *       （由组件内部用 <RouterLink custom> 渲染真实的 <a href>）
  *   .icon-button ← src/components/ui/IconButton.vue
- *   .text-button(62 处) / .text-link / .chip / .search-field / .button-group(15 处) 仍被页面直接使用
+ *   .text-button / .text-button:hover
+ *     ← src/components/ui/TextButton.vue 直接渲染 this class（与 .button 同一口径：
+ *        组件给 API，基元给视觉；页面还会依赖 .history-list .text-button 之类的上下文微调）
+ *     ← 未迁移的仅剩上传域（UploadsView / features/uploads，另一分支在改）
+ *   .text-link / .chip / .search-field / .button-group(15 处) 仍被页面直接使用
  *
  * 历史：.badge / .badge.quiet / .badge.warning 已删除，改由 src/components/ui/Tag.vue 的
  *       .ui-tag / .ui-tag--* 提供（内联在组件里，视觉等价）。

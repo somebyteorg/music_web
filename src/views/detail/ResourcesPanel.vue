@@ -3,6 +3,7 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import Tag from '@/components/ui/Tag.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { usePlayerStore } from '@/stores/player'
 import { useSignStore } from '@/stores/sign'
 import { bytes, date, displayName, duration, qualities } from '@/utils/format'
@@ -37,7 +38,7 @@ const sign = useSignStore()
         >{{ uploadingCount }} 份音频正在上传或解析，完成后会自动加入本歌曲。</template
       >
       <template v-else>{{ unfinishedUploadCount }} 个上传任务需要处理。</template>
-      <button class="text-button" @click="emit('upload')">查看进度</button>
+      <TextButton @click="emit('upload')">查看进度</TextButton>
     </p>
     <Card class="resources-panel" v-if="item.files?.length">
       <table class="resource-table">
@@ -102,14 +103,14 @@ const sign = useSignStore()
             </td>
             <td>
               <div class="resource-actions">
-                <button
+                <TextButton
                   v-if="!file.is_default"
                   :disabled="acting"
-                  class="text-button default-action"
+                  class="default-action"
                   @click="emit('setDefault', file)"
                 >
                   设为默认
-                </button>
+                </TextButton>
                 <details class="action-menu">
                   <summary :aria-label="`${file.file_name} 的更多操作`">⋯</summary>
                   <div
