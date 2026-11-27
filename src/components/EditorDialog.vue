@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { useId } from 'vue'
 import type { Entity } from '@/types/catalog'
 import type { EditorProps } from '@/features/editor/model'
@@ -72,7 +73,7 @@ const {
         /></label>
         <p v-if="libraries.error" class="error-text">
           {{ libraries.error }}
-          <button class="text-button" type="button" @click="libraries.load(true)">重试</button>
+          <TextButton @click="libraries.load(true)">重试</TextButton>
         </p>
         <label>修改原因<textarea v-model="assignmentReason" maxlength="1000" rows="2" /></label
       ></template>
@@ -113,9 +114,7 @@ const {
         <p v-if="assignmentChosen" class="notice">
           {{ form.album_id ? `归入：${albumSelectionName}` : '作为单曲，暂不归入专辑' }}
         </p>
-        <button class="text-button" type="button" @click="numberTracks">
-          按当前顺序从 1 编号（每张碟分别编号）
-        </button>
+        <TextButton @click="numberTracks"> 按当前顺序从 1 编号（每张碟分别编号） </TextButton>
         <div class="album-track-rows">
           <article v-for="row in trackRows" :key="row.song.id" :class="{ removed: row.remove }">
             <div>
@@ -204,23 +203,13 @@ const {
               type="file"
               @change="cover"
             />
-            <button
-              v-if="form.cover_id"
-              class="text-button"
-              type="button"
-              @click="form.cover_id = null"
-            >
+            <TextButton v-if="form.cover_id" @click="form.cover_id = null">
               移除自定义封面
-            </button>
+            </TextButton>
             <p class="hint">支持 JPG、PNG、WebP</p>
-            <button
-              :disabled="busy || uploading"
-              class="text-button"
-              type="button"
-              @click="images.show"
-            >
+            <TextButton :disabled="busy || uploading" @click="images.show">
               从我的图片选择
-            </button>
+            </TextButton>
           </div>
         </div>
         <p v-if="coverError" class="notice error" role="alert">{{ coverError }}</p>
@@ -242,14 +231,12 @@ const {
                   picture.type
                 ]
               }}</span>
-              <button
+              <TextButton
                 :disabled="busy || uploading"
-                class="text-button"
-                type="button"
                 @click="artwork = artwork.filter((item) => item.file_id !== picture.file_id)"
               >
                 移除附图
-              </button>
+              </TextButton>
             </article>
           </div>
         </div>
@@ -269,7 +256,7 @@ const {
             >
               搜索
             </Button>
-            <button class="text-button" type="button" @click="images.open = false">收起</button>
+            <TextButton @click="images.open = false">收起</TextButton>
           </div>
           <p v-if="images.error" class="error-text" role="alert">{{ images.error }}</p>
           <p v-if="!images.busy && !images.items.length" class="hint">
@@ -287,14 +274,9 @@ const {
                 <img :src="fileUrl(file.id)" alt="" loading="lazy" />
               </button>
               <span :title="file.file_name">{{ file.file_name }}</span>
-              <button
-                :disabled="busy || uploading || images.busy"
-                class="text-button"
-                type="button"
-                @click="selectCover(file)"
-              >
+              <TextButton :disabled="busy || uploading || images.busy" @click="selectCover(file)">
                 {{ form.cover_id === file.id ? '当前已选' : '用作封面' }}
-              </button>
+              </TextButton>
             </article>
           </div>
           <Pagination
@@ -387,7 +369,7 @@ const {
           /></label>
           <p v-if="libraries.error" class="error-text">
             {{ libraries.error }}
-            <button class="text-button" type="button" @click="libraries.load(true)">重试</button>
+            <TextButton @click="libraries.load(true)">重试</TextButton>
           </p>
           <label
             >收录专辑（可添加多张）
@@ -436,13 +418,12 @@ const {
                   min="1"
                   required
                   type="number" /></label
-              ><button
-                class="text-button danger"
-                type="button"
+              ><TextButton
+                variant="danger"
                 @click="albumEntries = albumEntries.filter((row) => row !== entry)"
               >
                 移出
-              </button>
+              </TextButton>
             </article>
           </div>
           <p class="hint">
@@ -487,13 +468,11 @@ const {
             </button>
           </div>
           <p v-if="recordingSongId" class="hint">
-            关联录音：{{ recordingQuery }}。专辑归属、音频与歌词分别保留。<button
-              class="text-button"
-              type="button"
+            关联录音：{{ recordingQuery }}。专辑归属、音频与歌词分别保留。<TextButton
               @click="recordingSongId = ''"
             >
               取消本次关联
-            </button>
+            </TextButton>
           </p> </template
         ><template v-if="type === 'playlists'"
           ><label class="check-label"
@@ -591,7 +570,7 @@ const {
       >
         关闭
       </Button>
-      <button
+      <TextButton
         v-if="images.preview?.file"
         :disabled="
           images.previewBusy ||
@@ -600,12 +579,11 @@ const {
           busy ||
           uploading
         "
-        class="text-button danger"
-        type="button"
+        variant="danger"
         @click="images.confirmDelete ? images.remove() : (images.confirmDelete = true)"
       >
         {{ images.confirmDelete ? '确认删除' : '删除图片' }}
-      </button>
+      </TextButton>
       <Button
         variant="primary"
         v-if="images.preview?.file"

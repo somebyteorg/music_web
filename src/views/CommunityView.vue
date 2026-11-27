@@ -3,6 +3,7 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import Tag from '@/components/ui/Tag.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import Pagination from '@/components/Pagination.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -102,10 +103,10 @@ const {
       /><Button variant="secondary">搜索</Button>
     </form>
     <span class="filter-count">共 {{ total }} 条</span
-    ><button :disabled="busy" class="text-button" @click="load">刷新</button>
+    ><TextButton :disabled="busy" @click="load">刷新</TextButton>
   </div>
   <div v-if="error" class="notice error">
-    {{ error }} <button class="text-button" @click="load">重试</button>
+    {{ error }} <TextButton @click="load">重试</TextButton>
   </div>
   <div v-if="busy && !loaded" class="skeleton list-skeleton"></div>
   <template v-else
@@ -128,8 +129,7 @@ const {
           <p v-if="log.reason" class="history-reason">{{ log.reason }}</p>
           <span class="hint">{{ date(log.created_at) }}</span>
         </div>
-        <button
-          class="text-button"
+        <TextButton
           @click="
             () => {
               inspect = log
@@ -138,7 +138,7 @@ const {
           "
         >
           查看变更
-        </button>
+        </TextButton>
       </article>
     </Card>
     <Card class="member-list" v-if="section === 'members' && members.length">
@@ -188,14 +188,9 @@ const {
             >查看详情 ↗</RouterLink
           >
         </div>
-        <button
-          v-if="!message.read_at"
-          :disabled="acting"
-          class="text-button"
-          @click="read(message.id)"
-        >
+        <TextButton v-if="!message.read_at" :disabled="acting" @click="read(message.id)">
           标为已读
-        </button>
+        </TextButton>
       </Card>
     </div>
     <EmptyState

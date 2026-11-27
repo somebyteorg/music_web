@@ -3,6 +3,7 @@ import Card from '@/components/ui/Card.vue'
 import Tabs from '@/components/ui/Tabs.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { inject } from 'vue'
 import BaseSelect from '@/components/BaseSelect.vue'
 import { useSignStore } from '@/stores/sign'
@@ -39,14 +40,14 @@ const sign = useSignStore()
             设为默认
           </Button>
           <Button variant="secondary" @click="lyrics.download">下载</Button>
-          <button
+          <TextButton
             v-if="lyrics.selected.user_id === sign.user?.id || sign.canModerate"
             :disabled="lyrics.busy"
-            class="text-button danger"
+            variant="danger"
             @click="lyrics.remove"
           >
             删除
-          </button>
+          </TextButton>
         </div>
       </div>
       <p class="hint">

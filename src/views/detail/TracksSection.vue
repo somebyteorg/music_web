@@ -2,6 +2,7 @@
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { computed, inject } from 'vue'
 import SongList from '@/components/SongList.vue'
 import Pagination from '@/components/Pagination.vue'
@@ -87,16 +88,10 @@ const collaborators = computed(() => item.value?.collaborators ?? [])
           v-if="type === 'playlists' && editable && managingTracks"
           #actions="{ song, index }"
         >
-          <button :disabled="acting" class="text-button" @click="moveEntry(song, index)">
-            移动
-          </button>
-          <button
-            :disabled="acting"
-            class="text-button danger"
-            @click="removeEntries([song.entry_id!])"
-          >
+          <TextButton :disabled="acting" @click="moveEntry(song, index)"> 移动 </TextButton>
+          <TextButton :disabled="acting" variant="danger" @click="removeEntries([song.entry_id!])">
             移除
-          </button>
+          </TextButton>
         </template>
       </SongList>
       <EmptyState v-else symbol="♫" as="h3" title="暂无歌曲"> 添加歌曲后会显示在这里。 </EmptyState>

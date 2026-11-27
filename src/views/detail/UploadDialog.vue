@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { computed, inject } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import { useAction } from '@/composables/useFeedback'
@@ -95,35 +96,31 @@ const {
             >
           </p>
           <div class="button-group">
-            <button
+            <TextButton
               v-if="TRANSMIT_STATES.includes(task.state)"
-              class="text-button"
               @click="run(() => uploads.pause(task))"
             >
               暂停
-            </button>
-            <button
+            </TextButton>
+            <TextButton
               v-if="['paused', 'failed'].includes(task.state)"
-              class="text-button"
               @click="run(() => uploads.retry(task))"
             >
               重试
-            </button>
-            <button
+            </TextButton>
+            <TextButton
               v-if="task.state === 'failed' && !task.transfer.file"
-              class="text-button"
               @click="uploads.restart(task)"
             >
               重新上传
-            </button>
+            </TextButton>
             <template v-if="task.state === 'duplicate'"
-              ><button
+              ><TextButton
                 :disabled="!uploads.duplicateFile(task)"
-                class="text-button"
                 @click="run(() => uploads.useDuplicate(task))"
               >
-                使用已有文件</button
-              ><button class="text-button" @click="uploads.skip(task)">跳过</button></template
+                使用已有文件</TextButton
+              ><TextButton @click="uploads.skip(task)">跳过</TextButton></template
             >
           </div>
         </article>

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Tag from '@/components/ui/Tag.vue'
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { computed, ref } from 'vue'
 import EntityCover from '@/components/EntityCover.vue'
 import { usePlayerStore } from '@/stores/player'
@@ -74,14 +75,13 @@ function togglePlay() {
       </div>
       <div v-if="item.description" class="description">
         <p :class="{ expanded: descriptionOpen }">{{ item.description }}</p>
-        <button
+        <TextButton
           v-if="item.description.length > 60 || item.description.includes('\n')"
           :aria-expanded="descriptionOpen"
-          class="text-button"
           @click="descriptionOpen = !descriptionOpen"
         >
           {{ descriptionOpen ? '收起简介' : '展开简介' }}
-        </button>
+        </TextButton>
       </div>
       <div class="button-group">
         <Button

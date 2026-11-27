@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { onMounted, ref } from 'vue'
 import { accountApi } from '@/lib/api/account'
 import type { PlaybackLibrarySettings, User } from '@/types/session'
@@ -104,7 +105,7 @@ async function save() {
     <p v-if="librariesBusy" class="hint" role="status">正在加载媒体库…</p>
     <p v-else-if="librariesError" class="error-text" role="alert">
       {{ librariesError }}
-      <button class="text-button" type="button" @click="loadLibraries">重新加载</button>
+      <TextButton @click="loadLibraries">重新加载</TextButton>
     </p>
     <fieldset
       v-else-if="libraries.length"
