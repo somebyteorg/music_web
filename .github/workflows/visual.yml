@@ -1,0 +1,35 @@
+name: visual
+
+on:
+  pull_request:
+
+concurrency:
+  group: visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual:
+    # 基线在 macOS 上渲染：字体（PingFang SC / SF）与抗锯齿和本地产物一致，
+    # 换到 ubuntu 会因为字体回退产生整页文本差异。
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: npx playwright install --with-deps chromium
+      - run: pnpm build
+      - run: pnpm test:visual
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff
+          path: |
+            e2e/__shots__/actual
+            e2e/__shots__/diff
+          if-no-files-found: ignore
+          retention-days: 7
