@@ -45,13 +45,13 @@ function pump() {
       if (finish()) job.reject(new DOMException('已暂停文件校验。', 'AbortError'))
     }
     job.signal.addEventListener('abort', abort, { once: true })
-    worker.onmessage = (event: MessageEvent) => {
+    worker.onmessage = async (event: MessageEvent) => {
       if (event.data.type === 'metadata') job.onMetadata(event.data.metadata)
       else if (event.data.type === 'progress') job.onProgress(event.data.progress)
       else if (event.data.type === 'complete') {
         try {
           const { lyrics, ...metadata } = event.data.metadata as UploadDraftMetadata
-          metadata.preparedLyrics = prepareEmbeddedLyrics(lyrics || [], job.file.name)
+          metadata.preparedLyrics = await prepareEmbeddedLyrics(lyrics || [], job.file.name)
           if (finish()) job.resolve({ sha256: event.data.sha256, metadata })
         } catch (error) {
           if (finish()) job.reject(error instanceof Error ? error : new Error('内嵌歌词处理失败。'))

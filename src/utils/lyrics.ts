@@ -1,10 +1,4 @@
-import {
-  type LyricLine,
-  parseLrcLike,
-  parseTTML,
-  stringifyLrcLike,
-  stringifySPL,
-} from '@applemusic-like-lyrics/lyric'
+import type { LyricLine } from '@applemusic-like-lyrics/lyric'
 import type {
   EmbeddedLyric,
   LyricFormat,
@@ -12,6 +6,21 @@ import type {
   PreparedLyric,
   StructuredLyric,
 } from '@/types/lyrics'
+
+/** 解析器（lyric + ttml + pako，合计约 200 kB）只在第一次真正解析时才加载 */
+type LyricModule = typeof import('@applemusic-like-lyrics/lyric')
+let lyricModule: Promise<LyricModule> | undefined
+
+export function loadLyricModule(): Promise<LyricModule> {
+  if (!lyricModule) {
+    lyricModule = import('@applemusic-like-lyrics/lyric').catch((error: unknown) => {
+      lyricModule = undefined
+      const reason = error instanceof Error ? error.message : String(error)
+      throw new Error(`歌词解析模块加载失败（${reason}），请检查网络后重试。`)
+    })
+  }
+  return lyricModule
+}
 
 export function detectLyricFormat(content: string, filename = ''): LyricFormat {
   const extension = filename.split('.').pop()?.toLowerCase()
@@ -33,14 +42,28 @@ const formatTime = (milliseconds: number) => {
   return `${minutes}:${seconds}.${String(value % 1000).padStart(3, '0')}`
 }
 
-function parse(format: LyricFormat, content: string): LyricLine[] {
-  const lines = format === 'ttml' ? parseTTML(content).lines : parseLrcLike(content).lines
-  return lines
-    .filter((line) => !line.isBG && Number.isFinite(line.startTime) && line.startTime >= 0)
-    .sort((a, b) => a.startTime - b.startTime)
+export interface LyricsResult {
+  /** 识别出的格式；纯文本不参与解析，lines 为空 */
+  format: LyricFormat
+  /** 过滤背景行并按开始时间排序，用来生成结构化歌词 */
+  lines: LyricLine[]
+  /** 解析器原始输出（未过滤），逐字 LRC 重排要用 */
+  raw: LyricLine[]
 }
 
-export function prepareLyrics(input: LyricInput): PreparedLyric {
+/** 解析歌词文本：只有同步歌词才需要解析器，因此这里按需 import，纯文本直接返回空行 */
+export async function parseLyrics(content: string, format?: LyricFormat): Promise<LyricsResult> {
+  const detected = format ?? detectLyricFormat(content)
+  if (detected === 'text') return { format: detected, lines: [], raw: [] }
+  const { parseLrcLike, parseTTML } = await loadLyricModule()
+  const raw = detected === 'ttml' ? parseTTML(content).lines : parseLrcLike(content).lines
+  const lines = raw
+    .filter((line) => !line.isBG && Number.isFinite(line.startTime) && line.startTime >= 0)
+    .sort((a, b) => a.startTime - b.startTime)
+  return { format: detected, lines, raw }
+}
+
+export async function prepareLyrics(input: LyricInput): Promise<PreparedLyric> {
   const content = input.content
     .replace(/^\uFEFF/, '')
     .replace(/\r\n?/g, '\n')
@@ -58,7 +81,7 @@ export function prepareLyrics(input: LyricInput): PreparedLyric {
   if (input.format === 'text') {
     document.line = content.split('\n').map((value) => ({ value }))
   } else {
-    const lines = parse(input.format, content)
+    const { lines } = await parseLyrics(content, input.format)
     if (!lines.length) throw new Error('没有读到有效的同步歌词，请检查歌词格式和时间标签。')
     document.line = lines.map((line) => ({
       start: Math.round(line.startTime),
@@ -70,6 +93,7 @@ export function prepareLyrics(input: LyricInput): PreparedLyric {
         .join('')
         .trim(),
     }))
+    const { stringifyLrcLike } = await loadLyricModule()
     lrc = stringifyLrcLike(lines, {
       mode: 'plain',
       auxiliaryLines: {
@@ -82,7 +106,10 @@ export function prepareLyrics(input: LyricInput): PreparedLyric {
   return { ...input, content, source_format: input.format, lrc, structured: [document] }
 }
 
-export function prepareEmbeddedLyrics(lyrics: EmbeddedLyric[], filename: string): PreparedLyric[] {
+export async function prepareEmbeddedLyrics(
+  lyrics: EmbeddedLyric[],
+  filename: string,
+): Promise<PreparedLyric[]> {
   const versions: PreparedLyric[] = []
   for (const [index, original] of lyrics.entries()) {
     let content = original.text || original.syncText?.map((line) => line.text).join('\n') || ''
@@ -98,8 +125,12 @@ export function prepareEmbeddedLyrics(lyrics: EmbeddedLyric[], filename: string)
     }
     if (!content.trim()) continue
     const format = original.format || detectLyricFormat(content)
-    if (format === 'elrc' && synchronized) content = stringifySPL(parseLrcLike(content).lines)
-    const prepared = prepareLyrics({
+    if (format === 'elrc' && synchronized) {
+      const { raw } = await parseLyrics(content, 'elrc')
+      const { stringifySPL } = await loadLyricModule()
+      content = stringifySPL(raw)
+    }
+    const prepared = await prepareLyrics({
       name: `内嵌歌词 ${index + 1}`,
       format,
       kind: 'main',

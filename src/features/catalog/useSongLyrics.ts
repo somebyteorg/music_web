@@ -94,10 +94,12 @@ export function useSongLyrics(item: Ref<Entity | undefined>) {
   async function save() {
     await run(async () => {
       if (!item.value) return
+      // 解析器按需加载：第一次保存才拉取歌词 chunk，busy 期间弹窗按钮显示「正在保存…」
+      const prepared = await prepareLyrics(form.value)
       const result = await catalogApi.saveLyrics<{ lyrics: LyricVersion[]; version: number }>(
         item.value.id,
         editingId.value || null,
-        { ...prepareLyrics(form.value), version: version.value },
+        { ...prepared, version: version.value },
       )
       apply(result)
       selectedId.value = editingId.value || result.lyrics.at(-1)?.id || ''
