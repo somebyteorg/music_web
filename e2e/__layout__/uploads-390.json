@@ -35,7 +35,7 @@
     {
       "tag": "a",
       "classes": "brand",
-      "x": -212, "y": 30, "width": 129, "height": 47,
+      "x": -212, "y": 30, "width": 128, "height": 47,
       "style": { "display": "flex", "align-items": "center", "row-gap": "12px", "column-gap": "12px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
@@ -45,13 +45,13 @@
     },
     {
       "tag": "span",
-      "x": -160, "y": 30, "width": 77, "height": 47,
+      "x": -160, "y": 30, "width": 76, "height": 47,
       "text": "跃律",
       "style": { "display": "block", "font-size": "26px", "font-weight": "750", "line-height": "31.2px", "letter-spacing": "2px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "small",
-      "x": -160, "y": 66, "width": 77, "height": 11,
+      "x": -160, "y": 66, "width": 76, "height": 11,
       "text": "EMOS MUSIC",
       "style": { "display": "block", "margin-top": "5px", "font-size": "9px", "font-weight": "500", "line-height": "10.8px", "letter-spacing": "1.8px", "color": "rgb(104, 101, 113)" }
     },
@@ -272,7 +272,7 @@
     },
     {
       "tag": "span",
-      "x": -178, "y": 724, "width": 69, "height": 21,
+      "x": -178, "y": 724, "width": 76, "height": 21,
       "text": "Navidrome",
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 112, 127)" }
     },
@@ -280,7 +280,7 @@
       "tag": "svg",
       "classes": "nav-external ui-icon",
       "x": -46, "y": 727, "width": 15, "height": 15,
-      "style": { "display": "block", "flex-shrink": "0", "margin-left": "49.5156px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
+      "style": { "display": "block", "flex-shrink": "0", "margin-left": "42.6094px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
     },
     {
       "tag": "a",
@@ -296,7 +296,7 @@
     },
     {
       "tag": "span",
-      "x": -178, "y": 775, "width": 46, "height": 21,
+      "x": -178, "y": 775, "width": 49, "height": 21,
       "text": "Feishin",
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 112, 127)" }
     },
@@ -304,7 +304,7 @@
       "tag": "svg",
       "classes": "nav-external ui-icon",
       "x": -46, "y": 778, "width": 15, "height": 15,
-      "style": { "display": "block", "flex-shrink": "0", "margin-left": "73.2969px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
+      "style": { "display": "block", "flex-shrink": "0", "margin-left": "70.2656px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
     },
     {
       "tag": "div",
@@ -461,7 +461,7 @@
     {
       "tag": "span",
       "classes": "muted",
-      "x": 121, "y": 102, "width": 51, "height": 20,
+      "x": 121, "y": 103, "width": 51, "height": 20,
       "text": "0 个任务",
       "style": { "display": "block", "font-size": "13px", "line-height": "19.5px", "color": "rgb(104, 101, 113)" }
     },
@@ -525,67 +525,67 @@
     {
       "tag": "div",
       "classes": "queue-filters",
-      "x": 18, "y": 396, "width": 337, "height": 32,
+      "x": 18, "y": 396, "width": 340, "height": 32,
       "style": { "display": "flex", "flex-wrap": "wrap", "row-gap": "4px", "column-gap": "4px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
       "classes": "active",
-      "x": 18, "y": 396, "width": 55, "height": 32,
+      "x": 18, "y": 396, "width": 56, "height": 32,
       "text": "全部",
       "style": { "display": "flex", "align-items": "center", "row-gap": "6px", "column-gap": "6px", "padding-top": "5px", "padding-right": "9px", "padding-bottom": "5px", "padding-left": "9px", "border-top-left-radius": "5px", "border-top-right-radius": "5px", "border-bottom-right-radius": "5px", "border-bottom-left-radius": "5px", "font-size": "12px", "font-weight": "550", "line-height": "18px", "color": "rgb(94, 61, 156)", "background-color": "rgb(240, 235, 248)" }
     },
     {
       "tag": "span",
-      "x": 57, "y": 404, "width": 7, "height": 17,
+      "x": 57, "y": 404, "width": 8, "height": 17,
       "text": "0",
       "style": { "display": "block", "font-size": "11px", "font-weight": "550", "line-height": "16.5px", "color": "rgb(94, 61, 156)" }
     },
     {
       "tag": "button",
-      "x": 77, "y": 396, "width": 67, "height": 32,
+      "x": 78, "y": 396, "width": 67, "height": 32,
       "text": "进行中",
       "style": { "display": "flex", "align-items": "center", "row-gap": "6px", "column-gap": "6px", "padding-top": "5px", "padding-right": "9px", "padding-bottom": "5px", "padding-left": "9px", "border-top-left-radius": "5px", "border-top-right-radius": "5px", "border-bottom-right-radius": "5px", "border-bottom-left-radius": "5px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "span",
-      "x": 128, "y": 404, "width": 7, "height": 17,
+      "x": 129, "y": 404, "width": 7, "height": 17,
       "text": "0",
       "style": { "display": "block", "font-size": "11px", "line-height": "16.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "button",
-      "x": 147, "y": 396, "width": 67, "height": 32,
+      "x": 149, "y": 396, "width": 67, "height": 32,
       "text": "待确认",
       "style": { "display": "flex", "align-items": "center", "row-gap": "6px", "column-gap": "6px", "padding-top": "5px", "padding-right": "9px", "padding-bottom": "5px", "padding-left": "9px", "border-top-left-radius": "5px", "border-top-right-radius": "5px", "border-bottom-right-radius": "5px", "border-bottom-left-radius": "5px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "span",
-      "x": 198, "y": 404, "width": 7, "height": 17,
+      "x": 200, "y": 404, "width": 7, "height": 17,
       "text": "0",
       "style": { "display": "block", "font-size": "11px", "line-height": "16.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "button",
-      "x": 218, "y": 396, "width": 67, "height": 32,
+      "x": 220, "y": 396, "width": 67, "height": 32,
       "text": "需处理",
       "style": { "display": "flex", "align-items": "center", "row-gap": "6px", "column-gap": "6px", "padding-top": "5px", "padding-right": "9px", "padding-bottom": "5px", "padding-left": "9px", "border-top-left-radius": "5px", "border-top-right-radius": "5px", "border-bottom-right-radius": "5px", "border-bottom-left-radius": "5px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "span",
-      "x": 269, "y": 404, "width": 7, "height": 17,
+      "x": 271, "y": 404, "width": 7, "height": 17,
       "text": "0",
       "style": { "display": "block", "font-size": "11px", "line-height": "16.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "button",
-      "x": 288, "y": 396, "width": 67, "height": 32,
+      "x": 291, "y": 396, "width": 67, "height": 32,
       "text": "已完成",
       "style": { "display": "flex", "align-items": "center", "row-gap": "6px", "column-gap": "6px", "padding-top": "5px", "padding-right": "9px", "padding-bottom": "5px", "padding-left": "9px", "border-top-left-radius": "5px", "border-top-right-radius": "5px", "border-bottom-right-radius": "5px", "border-bottom-left-radius": "5px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "span",
-      "x": 339, "y": 404, "width": 7, "height": 17,
+      "x": 342, "y": 404, "width": 7, "height": 17,
       "text": "0",
       "style": { "display": "block", "font-size": "11px", "line-height": "16.5px", "color": "rgb(104, 101, 113)" }
     },
@@ -598,7 +598,7 @@
     {
       "tag": "label",
       "classes": "concurrency-input",
-      "x": 18, "y": 455, "width": 164, "height": 40,
+      "x": 18, "y": 455, "width": 163, "height": 40,
       "style": { "display": "flex", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-right": "10px", "padding-left": "10px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
@@ -616,7 +616,7 @@
     {
       "tag": "span",
       "classes": "concurrency-value",
-      "x": 109, "y": 461, "width": 62, "height": 28,
+      "x": 109, "y": 461, "width": 61, "height": 28,
       "style": { "display": "flex", "align-items": "center", "row-gap": "2px", "column-gap": "2px", "padding-left": "7px", "border-left-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
@@ -627,7 +627,7 @@
     {
       "tag": "span",
       "classes": "concurrency-limit",
-      "x": 149, "y": 467, "width": 22, "height": 17,
+      "x": 149, "y": 467, "width": 21, "height": 17,
       "text": "/ 32",
       "style": { "display": "block", "font-size": "11px", "line-height": "16.5px", "color": "rgb(117, 111, 124)" }
     },
@@ -738,7 +738,7 @@
     },
     {
       "tag": "strong",
-      "x": 63, "y": 758, "width": 109, "height": 18,
+      "x": 63, "y": 760, "width": 112, "height": 15,
       "text": "未整理 - 夏夜.ogg",
       "style": { "display": "inline", "font-size": "13px", "font-weight": "700", "line-height": "19.5px", "color": "rgb(41, 39, 51)" }
     },
@@ -776,7 +776,7 @@
     },
     {
       "tag": "strong",
-      "x": 63, "y": 819, "width": 135, "height": 18,
+      "x": 63, "y": 821, "width": 140, "height": 15,
       "text": "未整理 - 迟到的信.wav",
       "style": { "display": "inline", "font-size": "13px", "font-weight": "700", "line-height": "19.5px", "color": "rgb(41, 39, 51)" }
     },
@@ -802,7 +802,7 @@
     },
     {
       "tag": "span",
-      "x": 18, "y": 881, "width": 77, "height": 18,
+      "x": 18, "y": 881, "width": 78, "height": 18,
       "text": "共 2 条 · 1 / 1",
       "style": { "display": "block", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)" }
     },
@@ -815,14 +815,14 @@
     {
       "tag": "button",
       "classes": "button secondary small",
-      "x": 18, "y": 911, "width": 78, "height": 34,
+      "x": 18, "y": 911, "width": 76, "height": 34,
       "text": "← 上一页",
       "style": { "display": "flex", "justify-content": "center", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "6px", "padding-right": "12px", "padding-bottom": "6px", "padding-left": "12px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "12px", "font-weight": "550", "line-height": "18px", "color": "rgb(104, 101, 113)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "button",
       "classes": "button secondary small",
-      "x": 294, "y": 911, "width": 78, "height": 34,
+      "x": 296, "y": 911, "width": 76, "height": 34,
       "text": "下一页 →",
       "style": { "display": "flex", "justify-content": "center", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "6px", "padding-right": "12px", "padding-bottom": "6px", "padding-left": "12px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "12px", "font-weight": "550", "line-height": "18px", "color": "rgb(104, 101, 113)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },

@@ -35,7 +35,7 @@
     {
       "tag": "a",
       "classes": "brand",
-      "x": -212, "y": 30, "width": 129, "height": 47,
+      "x": -212, "y": 30, "width": 128, "height": 47,
       "style": { "display": "flex", "align-items": "center", "row-gap": "12px", "column-gap": "12px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
@@ -45,13 +45,13 @@
     },
     {
       "tag": "span",
-      "x": -160, "y": 30, "width": 77, "height": 47,
+      "x": -160, "y": 30, "width": 76, "height": 47,
       "text": "跃律",
       "style": { "display": "block", "font-size": "26px", "font-weight": "750", "line-height": "31.2px", "letter-spacing": "2px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "small",
-      "x": -160, "y": 66, "width": 77, "height": 11,
+      "x": -160, "y": 66, "width": 76, "height": 11,
       "text": "EMOS MUSIC",
       "style": { "display": "block", "margin-top": "5px", "font-size": "9px", "font-weight": "500", "line-height": "10.8px", "letter-spacing": "1.8px", "color": "rgb(104, 101, 113)" }
     },
@@ -271,7 +271,7 @@
     },
     {
       "tag": "span",
-      "x": -178, "y": 724, "width": 69, "height": 21,
+      "x": -178, "y": 724, "width": 76, "height": 21,
       "text": "Navidrome",
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 112, 127)" }
     },
@@ -279,7 +279,7 @@
       "tag": "svg",
       "classes": "nav-external ui-icon",
       "x": -46, "y": 727, "width": 15, "height": 15,
-      "style": { "display": "block", "flex-shrink": "0", "margin-left": "49.5156px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
+      "style": { "display": "block", "flex-shrink": "0", "margin-left": "42.6094px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
     },
     {
       "tag": "a",
@@ -295,7 +295,7 @@
     },
     {
       "tag": "span",
-      "x": -178, "y": 775, "width": 46, "height": 21,
+      "x": -178, "y": 775, "width": 49, "height": 21,
       "text": "Feishin",
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 112, 127)" }
     },
@@ -303,7 +303,7 @@
       "tag": "svg",
       "classes": "nav-external ui-icon",
       "x": -46, "y": 778, "width": 15, "height": 15,
-      "style": { "display": "block", "flex-shrink": "0", "margin-left": "73.2969px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
+      "style": { "display": "block", "flex-shrink": "0", "margin-left": "70.2656px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
     },
     {
       "tag": "div",
