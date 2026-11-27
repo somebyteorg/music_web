@@ -46,15 +46,16 @@
 
   /* —— 分隔线 —— */
   --line-strong: color-mix(in srgb, var(--text) 24.3%, var(--surface));
-  --line-faint: color-mix(in srgb, var(--text) 24.3%, var(--surface));
+  /* 面包屑分隔符是文字不是线：按下面 --text-faint 的同一档取值，保证 4.5:1 */
+  --line-faint: color-mix(in srgb, var(--text) 53%, var(--surface));
 
   /* —— 文本层级 —— */
   --text-subtle: color-mix(in srgb, var(--text) 78.6%, var(--bg));
-  --text-faint: color-mix(in srgb, var(--text) 49.6%, var(--bg));
+  --text-faint: color-mix(in srgb, var(--text) 53%, var(--bg));
   --text-ghost: color-mix(in srgb, var(--text) 38.6%, var(--bg));
-  --text-breadcrumb: color-mix(in srgb, var(--text) 49.6%, var(--bg));
-  --text-link-muted: color-mix(in srgb, var(--text) 49.6%, var(--bg));
-  --text-meter: color-mix(in srgb, var(--text) 49.6%, var(--bg));
+  --text-breadcrumb: color-mix(in srgb, var(--text) 53%, var(--bg));
+  --text-link-muted: color-mix(in srgb, var(--text) 53%, var(--bg));
+  --text-meter: color-mix(in srgb, var(--text) 53%, var(--bg));
   --nav-item: var(--text-muted);
   --text-meta: var(--text-muted);
   --placeholder: var(--text-muted);

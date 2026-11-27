@@ -5,6 +5,11 @@
  * 对应元素的原始色值。不要在这里写 color-mix / 近似值 —— 那会让 getComputedStyle
  * 序列化成 color(srgb …)，与历史 rgb() 不相等（见 tokens.css 顶部的维修记录）。
  *
+ * 例外（WCAG AA 修正）：下面 6 个文字色在上游历史色上过不了 4.5:1，已按原色相
+ * 把明度压到 4.8~5.7:1 的区间 —— --text-muted / --text-faint / --text-ghost /
+ * --text-breadcrumb / --text-meter / --line-faint（面包屑分隔符实际是文字）。
+ * 复核方式：pnpm test:contrast。除这 6 个之外仍要求逐字节等于 5bd7a12。
+ *
  * 命名口径：
  *   - 基础色（--bg/--surface/--text/--brand/--danger/--success/--warning/--on-brand）：跨主题的角色色；
  *   - 派生色：按"用在哪里"命名（--nav-item / --chip-line / --tag-bg …），因为历史上同一角色
@@ -23,7 +28,7 @@
 
   /* —— 基础色：文本 —— */
   --text: #292733;
-  --text-muted: #777481;
+  --text-muted: #686571;
   --text-soft: #484551;
 
   /* —— 基础色：品牌 —— */
@@ -54,15 +59,15 @@
 
   /* —— 分隔线 —— */
   --line-strong: #c7c6d2; /* 次要按钮 hover 边框 */
-  --line-faint: #c4c0cc; /* 面包屑父级分隔符 */
+  --line-faint: #766d87; /* 面包屑父级分隔符（是文字不是线，按文字等级取色） */
 
   /* —— 文本层级 —— */
   --text-subtle: #575160; /* 面包屑当前项 */
-  --text-faint: #9b94a5; /* 侧栏分组标题 */
-  --text-ghost: #aaa3b1; /* 侧栏外链 */
-  --text-breadcrumb: #918b9c;
+  --text-faint: #746b80; /* 侧栏分组标题 */
+  --text-ghost: #776e81; /* 侧栏外链 */
+  --text-breadcrumb: #756e81;
   --text-link-muted: #8b8196; /* 收件箱链接 */
-  --text-meter: #99949f; /* 并发输入右侧上限数字 */
+  --text-meter: #756f7c; /* 并发输入右侧上限数字 */
   --nav-item: #77707f; /* 侧栏导航项（与 --text-muted 历史色不同） */
   --text-meta: #776b83; /* 账户区动作 */
   --placeholder: #777480;
