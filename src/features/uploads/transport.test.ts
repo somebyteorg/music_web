@@ -235,6 +235,39 @@ describe('transport：tus 传输', () => {
   })
 })
 
+describe('transport：tus 按需加载', () => {
+  it('加载失败时抛出可读错误，任务落到 failed / transfer', async () => {
+    vi.resetModules()
+    vi.doMock('tus-js-client', async () => {
+      throw new Error('chunk 404')
+    })
+    const fresh = await import('./transport')
+    const events: UploadEvent[] = []
+    const current = task()
+    const runner = fresh.createUploadRunner({
+      userId: () => 1,
+      chunkSize: () => 1024,
+      tasks: () => [current],
+      file: () => new File(['abc'], 'a.flac'),
+      apply: (target, event) => {
+        events.push(event)
+        Object.assign(target, reduceTask(target, event))
+      },
+      finish: vi.fn(),
+      isPublishing: () => false,
+      idle: vi.fn(),
+    })
+    await runner.run(current)
+    vi.doUnmock('tus-js-client')
+    vi.resetModules()
+    expect(current.state).toBe('failed')
+    expect(current.errorStage).toBe('transfer')
+    // 可读错误：外层是「上传组件加载失败」，括号里保留底层原因，结尾给出可操作建议
+    expect(current.error).toMatch(/^上传组件加载失败（.+），请检查网络后重试。$/)
+    expect(events.at(-1)).toEqual(expect.objectContaining({ type: 'failed' }))
+  })
+})
+
 describe('transport：指纹与续传地址', () => {
   it('文件指纹包含路径、大小与修改时间', () => {
     const file = new File(['abc'], 'a.flac', { lastModified: 123 })

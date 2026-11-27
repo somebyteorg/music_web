@@ -1,11 +1,11 @@
 import { reactive } from 'vue'
-import { Upload } from 'tus-js-client'
 import { prepareUpload } from '@/utils/uploadPreparation'
 import type { AudioFile } from '@/types/uploads'
 import { applyTaskMetadata } from './taskMetadata'
 import type { UploadTransfer } from './taskStats'
 import { TRANSMIT_STATES, type UploadTask } from './model'
 import type { UploadEvent } from './machine'
+import { loadTus, type TusUpload } from './tusClient'
 import { uploadRepository } from './repository'
 
 /** 队列里用于去重的稳定指纹：路径 + 大小 + 修改时间 */
@@ -47,7 +47,7 @@ export interface UploadRunner {
 
 /** 任务传输层：文件校验 → 查重 → 建会话 → tus 传输 → 轮询解析；状态迁移一律交给状态机 */
 export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
-  const active = new Map<string, Upload>()
+  const active = new Map<string, TusUpload>()
   const attempts = new Map<string, symbol>()
   const controllers = new Map<string, AbortController>()
   const cancels = new Map<string, () => void>()
@@ -188,6 +188,7 @@ export function createUploadRunner(deps: UploadRunnerDeps): UploadRunner {
         })
       }
       assertActive()
+      const { Upload } = await loadTus() // 失败会带着可读原因落到 failed（阶段 = transfer）
       await new Promise<void>((resolve, reject) => {
         cancels.set(task.id, () => reject(new DOMException('上传已暂停。', 'AbortError')))
         const upload = new Upload(file, {
