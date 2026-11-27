@@ -1,6 +1,6 @@
 import type { Person } from '@/types/catalog'
 import type { AudioFile } from '@/types/uploads'
-import type { UploadTask } from './model'
+import { RESELECT_FILE_HINT, type UploadTask } from './model'
 import { fingerprintOfFile } from './transport'
 import { uploadRepository } from './repository'
 import { type UploadOperationsDeps, operationError } from './operationContext'
@@ -47,7 +47,7 @@ export function createUploadRecovery(
     }
     if (!deps.storage.files.has(task.id)) {
       deps.apply(task, { type: 'paused' })
-      task.error = '重新选择原文件或原文件夹后，即可继续上传。'
+      task.error = RESELECT_FILE_HINT
       return
     }
     deps.apply(task, { type: 'retried' })
