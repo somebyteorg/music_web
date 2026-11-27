@@ -12,6 +12,7 @@ import { useUploadsStore } from '@/stores/uploads'
 import { useSignStore } from '@/stores/sign'
 import { type AlbumEntry, buildEntityPayload, createEditorForm, type EditorProps } from './model'
 import { communityApi } from '@/lib/api/community'
+import { invalidateScopes } from '@/lib/query/keys'
 
 export function useEntityEditor(
   props: EditorProps,
@@ -182,6 +183,13 @@ export function useEntityEditor(
       row.track_number = next
     }
   }
+  /** 保存成功后的统一收尾：编辑影响列表与详情两块，按前缀失效后由各页自己的 query 重取 */
+  function done(item: Entity) {
+    invalidateScopes(sign.user?.id, ['catalog', 'detail'])
+    open.value = false
+    onSaved(item)
+  }
+
   async function save() {
     await run(async () => {
       if (props.libraryMode) {
@@ -191,9 +199,8 @@ export function useEntityEditor(
           items: props.tracks.map((song) => ({ id: song.id, version: song.version })),
           reason: assignmentReason.value,
         })
-        open.value = false
         notify('歌曲所属媒体库已更新。')
-        onSaved(props.tracks[0]!)
+        done(props.tracks[0]!)
         return
       }
       if (trackMode.value) {
@@ -210,9 +217,8 @@ export function useEntityEditor(
           })),
           reason: assignmentReason.value,
         })
-        open.value = false
         notify('专辑归属和曲序已更新。')
-        onSaved(props.album || props.tracks![0]!)
+        done(props.album || props.tracks![0]!)
         return
       }
       const body = buildEntityPayload(
@@ -230,8 +236,7 @@ export function useEntityEditor(
       const result = await catalogApi.save(props.type, body, props.item?.id)
       if (props.type === 'libraries') await libraries.load(true)
       notify('保存成功。')
-      open.value = false
-      onSaved(result.item)
+      done(result.item)
     })
   }
 

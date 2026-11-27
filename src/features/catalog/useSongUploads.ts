@@ -3,6 +3,7 @@ import { useSignStore } from '@/stores/sign'
 import { useUploadsStore } from '@/stores/uploads'
 import { notify, report, useAction } from '@/composables/useFeedback'
 import { ACTIVE_UPLOAD_STATES, isUploadDone, UPLOAD_STATES } from '@/features/uploads/model'
+import { invalidateScopes } from '@/lib/query/keys'
 import type { useEntityDetail } from './useEntityDetail'
 
 export function useSongUploads(detail: ReturnType<typeof useEntityDetail>) {
@@ -40,7 +41,10 @@ export function useSongUploads(detail: ReturnType<typeof useEntityDetail>) {
         .map((task) => task.transfer.file?.id)
         .join(','),
     () => {
-      if (item.value && type === 'songs') void load()
+      if (!item.value || type !== 'songs') return
+      // 入库完成：文件表、曲目表、列表与待入库表都可能变，详情由 load() 自己失效
+      invalidateScopes(sign.user?.id, ['catalog', 'detail', 'pending-uploads'])
+      void load()
     },
   )
   async function chooseAudio(event: Event) {
