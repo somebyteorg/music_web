@@ -6,18 +6,18 @@
   "elements": [
     {
       "tag": "body",
-      "x": 0, "y": 0, "width": 390, "height": 992,
+      "x": 0, "y": 0, "width": 390, "height": 991,
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "div",
-      "x": 0, "y": 0, "width": 390, "height": 992,
+      "x": 0, "y": 0, "width": 390, "height": 991,
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "div",
       "classes": "app-shell",
-      "x": 0, "y": 0, "width": 390, "height": 992,
+      "x": 0, "y": 0, "width": 390, "height": 991,
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
@@ -35,7 +35,7 @@
     {
       "tag": "a",
       "classes": "brand",
-      "x": -212, "y": 30, "width": 129, "height": 47,
+      "x": -212, "y": 30, "width": 128, "height": 47,
       "style": { "display": "flex", "align-items": "center", "row-gap": "12px", "column-gap": "12px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
@@ -45,13 +45,13 @@
     },
     {
       "tag": "span",
-      "x": -160, "y": 30, "width": 77, "height": 47,
+      "x": -160, "y": 30, "width": 76, "height": 47,
       "text": "跃律",
       "style": { "display": "block", "font-size": "26px", "font-weight": "750", "line-height": "31.2px", "letter-spacing": "2px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "small",
-      "x": -160, "y": 66, "width": 77, "height": 11,
+      "x": -160, "y": 66, "width": 76, "height": 11,
       "text": "EMOS MUSIC",
       "style": { "display": "block", "margin-top": "5px", "font-size": "9px", "font-weight": "500", "line-height": "10.8px", "letter-spacing": "1.8px", "color": "rgb(104, 101, 113)" }
     },
@@ -272,7 +272,7 @@
     },
     {
       "tag": "span",
-      "x": -178, "y": 724, "width": 69, "height": 21,
+      "x": -178, "y": 724, "width": 76, "height": 21,
       "text": "Navidrome",
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 112, 127)" }
     },
@@ -280,7 +280,7 @@
       "tag": "svg",
       "classes": "nav-external ui-icon",
       "x": -46, "y": 727, "width": 15, "height": 15,
-      "style": { "display": "block", "flex-shrink": "0", "margin-left": "49.5156px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
+      "style": { "display": "block", "flex-shrink": "0", "margin-left": "42.6094px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
     },
     {
       "tag": "a",
@@ -296,7 +296,7 @@
     },
     {
       "tag": "span",
-      "x": -178, "y": 775, "width": 46, "height": 21,
+      "x": -178, "y": 775, "width": 49, "height": 21,
       "text": "Feishin",
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 112, 127)" }
     },
@@ -304,12 +304,12 @@
       "tag": "svg",
       "classes": "nav-external ui-icon",
       "x": -46, "y": 778, "width": 15, "height": 15,
-      "style": { "display": "block", "flex-shrink": "0", "margin-left": "73.2969px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
+      "style": { "display": "block", "flex-shrink": "0", "margin-left": "70.2656px", "font-size": "14px", "line-height": "21px", "color": "rgb(119, 110, 129)" }
     },
     {
       "tag": "div",
       "classes": "main-shell",
-      "x": 0, "y": 0, "width": 390, "height": 992,
+      "x": 0, "y": 0, "width": 390, "height": 991,
       "style": { "display": "block", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
@@ -437,557 +437,557 @@
     {
       "tag": "main",
       "classes": "main-content",
-      "x": 0, "y": 64, "width": 390, "height": 928,
+      "x": 0, "y": 64, "width": 390, "height": 927,
       "style": { "display": "block", "padding-top": "24px", "padding-right": "18px", "padding-bottom": "32px", "padding-left": "18px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "a",
       "classes": "back-link",
-      "x": 18, "y": 90, "width": 88, "height": 18,
+      "x": 18, "y": 89, "width": 86, "height": 18,
       "text": "← 回到歌曲列表",
       "style": { "display": "inline-block", "margin-bottom": "24px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "section",
       "classes": "detail-hero",
-      "x": 18, "y": 132, "width": 354, "height": 279,
+      "x": 18, "y": 131, "width": 354, "height": 279,
       "style": { "display": "flex", "align-items": "flow-start", "row-gap": "20px", "column-gap": "20px", "padding-top": "24px", "padding-right": "24px", "padding-bottom": "24px", "padding-left": "24px", "margin-bottom": "24px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "16px", "border-top-right-radius": "16px", "border-bottom-right-radius": "16px", "border-bottom-left-radius": "16px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "color-4 cover",
-      "x": 43, "y": 157, "width": 96, "height": 96,
+      "x": 43, "y": 156, "width": 96, "height": 96,
       "style": { "display": "grid", "position": "relative", "flex-shrink": "0", "align-items": "center", "border-top-left-radius": "10px", "border-top-right-radius": "10px", "border-bottom-right-radius": "10px", "border-bottom-left-radius": "10px", "font-size": "14px", "line-height": "21px", "color": "rgb(82, 109, 151)", "box-shadow": "rgba(53, 35, 64, 0.094) 0px 12px 28px 0px" }
     },
     {
       "tag": "span",
       "classes": "cover-ring",
-      "x": 65, "y": 153, "width": 96, "height": 96,
+      "x": 65, "y": 152, "width": 96, "height": 96,
       "style": { "display": "block", "position": "absolute", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "50%", "border-top-right-radius": "50%", "border-bottom-right-radius": "50%", "border-bottom-left-radius": "50%", "font-size": "14px", "line-height": "21px", "color": "rgb(82, 109, 151)" }
     },
     {
       "tag": "span",
       "classes": "cover-note",
-      "x": 51, "y": 162, "width": 28, "height": 53,
+      "x": 51, "y": 161, "width": 28, "height": 53,
       "text": "♪",
       "style": { "display": "block", "position": "absolute", "font-size": "33.6px", "line-height": "50.4px", "color": "rgb(82, 109, 151)" }
     },
     {
       "tag": "span",
       "classes": "cover-caption",
-      "x": 56, "y": 230, "width": 14, "height": 10,
+      "x": 56, "y": 229, "width": 14, "height": 10,
       "text": "夜航",
       "style": { "display": "block", "position": "absolute", "font-size": "6.72px", "font-weight": "550", "line-height": "10.08px", "letter-spacing": "0.4032px", "color": "rgb(82, 109, 151)" }
     },
     {
       "tag": "div",
       "classes": "detail-copy",
-      "x": 159, "y": 157, "width": 188, "height": 229,
+      "x": 159, "y": 156, "width": 188, "height": 229,
       "style": { "display": "block", "flex-grow": "1", "flex-basis": "0%", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "p",
       "classes": "detail-kind",
-      "x": 159, "y": 157, "width": 188, "height": 20,
+      "x": 159, "y": 156, "width": 188, "height": 20,
       "text": "歌曲",
       "style": { "display": "block", "margin-bottom": "8px", "font-size": "12px", "line-height": "19.8px", "letter-spacing": "1px", "color": "rgb(118, 84, 188)" }
     },
     {
       "tag": "h1",
-      "x": 159, "y": 185, "width": 188, "height": 34,
+      "x": 159, "y": 184, "width": 188, "height": 34,
       "text": "夜航",
       "style": { "display": "block", "font-size": "24px", "font-weight": "650", "line-height": "33.6px", "letter-spacing": "-0.8px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "div",
       "classes": "detail-meta",
-      "x": 159, "y": 232, "width": 188, "height": 46,
+      "x": 159, "y": 231, "width": 188, "height": 46,
       "style": { "display": "flex", "flex-wrap": "wrap", "align-items": "center", "row-gap": "5px", "column-gap": "12px", "margin-top": "14px", "margin-bottom": "20px", "font-size": "13px", "line-height": "19.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "a",
-      "x": 159, "y": 232, "width": 52, "height": 20,
+      "x": 159, "y": 231, "width": 52, "height": 20,
       "text": "林间电台",
       "style": { "display": "block", "font-size": "13px", "line-height": "19.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "a",
-      "x": 223, "y": 232, "width": 52, "height": 20,
+      "x": 223, "y": 231, "width": 52, "height": 20,
       "text": "主媒体库",
       "style": { "display": "block", "font-size": "13px", "line-height": "19.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "span",
-      "x": 287, "y": 232, "width": 52, "height": 20,
+      "x": 287, "y": 231, "width": 52, "height": 20,
       "text": "氛围流行",
       "style": { "display": "block", "font-size": "13px", "line-height": "19.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "span",
       "classes": "ui-tag ui-tag--brand",
-      "x": 159, "y": 257, "width": 90, "height": 22,
+      "x": 159, "y": 256, "width": 96, "height": 22,
       "text": "2021 Remaster",
       "style": { "display": "block", "padding-top": "2px", "padding-right": "6px", "padding-bottom": "2px", "padding-left": "6px", "border-top-left-radius": "4px", "border-top-right-radius": "4px", "border-bottom-right-radius": "4px", "border-bottom-left-radius": "4px", "font-size": "11px", "font-weight": "500", "line-height": "17.6px", "color": "rgb(94, 61, 156)", "background-color": "rgb(240, 235, 248)" }
     },
     {
       "tag": "div",
       "classes": "button-group",
-      "x": 159, "y": 298, "width": 188, "height": 88,
+      "x": 159, "y": 297, "width": 188, "height": 88,
       "style": { "display": "flex", "flex-wrap": "wrap", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
       "classes": "button detail-play primary",
-      "x": 159, "y": 298, "width": 40, "height": 40,
+      "x": 159, "y": 297, "width": 40, "height": 40,
       "style": { "display": "flex", "justify-content": "center", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "9px", "padding-right": "9px", "padding-bottom": "9px", "padding-left": "9px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "13px", "font-weight": "550", "line-height": "19.5px", "color": "rgb(255, 255, 255)", "background-color": "rgb(118, 84, 188)", "border-top-color": "rgba(0, 0, 0, 0)", "border-right-color": "rgba(0, 0, 0, 0)", "border-bottom-color": "rgba(0, 0, 0, 0)", "border-left-color": "rgba(0, 0, 0, 0)" }
     },
     {
       "tag": "svg",
       "classes": "playback-icon ui-icon",
-      "x": 169, "y": 308, "width": 20, "height": 20,
+      "x": 169, "y": 307, "width": 20, "height": 20,
       "style": { "display": "block", "flex-shrink": "0", "font-size": "13px", "font-weight": "550", "line-height": "19.5px", "color": "rgb(255, 255, 255)" }
     },
     {
       "tag": "button",
       "classes": "active button follow-button secondary",
-      "x": 207, "y": 298, "width": 89, "height": 40,
+      "x": 207, "y": 297, "width": 89, "height": 40,
       "text": "已收藏",
       "style": { "display": "flex", "justify-content": "center", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "9px", "padding-right": "10px", "padding-bottom": "9px", "padding-left": "10px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "13px", "font-weight": "550", "line-height": "19.5px", "color": "rgb(94, 61, 156)", "background-color": "rgb(240, 235, 248)", "border-top-color": "rgb(214, 199, 235)", "border-right-color": "rgb(214, 199, 235)", "border-bottom-color": "rgb(214, 199, 235)", "border-left-color": "rgb(214, 199, 235)" }
     },
     {
       "tag": "svg",
       "classes": "ui-icon",
-      "x": 218, "y": 308, "width": 20, "height": 20,
+      "x": 218, "y": 307, "width": 20, "height": 20,
       "style": { "display": "block", "flex-shrink": "0", "font-size": "13px", "font-weight": "550", "line-height": "19.5px", "color": "rgb(94, 61, 156)" }
     },
     {
       "tag": "button",
       "classes": "button secondary",
-      "x": 159, "y": 346, "width": 89, "height": 40,
+      "x": 159, "y": 345, "width": 89, "height": 40,
       "text": "✎ 编辑资料",
       "style": { "display": "flex", "justify-content": "center", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "9px", "padding-right": "10px", "padding-bottom": "9px", "padding-left": "10px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "13px", "font-weight": "550", "line-height": "19.5px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "details",
       "classes": "action-menu",
-      "x": 256, "y": 346, "width": 66, "height": 40,
+      "x": 256, "y": 345, "width": 66, "height": 40,
       "style": { "display": "block", "position": "relative", "flex-shrink": "0", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "summary",
-      "x": 256, "y": 346, "width": 66, "height": 40,
+      "x": 256, "y": 345, "width": 66, "height": 40,
       "text": "更多 ⋯",
       "style": { "display": "inline-flex", "justify-content": "center", "align-items": "center", "padding-top": "8px", "padding-right": "12px", "padding-bottom": "8px", "padding-left": "12px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "action-menu-items",
-      "x": 192, "y": 390, "width": 130, "height": 138,
+      "x": 192, "y": 389, "width": 130, "height": 138,
       "style": { "display": "block", "position": "absolute", "padding-top": "4px", "padding-right": "4px", "padding-bottom": "4px", "padding-left": "4px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "6px", "border-top-right-radius": "6px", "border-bottom-right-radius": "6px", "border-bottom-left-radius": "6px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)", "box-shadow": "rgba(40, 35, 53, 0.08) 0px 6px 20px 0px" }
     },
     {
       "tag": "button",
-      "x": 197, "y": 395, "width": 120, "height": 32,
+      "x": 197, "y": 394, "width": 120, "height": 32,
       "text": "关联 todb 资料",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
-      "x": 197, "y": 427, "width": 120, "height": 32,
+      "x": 197, "y": 426, "width": 120, "height": 32,
       "text": "合并重复资料",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "a",
-      "x": 197, "y": 459, "width": 120, "height": 32,
+      "x": 197, "y": 458, "width": 120, "height": 32,
       "text": "查看变更记录",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
       "classes": "danger",
-      "x": 197, "y": 491, "width": 120, "height": 32,
+      "x": 197, "y": 490, "width": 120, "height": 32,
       "text": "删除歌曲",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(179, 54, 69)" }
     },
     {
       "tag": "div",
       "classes": "detail-tabs ui-tabs ui-tabs--underline",
-      "x": 18, "y": 435, "width": 354, "height": 48,
+      "x": 18, "y": 434, "width": 354, "height": 48,
       "style": { "display": "flex", "align-items": "center", "row-gap": "18px", "column-gap": "18px", "border-bottom-width": "1px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)", "border-bottom-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "button",
       "classes": "active",
-      "x": 18, "y": 435, "width": 71, "height": 47,
+      "x": 18, "y": 434, "width": 71, "height": 47,
       "text": "音频文件",
       "style": { "display": "block", "padding-top": "12px", "padding-bottom": "12px", "border-bottom-width": "2px", "font-size": "14px", "line-height": "21px", "color": "rgb(94, 61, 156)", "border-top-color": "rgb(118, 84, 188)", "border-right-color": "rgb(118, 84, 188)", "border-bottom-color": "rgb(118, 84, 188)", "border-left-color": "rgb(118, 84, 188)" }
     },
     {
       "tag": "span",
-      "x": 83, "y": 450, "width": 7, "height": 16,
+      "x": 82, "y": 450, "width": 7, "height": 13,
       "text": "2",
       "style": { "display": "inline", "margin-left": "4px", "font-size": "11px", "line-height": "16.5px", "color": "rgb(94, 61, 156)" }
     },
     {
       "tag": "button",
-      "x": 107, "y": 435, "width": 28, "height": 47,
+      "x": 107, "y": 434, "width": 28, "height": 47,
       "text": "歌词",
       "style": { "display": "block", "padding-top": "12px", "padding-bottom": "12px", "border-bottom-width": "2px", "font-size": "14px", "line-height": "21px", "color": "rgb(104, 101, 113)", "border-bottom-color": "rgba(0, 0, 0, 0)" }
     },
     {
       "tag": "a",
-      "x": 308, "y": 450, "width": 64, "height": 18,
+      "x": 310, "y": 449, "width": 62, "height": 18,
       "text": "操作记录 ↗",
-      "style": { "display": "block", "margin-left": "154.719px", "font-size": "12px", "line-height": "18px", "color": "rgb(118, 84, 188)" }
+      "style": { "display": "block", "margin-left": "156.672px", "font-size": "12px", "line-height": "18px", "color": "rgb(118, 84, 188)" }
     },
     {
       "tag": "section",
       "classes": "section",
-      "x": 18, "y": 509, "width": 354, "height": 261,
+      "x": 18, "y": 508, "width": 354, "height": 261,
       "style": { "display": "block", "margin-top": "26px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "div",
       "classes": "section-heading",
-      "x": 18, "y": 509, "width": 354, "height": 72,
+      "x": 18, "y": 508, "width": 354, "height": 72,
       "style": { "display": "flex", "flex-wrap": "wrap", "justify-content": "space-between", "align-items": "center", "row-gap": "8px", "column-gap": "14px", "margin-bottom": "18px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "p",
       "classes": "hint",
-      "x": 18, "y": 514, "width": 324, "height": 19,
+      "x": 18, "y": 513, "width": 324, "height": 19,
       "text": "试听使用个人设置中的音质，没有对应音质时",
       "style": { "display": "block", "margin-top": "5px", "font-size": "12px", "line-height": "19.2px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "button",
       "classes": "button primary",
-      "x": 18, "y": 542, "width": 91, "height": 40,
+      "x": 18, "y": 541, "width": 92, "height": 40,
       "text": "＋ 上传音频",
       "style": { "display": "flex", "justify-content": "center", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "9px", "padding-right": "10px", "padding-bottom": "9px", "padding-left": "10px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "13px", "font-weight": "550", "line-height": "19.5px", "color": "rgb(255, 255, 255)", "background-color": "rgb(118, 84, 188)", "border-top-color": "rgba(0, 0, 0, 0)", "border-right-color": "rgba(0, 0, 0, 0)", "border-bottom-color": "rgba(0, 0, 0, 0)", "border-left-color": "rgba(0, 0, 0, 0)" }
     },
     {
       "tag": "div",
       "classes": "resources-card ui-card",
-      "x": 18, "y": 600, "width": 354, "height": 171,
+      "x": 18, "y": 599, "width": 354, "height": 171,
       "style": { "display": "block", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "12px", "border-top-right-radius": "12px", "border-bottom-right-radius": "12px", "border-bottom-left-radius": "12px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)", "box-shadow": "rgba(36, 32, 47, 0.008) 0px 2px 8px 0px" }
     },
     {
       "tag": "table",
       "classes": "resource-table",
-      "x": 19, "y": 601, "width": 352, "height": 169,
+      "x": 19, "y": 600, "width": 352, "height": 169,
       "style": { "display": "table", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "thead",
-      "x": 19, "y": 601, "width": 352, "height": 36,
+      "x": 19, "y": 600, "width": 352, "height": 36,
       "style": { "display": "table-header-group", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "tr",
-      "x": 19, "y": 601, "width": 352, "height": 36,
+      "x": 19, "y": 600, "width": 352, "height": 36,
       "style": { "display": "table-row", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "th",
-      "x": 19, "y": 601, "width": 167, "height": 36,
+      "x": 19, "y": 600, "width": 176, "height": 36,
       "text": "文件",
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-left-radius": "8px", "font-size": "12px", "font-weight": "450", "line-height": "18px", "color": "rgb(104, 101, 113)", "background-color": "rgb(248, 249, 251)" }
     },
     {
       "tag": "th",
-      "x": 186, "y": 601, "width": 110, "height": 36,
+      "x": 195, "y": 600, "width": 103, "height": 36,
       "text": "音质 / 格式",
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "font-size": "12px", "font-weight": "450", "line-height": "18px", "color": "rgb(104, 101, 113)", "background-color": "rgb(248, 249, 251)" }
     },
     {
       "tag": "th",
       "classes": "resource-actions-heading",
-      "x": 296, "y": 601, "width": 75, "height": 36,
+      "x": 298, "y": 600, "width": 73, "height": 36,
       "text": "操作",
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-right-radius": "8px", "font-size": "12px", "font-weight": "450", "line-height": "18px", "color": "rgb(104, 101, 113)", "background-color": "rgb(248, 249, 251)" }
     },
     {
       "tag": "tbody",
-      "x": 19, "y": 637, "width": 352, "height": 133,
+      "x": 19, "y": 636, "width": 352, "height": 133,
       "style": { "display": "table-row-group", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "tr",
-      "x": 19, "y": 637, "width": 352, "height": 74,
+      "x": 19, "y": 636, "width": 352, "height": 74,
       "style": { "display": "table-row", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "td",
       "classes": "resource-file",
-      "x": 19, "y": 637, "width": 167, "height": 74,
+      "x": 19, "y": 636, "width": 176, "height": 74,
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "resource-name",
-      "x": 26, "y": 647, "width": 153, "height": 28,
+      "x": 26, "y": 646, "width": 162, "height": 28,
       "style": { "display": "flex", "align-items": "flow-start", "row-gap": "7px", "column-gap": "7px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
       "classes": "tiny-play",
-      "x": 26, "y": 647, "width": 26, "height": 28,
+      "x": 26, "y": 646, "width": 26, "height": 28,
       "style": { "display": "grid", "flex-shrink": "0", "align-items": "center", "grid-template-columns": "26px", "grid-template-rows": "28px", "border-top-left-radius": "4px", "border-top-right-radius": "4px", "border-bottom-right-radius": "4px", "border-bottom-left-radius": "4px", "font-size": "11px", "line-height": "16.5px", "color": "rgb(118, 84, 188)", "background-color": "rgb(240, 235, 248)" }
     },
     {
       "tag": "svg",
       "classes": "playback-icon ui-icon",
-      "x": 29, "y": 651, "width": 20, "height": 20,
+      "x": 29, "y": 650, "width": 20, "height": 20,
       "style": { "display": "block", "flex-shrink": "0", "font-size": "11px", "line-height": "16.5px", "color": "rgb(118, 84, 188)" }
     },
     {
       "tag": "strong",
-      "x": 59, "y": 647, "width": 64, "height": 18,
+      "x": 59, "y": 646, "width": 74, "height": 18,
       "text": "01 夜航.flac",
       "style": { "display": "flow-root", "font-size": "12px", "font-weight": "550", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "span",
       "classes": "ui-tag ui-tag--brand",
-      "x": 26, "y": 680, "width": 34, "height": 22,
+      "x": 26, "y": 679, "width": 34, "height": 22,
       "text": "默认",
       "style": { "display": "inline-block", "padding-top": "2px", "padding-right": "6px", "padding-bottom": "2px", "padding-left": "6px", "margin-top": "5px", "border-top-left-radius": "4px", "border-top-right-radius": "4px", "border-bottom-right-radius": "4px", "border-bottom-left-radius": "4px", "font-size": "11px", "font-weight": "500", "line-height": "17.6px", "color": "rgb(94, 61, 156)", "background-color": "rgb(240, 235, 248)" }
     },
     {
       "tag": "td",
-      "x": 186, "y": 637, "width": 110, "height": 74,
+      "x": 195, "y": 636, "width": 103, "height": 74,
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "span",
       "classes": "quality-label",
-      "x": 193, "y": 655, "width": 24, "height": 17,
+      "x": 202, "y": 656, "width": 24, "height": 14,
       "text": "无损",
       "style": { "display": "inline", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "small",
-      "x": 193, "y": 676, "width": 96, "height": 17,
+      "x": 202, "y": 675, "width": 89, "height": 17,
       "text": "FLAC",
       "style": { "display": "block", "margin-top": "3px", "font-size": "11px", "line-height": "16.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "td",
-      "x": 296, "y": 637, "width": 75, "height": 74,
+      "x": 298, "y": 636, "width": 73, "height": 74,
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "resource-actions",
-      "x": 303, "y": 654, "width": 61, "height": 40,
+      "x": 305, "y": 653, "width": 59, "height": 40,
       "style": { "display": "flex", "justify-content": "flow-end", "align-items": "center", "row-gap": "10px", "column-gap": "10px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "details",
       "classes": "action-menu",
-      "x": 326, "y": 654, "width": 38, "height": 40,
+      "x": 326, "y": 653, "width": 38, "height": 40,
       "style": { "display": "block", "position": "relative", "flex-shrink": "0", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "summary",
-      "x": 326, "y": 654, "width": 38, "height": 40,
+      "x": 326, "y": 653, "width": 38, "height": 40,
       "text": "⋯",
       "style": { "display": "inline-flex", "justify-content": "center", "align-items": "center", "padding-top": "8px", "padding-right": "12px", "padding-bottom": "8px", "padding-left": "12px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "action-menu-items",
-      "x": 234, "y": 698, "width": 130, "height": 74,
+      "x": 234, "y": 697, "width": 130, "height": 74,
       "style": { "display": "block", "position": "absolute", "padding-top": "4px", "padding-right": "4px", "padding-bottom": "4px", "padding-left": "4px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "6px", "border-top-right-radius": "6px", "border-bottom-right-radius": "6px", "border-bottom-left-radius": "6px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)", "box-shadow": "rgba(40, 35, 53, 0.08) 0px 6px 20px 0px" }
     },
     {
       "tag": "button",
-      "x": 239, "y": 703, "width": 120, "height": 32,
+      "x": 239, "y": 702, "width": 120, "height": 32,
       "text": "移动到其他歌曲",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
       "classes": "danger",
-      "x": 239, "y": 735, "width": 120, "height": 32,
+      "x": 239, "y": 734, "width": 120, "height": 32,
       "text": "删除资源",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(179, 54, 69)" }
     },
     {
       "tag": "tr",
-      "x": 19, "y": 710, "width": 352, "height": 59,
+      "x": 19, "y": 709, "width": 352, "height": 59,
       "style": { "display": "table-row", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "td",
       "classes": "resource-file",
-      "x": 19, "y": 710, "width": 167, "height": 59,
+      "x": 19, "y": 709, "width": 176, "height": 59,
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "resource-name",
-      "x": 26, "y": 726, "width": 153, "height": 28,
+      "x": 26, "y": 725, "width": 162, "height": 28,
       "style": { "display": "flex", "align-items": "flow-start", "row-gap": "7px", "column-gap": "7px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
       "classes": "tiny-play",
-      "x": 26, "y": 726, "width": 26, "height": 28,
+      "x": 26, "y": 725, "width": 26, "height": 28,
       "style": { "display": "grid", "flex-shrink": "0", "align-items": "center", "grid-template-columns": "26px", "grid-template-rows": "28px", "border-top-left-radius": "4px", "border-top-right-radius": "4px", "border-bottom-right-radius": "4px", "border-bottom-left-radius": "4px", "font-size": "11px", "line-height": "16.5px", "color": "rgb(118, 84, 188)", "background-color": "rgb(240, 235, 248)" }
     },
     {
       "tag": "svg",
       "classes": "playback-icon ui-icon",
-      "x": 29, "y": 730, "width": 20, "height": 20,
+      "x": 29, "y": 729, "width": 20, "height": 20,
       "style": { "display": "block", "flex-shrink": "0", "font-size": "11px", "line-height": "16.5px", "color": "rgb(118, 84, 188)" }
     },
     {
       "tag": "strong",
-      "x": 59, "y": 726, "width": 68, "height": 18,
+      "x": 59, "y": 725, "width": 79, "height": 18,
       "text": "01 夜航.mp3",
       "style": { "display": "flow-root", "font-size": "12px", "font-weight": "550", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "td",
-      "x": 186, "y": 710, "width": 110, "height": 59,
+      "x": 195, "y": 709, "width": 103, "height": 59,
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "span",
       "classes": "quality-label",
-      "x": 193, "y": 722, "width": 36, "height": 17,
+      "x": 202, "y": 723, "width": 36, "height": 14,
       "text": "高品质",
       "style": { "display": "inline", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "small",
-      "x": 193, "y": 743, "width": 96, "height": 17,
+      "x": 202, "y": 742, "width": 89, "height": 17,
       "text": "MP3",
       "style": { "display": "block", "margin-top": "3px", "font-size": "11px", "line-height": "16.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "td",
-      "x": 296, "y": 710, "width": 75, "height": 59,
+      "x": 298, "y": 709, "width": 73, "height": 59,
       "style": { "display": "table-cell", "padding-top": "9px", "padding-right": "7px", "padding-bottom": "9px", "padding-left": "7px", "border-top-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "border-top-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "resource-actions",
-      "x": 303, "y": 720, "width": 61, "height": 40,
+      "x": 305, "y": 719, "width": 59, "height": 40,
       "style": { "display": "flex", "justify-content": "flow-end", "align-items": "center", "row-gap": "10px", "column-gap": "10px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "details",
       "classes": "action-menu",
-      "x": 326, "y": 720, "width": 38, "height": 40,
+      "x": 326, "y": 719, "width": 38, "height": 40,
       "style": { "display": "block", "position": "relative", "flex-shrink": "0", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "summary",
-      "x": 326, "y": 720, "width": 38, "height": 40,
+      "x": 326, "y": 719, "width": 38, "height": 40,
       "text": "⋯",
       "style": { "display": "inline-flex", "justify-content": "center", "align-items": "center", "padding-top": "8px", "padding-right": "12px", "padding-bottom": "8px", "padding-left": "12px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "action-menu-items",
-      "x": 234, "y": 764, "width": 130, "height": 106,
+      "x": 234, "y": 763, "width": 130, "height": 106,
       "style": { "display": "block", "position": "absolute", "padding-top": "4px", "padding-right": "4px", "padding-bottom": "4px", "padding-left": "4px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "6px", "border-top-right-radius": "6px", "border-bottom-right-radius": "6px", "border-bottom-left-radius": "6px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)", "box-shadow": "rgba(40, 35, 53, 0.08) 0px 6px 20px 0px" }
     },
     {
       "tag": "button",
       "classes": "mobile-default",
-      "x": 239, "y": 769, "width": 120, "height": 32,
+      "x": 239, "y": 768, "width": 120, "height": 32,
       "text": "设为默认",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
-      "x": 239, "y": 801, "width": 120, "height": 32,
+      "x": 239, "y": 800, "width": 120, "height": 32,
       "text": "移动到其他歌曲",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "button",
       "classes": "danger",
-      "x": 239, "y": 833, "width": 120, "height": 32,
+      "x": 239, "y": 832, "width": 120, "height": 32,
       "text": "删除资源",
       "style": { "display": "block", "padding-top": "7px", "padding-right": "10px", "padding-bottom": "7px", "padding-left": "10px", "border-top-left-radius": "3px", "border-top-right-radius": "3px", "border-bottom-right-radius": "3px", "border-bottom-left-radius": "3px", "font-size": "12px", "line-height": "18px", "color": "rgb(179, 54, 69)" }
     },
     {
       "tag": "section",
       "classes": "section",
-      "x": 18, "y": 796, "width": 354, "height": 109,
+      "x": 18, "y": 795, "width": 354, "height": 109,
       "style": { "display": "block", "margin-top": "26px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "div",
       "classes": "section-heading",
-      "x": 18, "y": 796, "width": 354, "height": 40,
+      "x": 18, "y": 795, "width": 354, "height": 40,
       "style": { "display": "flex", "flex-wrap": "wrap", "justify-content": "space-between", "align-items": "center", "row-gap": "8px", "column-gap": "14px", "margin-bottom": "18px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "h2",
-      "x": 18, "y": 803, "width": 83, "height": 27,
+      "x": 18, "y": 802, "width": 87, "height": 27,
       "text": "收录专辑",
       "style": { "display": "block", "font-size": "18px", "font-weight": "650", "line-height": "27px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "span",
       "classes": "muted",
-      "x": 96, "y": 809, "width": 5, "height": 18,
+      "x": 96, "y": 810, "width": 8, "height": 15,
       "text": "1",
       "style": { "display": "inline", "font-size": "13px", "line-height": "19.5px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "button",
       "classes": "button secondary",
-      "x": 246, "y": 796, "width": 126, "height": 40,
+      "x": 246, "y": 795, "width": 126, "height": 40,
       "text": "编辑专辑与媒体库",
       "style": { "display": "flex", "justify-content": "center", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "9px", "padding-right": "10px", "padding-bottom": "9px", "padding-left": "10px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "8px", "border-top-right-radius": "8px", "border-bottom-right-radius": "8px", "border-bottom-left-radius": "8px", "font-size": "13px", "font-weight": "550", "line-height": "19.5px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "div",
       "classes": "recording-releases ui-card",
-      "x": 18, "y": 854, "width": 354, "height": 51,
+      "x": 18, "y": 853, "width": 354, "height": 51,
       "style": { "display": "flex", "flex-direction": "column", "row-gap": "12px", "column-gap": "12px", "padding-top": "14px", "padding-right": "14px", "padding-bottom": "14px", "padding-left": "14px", "margin-top": "14px", "border-top-width": "1px", "border-right-width": "1px", "border-bottom-width": "1px", "border-left-width": "1px", "border-top-left-radius": "12px", "border-top-right-radius": "12px", "border-bottom-right-radius": "12px", "border-bottom-left-radius": "12px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)", "background-color": "rgb(255, 255, 255)", "border-top-color": "rgb(233, 232, 239)", "border-right-color": "rgb(233, 232, 239)", "border-bottom-color": "rgb(233, 232, 239)", "border-left-color": "rgb(233, 232, 239)", "box-shadow": "rgba(36, 32, 47, 0.008) 0px 2px 8px 0px" }
     },
     {
       "tag": "a",
-      "x": 33, "y": 869, "width": 324, "height": 21,
+      "x": 33, "y": 868, "width": 324, "height": 21,
       "style": { "display": "flex", "flex-wrap": "wrap", "justify-content": "space-between", "row-gap": "8px", "column-gap": "8px", "font-size": "14px", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "strong",
-      "x": 33, "y": 869, "width": 28, "height": 21,
+      "x": 33, "y": 868, "width": 28, "height": 21,
       "text": "夜航",
       "style": { "display": "block", "font-size": "14px", "font-weight": "700", "line-height": "21px", "color": "rgb(41, 39, 51)" }
     },
     {
       "tag": "span",
       "classes": "hint",
-      "x": 229, "y": 869, "width": 128, "height": 21,
+      "x": 225, "y": 868, "width": 132, "height": 21,
       "text": "2021 · 第 1 碟 · 第 1 首",
       "style": { "display": "block", "font-size": "12px", "line-height": "19.2px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "div",
       "classes": "detail-foot",
-      "x": 18, "y": 929, "width": 354, "height": 31,
+      "x": 18, "y": 928, "width": 354, "height": 31,
       "style": { "display": "flex", "flex-wrap": "wrap", "justify-content": "space-between", "align-items": "center", "row-gap": "8px", "column-gap": "8px", "padding-top": "12px", "margin-top": "24px", "border-top-width": "1px", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)", "border-top-color": "rgb(233, 232, 239)" }
     },
     {
       "tag": "span",
-      "x": 18, "y": 942, "width": 177, "height": 18,
+      "x": 18, "y": 941, "width": 186, "height": 18,
       "text": "由 用户 创建 · 2024.01.01",
       "style": { "display": "block", "font-size": "12px", "line-height": "18px", "color": "rgb(104, 101, 113)" }
     },
     {
       "tag": "a",
-      "x": 284, "y": 942, "width": 88, "height": 18,
+      "x": 286, "y": 941, "width": 86, "height": 18,
       "text": "查看操作记录 ↗",
       "style": { "display": "block", "font-size": "12px", "line-height": "18px", "color": "rgb(118, 84, 188)" }
     }

@@ -29,10 +29,10 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
-      # 布局快照门禁（待启用）：基线需先在 ubuntu 生成后才是跨机器可比的。
-      # 拿到 layout-baseline artifact 并提交后，取消下面两行注释即可。
-      # - run: pnpm exec playwright install --with-deps chromium
-      # - run: pnpm test:layout
+      # 布局快照门禁：基线由 layout-baseline job 在 ubuntu 生成（文字撑开的盒子随字体度量变化，
+      # macOS 基线在 runner 上会差 2~7px），浏览器由脚本自己拉 vite preview。
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:layout
 
   layout-baseline:
     if: ${{ github.event.inputs.layout_baseline == 'true' }}
