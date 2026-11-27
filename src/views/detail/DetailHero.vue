@@ -17,6 +17,8 @@ const props = defineProps<{
   label: string
   canEdit: boolean
   hasSongs: boolean
+  /** 曲目是否已就绪；未就绪时「播放全部」可见但禁用（不隐藏、也不假装无曲目） */
+  tracksReady: boolean
   playingAll: boolean
   acting: boolean
 }>()
@@ -109,7 +111,13 @@ function togglePlay() {
           </svg>
           {{ item.is_favorite ? '已收藏' : '收藏' }}</Button
         ><Button variant="secondary" v-if="canEdit" @click="emit('edit')">✎ 编辑资料</Button>
-        <Button variant="secondary" v-if="hasSongs" :disabled="playingAll" @click="emit('playAll')">
+        <Button
+          v-if="tracksReady ? hasSongs : true"
+          variant="secondary"
+          :disabled="playingAll || !tracksReady"
+          :title="tracksReady ? undefined : '曲目未加载完成，暂时无法播放全部'"
+          @click="emit('playAll')"
+        >
           {{ playingAll ? '正在读取…' : '播放全部' }}
         </Button>
         <Button

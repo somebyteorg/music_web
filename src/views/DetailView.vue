@@ -101,6 +101,7 @@ const tab = ref('resources')
       :acting="acting"
       :can-edit="canEdit"
       :has-songs="tracksStatus === 'ready' && total > 0"
+      :tracks-ready="type === 'songs' ? true : tracksStatus === 'ready'"
       :item="item"
       :label="labels[type]"
       :playing-all="playingAll"
