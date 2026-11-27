@@ -1,0 +1,165 @@
+/**
+ * 设计 token：浅色层。
+ *
+ * 铁律：本文件里的颜色**全部是 8bit 字面量**，且每个派生色都逐字节等于重构前（5bd7a12）
+ * 对应元素的原始色值。不要在这里写 color-mix / 近似值 —— 那会让 getComputedStyle
+ * 序列化成 color(srgb …)，与历史 rgb() 不相等（见 tokens.css 顶部的维修记录）。
+ *
+ * 命名口径：
+ *   - 基础色（--bg/--surface/--text/--brand/--danger/--success/--warning/--on-brand）：跨主题的角色色；
+ *   - 派生色：按"用在哪里"命名（--nav-item / --chip-line / --tag-bg …），因为历史上同一角色
+ *     在不同组件里本来就差 1~15/255，要逐字节对齐就不能再合并。合并过的那些色值分散在
+ *     「近邻色分列」区块里，改动前先看注释里写的使用点。
+ */
+
+:root {
+  color-scheme: light;
+
+  /* —— 基础色：表面 —— */
+  --bg: #f7f7fa;
+  --surface: #fff;
+  --surface-muted: #f8f9fb;
+  --line: #e9e8ef;
+
+  /* —— 基础色：文本 —— */
+  --text: #292733;
+  --text-muted: #777481;
+  --text-soft: #484551;
+
+  /* —— 基础色：品牌 —— */
+  --brand: #7654bc;
+  --brand-strong: #5e3d9c;
+  --brand-soft: #f0ebf8;
+
+  /* —— 基础色：状态 —— */
+  --danger: #b33645;
+  --success: #23774c;
+  --warning: #93601d;
+  --warning-soft: #fff3da;
+  --danger-hover: #af4d65;
+  /* 品牌色/深色底上的文字：两套主题都保持浅色 */
+  --on-brand: #fff;
+  /* 阴影 / 遮罩的"墨色"基色：深色层用它派生阴影，浅色层的阴影直接用字面量 */
+  --ink: #292035;
+
+  /* —— 表面：状态与玻璃 —— */
+  --surface-hover: #faf9fd; /* 行 hover（SongList / QueuePanel / CatalogView） */
+  --surface-hero: #fcfbfd; /* 详情页头图渐变终点 */
+  --surface-unread: #fcfaff; /* 未读消息底 */
+  --surface-sunken: #eef0f4; /* 静默徽标底（.ui-tag--default） */
+  --segmented-bg: #edf0f4; /* 分段控件槽底（.ui-tabs--segmented） */
+  --skeleton-base: #eceef3; /* 骨架屏渐变两端 */
+  --surface-glass: #ffffffd9;
+  --surface-glass-strong: #fffffff5;
+
+  /* —— 分隔线 —— */
+  --line-strong: #c7c6d2; /* 次要按钮 hover 边框 */
+  --line-faint: #c4c0cc; /* 面包屑父级分隔符 */
+
+  /* —— 文本层级 —— */
+  --text-subtle: #575160; /* 面包屑当前项 */
+  --text-faint: #9b94a5; /* 侧栏分组标题 */
+  --text-ghost: #aaa3b1; /* 侧栏外链 */
+  --text-breadcrumb: #918b9c;
+  --text-link-muted: #8b8196; /* 收件箱链接 */
+  --text-meter: #99949f; /* 并发输入右侧上限数字 */
+  --nav-item: #77707f; /* 侧栏导航项（与 --text-muted 历史色不同） */
+  --text-meta: #776b83; /* 账户区动作 */
+  --placeholder: #777480;
+  --text-deep: #2a2438; /* 空态段落 */
+
+  /* —— 品牌派生：底与描边 —— */
+  --hero-tint: #f0eaf6; /* 详情页头图渐变起点 */
+  --brand-tint: #f5f1fc; /* 当前行 / 提示条底 */
+  --brand-tint-pick: #f7f3fd; /* 资源表当前行 */
+  --brand-tint-quality: #f6f2fc; /* 音质选项选中 */
+  --brand-tint-row: #f6f3fc; /* 上传拖放区 */
+  --brand-tint-strong: #e9e0f6; /* 头像底 */
+  --brand-tint-deep: #ede5fb; /* 上传拖放区 drag-over */
+  --brand-soft-progress: #ebe5f5; /* 上传进度条槽底 */
+  --brand-line: #cfc0eb; /* chip 选中 / 提示条描边 */
+  --brand-line-hover: #b9a5dd; /* chip hover */
+  --brand-line-strong: #b8a8d3; /* 下拉触发器 hover */
+  --brand-line-focus: #ab91d9; /* 输入聚焦描边 */
+  --brand-line-soft: #dfd4ef; /* 批量操作条 */
+  --brand-line-pick: #d3c4ee; /* 选择器结果选中 */
+  --brand-line-bar: #d9cbed; /* 列表多选操作条 */
+  --brand-line-unread: #cdbce9; /* 未读消息 */
+  --brand-line-follow: #d6c7eb; /* 关注按钮 */
+  --brand-line-meter: #c9bddf; /* 并发输入 hover */
+  --brand-line-quality: #baa2e2; /* 音质选项选中描边 */
+  --brand-line-drop: #c1afdf; /* 上传拖放区描边 */
+  --brand-ink: #65469c; /* 提示条文字 */
+  --brand-veil: #ded3f2; /* 提示条描边 */
+  --selection-bg: #dfd2f4; /* ::selection */
+  --follow-fill: #dfd2f3; /* 关注按钮图标填充 */
+  --veil-hover: #e5d9f7; /* 成员角色下拉 hover */
+  --brand-veil-ink: #392354;
+
+  /* —— 状态派生 —— */
+  --danger-soft: #fff3f4; /* 错误提示条底 */
+  --danger-soft-hover: #fff0f3; /* 退出登录 hover 底 */
+  --danger-diff: #fff0f1; /* 变更记录 before */
+  --danger-line: #efd3d6;
+  --danger-ink: #9a3544; /* 变更记录 before 文字 */
+  --success-soft: #eaf5ee; /* 已完成任务图标底 */
+  --success-diff: #edf7ef; /* 变更记录 after */
+  --success-ink: #286840;
+  --warning-veil: #fffaf2; /* 解析告警底 */
+  --warning-line: #eddfc8;
+  --warning-task: #91632b; /* 任务级告警文字 */
+  --warning-note: #8d622c; /* 解析告警文字 */
+  --warning-rank: #956323; /* 排行榜首位 */
+
+  /* —— 阴影 / 遮罩 ——
+   * 浅色下每个阴影都按"用在哪"给了完整字面量：历史上同一档阴影的墨色其实有
+   * #24202f / #282335 / #292035 / #352340 / #302040 / #172d23 几种，合并就会差 1~15/255。
+   */
+  --shadow-sm: 0 2px 8px #24202f02;
+  --shadow-md: 0 8px 32px #28233516;
+  --shadow-lg: 0 12px 48px #2920351f;
+  --shadow-brand: 0 4px 14px #7654bc20;
+  --shadow-modal: 0 15px 70px #172d2326;
+  --shadow-select: 0 8px 28px #28233520;
+  --shadow-select-focus: 0 0 0 2px #7048c610;
+  --shadow-player: 0 8px 40px #29203514;
+  --shadow-player-collapsed: 0 4px 16px #28233512;
+  --shadow-menu: 0 6px 20px #28233514;
+  --shadow-cover: 0 5px 16px #29203509;
+  --shadow-cover-hover: 0 10px 24px #29203516;
+  --shadow-hero-cover: 0 12px 28px #35234018;
+  --shadow-segmented: 0 1px 3px #30204010;
+  --shadow-field-focus: 0 0 0 2px #7048c612;
+  --shadow-meter-focus: 0 0 0 3px #7654bc12;
+
+  --scrim-sidebar: #17132466;
+  --scrim-modal: #201a2d66;
+  --scrim-soft: #1b162a0f;
+  --scrim-strong: #1b162a26;
+  --ring-highlight: #ffffff0a;
+
+  /* —— 封面占位色（按实体类型区分） ——
+   * --cover-N-base 是封面本色：浅色主题原样使用，深色主题从它派生压暗的封面与提亮的字色，
+   * 避免深色页面里出现整块浅色。
+   */
+  --cover-0-base: #a892c1;
+  --cover-0: var(--cover-0-base);
+  --cover-0-ink: #69517f;
+  --cover-0-tint: #d5c9e6;
+  --cover-1-base: #b8b18d;
+  --cover-1: var(--cover-1-base);
+  --cover-1-ink: #726c47;
+  --cover-1-tint: #e2dfc9;
+  --cover-2-base: #c59c89;
+  --cover-2: var(--cover-2-base);
+  --cover-2-ink: #91604c;
+  --cover-2-tint: #edd8c9;
+  --cover-3-base: #99b8ab;
+  --cover-3: var(--cover-3-base);
+  --cover-3-ink: #4b7967;
+  --cover-3-tint: #d6e4db;
+  --cover-4-base: #95a9ca;
+  --cover-4: var(--cover-4-base);
+  --cover-4-ink: #526d97;
+  --cover-4-tint: #d1dbea;
+}

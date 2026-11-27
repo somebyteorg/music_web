@@ -1,0 +1,144 @@
+/**
+ * 设计 token：深色层。
+ *
+ * 只覆盖基础色；派生色一律用 color-mix 从基础色重推，改主题时整体翻转。
+ * 深色层允许（也应该）继续用 color-mix —— 它没有 8bit 的历史基线要守，
+ * 只要和浅色层语义对齐即可（浅色层为什么不能用 color-mix 见 tokens.css）。
+ *
+ * 每个 token 都必须在浅色层有同名定义，这里只做覆盖，不新增语义。
+ */
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #131218;
+  --surface: #1b1a23;
+  --surface-muted: #232231;
+  --line: #2e2c3a;
+
+  --text: #eceaf2;
+  --text-muted: #9d9aab;
+  --text-soft: #cbc8d6;
+
+  --brand: #9d80dd;
+  --brand-strong: #bda6f0;
+  --brand-soft: #2b2439;
+
+  --danger: #ef8d9d;
+  --success: #6ec59a;
+  --warning: #ddaa63;
+  --warning-soft: #3a2f1d;
+  --danger-hover: #f6a6b4;
+
+  /* 品牌色在深色下变浅，品牌底上的文字必须转成墨色，白字对比只有 3.2:1 */
+  --on-brand: #17111f;
+  --brand-veil-ink: #efe6ff;
+
+  /* —— 表面 —— */
+  --surface-hover: color-mix(in srgb, var(--brand) 3.4%, var(--surface));
+  --surface-hero: color-mix(in srgb, var(--brand) 3.4%, var(--surface));
+  --surface-unread: color-mix(in srgb, var(--brand) 3.4%, var(--surface));
+  --surface-sunken: color-mix(in srgb, var(--text) 7.4%, var(--surface));
+  --segmented-bg: color-mix(in srgb, var(--text) 7.4%, var(--surface));
+  --skeleton-base: color-mix(in srgb, var(--text) 7.4%, var(--surface));
+  --surface-glass: color-mix(in srgb, var(--surface) 85%, transparent);
+  --surface-glass-strong: color-mix(in srgb, var(--surface) 96%, transparent);
+
+  /* —— 分隔线 —— */
+  --line-strong: color-mix(in srgb, var(--text) 24.3%, var(--surface));
+  --line-faint: color-mix(in srgb, var(--text) 24.3%, var(--surface));
+
+  /* —— 文本层级 —— */
+  --text-subtle: color-mix(in srgb, var(--text) 78.6%, var(--bg));
+  --text-faint: color-mix(in srgb, var(--text) 49.6%, var(--bg));
+  --text-ghost: color-mix(in srgb, var(--text) 38.6%, var(--bg));
+  --text-breadcrumb: color-mix(in srgb, var(--text) 49.6%, var(--bg));
+  --text-link-muted: color-mix(in srgb, var(--text) 49.6%, var(--bg));
+  --text-meter: color-mix(in srgb, var(--text) 49.6%, var(--bg));
+  --nav-item: var(--text-muted);
+  --text-meta: var(--text-muted);
+  --placeholder: var(--text-muted);
+  --text-deep: var(--text);
+
+  /* —— 品牌派生 —— */
+  --hero-tint: var(--brand-soft);
+  --brand-tint: color-mix(in srgb, var(--brand) 7.2%, var(--surface));
+  --brand-tint-pick: color-mix(in srgb, var(--brand) 7.2%, var(--surface));
+  --brand-tint-quality: color-mix(in srgb, var(--brand) 7.2%, var(--surface));
+  --brand-tint-row: color-mix(in srgb, var(--brand) 7.2%, var(--surface));
+  --brand-tint-strong: color-mix(in srgb, var(--brand) 15.6%, var(--surface));
+  --brand-tint-deep: color-mix(in srgb, var(--brand) 15.6%, var(--surface));
+  --brand-soft-progress: var(--brand-soft);
+  --brand-line: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
+  --brand-line-pick: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
+  --brand-line-bar: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
+  --brand-line-unread: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
+  --brand-line-follow: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
+  --brand-line-meter: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
+  --brand-line-hover: color-mix(in srgb, var(--brand) 49%, var(--surface));
+  --brand-line-strong: color-mix(in srgb, var(--brand) 49%, var(--surface));
+  --brand-line-quality: color-mix(in srgb, var(--brand) 49%, var(--surface));
+  --brand-line-drop: color-mix(in srgb, var(--brand) 49%, var(--surface));
+  --brand-line-focus: color-mix(in srgb, var(--brand) 61%, var(--surface));
+  --brand-line-soft: color-mix(in srgb, var(--brand) 25%, var(--surface));
+  --brand-ink: color-mix(in srgb, var(--brand) 74.8%, var(--text));
+  --brand-veil: color-mix(in srgb, var(--brand) 23.6%, var(--surface));
+  --selection-bg: color-mix(in srgb, var(--brand) 23.6%, var(--surface));
+  --follow-fill: color-mix(in srgb, var(--brand) 23.6%, var(--surface));
+  --veil-hover: color-mix(in srgb, var(--brand) 23.6%, var(--surface));
+
+  /* —— 状态派生 —— */
+  --danger-soft: color-mix(in srgb, var(--danger) 16%, var(--surface));
+  --danger-soft-hover: color-mix(in srgb, var(--danger) 16%, var(--surface));
+  --danger-diff: color-mix(in srgb, var(--danger) 16%, var(--surface));
+  --danger-line: color-mix(in srgb, var(--danger) 21.8%, var(--surface));
+  --danger-ink: color-mix(in srgb, var(--danger) 83.3%, var(--text));
+  --success-soft: color-mix(in srgb, var(--success) 16%, var(--surface));
+  --success-diff: color-mix(in srgb, var(--success) 16%, var(--surface));
+  --success-ink: color-mix(in srgb, var(--success) 74.3%, var(--text));
+  --warning-veil: color-mix(in srgb, var(--warning) 14%, var(--surface));
+  --warning-line: color-mix(in srgb, var(--warning) 21.9%, var(--surface));
+  --warning-task: var(--warning);
+  --warning-note: var(--warning);
+  --warning-rank: var(--warning);
+
+  /* —— 阴影 / 遮罩 —— */
+  --shadow-sm: 0 2px 8px color-mix(in srgb, var(--ink) 0.8%, transparent);
+  --shadow-md: 0 12px 48px color-mix(in srgb, var(--ink) 8.6%, transparent);
+  --shadow-lg: 0 12px 48px color-mix(in srgb, var(--ink) 12.2%, transparent);
+  --shadow-brand: 0 4px 14px color-mix(in srgb, var(--brand) 12.5%, transparent);
+  --shadow-modal: 0 15px 70px color-mix(in srgb, var(--ink) 15%, transparent);
+  --shadow-select: 0 8px 28px color-mix(in srgb, var(--ink) 12.5%, transparent);
+  --shadow-select-focus: 0 0 0 2px color-mix(in srgb, var(--brand) 6.3%, transparent);
+  --shadow-player: 0 8px 40px color-mix(in srgb, var(--ink) 7.8%, transparent);
+  --shadow-player-collapsed: 0 4px 16px color-mix(in srgb, var(--ink) 7.1%, transparent);
+  --shadow-menu: 0 6px 20px color-mix(in srgb, var(--ink) 7.8%, transparent);
+  --shadow-cover: 0 5px 16px color-mix(in srgb, var(--ink) 3.5%, transparent);
+  --shadow-cover-hover: 0 10px 24px color-mix(in srgb, var(--ink) 8.6%, transparent);
+  --shadow-hero-cover: 0 12px 28px color-mix(in srgb, var(--ink) 9.4%, transparent);
+  --shadow-segmented: 0 1px 3px color-mix(in srgb, var(--ink) 6.3%, transparent);
+  --shadow-field-focus: 0 0 0 2px color-mix(in srgb, var(--brand) 7.1%, transparent);
+  --shadow-meter-focus: 0 0 0 3px color-mix(in srgb, var(--brand) 7%, transparent);
+  --scrim-sidebar: color-mix(in srgb, var(--ink) 40%, transparent);
+  --scrim-modal: color-mix(in srgb, var(--ink) 40%, transparent);
+  --scrim-soft: color-mix(in srgb, var(--ink) 5.9%, transparent);
+  --scrim-strong: color-mix(in srgb, var(--ink) 14.9%, transparent);
+  --ring-highlight: color-mix(in srgb, var(--surface) 3.9%, transparent);
+
+  /* —— 封面占位色：本色与表面混合压暗（白字改墨色后也要保证封面字可读） —— */
+  --cover-0: color-mix(in srgb, var(--cover-0-base) 38%, var(--surface));
+  --cover-0-tint: color-mix(in srgb, var(--cover-0-base) 58%, var(--surface));
+  --cover-0-ink: color-mix(in srgb, var(--cover-0-base) 30%, var(--text));
+  --cover-1: color-mix(in srgb, var(--cover-1-base) 38%, var(--surface));
+  --cover-1-tint: color-mix(in srgb, var(--cover-1-base) 58%, var(--surface));
+  --cover-1-ink: color-mix(in srgb, var(--cover-1-base) 30%, var(--text));
+  --cover-2: color-mix(in srgb, var(--cover-2-base) 38%, var(--surface));
+  --cover-2-tint: color-mix(in srgb, var(--cover-2-base) 58%, var(--surface));
+  --cover-2-ink: color-mix(in srgb, var(--cover-2-base) 30%, var(--text));
+  --cover-3: color-mix(in srgb, var(--cover-3-base) 38%, var(--surface));
+  --cover-3-tint: color-mix(in srgb, var(--cover-3-base) 58%, var(--surface));
+  --cover-3-ink: color-mix(in srgb, var(--cover-3-base) 30%, var(--text));
+  --cover-4: color-mix(in srgb, var(--cover-4-base) 38%, var(--surface));
+  --cover-4-tint: color-mix(in srgb, var(--cover-4-base) 58%, var(--surface));
+  --cover-4-ink: color-mix(in srgb, var(--cover-4-base) 30%, var(--text));
+}

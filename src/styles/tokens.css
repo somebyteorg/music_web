@@ -1,120 +1,20 @@
 /**
- * 设计 token（颜色 / 圆角 / 字号 / 间距 / 阴影 / 动效）。
+ * 设计 token：结构部分（非颜色）。
  *
- * 颜色分两层：
- * 1. 基础色（--bg/--surface/--text/--brand/...）：逐条对应重构前的实际色值，值完全相同；
- * 2. 派生色（--text-faint/--line-strong/--brand-line/--shadow-*）：由基础色用 color-mix 推出，
- *    与重构前的色值逐通道偏差 ≤8/255；同一角色下原本取值互不相同的近邻色（中性灰、浅色描边）
- *    会合并到同一个 token，偏差最大 15/255，且只出现在 1px 描边与小号灰字上。
- *    换主题时只要覆盖基础色，派生色即可整体翻转。
+ * 颜色拆到两份文件里，因为浅色与深色的"取色方式"不同：
+ *   - tokens-light.css：浅色层，**全部是 8bit 字面量**（hex / hex8）；
+ *   - tokens-dark.css ：深色层，只覆盖基础色，派生色用 color-mix 从基础色推。
  *
- * 深色层 [data-theme='dark'] 只覆盖基础色，派生色自动跟随；阴影/遮罩基色 --ink 始终保持暗色。
+ * 为什么浅色层不能再用 color-mix 派生（本轮维修记录）：
+ *   color-mix() 的计算值不会序列化成 rgb()，而是 color(srgb 0.567937 …)，精度 6 位小数、
+ *   且不回落到 8bit。所以"用 color-mix 近似某个历史字面量"在 getComputedStyle 层面
+ *   必然与重构前（5bd7a12）**逐字节不等**，哪怕差值只有 1/255。
+ *   浅色因此改为逐点字面量；深色没有历史基线，仍保留 color-mix 派生（序列化两边一致）。
  *
- * 为什么 token 里有 44 个色值字面量、而不是 30 以内：
- * 重构前 src 内共 153 处色值字面量，其中 105 个互不相同（83 个实色 + 22 个带 alpha）。
- * 脚本按「每通道允许偏差」做过聚类：偏差 ≤3 只能归并到 66 组，放宽到 ≤18（已经肉眼可见）
- * 也只有 33 组 —— 所以「压到 30 个以内」与「浅色视觉不变」在数学上互斥。
- * 这里选择视觉优先：能 1:1 对应的色值原样保留，其余同角色近邻色合并到派生色（偏差见上）。
+ * 深色层仍然只覆盖基础色 + 少数派生色，改主题时浅色/深色各自自洽。
  */
 
 :root {
-  color-scheme: light;
-
-  /* —— 基础色：表面 —— */
-  --bg: #f7f7fa;
-  --surface: #fff;
-  --surface-muted: #f8f9fb;
-  --line: #e9e8ef;
-
-  /* —— 基础色：文本 —— */
-  --text: #292733;
-  --text-muted: #777481;
-  --text-soft: #484551;
-
-  /* —— 基础色：品牌 —— */
-  --brand: #7654bc;
-  --brand-strong: #5e3d9c;
-  --brand-soft: #f0ebf8;
-
-  /* —— 基础色：状态 —— */
-  --danger: #b33645;
-  --success: #23774c;
-  --warning: #93601d;
-  --warning-soft: #fff3da;
-  --danger-hover: #af4d65;
-  /* 品牌色/深色底上的文字：两套主题都保持浅色 */
-  --on-brand: #fff;
-
-  /* —— 阴影 / 遮罩基色：两套主题共用的“墨色”，不随主题变浅 —— */
-  --ink: #292035;
-
-  /* —— 派生色：表面与分隔线 —— */
-  --surface-hover: color-mix(in srgb, var(--brand) 3.4%, var(--surface));
-  --surface-sunken: color-mix(in srgb, var(--text) 7.4%, var(--surface));
-  --surface-glass: color-mix(in srgb, var(--surface) 85%, transparent);
-  --surface-glass-strong: color-mix(in srgb, var(--surface) 96%, transparent);
-  --line-strong: color-mix(in srgb, var(--text) 24.3%, var(--surface));
-
-  /* —— 派生色：文本层级（由 --text 与 --bg 之间取值） —— */
-  --text-subtle: color-mix(in srgb, var(--text) 78.6%, var(--bg));
-  --text-faint: color-mix(in srgb, var(--text) 49.6%, var(--bg));
-  --text-ghost: color-mix(in srgb, var(--text) 38.6%, var(--bg));
-
-  /* —— 派生色：品牌—— */
-  --brand-tint: color-mix(in srgb, var(--brand) 7.2%, var(--surface));
-  --brand-tint-strong: color-mix(in srgb, var(--brand) 15.6%, var(--surface));
-  --brand-line-soft: color-mix(in srgb, var(--brand) 25%, var(--surface));
-  --brand-line: color-mix(in srgb, var(--brand) 35.5%, var(--surface));
-  --brand-line-strong: color-mix(in srgb, var(--brand) 49%, var(--surface));
-  --brand-line-focus: color-mix(in srgb, var(--brand) 61%, var(--surface));
-  --brand-ink: color-mix(in srgb, var(--brand) 74.8%, var(--text));
-  --brand-veil: color-mix(in srgb, var(--brand) 23.6%, var(--surface));
-  --brand-veil-ink: #392354;
-
-  /* —— 派生色：状态 —— */
-  --danger-soft: color-mix(in srgb, var(--danger) 4.7%, var(--surface));
-  --danger-line: color-mix(in srgb, var(--danger) 21.8%, var(--surface));
-  --danger-ink: color-mix(in srgb, var(--danger) 83.3%, var(--text));
-  --success-soft: color-mix(in srgb, var(--success) 7.9%, var(--surface));
-  --success-ink: color-mix(in srgb, var(--success) 74.3%, var(--text));
-  --warning-veil: color-mix(in srgb, var(--warning) 3.9%, var(--surface));
-  --warning-line: color-mix(in srgb, var(--warning) 21.9%, var(--surface));
-
-  /* —— 阴影 / 遮罩 —— */
-  --shadow-sm: 0 2px 8px color-mix(in srgb, var(--ink) 0.8%, transparent);
-  --shadow-md: 0 8px 32px color-mix(in srgb, var(--ink) 8.6%, transparent);
-  --shadow-lg: 0 12px 48px color-mix(in srgb, var(--ink) 12.2%, transparent);
-  --shadow-brand: 0 4px 14px color-mix(in srgb, var(--brand) 12.5%, transparent);
-  --scrim: color-mix(in srgb, var(--ink) 40%, transparent);
-  --scrim-soft: color-mix(in srgb, var(--ink) 5.9%, transparent);
-  --scrim-strong: color-mix(in srgb, var(--ink) 14.9%, transparent);
-  --ring-highlight: color-mix(in srgb, var(--surface) 3.9%, transparent);
-
-  /* —— 封面占位色（按实体类型区分） ——
-   * --cover-N-base 是封面本色：浅色主题原样使用，深色主题从它派生压暗的封面与提亮的字色，
-   * 避免深色页面里出现整块浅色。
-   */
-  --cover-0-base: #a892c1;
-  --cover-0: var(--cover-0-base);
-  --cover-0-ink: #69517f;
-  --cover-0-tint: color-mix(in srgb, var(--cover-0-base) 46.2%, var(--surface));
-  --cover-1-base: #b8b18d;
-  --cover-1: var(--cover-1-base);
-  --cover-1-ink: #726c47;
-  --cover-1-tint: color-mix(in srgb, var(--cover-1-base) 44.8%, var(--surface));
-  --cover-2-base: #c59c89;
-  --cover-2: var(--cover-2-base);
-  --cover-2-ink: #91604c;
-  --cover-2-tint: color-mix(in srgb, var(--cover-2-base) 40.9%, var(--surface));
-  --cover-3-base: #99b8ab;
-  --cover-3: var(--cover-3-base);
-  --cover-3-ink: #4b7967;
-  --cover-3-tint: color-mix(in srgb, var(--cover-3-base) 40.6%, var(--surface));
-  --cover-4-base: #95a9ca;
-  --cover-4: var(--cover-4-base);
-  --cover-4-ink: #526d97;
-  --cover-4-tint: color-mix(in srgb, var(--cover-4-base) 42.2%, var(--surface));
-
   /* —— 圆角 —— */
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -147,52 +47,4 @@
   --player-height: 76px;
   --player-offset: 16px;
   --page-gutter: clamp(24px, 3.2vw, 56px);
-}
-
-/* 深色主题：只覆盖基础色，派生色与之联动 */
-[data-theme='dark'] {
-  color-scheme: dark;
-
-  --bg: #131218;
-  --surface: #1b1a23;
-  --surface-muted: #232231;
-  --line: #2e2c3a;
-
-  --text: #eceaf2;
-  --text-muted: #9d9aab;
-  --text-soft: #cbc8d6;
-
-  --brand: #9d80dd;
-  --brand-strong: #bda6f0;
-  --brand-soft: #2b2439;
-
-  --danger: #ef8d9d;
-  --success: #6ec59a;
-  --warning: #ddaa63;
-  --warning-soft: #3a2f1d;
-  --danger-hover: #f6a6b4;
-  --warning-veil: color-mix(in srgb, var(--warning) 14%, var(--surface));
-  --danger-soft: color-mix(in srgb, var(--danger) 16%, var(--surface));
-  --success-soft: color-mix(in srgb, var(--success) 16%, var(--surface));
-  --brand-veil-ink: #efe6ff;
-
-  /* 品牌色在深色下变浅，品牌底上的文字必须转成墨色，白字对比只有 3.2:1 */
-  --on-brand: #17111f;
-
-  /* 封面占位色：本色与表面混合压暗（白字改墨色后也要保证封面字可读） */
-  --cover-0: color-mix(in srgb, var(--cover-0-base) 38%, var(--surface));
-  --cover-0-tint: color-mix(in srgb, var(--cover-0-base) 58%, var(--surface));
-  --cover-0-ink: color-mix(in srgb, var(--cover-0-base) 30%, var(--text));
-  --cover-1: color-mix(in srgb, var(--cover-1-base) 38%, var(--surface));
-  --cover-1-tint: color-mix(in srgb, var(--cover-1-base) 58%, var(--surface));
-  --cover-1-ink: color-mix(in srgb, var(--cover-1-base) 30%, var(--text));
-  --cover-2: color-mix(in srgb, var(--cover-2-base) 38%, var(--surface));
-  --cover-2-tint: color-mix(in srgb, var(--cover-2-base) 58%, var(--surface));
-  --cover-2-ink: color-mix(in srgb, var(--cover-2-base) 30%, var(--text));
-  --cover-3: color-mix(in srgb, var(--cover-3-base) 38%, var(--surface));
-  --cover-3-tint: color-mix(in srgb, var(--cover-3-base) 58%, var(--surface));
-  --cover-3-ink: color-mix(in srgb, var(--cover-3-base) 30%, var(--text));
-  --cover-4: color-mix(in srgb, var(--cover-4-base) 38%, var(--surface));
-  --cover-4-tint: color-mix(in srgb, var(--cover-4-base) 58%, var(--surface));
-  --cover-4-ink: color-mix(in srgb, var(--cover-4-base) 30%, var(--text));
 }
