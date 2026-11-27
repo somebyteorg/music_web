@@ -11,7 +11,7 @@
  * ·  900 —— resources.css：资源表「音频参数」列隐藏
  * ·  760 —— App.vue 侧栏抽屉+汉堡 / PlayerBar 边距与音量 / QueuePanel 移动面板
  *            （含 `(pointer: coarse), (max-width: 760px)` 一条组合查询）
- * ·  680 —— 本文件的基础排版；CatalogView / CommunityView / DetailHero /
+ * ·  680 —— 本文件的基础排版；catalog / community 目录 / DetailHero /
  *            DetailView / resources / UploadsView 与 uploads 目录
  * ·  640 —— BaseDialog 弹窗宽度、Pagination 工具条
  * ·  540 —— App.vue 面包屑与账号紧凑 / PlayerBar 紧凑换行 / SettingsView

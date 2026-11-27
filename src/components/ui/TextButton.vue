@@ -8,7 +8,7 @@
  *   danger 变体叠加 .danger → color: var(--danger)
  *   disabled → 继承 base.css 的 button:disabled { cursor: not-allowed; opacity: 0.5 }
  * 根元素保留 text-button 这个 class：页面会用上下文选择器微调它，例如
- *   .history-list .text-button { white-space: nowrap }（CommunityView）
+ *   .history-list .text-button { white-space: nowrap }（community/HistoryList.vue）
  *   .cover-editor .text-button { display: block; font-size: 12px }（EditorDialog）
  *   .resource-actions .text-button { white-space: nowrap }（resources.css）
  *
