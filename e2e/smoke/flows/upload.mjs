@@ -23,12 +23,12 @@ export const flow = {
       await notice.check()
       await modal.getByRole('button', { name: '确认须知' }).click()
     }
-    await modal.getByRole('button', { name: '选择音频文件' }).waitFor({ timeout: 10000 })
-    await modal.locator('input[type=file]').setInputFiles({
-      name: FILE_NAME,
-      mimeType: 'audio/wav',
-      buffer: WAV,
-    })
+    // 用 filechooser 事件绑定"这一次点击真正打开的选择器"：
+    // 直接 setInputFiles 隐藏 input 会与组件重渲染竞态（元素被替换后 change 不再触发）。
+    const chooserPromise = page.waitForEvent('filechooser', { timeout: 10000 })
+    await modal.getByRole('button', { name: '选择音频文件' }).click()
+    const chooser = await chooserPromise
+    await chooser.setFiles({ name: FILE_NAME, mimeType: 'audio/wav', buffer: WAV })
 
     // 任务来自状态机：只有 文件校验 → tus 传输 → 轮询处理 → 入库 全部走通才会变成「已加入歌曲」
     await page.waitForFunction(

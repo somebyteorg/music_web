@@ -7,6 +7,7 @@
  * 失败会把整页截图写到 e2e/__smoke__/<流程名>.png，并打印 mock 后端与 preview 的输出。
  */
 import { existsSync } from 'node:fs'
+import net from 'node:net'
 import { readdir } from 'node:fs/promises'
 import path from 'node:path'
 import { chromium } from 'playwright'
@@ -76,6 +77,24 @@ async function runFlows(flows, context, origin, stub) {
   return failures
 }
 
+/** 端口预检：被占用时给出可操作的错误，而不是让后续等待随机超时 */
+function assertPortFree(port) {
+  return new Promise((resolve, reject) => {
+    const probe = net.createServer()
+    probe.once('error', (error) => {
+      if (error && error.code === 'EADDRINUSE')
+        reject(
+          new Error(
+            `端口 ${port} 已被占用（可能是上次残留的 stub/preview）；请结束该进程或用 --api-port/--preview-port 换端口`,
+          ),
+        )
+      else reject(error)
+    })
+    probe.once('listening', () => probe.close(() => resolve(undefined)))
+    probe.listen(port, '127.0.0.1')
+  })
+}
+
 async function main() {
   if (!existsSync(DIST_ENTRY)) {
     process.stderr.write('缺少 dist/：请先运行 pnpm exec vite build\n')
@@ -88,6 +107,9 @@ async function main() {
   }
   const apiPort = numberArg('api-port', API_PORT)
   const previewPort = numberArg('preview-port', PREVIEW_PORT)
+  // 端口被占用时直接失败并说明原因：否则会连到上一次残留的 server，表现为"偶发超时"
+  await assertPortFree(apiPort)
+  await assertPortFree(previewPort)
   const stub = await startStubApi({ port: apiPort })
   const preview = startPreview(stub.port, previewPort)
   const origin = `http://127.0.0.1:${previewPort}`
