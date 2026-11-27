@@ -16,13 +16,13 @@ import { collectSnapshot } from './layout/collect.mjs'
 import { compareLayoutOnly, compareSnapshots } from './layout/compare.mjs'
 import {
   CONTEXT_OPTIONS,
-  LAUNCH_ARGS,
   ROOT,
   ROUTES,
   VIEWPORT_HEIGHT,
   WIDTHS,
   arg,
   delay,
+  launchArgs,
   numberArg,
   openRoute,
   startPreview,
@@ -64,6 +64,7 @@ function printHelp() {
       '',
       '  --update                    生成/更新布局基线',
       '  --font-probe                字体替换自检（不比对基线，退出码反映自检结论）',
+      '  --ignore-raster             去掉抗锯齿相关启动参数再比对（应仍 0 差异）',
       '  --api-port=8150             mock 后端端口',
       '  --preview-port=4250         vite preview 端口',
       '  --routes=/albums,/settings  只跑指定路由',
@@ -235,7 +236,13 @@ async function main() {
   let browser
   try {
     await waitForHttp(origin, 60000, preview.child, 'vite preview')
-    browser = await chromium.launch({ args: LAUNCH_ARGS })
+    const ignoreRaster = process.argv.includes('--ignore-raster')
+    if (ignoreRaster) {
+      process.stdout.write(
+        '已关闭抗锯齿相关启动参数（--disable-lcd-text 等）：布局快照理应零差异\n',
+      )
+    }
+    browser = await chromium.launch({ args: launchArgs(ignoreRaster) })
     const context = await browser.newContext(CONTEXT_OPTIONS)
     const page = await context.newPage()
     if (fontProbe) return await runFontProbe(page, origin, routes, widths)

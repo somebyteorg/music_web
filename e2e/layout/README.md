@@ -28,6 +28,7 @@
 pnpm test:layout:update   # 生成/更新基线（e2e/__layout__/<route>-<width>.json）
 pnpm test:layout          # 对比（需要先 pnpm exec vite build，脚本自己拉起 vite preview）
 pnpm test:layout:fonts    # 字体替换自检：font-family 换成 serif 后再采一次
+node e2e/layout-snapshot.mjs --ignore-raster   # 去掉 --disable-lcd-text 等抗锯齿参数再比对（应仍零差异）
 ```
 
 渲染参数与 `e2e/visual.mjs` 一致（stub-api + vite preview + 390/768/1280×900 + 关 LCD 次像素），

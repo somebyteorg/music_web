@@ -27,6 +27,20 @@ export const LAUNCH_ARGS = [
   '--disable-font-subpixel-positioning',
 ]
 
+/** 只影响字体栅格化/抗锯齿、不影响布局计算的参数。 */
+const RASTER_ONLY_ARGS = [
+  '--disable-lcd-text',
+  '--font-render-hinting=none',
+  '--disable-font-subpixel-positioning',
+]
+
+/** --ignore-raster 时去掉上面三项：布局快照理应一模一样（没有截图，栅格化不参与）。 */
+export function launchArgs(ignoreRaster) {
+  return ignoreRaster
+    ? LAUNCH_ARGS.filter((value) => !RASTER_ONLY_ARGS.includes(value))
+    : LAUNCH_ARGS
+}
+
 export const CONTEXT_OPTIONS = {
   deviceScaleFactor: 1,
   locale: 'zh-CN',
