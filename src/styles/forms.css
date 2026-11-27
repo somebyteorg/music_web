@@ -34,7 +34,7 @@ select {
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--text-muted);
+  color: var(--placeholder);
   font-weight: 400;
 }
 
@@ -42,7 +42,7 @@ input:focus,
 textarea:focus,
 select:focus {
   border-color: var(--brand-line-focus);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 7.1%, transparent);
+  box-shadow: var(--shadow-field-focus);
 }
 
 textarea {
@@ -114,7 +114,7 @@ input[type='radio'] {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--ink) 7.8%, transparent);
+  box-shadow: var(--shadow-menu);
 }
 
 .action-menu-items > button,

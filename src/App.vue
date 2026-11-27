@@ -330,7 +330,7 @@ const themeTitle = computed(
   min-height: 46px;
   padding: 11px 14px;
   border-radius: 9px;
-  color: var(--text-muted);
+  color: var(--nav-item);
   font-size: 14px;
   transition:
     background 0.15s,
@@ -398,7 +398,7 @@ const themeTitle = computed(
   align-items: center;
   gap: 14px;
   min-width: 0;
-  color: var(--text-faint);
+  color: var(--text-breadcrumb);
   font-size: 12px;
   white-space: nowrap;
 }
@@ -407,7 +407,7 @@ const themeTitle = computed(
 }
 .breadcrumb-parent > span {
   margin-left: 14px;
-  color: var(--line-strong);
+  color: var(--line-faint);
 }
 .breadcrumb strong {
   overflow: hidden;
@@ -464,7 +464,7 @@ const themeTitle = computed(
   min-height: 34px;
   padding: 7px 9px;
   border-radius: 9px;
-  color: var(--text-muted);
+  color: var(--text-meta);
   font-size: 12px;
   white-space: nowrap;
   transition:
@@ -480,7 +480,7 @@ const themeTitle = computed(
 }
 .account-logout:hover:not(:disabled) {
   color: var(--danger-hover);
-  background: var(--danger-soft);
+  background: var(--danger-soft-hover);
 }
 .account-action .ui-icon {
   width: 18px;
@@ -493,7 +493,7 @@ const themeTitle = computed(
   width: 38px;
   height: 38px;
   border-radius: 11px;
-  color: var(--text-faint);
+  color: var(--text-link-muted);
   transition:
     background 0.15s,
     color 0.15s;
@@ -647,7 +647,7 @@ const themeTitle = computed(
     position: fixed;
     inset: 0;
     z-index: 35;
-    background: var(--scrim);
+    background: var(--scrim-sidebar);
     backdrop-filter: blur(3px);
   }
   .main-shell {

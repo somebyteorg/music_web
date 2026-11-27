@@ -130,9 +130,9 @@
 .skeleton {
   background: linear-gradient(
     100deg,
-    var(--surface-sunken) 30%,
+    var(--skeleton-base) 30%,
     var(--surface-muted) 50%,
-    var(--surface-sunken) 70%
+    var(--skeleton-base) 70%
   );
   background-size: 200% 100%;
   animation: shimmer 1.8s infinite;
@@ -188,7 +188,7 @@
 .picker-results > button:hover,
 .picker-results > button.selected {
   background: var(--brand-soft);
-  border-color: var(--brand-line);
+  border-color: var(--brand-line-pick);
 }
 
 .picker-results small {

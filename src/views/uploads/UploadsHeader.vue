@@ -104,16 +104,16 @@ onBeforeUnmount(() => {
   gap: 14px;
   padding: 26px 22px;
   margin-bottom: 18px;
-  border: 1px dashed var(--brand-line-strong);
+  border: 1px dashed var(--brand-line-drop);
   border-radius: 8px;
-  background: var(--brand-tint);
+  background: var(--brand-tint-row);
 }
 .upload-drop.compact {
   padding: 14px 16px;
 }
 .upload-drop.over {
   border-color: var(--brand);
-  background: var(--brand-tint-strong);
+  background: var(--brand-tint-deep);
 }
 .drop-copy strong {
   font-size: 14px;

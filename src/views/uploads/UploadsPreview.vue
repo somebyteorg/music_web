@@ -170,7 +170,7 @@ function previewCover(task: UploadTask) {
   border: 1px solid var(--warning-line);
   border-radius: 8px;
   background: var(--warning-veil);
-  color: var(--warning);
+  color: var(--warning-note);
   font-size: 12px;
   line-height: 1.7;
   list-style: disc;
@@ -193,7 +193,7 @@ function previewCover(task: UploadTask) {
 }
 .task-warning {
   margin-top: 5px;
-  color: var(--warning);
+  color: var(--warning-task);
   font-size: 12px;
   overflow-wrap: anywhere;
 }

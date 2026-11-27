@@ -19,7 +19,7 @@ body {
 }
 
 ::selection {
-  background: var(--brand-veil);
+  background: var(--selection-bg);
   color: var(--brand-veil-ink);
 }
 

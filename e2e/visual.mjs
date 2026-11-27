@@ -220,7 +220,16 @@ async function main() {
   let browser
   try {
     await waitForHttp(origin, 60000, preview.child, 'vite preview')
-    browser = await chromium.launch()
+    // 固定渲染环境：CI（macOS runner）与本机的字体抗锯齿/子像素渲染不同，
+    // 不加这些参数会整页出现 1~2% 的文本像素差异、通道差可达 200+。
+    browser = await chromium.launch({
+      args: [
+        '--disable-lcd-text',
+        '--font-render-hinting=none',
+        '--disable-font-subpixel-positioning',
+        '--force-color-profile=srgb',
+      ],
+    })
     const results = []
     for (const width of widths) {
       const context = await browser.newContext({

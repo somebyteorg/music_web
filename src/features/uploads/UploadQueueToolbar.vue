@@ -135,11 +135,11 @@ async function clearDone() {
     box-shadow 0.15s;
 }
 .concurrency-input:hover {
-  border-color: var(--brand-line);
+  border-color: var(--brand-line-meter);
 }
 .concurrency-input:focus-within {
   border-color: var(--brand-line-focus);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 7%, transparent);
+  box-shadow: var(--shadow-meter-focus);
 }
 .concurrency-icon,
 .queue-clear svg {
@@ -184,7 +184,7 @@ async function clearDone() {
   -webkit-appearance: none;
 }
 .concurrency-limit {
-  color: var(--text-faint);
+  color: var(--text-meter);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
 }

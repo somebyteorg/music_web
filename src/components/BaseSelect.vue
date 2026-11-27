@@ -217,7 +217,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
 }
 .select-trigger[aria-expanded='true'] {
   border-color: var(--brand);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--brand) 6.3%, transparent);
+  box-shadow: var(--shadow-select-focus);
 }
 .select-trigger > span {
   min-width: 0;
@@ -237,7 +237,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--surface);
-  box-shadow: 0 8px 28px color-mix(in srgb, var(--ink) 12.5%, transparent);
+  box-shadow: var(--shadow-select);
   overflow: hidden;
   outline: none;
 }

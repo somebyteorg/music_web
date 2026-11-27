@@ -190,7 +190,7 @@ const coverUrl = computed(() => {
   max-width: 460px;
   overflow: hidden;
   border-radius: 2px;
-  background: var(--brand-soft);
+  background: var(--brand-soft-progress);
 }
 .progress-track > span {
   display: block;
@@ -201,7 +201,7 @@ const coverUrl = computed(() => {
 .duplicate-note,
 .task-warning {
   margin-top: 5px;
-  color: var(--warning);
+  color: var(--warning-task);
   font-size: 12px;
   overflow-wrap: anywhere;
 }

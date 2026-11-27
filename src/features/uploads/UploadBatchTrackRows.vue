@@ -136,7 +136,7 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
 }
 .task-warning {
   margin-top: 5px;
-  color: var(--warning);
+  color: var(--warning-task);
   font-size: 12px;
   overflow-wrap: anywhere;
 }

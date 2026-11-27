@@ -349,7 +349,7 @@ const {
   padding: 8px 12px;
   margin-bottom: 8px;
   background: var(--brand-soft);
-  border: 1px solid var(--brand-line);
+  border: 1px solid var(--brand-line-bar);
   border-radius: 6px;
   font-size: 12px;
 }
@@ -443,14 +443,14 @@ const {
 .grid .entity-main > .cover {
   width: 100%;
   margin-bottom: 16px;
-  box-shadow: 0 5px 16px color-mix(in srgb, var(--ink) 3.5%, transparent);
+  box-shadow: var(--shadow-cover);
   transition:
     transform 0.25s,
     box-shadow 0.25s;
 }
 .grid .entity-main:hover > .cover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 8.6%, transparent);
+  box-shadow: var(--shadow-cover-hover);
 }
 .grid .entity-main > .cover.round {
   width: 85%;

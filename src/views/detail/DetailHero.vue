@@ -162,12 +162,12 @@ function togglePlay() {
   margin-bottom: 32px;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
-  background: linear-gradient(125deg, var(--brand-soft), var(--surface-hover) 75%);
+  background: linear-gradient(125deg, var(--hero-tint), var(--surface-hero) 75%);
 }
 .detail-hero > .cover {
   width: clamp(160px, 15vw, 220px);
   flex-shrink: 0;
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--ink) 9.4%, transparent);
+  box-shadow: var(--shadow-hero-cover);
 }
 .detail-copy {
   min-width: 0;
@@ -219,11 +219,11 @@ function togglePlay() {
 }
 .follow-button.active {
   color: var(--brand-strong);
-  border-color: var(--brand-line);
+  border-color: var(--brand-line-follow);
   background: var(--brand-soft);
 }
 .follow-button.active .ui-icon {
-  fill: var(--brand-veil);
+  fill: var(--follow-fill);
 }
 @media (max-width: 680px) {
   .detail-hero {
