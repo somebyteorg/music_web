@@ -1,0 +1,22 @@
+/*
+ * 无障碍降级：整份样式落在最靠后的 a11y 层里。
+ *
+ * 通配选择器特异性为 0，但级联层比特异性优先：a11y 层在 style.css 的层序里排最后，
+ * 所以不需要提权（也不需要感叹号强制）也能关掉
+ *   - components.css 的 .skeleton shimmer
+ *   - forms.css / Button.vue 等控件的 transition
+ *   - 各组件 scoped 样式里的 animation / transition（它们都在 components 层）
+ * 前提是「带动效的样式都归属某个层」：.vue 的 <style scoped> 与 scoped 外链 css
+ * 都用 @layer components 包裹，新加动效时请沿用。
+ */
+@layer a11y {
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none;
+      transition: none;
+      scroll-behavior: auto;
+    }
+  }
+}

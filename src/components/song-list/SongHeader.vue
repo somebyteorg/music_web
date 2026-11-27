@@ -27,39 +27,41 @@ const { props, allSelected, someSelected, toggleAll } = useSongListContext()
 
 <style scoped src="./songGrid.css"></style>
 <style scoped>
-.song-label {
-  min-height: 44px;
-  background: var(--surface-muted);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-.number-label {
-  text-align: center;
-}
-.action-label {
-  text-align: right;
-  padding-right: 6px;
-}
-.song-artists,
-.song-album {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-@container (max-width: 800px) {
-  .song-artists {
-    display: none;
+@layer components {
+  .song-label {
+    min-height: 44px;
+    background: var(--surface-muted);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    color: var(--text-muted);
+    font-size: 12px;
   }
-}
-@container (max-width: 620px) {
+  .number-label {
+    text-align: center;
+  }
+  .action-label {
+    text-align: right;
+    padding-right: 6px;
+  }
+  .song-artists,
   .song-album {
-    display: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-}
-@container (max-width: 460px) {
-  .resource-label {
-    display: none;
+  @container (max-width: 800px) {
+    .song-artists {
+      display: none;
+    }
+  }
+  @container (max-width: 620px) {
+    .song-album {
+      display: none;
+    }
+  }
+  @container (max-width: 460px) {
+    .resource-label {
+      display: none;
+    }
   }
 }
 </style>

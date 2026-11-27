@@ -134,164 +134,166 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
 </template>
 
 <style scoped>
-.player {
-  position: fixed;
-  z-index: 45;
-  left: calc(var(--sidebar-width) + 20px);
-  right: 20px;
-  bottom: var(--player-offset);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-height: var(--player-height);
-  padding: 14px 20px;
-  background: var(--surface-glass-strong);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: var(--shadow-player);
-  backdrop-filter: blur(20px);
-}
-.player > .cover {
-  width: 46px;
-  flex-shrink: 0;
-}
-.player-title {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 168px;
-  min-width: 0;
-}
-.player-title strong {
-  font-size: 14px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.player-title span {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-.player-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-.player-controls .icon-button {
-  color: var(--text-muted);
-}
-.play-button {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  color: var(--on-brand);
-  background: var(--brand);
-}
-.play-button[aria-busy='true'] {
-  opacity: 0.6;
-}
-.seek {
-  flex: 1;
-  min-width: 60px;
-  accent-color: var(--brand);
-}
-.volume {
-  width: 75px;
-  accent-color: var(--brand);
-}
-.time {
-  color: var(--text-muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-.player-extra {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-}
-.player-extra .icon-button {
-  color: var(--text-muted);
-}
-.queue-button {
-  position: relative;
-}
-.queue-count {
-  position: absolute;
-  top: -2px;
-  right: -4px;
-  min-width: 15px;
-  padding: 0 3px;
-  border-radius: 8px;
-  background: var(--brand);
-  color: var(--on-brand);
-  font-size: 9px;
-  line-height: 15px;
-  font-variant-numeric: tabular-nums;
-}
-.player.collapsed {
-  left: auto;
-  right: 12px;
-  bottom: 12px;
-  width: min(420px, calc(100% - 24px));
-  padding: 8px 12px;
-  min-height: 54px;
-  gap: 10px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: var(--shadow-player-collapsed);
-}
-.collapsed .player-title {
-  flex: 1;
-  width: auto;
-}
-.collapsed .player-controls {
-  flex-shrink: 0;
-}
-@media (max-width: 980px) {
-  .mode-button {
-    display: none;
-  }
-}
-@media (max-width: 760px) {
+@layer components {
   .player {
-    left: 16px;
-    right: 16px;
-    padding-inline: 14px;
+    position: fixed;
+    z-index: 45;
+    left: calc(var(--sidebar-width) + 20px);
+    right: 20px;
+    bottom: var(--player-offset);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: var(--player-height);
+    padding: 14px 20px;
+    background: var(--surface-glass-strong);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow-player);
+    backdrop-filter: blur(20px);
+  }
+  .player > .cover {
+    width: 46px;
+    flex-shrink: 0;
   }
   .player-title {
-    width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 168px;
+    min-width: 0;
   }
-  .volume {
-    display: none;
+  .player-title strong {
+    font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
-}
-@media (max-width: 540px) {
-  .player {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    flex-wrap: wrap;
-    gap: 7px;
+  .player-title span {
+    font-size: 11px;
+    color: var(--text-muted);
   }
-  .player-title {
-    flex: 1;
-    width: 100px;
-  }
-  .seek {
-    order: 5;
-    flex-basis: 100%;
-    margin: 0;
-  }
-  .time {
-    display: none;
+  .player-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
   }
   .player-controls .icon-button {
-    display: none;
+    color: var(--text-muted);
+  }
+  .play-button {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: var(--on-brand);
+    background: var(--brand);
+  }
+  .play-button[aria-busy='true'] {
+    opacity: 0.6;
+  }
+  .seek {
+    flex: 1;
+    min-width: 60px;
+    accent-color: var(--brand);
+  }
+  .volume {
+    width: 75px;
+    accent-color: var(--brand);
+  }
+  .time {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+  .player-extra {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .player-extra .icon-button {
+    color: var(--text-muted);
+  }
+  .queue-button {
+    position: relative;
+  }
+  .queue-count {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    min-width: 15px;
+    padding: 0 3px;
+    border-radius: 8px;
+    background: var(--brand);
+    color: var(--on-brand);
+    font-size: 9px;
+    line-height: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+  .player.collapsed {
+    left: auto;
+    right: 12px;
+    bottom: 12px;
+    width: min(420px, calc(100% - 24px));
+    padding: 8px 12px;
+    min-height: 54px;
+    gap: 10px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow-player-collapsed);
+  }
+  .collapsed .player-title {
+    flex: 1;
+    width: auto;
+  }
+  .collapsed .player-controls {
+    flex-shrink: 0;
+  }
+  @media (max-width: 980px) {
+    .mode-button {
+      display: none;
+    }
+  }
+  @media (max-width: 760px) {
+    .player {
+      left: 16px;
+      right: 16px;
+      padding-inline: 14px;
+    }
+    .player-title {
+      width: 120px;
+    }
+    .volume {
+      display: none;
+    }
+  }
+  @media (max-width: 540px) {
+    .player {
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .player-title {
+      flex: 1;
+      width: 100px;
+    }
+    .seek {
+      order: 5;
+      flex-basis: 100%;
+      margin: 0;
+    }
+    .time {
+      display: none;
+    }
+    .player-controls .icon-button {
+      display: none;
+    }
   }
 }
 </style>

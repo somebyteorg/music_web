@@ -1,40 +1,42 @@
-/* 表头与数据行共用同一套列宽：列宽只跟容器宽度走，不跟行内容走。 */
-.song-grid {
-  display: grid;
-  grid-template-columns: 28px minmax(150px, 2fr) minmax(90px, 1fr) minmax(100px, 1fr) 82px 152px;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 18px;
-}
-.selectable .song-grid {
-  grid-template-columns:
-    20px 28px minmax(150px, 2fr) minmax(90px, 1fr) minmax(100px, 1fr)
-    82px 152px;
-}
-@container (max-width: 800px) {
+@layer components {
+  /* 表头与数据行共用同一套列宽：列宽只跟容器宽度走，不跟行内容走。 */
   .song-grid {
-    grid-template-columns: 26px minmax(140px, 1.7fr) minmax(90px, 1fr) 82px 152px;
-    gap: 8px;
-    padding-inline: 14px;
+    display: grid;
+    grid-template-columns: 28px minmax(150px, 2fr) minmax(90px, 1fr) minmax(100px, 1fr) 82px 152px;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 18px;
   }
   .selectable .song-grid {
-    grid-template-columns: 20px 26px minmax(140px, 1.7fr) minmax(90px, 1fr) 82px 152px;
+    grid-template-columns:
+      20px 28px minmax(150px, 2fr) minmax(90px, 1fr) minmax(100px, 1fr)
+      82px 152px;
   }
-}
-@container (max-width: 620px) {
-  .song-grid {
-    grid-template-columns: 26px minmax(120px, 1fr) 82px 70px;
+  @container (max-width: 800px) {
+    .song-grid {
+      grid-template-columns: 26px minmax(140px, 1.7fr) minmax(90px, 1fr) 82px 152px;
+      gap: 8px;
+      padding-inline: 14px;
+    }
+    .selectable .song-grid {
+      grid-template-columns: 20px 26px minmax(140px, 1.7fr) minmax(90px, 1fr) 82px 152px;
+    }
   }
-  .selectable .song-grid {
-    grid-template-columns: 20px 26px minmax(120px, 1fr) 82px 70px;
+  @container (max-width: 620px) {
+    .song-grid {
+      grid-template-columns: 26px minmax(120px, 1fr) 82px 70px;
+    }
+    .selectable .song-grid {
+      grid-template-columns: 20px 26px minmax(120px, 1fr) 82px 70px;
+    }
   }
-}
-@container (max-width: 460px) {
-  .song-grid {
-    grid-template-columns: 24px minmax(0, 1fr) 70px;
-    gap: 3px 6px;
-  }
-  .selectable .song-grid {
-    grid-template-columns: 18px 24px minmax(0, 1fr) 70px;
+  @container (max-width: 460px) {
+    .song-grid {
+      grid-template-columns: 24px minmax(0, 1fr) 70px;
+      gap: 3px 6px;
+    }
+    .selectable .song-grid {
+      grid-template-columns: 18px 24px minmax(0, 1fr) 70px;
+    }
   }
 }

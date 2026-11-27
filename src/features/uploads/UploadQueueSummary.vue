@@ -70,86 +70,88 @@ const uploads = useUploadsStore()
   </Card>
 </template>
 <style scoped>
-.queue-summary {
-  padding: 18px 20px;
-  margin-bottom: 18px;
-}
-.summary-heading,
-.summary-heading > div:first-child {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.summary-heading {
-  justify-content: space-between;
-}
-.summary-heading > div:first-child > strong {
-  color: var(--brand-strong);
-  font-size: 28px;
-  line-height: 1.2;
-  font-variant-numeric: tabular-nums;
-}
-.summary-heading small {
-  margin-left: 2px;
-  font-size: 13px;
-  font-weight: 500;
-}
-.summary-speed {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-.summary-progress {
-  height: 6px;
-  margin: 15px 0;
-  border-radius: 4px;
-  overflow: hidden;
-  background: var(--brand-soft);
-}
-.summary-progress > span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--brand);
-  transition: width 0.2s;
-}
-.summary-stages {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-.summary-stages b {
-  margin-left: 4px;
-  font-weight: 550;
-  font-variant-numeric: tabular-nums;
-}
-.summary-stages .current {
-  color: var(--brand-strong);
-}
-@media (max-width: 680px) {
+@layer components {
   .queue-summary {
-    padding: 15px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+  }
+  .summary-heading,
+  .summary-heading > div:first-child {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
   }
   .summary-heading {
-    align-items: center;
+    justify-content: space-between;
   }
-  .summary-heading > div:first-child {
-    gap: 6px 10px;
+  .summary-heading > div:first-child > strong {
+    color: var(--brand-strong);
+    font-size: 28px;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
   }
-  .summary-heading > div:first-child > .hint:last-child {
-    flex-basis: 100%;
+  .summary-heading small {
+    margin-left: 2px;
+    font-size: 13px;
+    font-weight: 500;
   }
   .summary-speed {
-    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary-progress {
+    height: 6px;
+    margin: 15px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--brand-soft);
+  }
+  .summary-progress > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--brand);
+    transition: width 0.2s;
   }
   .summary-stages {
-    gap: 8px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .summary-stages b {
+    margin-left: 4px;
+    font-weight: 550;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary-stages .current {
+    color: var(--brand-strong);
+  }
+  @media (max-width: 680px) {
+    .queue-summary {
+      padding: 15px;
+    }
+    .summary-heading {
+      align-items: center;
+    }
+    .summary-heading > div:first-child {
+      gap: 6px 10px;
+    }
+    .summary-heading > div:first-child > .hint:last-child {
+      flex-basis: 100%;
+    }
+    .summary-speed {
+      font-size: 12px;
+    }
+    .summary-stages {
+      gap: 8px 16px;
+    }
   }
 }
 </style>

@@ -117,126 +117,128 @@ const coverUrl = computed(() => {
   </article>
 </template>
 <style scoped>
-.task-thumbnail {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: 5px;
-  overflow: hidden;
-  background: var(--surface-muted);
-}
-.task-thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.upload-task {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-top: 1px solid var(--line);
-}
-.task-icon {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 30px;
-  flex-shrink: 0;
-  color: var(--brand);
-  background: var(--brand-soft);
-  border-radius: 4px;
-  font-size: 16px;
-}
-.task-icon.done {
-  background: var(--success-soft);
-  color: var(--success);
-}
-.task-body {
-  min-width: 0;
-  flex: 1;
-}
-.task-body strong {
-  display: block;
-  font-size: 13px;
-  font-weight: 550;
-  overflow-wrap: anywhere;
-}
-.task-body > .hint {
-  margin-top: 2px;
-  font-size: 11px;
-  overflow-wrap: anywhere;
-}
-.task-state {
-  width: 82px;
-  flex-shrink: 0;
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
-}
-.task-state.ready,
-.task-state.duplicate {
-  color: var(--warning);
-}
-.task-state.published {
-  color: var(--success);
-}
-.task-state.failed {
-  color: var(--danger);
-}
-.progress-track {
-  margin-top: 5px;
-  height: 3px;
-  max-width: 460px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--brand-soft-progress);
-}
-.progress-track > span {
-  display: block;
-  height: 100%;
-  background: var(--brand);
-  transition: width 0.2s;
-}
-.duplicate-note,
-.task-warning {
-  margin-top: 5px;
-  color: var(--warning-task);
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-.task-select {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 26px;
-  min-height: 30px;
-}
-@media (max-width: 680px) {
-  .upload-task {
-    display: grid;
-    grid-template-columns: 26px minmax(0, 1fr);
-    gap: 4px 10px;
-    padding: 10px;
-  }
-  .task-icon,
-  .task-thumbnail,
-  .task-select {
-    grid-column: 1;
-    grid-row: 1;
-  }
+@layer components {
   .task-thumbnail {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--surface-muted);
+  }
+  .task-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .upload-task {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--line);
+  }
+  .task-icon {
+    display: grid;
+    place-items: center;
     width: 26px;
     height: 30px;
+    flex-shrink: 0;
+    color: var(--brand);
+    background: var(--brand-soft);
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  .task-icon.done {
+    background: var(--success-soft);
+    color: var(--success);
   }
   .task-body {
-    grid-column: 2;
-    grid-row: 1;
+    min-width: 0;
+    flex: 1;
+  }
+  .task-body strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 550;
+    overflow-wrap: anywhere;
+  }
+  .task-body > .hint {
+    margin-top: 2px;
+    font-size: 11px;
+    overflow-wrap: anywhere;
   }
   .task-state {
-    grid-column: 2;
-    grid-row: 2;
-    width: auto;
+    width: 82px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .task-state.ready,
+  .task-state.duplicate {
+    color: var(--warning);
+  }
+  .task-state.published {
+    color: var(--success);
+  }
+  .task-state.failed {
+    color: var(--danger);
+  }
+  .progress-track {
+    margin-top: 5px;
+    height: 3px;
+    max-width: 460px;
+    overflow: hidden;
+    border-radius: 2px;
+    background: var(--brand-soft-progress);
+  }
+  .progress-track > span {
+    display: block;
+    height: 100%;
+    background: var(--brand);
+    transition: width 0.2s;
+  }
+  .duplicate-note,
+  .task-warning {
+    margin-top: 5px;
+    color: var(--warning-task);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  .task-select {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 26px;
+    min-height: 30px;
+  }
+  @media (max-width: 680px) {
+    .upload-task {
+      display: grid;
+      grid-template-columns: 26px minmax(0, 1fr);
+      gap: 4px 10px;
+      padding: 10px;
+    }
+    .task-icon,
+    .task-thumbnail,
+    .task-select {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .task-thumbnail {
+      width: 26px;
+      height: 30px;
+    }
+    .task-body {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .task-state {
+      grid-column: 2;
+      grid-row: 2;
+      width: auto;
+    }
   }
 }
 </style>

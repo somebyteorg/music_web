@@ -122,28 +122,30 @@ provide(communityContextKey, { community })
 </template>
 
 <style scoped>
-.history-diff {
-  padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-.history-diff > strong {
-  font-size: 13px;
-}
-.history-diff p {
-  padding: 8px;
-  margin-top: 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-.history-diff .before {
-  background: var(--danger-diff);
-  color: var(--danger-ink);
-}
-.history-diff .after {
-  background: var(--success-diff);
-  color: var(--success-ink);
+@layer components {
+  .history-diff {
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .history-diff > strong {
+    font-size: 13px;
+  }
+  .history-diff p {
+    padding: 8px;
+    margin-top: 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .history-diff .before {
+    background: var(--danger-diff);
+    color: var(--danger-ink);
+  }
+  .history-diff .after {
+    background: var(--success-diff);
+    color: var(--success-ink);
+  }
 }
 </style>

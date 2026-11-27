@@ -143,23 +143,25 @@ const collaboratorNames = computed(() =>
 </template>
 
 <style scoped>
-.tracks-loading {
-  display: grid;
-  gap: 10px;
-  padding: 16px;
-}
-.tracks-skeleton-row {
-  height: 44px;
-}
-.tracks-error {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 28px 24px;
-}
-.tracks-error p {
-  color: var(--danger);
-  font-size: 13px;
+@layer components {
+  .tracks-loading {
+    display: grid;
+    gap: 10px;
+    padding: 16px;
+  }
+  .tracks-skeleton-row {
+    height: 44px;
+  }
+  .tracks-error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 28px 24px;
+  }
+  .tracks-error p {
+    color: var(--danger);
+    font-size: 13px;
+  }
 }
 </style>

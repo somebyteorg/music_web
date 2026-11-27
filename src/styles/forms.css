@@ -19,11 +19,19 @@ textarea {
   border-radius: var(--radius-md);
   background: var(--surface);
   color: var(--text);
-  font-size: 13px;
-  line-height: 1.5;
   transition:
     border-color var(--transition-fast),
     box-shadow var(--transition-fast);
+}
+
+/*
+ * 字号/行高只兜原生下拉与多行文本：单行 input 靠 base.css 的 `font: inherit` 继承
+ * 页面字号（14px），写进上面那个 :where() 里会被 base 层的 font 简写反压。
+ */
+select,
+textarea {
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 select {

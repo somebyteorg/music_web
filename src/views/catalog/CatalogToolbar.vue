@@ -103,22 +103,24 @@ const { libraries, layout } = actions
 </template>
 
 <style scoped>
-.view-toggle {
-  display: flex;
-  padding: 3px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-}
-.view-toggle button {
-  min-height: 32px;
-  padding: 6px 11px;
-  border-radius: 5px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.view-toggle .active {
-  color: var(--brand-strong);
-  background: var(--brand-soft);
+@layer components {
+  .view-toggle {
+    display: flex;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+  .view-toggle button {
+    min-height: 32px;
+    padding: 6px 11px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .view-toggle .active {
+    color: var(--brand-strong);
+    background: var(--brand-soft);
+  }
 }
 </style>

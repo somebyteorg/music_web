@@ -11,10 +11,12 @@
 </template>
 
 <style scoped>
-.button-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
+@layer components {
+  .button-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }
 </style>

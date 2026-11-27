@@ -124,12 +124,14 @@ const { folderUpload, folderBusy, confirmFolder } = source
   </BaseDialog>
 </template>
 <style scoped>
-.folder-audio {
-  max-height: 180px;
-  overflow-y: auto;
-  margin-top: 8px;
-  padding-left: 20px;
-  font-size: 12px;
-  overflow-wrap: anywhere;
+@layer components {
+  .folder-audio {
+    max-height: 180px;
+    overflow-y: auto;
+    margin-top: 8px;
+    padding-left: 20px;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
 }
 </style>

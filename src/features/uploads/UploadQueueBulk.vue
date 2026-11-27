@@ -76,43 +76,45 @@ function skipDuplicates() {
   </div>
 </template>
 <style scoped>
-.queue-bulk,
-.queue-selection {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-.queue-bulk > .button-group {
-  gap: 10px;
-}
-.queue-grouping {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 12px;
-  margin-left: auto;
-}
-.queue-grouping > span {
-  margin-right: 5px;
-}
-.queue-grouping button {
-  padding: 5px 9px;
-  border-radius: 5px;
-  color: var(--text-muted);
-}
-.queue-grouping button.active {
-  background: var(--brand-soft);
-  color: var(--brand-strong);
-}
-.queue-selection {
-  padding: 10px 12px;
-  border: 1px solid var(--brand-line-soft);
-  border-radius: 8px;
-  background: var(--brand-soft);
-  color: var(--brand-strong);
-  font-size: 12px;
+@layer components {
+  .queue-bulk,
+  .queue-selection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .queue-bulk > .button-group {
+    gap: 10px;
+  }
+  .queue-grouping {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 12px;
+    margin-left: auto;
+  }
+  .queue-grouping > span {
+    margin-right: 5px;
+  }
+  .queue-grouping button {
+    padding: 5px 9px;
+    border-radius: 5px;
+    color: var(--text-muted);
+  }
+  .queue-grouping button.active {
+    background: var(--brand-soft);
+    color: var(--brand-strong);
+  }
+  .queue-selection {
+    padding: 10px 12px;
+    border: 1px solid var(--brand-line-soft);
+    border-radius: 8px;
+    background: var(--brand-soft);
+    color: var(--brand-strong);
+    font-size: 12px;
+  }
 }
 </style>

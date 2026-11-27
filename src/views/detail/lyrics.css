@@ -1,29 +1,31 @@
-.lyric-toolbar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 16px 0 12px;
-}
+@layer components {
+  .lyric-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0 12px;
+  }
 
-.lyric-toolbar > :first-child {
-  flex: 1;
-  min-width: 220px;
-}
+  .lyric-toolbar > :first-child {
+    flex: 1;
+    min-width: 220px;
+  }
 
-.lyric-display {
-  margin-top: 20px;
-}
+  .lyric-display {
+    margin-top: 20px;
+  }
 
-.lyrics-panel {
-  margin-top: 16px;
-  padding: 20px;
-}
+  .lyrics-panel {
+    margin-top: 16px;
+    padding: 20px;
+  }
 
-.lyrics-panel pre {
-  font-family: inherit;
-  font-size: 13px;
-  line-height: 2;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  .lyrics-panel pre {
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 2;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
 }

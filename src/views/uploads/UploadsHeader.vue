@@ -85,54 +85,56 @@ onBeforeUnmount(() => {
   </section>
 </template>
 <style scoped>
-.notice-card {
-  padding: 20px;
-  margin-bottom: 16px;
-}
-.notice-card .preline {
-  margin: 12px 0;
-  color: var(--text-muted);
-  font-size: 13px;
-}
-.notice-card > .button {
-  margin-top: 12px;
-}
-.upload-drop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 26px 22px;
-  margin-bottom: 18px;
-  border: 1px dashed var(--brand-line-drop);
-  border-radius: 8px;
-  background: var(--brand-tint-row);
-}
-.upload-drop.compact {
-  padding: 14px 16px;
-}
-.upload-drop.over {
-  border-color: var(--brand);
-  background: var(--brand-tint-deep);
-}
-.drop-copy strong {
-  font-size: 14px;
-}
-.drop-copy p {
-  margin-top: 3px;
-}
-.upload-drop label {
-  cursor: pointer;
-}
-.upload-drop label:focus-within {
-  outline: 2px solid var(--brand);
-  outline-offset: 3px;
-}
-@media (max-width: 680px) {
-  .upload-drop,
+@layer components {
+  .notice-card {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .notice-card .preline {
+    margin: 12px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .notice-card > .button {
+    margin-top: 12px;
+  }
+  .upload-drop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 26px 22px;
+    margin-bottom: 18px;
+    border: 1px dashed var(--brand-line-drop);
+    border-radius: 8px;
+    background: var(--brand-tint-row);
+  }
   .upload-drop.compact {
-    padding: 16px;
+    padding: 14px 16px;
+  }
+  .upload-drop.over {
+    border-color: var(--brand);
+    background: var(--brand-tint-deep);
+  }
+  .drop-copy strong {
+    font-size: 14px;
+  }
+  .drop-copy p {
+    margin-top: 3px;
+  }
+  .upload-drop label {
+    cursor: pointer;
+  }
+  .upload-drop label:focus-within {
+    outline: 2px solid var(--brand);
+    outline-offset: 3px;
+  }
+  @media (max-width: 680px) {
+    .upload-drop,
+    .upload-drop.compact {
+      padding: 16px;
+    }
   }
 }
 </style>

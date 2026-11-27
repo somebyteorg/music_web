@@ -92,9 +92,11 @@ provide(catalogContextKey, { catalog, actions })
 </template>
 
 <style scoped>
-.catalog-intro {
-  margin-top: 10px;
-  color: var(--text-muted);
-  font-size: 13px;
+@layer components {
+  .catalog-intro {
+    margin-top: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
 }
 </style>

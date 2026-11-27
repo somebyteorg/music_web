@@ -122,77 +122,79 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
   </details>
 </template>
 <style scoped>
-.batch-details > summary {
-  cursor: pointer;
-  color: var(--brand-strong);
-  font-size: 12px;
-  font-weight: 550;
-}
-.batch-details[open] > summary {
-  margin-bottom: 14px;
-}
-.task-warning {
-  margin-top: 5px;
-  color: var(--warning-task);
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-.batch-files {
-  display: grid;
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-.batch-file {
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-}
-.batch-file-heading {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  margin-bottom: 12px;
-}
-.batch-file-heading > strong {
-  min-width: 0;
-  flex: 1;
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-.batch-file-heading > .hint {
-  font-size: 11px;
-}
-.batch-file-fields {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin-bottom: 8px;
-}
-.batch-file-fields > label:first-child,
-.batch-file-fields > label:nth-child(2) {
-  grid-column: span 2;
-}
-.batch-file-fields > label {
-  min-width: 0;
-  font-size: 12px;
-}
-.batch-static {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-}
-@media (max-width: 680px) {
-  .batch-file-fields {
-    grid-template-columns: 1fr 1fr;
+@layer components {
+  .batch-details > summary {
+    cursor: pointer;
+    color: var(--brand-strong);
+    font-size: 12px;
+    font-weight: 550;
   }
-  .batch-file-fields > label:nth-child(-n + 3) {
-    grid-column: 1 / -1;
+  .batch-details[open] > summary {
+    margin-bottom: 14px;
+  }
+  .task-warning {
+    margin-top: 5px;
+    color: var(--warning-task);
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  .batch-files {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
   .batch-file {
-    padding: 12px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .batch-file-heading {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    margin-bottom: 12px;
+  }
+  .batch-file-heading > strong {
+    min-width: 0;
+    flex: 1;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+  .batch-file-heading > .hint {
+    font-size: 11px;
+  }
+  .batch-file-fields {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .batch-file-fields > label:first-child,
+  .batch-file-fields > label:nth-child(2) {
+    grid-column: span 2;
+  }
+  .batch-file-fields > label {
+    min-width: 0;
+    font-size: 12px;
+  }
+  .batch-static {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+  }
+  @media (max-width: 680px) {
+    .batch-file-fields {
+      grid-template-columns: 1fr 1fr;
+    }
+    .batch-file-fields > label:nth-child(-n + 3) {
+      grid-column: 1 / -1;
+    }
+    .batch-file {
+      padding: 12px;
+    }
   }
 }
 </style>

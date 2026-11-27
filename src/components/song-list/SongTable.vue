@@ -23,7 +23,9 @@ const { props, rowKey } = useSongListContext()
 </template>
 
 <style scoped>
-.song-list {
-  container-type: inline-size;
+@layer components {
+  .song-list {
+    container-type: inline-size;
+  }
 }
 </style>

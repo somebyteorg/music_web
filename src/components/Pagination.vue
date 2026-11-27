@@ -63,57 +63,59 @@ function jump() {
 </template>
 
 <style scoped>
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 12px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-.pagination-tools {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.pagination-jump {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.pagination-jump label {
-  flex-direction: row;
-  align-items: center;
-  gap: 6px;
-  font-weight: 400;
-}
-.pagination-jump input {
-  width: 58px;
-  padding: 4px 6px;
-}
-/* 跳转框要一直保持紧凑：responsive.css 的 @media (pointer: coarse) 会把输入框
-   顶到 (0,3,1) 的 38px / 16px，这里叠 .pagination 祖先与 [type='number']
-   提到 (0,4,1) 压回去，不再依赖提权。 */
-.pagination .pagination-jump input[type='number'] {
-  min-height: 28px;
-  font-size: 13px;
-}
-@media (max-width: 640px) {
-  .pagination-tools {
-    width: 100%;
+@layer components {
+  .pagination {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .pagination-tools {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .pagination-jump {
-    gap: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .pagination-jump label {
-    gap: 4px;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
   }
   .pagination-jump input {
-    width: 46px;
+    width: 58px;
+    padding: 4px 6px;
+  }
+  /* 跳转框要一直保持紧凑：responsive.css 的 @media (pointer: coarse) 会把输入框
+   顶到 (0,3,1) 的 38px / 16px，这里叠 .pagination 祖先与 [type='number']
+   提到 (0,4,1) 压回去，不再依赖提权。 */
+  .pagination .pagination-jump input[type='number'] {
+    min-height: 28px;
+    font-size: 13px;
+  }
+  @media (max-width: 640px) {
+    .pagination-tools {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .pagination-jump {
+      gap: 5px;
+    }
+    .pagination-jump label {
+      gap: 4px;
+    }
+    .pagination-jump input {
+      width: 46px;
+    }
   }
 }
 </style>

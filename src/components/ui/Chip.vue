@@ -22,32 +22,34 @@ const classes = computed(() => ({ chip: true, selected: props.selected }))
 </template>
 
 <style scoped>
-.chip {
-  padding: 8px 13px;
-  min-height: 40px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.chip.selected {
-  background: var(--brand-soft);
-  color: var(--brand-strong);
-  border-color: var(--brand-line);
-}
-
-.chip:hover {
-  border-color: var(--brand-line-hover);
-}
-
-/* 触屏尺寸：原在 responsive.css 的 (pointer: coarse) 块里，组件化后放在这里，
- * 才不会被 .chip[data-v] 更高的特异性反压回 40px。 */
-@media (pointer: coarse) {
+@layer components {
   .chip {
-    min-height: 38px;
+    padding: 8px 13px;
+    min-height: 40px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .chip.selected {
+    background: var(--brand-soft);
+    color: var(--brand-strong);
+    border-color: var(--brand-line);
+  }
+
+  .chip:hover {
+    border-color: var(--brand-line-hover);
+  }
+
+  /* 触屏尺寸：原在 responsive.css 的 (pointer: coarse) 块里，组件化后放在这里，
+ * 才不会被 .chip[data-v] 更高的特异性反压回 40px。 */
+  @media (pointer: coarse) {
+    .chip {
+      min-height: 38px;
+    }
   }
 }
 </style>

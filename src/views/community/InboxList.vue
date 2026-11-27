@@ -40,55 +40,57 @@ const { messages, acting, read } = community
 </template>
 
 <style scoped>
-.message-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.message {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px;
-}
-.message.unread {
-  background: var(--surface-unread);
-  border-color: var(--brand-line-unread);
-}
-.message-icon {
-  font-size: 22px;
-  color: var(--brand);
-}
-.message > div {
-  min-width: 0;
-  flex: 1;
-}
-.message h3 {
-  font-size: 14px;
-}
-.message p {
-  margin: 6px 0;
-  color: var(--text-muted);
-  font-size: 13px;
-  white-space: pre-line;
-}
-.message .hint {
-  font-size: 11px;
-}
-.message .text-link {
-  margin-left: 12px;
-}
-.message .text-button {
-  white-space: nowrap;
-}
-@media (max-width: 680px) {
+@layer components {
+  .message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
   .message {
-    padding: 12px;
-    gap: 10px;
-    flex-wrap: wrap;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px;
+  }
+  .message.unread {
+    background: var(--surface-unread);
+    border-color: var(--brand-line-unread);
+  }
+  .message-icon {
+    font-size: 22px;
+    color: var(--brand);
+  }
+  .message > div {
+    min-width: 0;
+    flex: 1;
+  }
+  .message h3 {
+    font-size: 14px;
+  }
+  .message p {
+    margin: 6px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    white-space: pre-line;
+  }
+  .message .hint {
+    font-size: 11px;
+  }
+  .message .text-link {
+    margin-left: 12px;
   }
   .message .text-button {
-    margin-left: 32px;
+    white-space: nowrap;
+  }
+  @media (max-width: 680px) {
+    .message {
+      padding: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .message .text-button {
+      margin-left: 32px;
+    }
   }
 }
 </style>

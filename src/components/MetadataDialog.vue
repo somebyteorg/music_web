@@ -135,26 +135,28 @@ async function apply() {
 </template>
 
 <style scoped>
-.metadata-field {
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 12px;
-  margin-top: 8px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-.metadata-field > div {
-  min-width: 0;
-}
-.metadata-field p {
-  margin-top: 5px;
-  max-height: 130px;
-  overflow: auto;
-  overflow-wrap: anywhere;
-  font-size: 12px;
-}
-.metadata-field strong {
-  font-size: 13px;
+@layer components {
+  .metadata-field {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .metadata-field > div {
+    min-width: 0;
+  }
+  .metadata-field p {
+    margin-top: 5px;
+    max-height: 130px;
+    overflow: auto;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+  }
+  .metadata-field strong {
+    font-size: 13px;
+  }
 }
 </style>

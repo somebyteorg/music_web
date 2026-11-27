@@ -179,53 +179,55 @@ const emit = defineEmits<{
   </section>
 </template>
 <style scoped>
-.album-confirmation {
-  padding: 18px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  background: var(--surface-muted);
-}
-.album-confirmation-heading {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-}
-.album-confirmation-heading > .cover {
-  width: 64px;
-  flex-shrink: 0;
-}
-.album-confirmation-heading > div {
-  min-width: 0;
-}
-.album-confirmation-heading h3 {
-  overflow-wrap: anywhere;
-}
-.batch-details > summary {
-  cursor: pointer;
-  color: var(--brand-strong);
-  font-size: 12px;
-  font-weight: 550;
-}
-.batch-details[open] > summary {
-  margin-bottom: 14px;
-}
-.group-performer {
-  display: grid;
-  gap: 8px;
-}
-.preview-warnings {
-  margin: 0;
-  padding: 10px 12px 10px 28px;
-  border: 1px solid var(--warning-line);
-  border-radius: 8px;
-  background: var(--warning-veil);
-  color: var(--warning-note);
-  font-size: 12px;
-  line-height: 1.7;
-  list-style: disc;
+@layer components {
+  .album-confirmation {
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--surface-muted);
+  }
+  .album-confirmation-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .album-confirmation-heading > .cover {
+    width: 64px;
+    flex-shrink: 0;
+  }
+  .album-confirmation-heading > div {
+    min-width: 0;
+  }
+  .album-confirmation-heading h3 {
+    overflow-wrap: anywhere;
+  }
+  .batch-details > summary {
+    cursor: pointer;
+    color: var(--brand-strong);
+    font-size: 12px;
+    font-weight: 550;
+  }
+  .batch-details[open] > summary {
+    margin-bottom: 14px;
+  }
+  .group-performer {
+    display: grid;
+    gap: 8px;
+  }
+  .preview-warnings {
+    margin: 0;
+    padding: 10px 12px 10px 28px;
+    border: 1px solid var(--warning-line);
+    border-radius: 8px;
+    background: var(--warning-veil);
+    color: var(--warning-note);
+    font-size: 12px;
+    line-height: 1.7;
+    list-style: disc;
+  }
 }
 </style>
