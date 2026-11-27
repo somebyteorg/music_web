@@ -224,15 +224,9 @@ importers:
       eslint-plugin-vue:
         specifier: ^10.12.1
         version: 10.12.1(@typescript-eslint/parser@8.74.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.15.0(jiti@2.7.0))(vue-eslint-parser@10.4.2(eslint@10.15.0(jiti@2.7.0)))
-      pixelmatch:
-        specifier: 8.0.0
-        version: 8.0.0
       playwright:
         specifier: 1.65.1
         version: 1.65.1
-      pngjs:
-        specifier: 7.0.0
-        version: 7.0.0
       prettier:
         specifier: ^3.9.10
         version: 3.10.1
@@ -1269,10 +1263,6 @@ packages:
       typescript:
         optional: true
 
-  pixelmatch@8.0.0:
-    resolution: {integrity: sha512-cIqOLfh5k52us715qf3B3+kTOxZv+WDv77HN7xokLScYQGYQHi4m/ynoDIPpvF2LvCyUJGyvzY64i0QCXtzu1g==}
-    hasBin: true
-
   playwright-core@1.65.1:
     resolution: {integrity: sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw==}
     engines: {node: '>=20'}
@@ -1282,10 +1272,6 @@ packages:
     resolution: {integrity: sha512-vJ1FuoOrNwOKHUIVEvSt3jT1L+wjjDpwhwIstKtfvTh8XIG4FG4bIFuvNdMxi81LGfAhUgUZleVFaOLY4RIUUw==}
     engines: {node: '>=20'}
     hasBin: true
-
-  pngjs@7.0.0:
-    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
-    engines: {node: '>=14.19.0'}
 
   postcss-selector-parser@7.2.1:
     resolution: {integrity: sha512-GwxlMgTTXwIom+ebC7an3k6RaJDwklRQQnfiXsLPGicu8FYV/k/+1/9YY2OU2+r938H2t4X0TDxoif+HP2rjzQ==}
@@ -2549,17 +2535,11 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  pixelmatch@8.0.0:
-    dependencies:
-      pngjs: 7.0.0
-
   playwright-core@1.65.1: {}
 
   playwright@1.65.1:
     dependencies:
       playwright-core: 1.65.1
-
-  pngjs@7.0.0: {}
 
   postcss-selector-parser@7.2.1:
     dependencies:
