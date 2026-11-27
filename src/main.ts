@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import router from '@/router'
 import App from '@/App.vue'
 import { installTelemetry, reportError } from '@/lib/telemetry'
+import { prefetchRoutes } from '@/lib/prefetchRoutes'
 import './style.css'
 
 // 全局错误钩子必须在挂载前装：启动阶段（路由/首屏请求）的异常也要能被看到
@@ -14,3 +15,6 @@ app.config.errorHandler = (error, _instance, info) => {
   reportError(error, { source: 'vue', info })
 }
 app.use(createPinia()).use(router).mount('#app')
+
+// 挂载后在空闲时预取其余路由分块，点击进入详情页不再等下载
+prefetchRoutes(router)
