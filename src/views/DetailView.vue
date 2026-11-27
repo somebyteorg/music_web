@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import Tabs from '@/components/ui/Tabs.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
-import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import { computed, provide, reactive, ref } from 'vue'
 import type { Entity } from '@/types/catalog'
@@ -22,6 +21,8 @@ import { tracksContextKey, uploadContextKey } from './detail/detailContext'
 import TracksSection from './detail/TracksSection.vue'
 import UploadDialog from './detail/UploadDialog.vue'
 import ResourcesPanel from './detail/ResourcesPanel.vue'
+import DetailAlbums from './detail/DetailAlbums.vue'
+import DetailRecording from './detail/DetailRecording.vue'
 import OperationDialog from './detail/OperationDialog.vue'
 import { operationContextKey } from './detail/operationContext'
 import EditorDialog from '@/components/EditorDialog.vue'
@@ -128,39 +129,11 @@ const tab = ref('resources')
         }
       "
     />
-    <section v-if="type === 'songs'" class="section">
-      <div class="section-heading">
-        <h2>
-          收录专辑 <span class="muted">{{ item.albums?.length || 0 }}</span>
-        </h2>
-        <Button variant="secondary" @click="editor = true">编辑专辑与媒体库</Button>
-      </div>
-      <Card class="recording-releases" v-if="item.albums?.length">
-        <RouterLink v-for="album in item.albums" :key="album.id" :to="`/albums/${album.id}`"
-          ><strong>{{ album.name }}</strong
-          ><span class="hint"
-            >{{ album.release_year || '' }} {{ album.edition || '' }} · 第
-            {{ album.pivot?.disc_number }} 碟 · 第 {{ album.pivot?.track_number }} 首</span
-          ></RouterLink
-        >
-      </Card>
-      <p v-else class="hint">暂未收录到专辑，可作为单曲保留。</p>
-    </section>
-    <section v-if="type === 'songs' && item.recording_tracks?.length" class="section">
-      <h2>关联的录音版本</h2>
-      <Card class="recording-releases">
-        <RouterLink
-          v-for="track in item.recording_tracks"
-          :key="track.id"
-          :to="`/songs/${track.id}`"
-          ><strong>{{ track.name }} {{ track.recording_version }}</strong
-          ><span class="hint"
-            >{{ track.albums?.map((album) => album.name).join(' / ') || '单曲' }} ·
-            {{ track.library?.name }}</span
-          ></RouterLink
-        >
-      </Card>
-    </section>
+    <DetailAlbums v-if="type === 'songs'" :albums="item.albums" @edit="editor = true" />
+    <DetailRecording
+      v-if="type === 'songs' && item.recording_tracks?.length"
+      :tracks="item.recording_tracks"
+    />
     <div class="detail-foot">
       <span
         >由 {{ displayName(item.creator || item.owner) }} 创建 · {{ date(item.created_at) }}</span
