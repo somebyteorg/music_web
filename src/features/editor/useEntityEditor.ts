@@ -234,7 +234,11 @@ export function useEntityEditor(
         props.item,
       )
       const result = await catalogApi.save(props.type, body, props.item?.id)
-      if (props.type === 'libraries') await libraries.load(true)
+      // 写操作只标脏：缓存作废，随后的读取把新列表取回来
+      if (props.type === 'libraries') {
+        libraries.invalidate()
+        await libraries.load()
+      }
       notify('保存成功。')
       done(result.item)
     })

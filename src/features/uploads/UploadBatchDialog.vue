@@ -65,7 +65,7 @@ const emit = defineEmits<{
       <p class="hint">关联已有歌曲时保留其媒体库，新增的专辑收录不会移除其他专辑关联。</p>
       <p v-if="batch.libraries.error" class="error-text">
         {{ batch.libraries.error }}
-        <TextButton @click="batch.libraries.load(true)">重试</TextButton>
+        <TextButton @click="batch.libraries.reload()">重试</TextButton>
       </p>
       <label
         >音频分组<BaseSelect

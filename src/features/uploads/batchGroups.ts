@@ -14,7 +14,7 @@ import {
 
 interface BatchGroupsDeps {
   uploads: { tasks: UploadTask[] }
-  libraries: { defaultId: string; load(refresh?: boolean): Promise<void> }
+  libraries: { defaultId: string; load(): Promise<void> }
   busy: Ref<boolean>
   open: Ref<boolean>
   rows: Ref<BatchRow[]>

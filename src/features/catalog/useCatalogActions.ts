@@ -100,7 +100,11 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
   }
   async function saved() {
     await load()
-    if (type.value === 'libraries') await libraries.load(true)
+    // 写操作只负责标脏，读路径紧接着把新列表取回来（与 invalidateScopes + load 同一套做法）
+    if (type.value === 'libraries') {
+      libraries.invalidate()
+      await libraries.load()
+    }
   }
 
   return {

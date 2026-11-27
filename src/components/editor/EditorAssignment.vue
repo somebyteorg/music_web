@@ -35,7 +35,7 @@ const {
     /></label>
     <p v-if="libraries.error" class="error-text">
       {{ libraries.error }}
-      <TextButton @click="libraries.load(true)">重试</TextButton>
+      <TextButton @click="libraries.reload()">重试</TextButton>
     </p>
     <label>修改原因<textarea v-model="assignmentReason" maxlength="1000" rows="2" /></label>
   </template>
