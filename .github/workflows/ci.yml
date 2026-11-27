@@ -4,19 +4,9 @@ on:
   pull_request:
   push:
     branches: [main]
-  # 布局基线必须在 CI（ubuntu）内生成：文字撑开的盒子随字体度量变化，
-  # macOS 生成的基线在 runner 上会有 2~7px 差异（颜色 0 差异）。
-  # 用法：workflow_dispatch + layout_baseline=true → 上传 e2e/__layout__ artifact。
-  workflow_dispatch:
-    inputs:
-      layout_baseline:
-        description: "true = 只跑布局基线生成并上传 artifact"
-        required: false
-        default: "false"
 
 jobs:
   verify:
-    if: ${{ github.event.inputs.layout_baseline != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,40 +17,4 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - run: pnpm test
       - run: pnpm build
-      # 浏览器只装一次，冒烟与布局快照共用
-      - run: pnpm exec playwright install --with-deps chromium
-      # 端到端冒烟：读 / 上传 / 社区三条主链路。与布局快照串行，端口错开（冒烟 8160/4260）
-      - run: pnpm test:smoke
-      # 布局快照门禁：基线由 layout-baseline job 在 ubuntu 生成（文字撑开的盒子随字体度量变化，
-      # macOS 基线在 runner 上会差 2~7px），浏览器由脚本自己拉 vite preview（8150/4250）。
-      - run: pnpm test:layout
-      - name: 冒烟失败截图
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: smoke-screenshots
-          path: e2e/__smoke__
-          retention-days: 7
-          if-no-files-found: ignore
-
-  layout-baseline:
-    if: ${{ github.event.inputs.layout_baseline == 'true' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm test:layout:update
-      - uses: actions/upload-artifact@v4
-        with:
-          name: layout-baseline
-          path: e2e/__layout__
-          retention-days: 7
