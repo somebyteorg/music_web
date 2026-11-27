@@ -120,76 +120,78 @@ const {
   </section>
 </template>
 <style scoped>
-.queue-section {
-  margin-top: 16px;
-}
-.upload-groups {
-  display: grid;
-  gap: 12px;
-}
-.upload-queue {
-  overflow: hidden;
-}
-.upload-group-heading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  background: var(--surface-muted);
-  border-radius: 11px 11px 0 0;
-}
-.upload-group-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-  min-width: 0;
-  text-align: left;
-}
-.upload-group-toggle > div {
-  min-width: 0;
-}
-.upload-group-toggle strong {
-  display: block;
-  font-size: 13px;
-  font-weight: 550;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.upload-group-toggle small {
-  display: block;
-  margin-top: 3px;
-  color: var(--text-muted);
-  font-size: 11px;
-}
-.group-chevron {
-  width: 14px;
-  flex-shrink: 0;
-  color: var(--text-muted);
-  font-size: 18px;
-  transition: transform 0.15s;
-}
-.group-chevron.collapsed {
-  transform: rotate(-90deg);
-}
-.group-select {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 26px;
-  min-height: 30px;
-}
-@media (max-width: 680px) {
+@layer components {
+  .queue-section {
+    margin-top: 16px;
+  }
+  .upload-groups {
+    display: grid;
+    gap: 12px;
+  }
+  .upload-queue {
+    overflow: hidden;
+  }
   .upload-group-heading {
-    padding: 10px;
-    gap: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--surface-muted);
+    border-radius: 11px 11px 0 0;
   }
   .upload-group-toggle {
-    gap: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+  }
+  .upload-group-toggle > div {
+    min-width: 0;
+  }
+  .upload-group-toggle strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 550;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .upload-group-toggle small {
-    font-size: 10px;
+    display: block;
+    margin-top: 3px;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+  .group-chevron {
+    width: 14px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 18px;
+    transition: transform 0.15s;
+  }
+  .group-chevron.collapsed {
+    transform: rotate(-90deg);
+  }
+  .group-select {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 26px;
+    min-height: 30px;
+  }
+  @media (max-width: 680px) {
+    .upload-group-heading {
+      padding: 10px;
+      gap: 6px;
+    }
+    .upload-group-toggle {
+      gap: 4px;
+    }
+    .upload-group-toggle small {
+      font-size: 10px;
+    }
   }
 }
 </style>

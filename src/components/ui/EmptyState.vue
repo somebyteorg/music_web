@@ -31,33 +31,35 @@ withDefaults(
 </template>
 
 <style scoped>
-.ui-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  padding: 56px 24px;
-  text-align: center;
-}
+@layer components {
+  .ui-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 56px 24px;
+    text-align: center;
+  }
 
-.ui-placeholder--compact {
-  padding: 32px 20px;
-}
+  .ui-placeholder--compact {
+    padding: 32px 20px;
+  }
 
-.ui-placeholder__symbol {
-  color: var(--text-muted);
-  font-size: 26px;
-  line-height: 1.2;
-}
+  .ui-placeholder__symbol {
+    color: var(--text-muted);
+    font-size: 26px;
+    line-height: 1.2;
+  }
 
-.ui-placeholder h2 {
-  font-size: var(--font-lg);
-}
+  .ui-placeholder h2 {
+    font-size: var(--font-lg);
+  }
 
-.ui-placeholder p {
-  max-width: 440px;
-  color: var(--text-muted);
-  font-size: 13px;
+  .ui-placeholder p {
+    max-width: 440px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
 }
 </style>

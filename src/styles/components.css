@@ -122,6 +122,13 @@
   gap: var(--space-4);
 }
 
+/* 胶囊容器（成员 / 艺人已选列表）：只负责排布，视觉在 Chip.vue */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .picker-results {
   display: flex;
   flex-direction: column;

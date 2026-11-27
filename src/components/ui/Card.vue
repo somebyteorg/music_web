@@ -19,22 +19,24 @@ withDefaults(
 </template>
 
 <style scoped>
-.ui-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
+@layer components {
+  .ui-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
 
-.ui-card--pad-sm {
-  padding: var(--space-3);
-}
+  .ui-card--pad-sm {
+    padding: var(--space-3);
+  }
 
-.ui-card--pad-md {
-  padding: var(--space-4);
-}
+  .ui-card--pad-md {
+    padding: var(--space-4);
+  }
 
-.ui-card--pad-lg {
-  padding: var(--space-6);
+  .ui-card--pad-lg {
+    padding: var(--space-6);
+  }
 }
 </style>

@@ -82,77 +82,79 @@ const { searchHistory, showAllHistory } = community
 </template>
 
 <style scoped>
-.history-filters {
-  display: flex;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-bottom: 14px;
-  padding: 16px;
-}
-.history-filters > label {
-  width: 180px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.history-list > article {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--line);
-}
-.history-list > article:last-child {
-  border: 0;
-}
-.history-body {
-  min-width: 0;
-  flex: 1;
-}
-.history-body > p {
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-.history-body > p .muted {
-  font-size: 12px;
-  margin-inline: 4px;
-}
-.history-body > p > a {
-  color: var(--brand);
-}
-/* 与 .history-body > p 的 13px 区分开：叠一层 .history-reason 加权，不靠提权 */
-.history-body > p.history-reason {
-  margin-top: 5px;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-.history-body .hint {
-  display: block;
-  margin-top: 4px;
-  font-size: 11px;
-}
-.history-list .text-button {
-  white-space: nowrap;
-}
-@media (max-width: 680px) {
+@layer components {
   .history-filters {
-    gap: 9px;
-    padding: 10px;
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding: 16px;
   }
   .history-filters > label {
-    flex: 1 1 130px;
+    width: 180px;
+    font-size: 12px;
+    color: var(--text-muted);
   }
   .history-list > article {
-    padding: 11px 10px;
-    gap: 8px;
-    flex-wrap: wrap;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
   }
-  .history-list .text-button {
-    margin-left: 36px;
+  .history-list > article:last-child {
+    border: 0;
   }
   .history-body {
-    flex-basis: calc(100% - 40px);
+    min-width: 0;
+    flex: 1;
+  }
+  .history-body > p {
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .history-body > p .muted {
+    font-size: 12px;
+    margin-inline: 4px;
+  }
+  .history-body > p > a {
+    color: var(--brand);
+  }
+  /* 与 .history-body > p 的 13px 区分开：叠一层 .history-reason 加权，不靠提权 */
+  .history-body > p.history-reason {
+    margin-top: 5px;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .history-body .hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+  }
+  .history-list .text-button {
+    white-space: nowrap;
+  }
+  @media (max-width: 680px) {
+    .history-filters {
+      gap: 9px;
+      padding: 10px;
+    }
+    .history-filters > label {
+      flex: 1 1 130px;
+    }
+    .history-list > article {
+      padding: 11px 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .history-list .text-button {
+      margin-left: 36px;
+    }
+    .history-body {
+      flex-basis: calc(100% - 40px);
+    }
   }
 }
 </style>

@@ -59,81 +59,83 @@ const { searchMembers, canChangeRole, changeRole, roleLabel } = community
 </template>
 
 <style scoped>
-.member-list > article {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--line);
-}
-.member-list > article:last-child {
-  border: 0;
-}
-.ranking {
-  width: 22px;
-  flex-shrink: 0;
-  color: var(--text-muted);
-  font-size: 12px;
-  text-align: center;
-}
-.ranking.top {
-  color: var(--warning-rank);
-}
-.member-name {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  flex: 1;
-  min-width: 0;
-}
-.member-name strong {
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-.member-role {
-  align-self: flex-start;
-}
-.member-role :deep(.select-trigger) {
-  width: auto;
-  min-height: 0;
-  gap: 4px;
-  padding: 2px 6px;
-  border: 0;
-  border-radius: 4px;
-  background: var(--brand-soft);
-  color: var(--brand-strong);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1.6;
-}
-.member-role :deep(.select-trigger:hover:not(:disabled)) {
-  background: var(--veil-hover);
-}
-.member-contribution {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  min-width: 90px;
-  text-align: right;
-}
-.member-contribution strong {
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-.member-contribution .hint {
-  font-size: 11px;
-}
-@media (max-width: 680px) {
+@layer components {
   .member-list > article {
-    padding: 11px 10px;
-    gap: 8px;
-    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
   }
-  .member-contribution {
-    min-width: 74px;
+  .member-list > article:last-child {
+    border: 0;
   }
   .ranking {
-    width: 16px;
+    width: 22px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: center;
+  }
+  .ranking.top {
+    color: var(--warning-rank);
+  }
+  .member-name {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 0;
+  }
+  .member-name strong {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+  .member-role {
+    align-self: flex-start;
+  }
+  .member-role :deep(.select-trigger) {
+    width: auto;
+    min-height: 0;
+    gap: 4px;
+    padding: 2px 6px;
+    border: 0;
+    border-radius: 4px;
+    background: var(--brand-soft);
+    color: var(--brand-strong);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .member-role :deep(.select-trigger:hover:not(:disabled)) {
+    background: var(--veil-hover);
+  }
+  .member-contribution {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 90px;
+    text-align: right;
+  }
+  .member-contribution strong {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .member-contribution .hint {
+    font-size: 11px;
+  }
+  @media (max-width: 680px) {
+    .member-list > article {
+      padding: 11px 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .member-contribution {
+      min-width: 74px;
+    }
+    .ranking {
+      width: 16px;
+    }
   }
 }
 </style>

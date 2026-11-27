@@ -37,16 +37,18 @@ defineProps<{ mode: PlayMode }>()
 </template>
 
 <style scoped>
-.play-mode {
-  position: relative;
-  display: grid;
-  place-items: center;
-}
-/* 单曲循环：同一个循环符号 + 居中的 1，避免小尺寸下与列表循环混淆 */
-.mode-one {
-  position: absolute;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1;
+@layer components {
+  .play-mode {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+  /* 单曲循环：同一个循环符号 + 居中的 1，避免小尺寸下与列表循环混淆 */
+  .mode-one {
+    position: absolute;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+  }
 }
 </style>

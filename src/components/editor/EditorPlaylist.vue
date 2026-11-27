@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import Chip from '@/components/ui/Chip.vue'
 import { useEditorContext } from './editorContext'
 
 const { editor } = useEditorContext()
@@ -19,15 +20,14 @@ const { form, members, memberQuery, memberOptions, search } = editor
     </div></label
   >
   <div class="chips">
-    <button
+    <Chip
       v-for="m in members"
       :key="m.id"
-      class="chip selected"
-      type="button"
+      selected
       @click="members = members.filter((i) => i.id !== m.id)"
     >
       {{ m.pseudonym || m.username }} ×
-    </button>
+    </Chip>
   </div>
   <div v-if="memberOptions.length" class="picker-results">
     <button

@@ -40,8 +40,12 @@ const STATUS_MESSAGE: Record<number, string> = {
   503: '服务暂时不可用，请稍后重试。',
 }
 
-/** 裸 ky 实例：尚未迁移到类型化 api 模块的领域仍可用它，但共用同一套钩子 */
-export const http = ky.create({
+/**
+ * 内部 ky 实例：只给下面的 request() 用。
+ * 不导出是刻意的——绕开 request() 直接发请求就会丢掉统一的错误模型，
+ * 也会让人有机会自己再包一层 { json: body }（历史上就是这么把请求体套成两层的）。
+ */
+const http = ky.create({
   prefixUrl: '/api',
   credentials: 'same-origin',
   retry: 0,
@@ -81,8 +85,14 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
       signal: options.signal,
       ...(options.timeoutMs ? { timeout: options.timeoutMs } : {}),
     })
-    if (response.status === 204) return undefined as T
-    return (await response.json()) as T
+    // 空响应统一当「没有内容」：204 与 200 + 空 body 走同一条路，不猜缺省值
+    const text = await response.text()
+    if (!text) return undefined as T
+    try {
+      return JSON.parse(text) as T
+    } catch {
+      throw new ApiError('服务器返回的内容不是合法 JSON，请稍后重试。', response.status, text)
+    }
   } catch (error) {
     throw await normalize(error)
   }
@@ -90,6 +100,8 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
 
 async function normalize(error: unknown): Promise<Error> {
   if (error instanceof Error && error.name === 'AbortError') return error
+  // 已经归一过的错误（例如响应体不是合法 JSON）原样抛出，别把 status 抹成 0
+  if (error instanceof ApiError) return error
   if (error instanceof HTTPError) {
     const data = await error.response
       .clone()

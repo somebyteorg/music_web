@@ -102,20 +102,22 @@ const {
 </template>
 
 <style scoped>
-.cover-editor {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.cover-preview-button {
-  width: 72px;
-  flex-shrink: 0;
-}
-.cover-editor .text-button {
-  display: block;
-  font-size: 12px;
-}
-.cover-editor .hint {
-  margin-top: 4px;
+@layer components {
+  .cover-editor {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .cover-preview-button {
+    width: 72px;
+    flex-shrink: 0;
+  }
+  .cover-editor .text-button {
+    display: block;
+    font-size: 12px;
+  }
+  .cover-editor .hint {
+    margin-top: 4px;
+  }
 }
 </style>

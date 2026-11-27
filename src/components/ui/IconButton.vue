@@ -22,10 +22,12 @@ withDefaults(
 </template>
 
 <style scoped>
-/* (0,3,0) 压过全局 .icon-button 的 --text-muted；hover 也一并锁住，
+@layer components {
+  /* (0,3,0) 压过全局 .icon-button 的 --text-muted；hover 也一并锁住，
    否则 .icon-button:hover:not(:disabled) 的 (0,3,0) 会把 × 染成品牌色 */
-.icon-button.danger,
-.icon-button.danger:hover:not(:disabled) {
-  color: var(--danger);
+  .icon-button.danger,
+  .icon-button.danger:hover:not(:disabled) {
+    color: var(--danger);
+  }
 }
 </style>

@@ -192,99 +192,101 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
 </template>
 
 <style scoped>
-.select-control {
-  display: inline-flex;
-  min-width: 0;
-}
-.select-trigger {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 40px;
-  padding: 9px 12px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--text-soft);
-  text-align: left;
-  font-size: 13px;
-  white-space: nowrap;
-}
-.select-trigger:hover:not(:disabled) {
-  border-color: var(--brand-line-strong);
-}
-.select-trigger[aria-expanded='true'] {
-  border-color: var(--brand);
-  box-shadow: var(--shadow-select-focus);
-}
-.select-trigger > span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.select-trigger svg {
-  flex-shrink: 0;
-  color: var(--text-muted);
-}
-.select-dropdown {
-  position: fixed;
-  z-index: 150;
-  display: flex;
-  flex-direction: column;
-  padding: 6px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--surface);
-  box-shadow: var(--shadow-select);
-  overflow: hidden;
-  outline: none;
-}
-.select-search {
-  padding: 3px 3px 7px;
-  flex-shrink: 0;
-}
-.select-search input {
-  min-height: 32px;
-  background: var(--surface-muted);
-  font-size: 13px;
-}
-.select-options {
-  overflow-y: auto;
-  min-height: 0;
-  overscroll-behavior: contain;
-}
-.select-options > button {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 4px;
-  color: var(--text-soft);
-  text-align: left;
-  font-size: 13px;
-}
-.select-options > button.active {
-  background: var(--surface-muted);
-}
-.select-options > button.selected {
-  color: var(--brand-strong);
-  font-weight: 550;
-  background: var(--brand-soft);
-}
-.select-blank {
-  padding: 18px 10px;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 12px;
-}
-@media (pointer: coarse) {
-  .select-trigger,
-  .select-options > button {
+@layer components {
+  .select-control {
+    display: inline-flex;
+    min-width: 0;
+  }
+  .select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
     min-height: 40px;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text-soft);
+    text-align: left;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .select-trigger:hover:not(:disabled) {
+    border-color: var(--brand-line-strong);
+  }
+  .select-trigger[aria-expanded='true'] {
+    border-color: var(--brand);
+    box-shadow: var(--shadow-select-focus);
+  }
+  .select-trigger > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .select-trigger svg {
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+  .select-dropdown {
+    position: fixed;
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: var(--shadow-select);
+    overflow: hidden;
+    outline: none;
+  }
+  .select-search {
+    padding: 3px 3px 7px;
+    flex-shrink: 0;
+  }
+  .select-search input {
+    min-height: 32px;
+    background: var(--surface-muted);
+    font-size: 13px;
+  }
+  .select-options {
+    overflow-y: auto;
+    min-height: 0;
+    overscroll-behavior: contain;
+  }
+  .select-options > button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 4px;
+    color: var(--text-soft);
+    text-align: left;
+    font-size: 13px;
+  }
+  .select-options > button.active {
+    background: var(--surface-muted);
+  }
+  .select-options > button.selected {
+    color: var(--brand-strong);
+    font-weight: 550;
+    background: var(--brand-soft);
+  }
+  .select-blank {
+    padding: 18px 10px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  @media (pointer: coarse) {
+    .select-trigger,
+    .select-options > button {
+      min-height: 40px;
+    }
   }
 }
 </style>

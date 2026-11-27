@@ -45,98 +45,100 @@ const avatar = computed(() => sign.user?.avatar)
 </template>
 
 <style scoped>
-.account {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 5px 6px 5px 12px;
-}
-.account-profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.account-profile .avatar {
-  width: 32px;
-  height: 32px;
-  background: var(--brand-tint-strong);
-  font-size: 13px;
-  font-weight: 600;
-}
-.account-name {
-  min-width: 0;
-  max-width: 128px;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-  font-weight: 600;
-}
-.account-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.account-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 34px;
-  padding: 7px 9px;
-  border-radius: 9px;
-  color: var(--text-meta);
-  font-size: 12px;
-  white-space: nowrap;
-  transition:
-    background 0.15s,
-    color 0.15s;
-}
-.account-action:hover:not(:disabled) {
-  color: var(--brand-strong);
-  background: var(--brand-soft);
-}
-.account-action.router-link-active {
-  color: var(--brand-strong);
-}
-.account-logout:hover:not(:disabled) {
-  color: var(--danger-hover);
-  background: var(--danger-soft-hover);
-}
-.account-action .ui-icon {
-  width: 18px;
-  height: 18px;
-}
-@media (max-width: 1100px) {
-  .account-action-label {
-    display: none;
-  }
-  .account-action {
-    width: 34px;
-    padding: 8px;
-  }
+@layer components {
   .account {
-    gap: 12px;
-  }
-}
-@media (max-width: 540px) {
-  .account {
-    gap: 8px;
-    padding-left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 5px 6px 5px 12px;
   }
   .account-profile {
-    gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .account-profile .avatar {
+    width: 32px;
+    height: 32px;
+    background: var(--brand-tint-strong);
+    font-size: 13px;
+    font-weight: 600;
   }
   .account-name {
-    max-width: 64px;
+    min-width: 0;
+    max-width: 128px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 600;
   }
   .account-actions {
+    display: flex;
+    align-items: center;
     gap: 4px;
   }
   .account-action {
-    width: 32px;
-    padding-inline: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 7px 9px;
+    border-radius: 9px;
+    color: var(--text-meta);
+    font-size: 12px;
+    white-space: nowrap;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .account-action:hover:not(:disabled) {
+    color: var(--brand-strong);
+    background: var(--brand-soft);
+  }
+  .account-action.router-link-active {
+    color: var(--brand-strong);
+  }
+  .account-logout:hover:not(:disabled) {
+    color: var(--danger-hover);
+    background: var(--danger-soft-hover);
+  }
+  .account-action .ui-icon {
+    width: 18px;
+    height: 18px;
+  }
+  @media (max-width: 1100px) {
+    .account-action-label {
+      display: none;
+    }
+    .account-action {
+      width: 34px;
+      padding: 8px;
+    }
+    .account {
+      gap: 12px;
+    }
+  }
+  @media (max-width: 540px) {
+    .account {
+      gap: 8px;
+      padding-left: 8px;
+    }
+    .account-profile {
+      gap: 8px;
+    }
+    .account-name {
+      max-width: 64px;
+    }
+    .account-actions {
+      gap: 4px;
+    }
+    .account-action {
+      width: 32px;
+      padding-inline: 7px;
+    }
   }
 }
 </style>

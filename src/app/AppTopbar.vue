@@ -92,113 +92,115 @@ defineExpose(topbarExpose)
 </template>
 
 <style scoped>
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  height: 72px;
-  padding: 0 var(--page-gutter);
-  background: var(--surface-glass);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(16px);
-}
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  min-width: 0;
-  color: var(--text-breadcrumb);
-  font-size: 12px;
-  white-space: nowrap;
-}
-.breadcrumb-parent {
-  flex-shrink: 0;
-}
-.breadcrumb-parent > span {
-  margin-left: 14px;
-  color: var(--line-faint);
-}
-.breadcrumb strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text-subtle);
-  font-size: 13px;
-  font-weight: 500;
-}
-.topbar-actions {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 12px;
-  margin-left: auto;
-}
-.inbox-link {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  color: var(--text-link-muted);
-  transition:
-    background 0.15s,
-    color 0.15s;
-}
-.inbox-link:hover {
-  background: var(--brand-soft);
-  color: var(--brand);
-}
-.theme-toggle {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  color: var(--text-faint);
-}
-.theme-toggle:hover:not(:disabled) {
-  background: var(--brand-soft);
-  color: var(--brand);
-}
-.unread-dot {
-  position: absolute;
-  top: 6px;
-  right: 5px;
-  width: 6px;
-  height: 6px;
-  border: 1px solid var(--surface);
-  border-radius: 50%;
-  background: var(--danger);
-}
-/* 汉堡按钮只在窄屏出现（侧栏关闭按钮同规则，各自组件持有） */
-.mobile-menu {
-  display: none;
-}
-@media (max-width: 1100px) {
+@layer components {
   .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    height: 72px;
+    padding: 0 var(--page-gutter);
+    background: var(--surface-glass);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(16px);
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
     gap: 14px;
+    min-width: 0;
+    color: var(--text-breadcrumb);
+    font-size: 12px;
+    white-space: nowrap;
   }
-}
-@media (max-width: 760px) {
-  .mobile-menu {
-    display: inline-grid;
-  }
-  .topbar {
-    height: 64px;
-    padding-inline: 20px;
-  }
-}
-@media (max-width: 540px) {
   .breadcrumb-parent {
-    display: none;
+    flex-shrink: 0;
+  }
+  .breadcrumb-parent > span {
+    margin-left: 14px;
+    color: var(--line-faint);
+  }
+  .breadcrumb strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-subtle);
+    font-size: 13px;
+    font-weight: 500;
   }
   .topbar-actions {
-    gap: 8px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 12px;
+    margin-left: auto;
   }
-  .topbar {
-    padding-inline: 12px;
-    gap: 8px;
+  .inbox-link {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    color: var(--text-link-muted);
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .inbox-link:hover {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    color: var(--text-faint);
+  }
+  .theme-toggle:hover:not(:disabled) {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+  .unread-dot {
+    position: absolute;
+    top: 6px;
+    right: 5px;
+    width: 6px;
+    height: 6px;
+    border: 1px solid var(--surface);
+    border-radius: 50%;
+    background: var(--danger);
+  }
+  /* 汉堡按钮只在窄屏出现（侧栏关闭按钮同规则，各自组件持有） */
+  .mobile-menu {
+    display: none;
+  }
+  @media (max-width: 1100px) {
+    .topbar {
+      gap: 14px;
+    }
+  }
+  @media (max-width: 760px) {
+    .mobile-menu {
+      display: inline-grid;
+    }
+    .topbar {
+      height: 64px;
+      padding-inline: 20px;
+    }
+  }
+  @media (max-width: 540px) {
+    .breadcrumb-parent {
+      display: none;
+    }
+    .topbar-actions {
+      gap: 8px;
+    }
+    .topbar {
+      padding-inline: 12px;
+      gap: 8px;
+    }
   }
 }
 </style>

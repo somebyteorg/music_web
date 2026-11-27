@@ -45,54 +45,56 @@ const { sign, booting, bootError, playbackLinks, hydrate } = useAppShellContext(
 </template>
 
 <style scoped>
-.boot {
-  display: flex;
-  min-height: 100dvh;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  color: var(--text-muted);
-}
-.sign-in-screen {
-  display: grid;
-  min-height: 100dvh;
-  place-items: center;
-  padding: 20px;
-}
-.sign-in-card {
-  width: 100%;
-  max-width: 400px;
-  padding: 32px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--surface);
-  text-align: center;
-}
-.sign-in-logo {
-  margin: 0 auto 16px;
-}
-.sign-in-card h1 {
-  font-size: 26px;
-  margin-bottom: 24px;
-}
-.sign-in-link {
-  justify-content: flex-start;
-  width: 100%;
-  min-height: 44px;
-  gap: 10px;
-  margin-top: 10px;
-}
-.sign-in-link img {
-  border-radius: 4px;
-  object-fit: contain;
-}
-.sign-in-link > span {
-  margin-left: auto;
-}
-@media (max-width: 540px) {
+@layer components {
+  .boot {
+    display: flex;
+    min-height: 100dvh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    color: var(--text-muted);
+  }
+  .sign-in-screen {
+    display: grid;
+    min-height: 100dvh;
+    place-items: center;
+    padding: 20px;
+  }
   .sign-in-card {
-    padding: 32px 24px;
+    width: 100%;
+    max-width: 400px;
+    padding: 32px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    text-align: center;
+  }
+  .sign-in-logo {
+    margin: 0 auto 16px;
+  }
+  .sign-in-card h1 {
+    font-size: 26px;
+    margin-bottom: 24px;
+  }
+  .sign-in-link {
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 44px;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .sign-in-link img {
+    border-radius: 4px;
+    object-fit: contain;
+  }
+  .sign-in-link > span {
+    margin-left: auto;
+  }
+  @media (max-width: 540px) {
+    .sign-in-card {
+      padding: 32px 24px;
+    }
   }
 }
 </style>

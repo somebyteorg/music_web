@@ -69,68 +69,70 @@ function batchPending() {
   </section>
 </template>
 <style scoped>
-.task-thumbnail {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: 5px;
-  overflow: hidden;
-  background: var(--surface-muted);
-}
-.task-thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.task-icon {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 30px;
-  flex-shrink: 0;
-  color: var(--brand);
-  background: var(--brand-soft);
-  border-radius: 4px;
-  font-size: 16px;
-}
-.task-icon.done {
-  background: var(--success-soft);
-  color: var(--success);
-}
-.pending-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--line);
-}
-.pending-row:last-child {
-  border: 0;
-}
-.pending-row > div {
-  min-width: 0;
-  flex: 1;
-}
-.pending-row strong {
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-.pending-note {
-  padding: 14px;
-}
-@media (max-width: 680px) {
-  .task-icon,
+@layer components {
   .task-thumbnail {
-    grid-column: 1;
-    grid-row: 1;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    overflow: hidden;
+    background: var(--surface-muted);
   }
-  .task-thumbnail {
+  .task-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .task-icon {
+    display: grid;
+    place-items: center;
     width: 26px;
     height: 30px;
+    flex-shrink: 0;
+    color: var(--brand);
+    background: var(--brand-soft);
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  .task-icon.done {
+    background: var(--success-soft);
+    color: var(--success);
   }
   .pending-row {
-    padding: 10px;
-    gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pending-row:last-child {
+    border: 0;
+  }
+  .pending-row > div {
+    min-width: 0;
+    flex: 1;
+  }
+  .pending-row strong {
+    font-size: 13px;
+    overflow-wrap: anywhere;
+  }
+  .pending-note {
+    padding: 14px;
+  }
+  @media (max-width: 680px) {
+    .task-icon,
+    .task-thumbnail {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .task-thumbnail {
+      width: 26px;
+      height: 30px;
+    }
+    .pending-row {
+      padding: 10px;
+      gap: 8px;
+    }
   }
 }
 </style>

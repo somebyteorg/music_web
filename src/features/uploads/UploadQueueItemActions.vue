@@ -73,21 +73,23 @@ const uploads = useUploadsStore()
   </div>
 </template>
 <style scoped>
-.task-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  min-width: 150px;
-  max-width: 230px;
-}
-@media (max-width: 680px) {
+@layer components {
   .task-actions {
-    grid-column: 2;
-    grid-row: 3;
-    justify-content: flex-start;
-    min-width: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-width: 150px;
+    max-width: 230px;
+  }
+  @media (max-width: 680px) {
+    .task-actions {
+      grid-column: 2;
+      grid-row: 3;
+      justify-content: flex-start;
+      min-width: 0;
+    }
   }
 }
 </style>

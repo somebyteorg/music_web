@@ -104,135 +104,137 @@ async function clearDone() {
   />
 </template>
 <style scoped>
-.queue-tools {
-  justify-content: space-between;
-  gap: 12px 16px;
-}
-.queue-settings {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 8px;
-  margin-left: auto;
-}
-.concurrency-input {
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 400;
-  white-space: nowrap;
-  cursor: text;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
-}
-.concurrency-input:hover {
-  border-color: var(--brand-line-meter);
-}
-.concurrency-input:focus-within {
-  border-color: var(--brand-line-focus);
-  box-shadow: var(--shadow-meter-focus);
-}
-.concurrency-icon,
-.queue-clear svg {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  stroke: currentColor;
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.concurrency-value {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  padding-left: 7px;
-  border-left: 1px solid var(--line);
-}
-.concurrency-input input[type='number'] {
-  appearance: textfield;
-  -moz-appearance: textfield;
-  width: 30px;
-  min-width: 0;
-  height: 28px;
-  min-height: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  outline: 0;
-  background: transparent;
-  box-shadow: none;
-  color: var(--brand-strong);
-  font-size: 13px;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-}
-.concurrency-input input::-webkit-inner-spin-button,
-.concurrency-input input::-webkit-outer-spin-button {
-  margin: 0;
-  -webkit-appearance: none;
-}
-.concurrency-limit {
-  color: var(--text-meter);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-.queue-clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 36px;
-  padding: 0 8px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: var(--text-muted);
-  font-size: 12px;
-  white-space: nowrap;
-  transition:
-    background-color 0.15s,
-    color 0.15s;
-}
-.queue-clear:not(:disabled):hover {
-  background: var(--brand-soft);
-  color: var(--brand-strong);
-}
-.queue-search {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  margin-bottom: 10px;
-}
-@media (max-width: 680px) {
-  .queue-settings {
-    width: 100%;
+@layer components {
+  .queue-tools {
     justify-content: space-between;
-    margin-top: 2px;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
+    gap: 12px 16px;
   }
-  .concurrency-input,
-  .queue-clear {
-    min-height: 40px;
+  .queue-settings {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .concurrency-input {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+    cursor: text;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+  .concurrency-input:hover {
+    border-color: var(--brand-line-meter);
+  }
+  .concurrency-input:focus-within {
+    border-color: var(--brand-line-focus);
+    box-shadow: var(--shadow-meter-focus);
+  }
+  .concurrency-icon,
+  .queue-clear svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .concurrency-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding-left: 7px;
+    border-left: 1px solid var(--line);
   }
   .concurrency-input input[type='number'] {
-    font-size: 16px;
+    appearance: textfield;
+    -moz-appearance: textfield;
+    width: 30px;
+    min-width: 0;
+    height: 28px;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 4px;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--brand-strong);
+    font-size: 13px;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
   }
-  .queue-search > .hint {
+  .concurrency-input input::-webkit-inner-spin-button,
+  .concurrency-input input::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+  .concurrency-limit {
+    color: var(--text-meter);
     font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+  .queue-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 12px;
+    white-space: nowrap;
+    transition:
+      background-color 0.15s,
+      color 0.15s;
+  }
+  .queue-clear:not(:disabled):hover {
+    background: var(--brand-soft);
+    color: var(--brand-strong);
+  }
+  .queue-search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-bottom: 10px;
+  }
+  @media (max-width: 680px) {
+    .queue-settings {
+      width: 100%;
+      justify-content: space-between;
+      margin-top: 2px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+    .concurrency-input,
+    .queue-clear {
+      min-height: 40px;
+    }
+    .concurrency-input input[type='number'] {
+      font-size: 16px;
+    }
+    .queue-search > .hint {
+      font-size: 11px;
+    }
   }
 }
 </style>

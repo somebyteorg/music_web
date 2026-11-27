@@ -18,7 +18,7 @@ const { form, libraries, busy, albumEntries, albumOptions, albumQuery, search, p
   /></label>
   <p v-if="libraries.error" class="error-text">
     {{ libraries.error }}
-    <TextButton @click="libraries.load(true)">重试</TextButton>
+    <TextButton @click="libraries.reload()">重试</TextButton>
   </p>
   <label
     >收录专辑（可添加多张）

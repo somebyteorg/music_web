@@ -19,6 +19,9 @@
  *
  * 调整这些值时，请先用 660 / 700 / 950 / 1050 / 1200 等「断点两侧」宽度与基线截图对比，
  * 确认可见性没有变化。
+ *
+ * 本文件可访问性降级（prefers-reduced-motion）部分已移到 styles/a11y.css，靠 a11y 层降级，
+ * 不再依赖感叹号提权。
  */
 @media (max-width: 680px) {
   .page-heading {
@@ -62,7 +65,6 @@
     height: 36px;
   }
 
-  .chip,
   .action-menu > summary {
     min-height: 38px;
   }
@@ -72,21 +74,5 @@
   textarea {
     min-height: 38px;
     font-size: 16px;
-  }
-}
-
-/*
- * 无障碍降级：通配选择器特异性为 0，不提权就压不过任何带 animation / transition 的
- * 类规则（.skeleton 的 shimmer、各控件的 transition 都在其中），因此这三条必须保留
- * !important —— 这是全站仅存的提权用法，其余位置都已改成选择器加权。
- * 附带影响：e2e 截图带 reducedMotion: reduce 跑，靠这里关掉骨架屏动画才稳定。
- */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
   }
 }

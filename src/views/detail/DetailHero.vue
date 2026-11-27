@@ -163,92 +163,94 @@ function togglePlay() {
 </template>
 
 <style scoped>
-.detail-hero {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  padding: 32px;
-  margin-bottom: 32px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(125deg, var(--hero-tint), var(--surface-hero) 75%);
-}
-.detail-hero > .cover {
-  width: clamp(160px, 15vw, 220px);
-  flex-shrink: 0;
-  box-shadow: var(--shadow-hero-cover);
-}
-.detail-copy {
-  min-width: 0;
-  flex: 1;
-}
-.detail-kind {
-  margin-bottom: 12px;
-  color: var(--brand);
-  font-size: var(--font-sm, 12px);
-  letter-spacing: 1px;
-}
-.detail-copy h1 {
-  font-size: clamp(28px, 3vw, 42px);
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-.detail-meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5px 12px;
-  margin: 14px 0 20px;
-  color: var(--text-muted);
-  font-size: var(--font-base, 13px);
-}
-.detail-meta a:hover {
-  color: var(--brand);
-}
-.description {
-  margin-bottom: 18px;
-  max-width: 900px;
-}
-.description p {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: var(--font-base, 13px);
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-}
-.description p.expanded {
-  display: block;
-}
-.detail-play {
-  width: 40px;
-  padding: 9px;
-}
-.follow-button.active {
-  color: var(--brand-strong);
-  border-color: var(--brand-line-follow);
-  background: var(--brand-soft);
-}
-.follow-button.active .ui-icon {
-  fill: var(--follow-fill);
-}
-@media (max-width: 680px) {
+@layer components {
   .detail-hero {
-    align-items: flex-start;
-    gap: 20px;
-    padding: 24px;
-    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 32px;
+    margin-bottom: 32px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(125deg, var(--hero-tint), var(--surface-hero) 75%);
   }
   .detail-hero > .cover {
-    width: 96px;
+    width: clamp(160px, 15vw, 220px);
+    flex-shrink: 0;
+    box-shadow: var(--shadow-hero-cover);
+  }
+  .detail-copy {
+    min-width: 0;
+    flex: 1;
   }
   .detail-kind {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    color: var(--brand);
+    font-size: var(--font-sm, 12px);
+    letter-spacing: 1px;
   }
   .detail-copy h1 {
-    font-size: 24px;
+    font-size: clamp(28px, 3vw, 42px);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .detail-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px 12px;
+    margin: 14px 0 20px;
+    color: var(--text-muted);
+    font-size: var(--font-base, 13px);
+  }
+  .detail-meta a:hover {
+    color: var(--brand);
+  }
+  .description {
+    margin-bottom: 18px;
+    max-width: 900px;
+  }
+  .description p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    color: var(--text-muted);
+    font-size: var(--font-base, 13px);
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+  }
+  .description p.expanded {
+    display: block;
+  }
+  .detail-play {
+    width: 40px;
+    padding: 9px;
+  }
+  .follow-button.active {
+    color: var(--brand-strong);
+    border-color: var(--brand-line-follow);
+    background: var(--brand-soft);
+  }
+  .follow-button.active .ui-icon {
+    fill: var(--follow-fill);
+  }
+  @media (max-width: 680px) {
+    .detail-hero {
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .detail-hero > .cover {
+      width: 96px;
+    }
+    .detail-kind {
+      margin-bottom: 8px;
+    }
+    .detail-copy h1 {
+      font-size: 24px;
+    }
   }
 }
 </style>

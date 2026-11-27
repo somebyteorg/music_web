@@ -32,39 +32,41 @@ const queue = useQueueStore()
   </div>
 </template>
 <style scoped>
-.queue-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 0 10px 10px;
-}
-.queue-head h2 {
-  margin: 0;
-  font-size: 15px;
-}
-.queue-source {
-  margin: 4px 0 0;
-  color: var(--text-muted);
-  font-size: 11px;
-}
-.queue-from {
-  margin-left: 4px;
-}
-.queue-tools {
-  display: flex;
-  gap: 8px;
-  padding: 0 10px 10px;
-}
-.queue-tools .button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  font-size: 12px;
-}
-.queue-tools :deep(.ui-icon) {
-  width: 14px;
-  height: 14px;
+@layer components {
+  .queue-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 10px 10px;
+  }
+  .queue-head h2 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .queue-source {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+  .queue-from {
+    margin-left: 4px;
+  }
+  .queue-tools {
+    display: flex;
+    gap: 8px;
+    padding: 0 10px 10px;
+  }
+  .queue-tools .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+  .queue-tools :deep(.ui-icon) {
+    width: 14px;
+    height: 14px;
+  }
 }
 </style>
