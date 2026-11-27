@@ -40,7 +40,7 @@ const sign = useSignStore()
       <template v-else>{{ unfinishedUploadCount }} 个上传任务需要处理。</template>
       <TextButton @click="emit('upload')">查看进度</TextButton>
     </p>
-    <Card class="resources-panel" v-if="item.files?.length">
+    <Card class="resources-card" v-if="item.files?.length">
       <table class="resource-table">
         <thead>
           <tr>

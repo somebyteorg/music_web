@@ -4,6 +4,7 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import Tag from '@/components/ui/Tag.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import { useCatalog } from '@/features/catalog/useCatalog'
 import { useCatalogActions } from '@/features/catalog/useCatalogActions'
@@ -80,12 +81,12 @@ const {
       </div>
       <p class="catalog-intro">{{ introductions[type] }}</p>
     </div>
-    <div class="button-group">
+    <ButtonGroup>
       <Button v-if="type === 'songs'" to="/uploads" variant="secondary">↑ 上传音频</Button
       ><Button variant="primary" v-if="canCreate" @click="newItem">
         ＋ 新建{{ labels[type] }}
       </Button>
-    </div>
+    </ButtonGroup>
   </div>
   <div :aria-label="`筛选${labels[type]}`" class="filter-bar" role="search">
     <div class="search-field">

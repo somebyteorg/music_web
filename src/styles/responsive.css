@@ -37,10 +37,6 @@
     font-size: 25px;
   }
 
-  .button {
-    padding-inline: 10px;
-  }
-
   .search-field {
     width: 100%;
   }
@@ -66,7 +62,6 @@
     height: 36px;
   }
 
-  .button,
   .chip,
   .action-menu > summary {
     min-height: 38px;

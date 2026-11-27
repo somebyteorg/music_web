@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import { inject, ref } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -61,7 +62,7 @@ const lyricInput = ref<HTMLInputElement>()
           maxlength="500"
           placeholder="提供者、来源网站或文件名（选填）"
       /></label>
-      <div class="button-group">
+      <ButtonGroup>
         <input
           ref="lyricInput"
           accept=".txt,.lrc,.elrc,.ttml"
@@ -78,7 +79,7 @@ const lyricInput = ref<HTMLInputElement>()
           从文件导入
         </Button>
         <span class="hint">UTF-8 编码，保留原始歌词和时间标签。</span>
-      </div>
+      </ButtonGroup>
       <label
         >歌词内容<textarea
           v-model="lyrics.form.content"

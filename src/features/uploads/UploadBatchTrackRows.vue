@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import BaseSelect from '@/components/BaseSelect.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { duration, qualities } from '@/utils/format'
 import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
@@ -26,9 +27,7 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
             >{{ entry.task.transfer.file ? qualities[entry.task.transfer.file.quality] : '' }} ·
             {{ duration(entry.task.metadata.duration || 0)
             }}<template v-if="entry.task.state === 'published'"> · 已加入</template></span
-          ><button class="text-button" type="button" @click="emit('preview', entry.task)">
-            解析预览
-          </button>
+          ><TextButton @click="emit('preview', entry.task)"> 解析预览 </TextButton>
         </div>
         <div class="batch-file-fields">
           <label
@@ -111,14 +110,12 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
         <p v-else-if="entry.task.transfer.file?.preview?.warnings.length" class="hint">
           {{ entry.task.transfer.file.preview.warnings.join(' ') }}
         </p>
-        <button
+        <TextButton
           :disabled="batch.busy || entry.row.searching"
-          class="text-button"
-          type="button"
           @click="batch.searchTracks(entry.task, entry.row)"
         >
           {{ entry.row.searching ? '正在查找…' : '查找已有曲目／录音' }}
-        </button>
+        </TextButton>
         <p v-if="entry.task.error" class="error-text">{{ entry.task.error }}</p>
       </article>
     </fieldset>

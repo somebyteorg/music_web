@@ -184,7 +184,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
               >✓</span
             >
           </button>
-          <p v-if="!filtered.length" class="select-empty">没有匹配的选项</p>
+          <p v-if="!filtered.length" class="select-blank">没有匹配的选项</p>
         </div>
       </div>
     </Teleport>
@@ -275,7 +275,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
   font-weight: 550;
   background: var(--brand-soft);
 }
-.select-empty {
+.select-blank {
   padding: 18px 10px;
   text-align: center;
   color: var(--text-muted);

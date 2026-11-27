@@ -1,18 +1,16 @@
 <script setup lang="ts">
 /**
- * 文字按钮：品牌色、无底色、hover 下划线。替代散落的 class="text-button" 用法。
+ * 文字按钮：品牌色、无底色、hover 下划线。
  *
- * 视觉与全局 .text-button 逐属性一致，并且直接复用这套全局规则（和 Button 复用 .button、
- * Card 复用 .panel 同一口径：组件给 API，基元给视觉）：
+ * 视觉全部在本组件的 <style scoped> 里，与旧全局规则逐属性一致：
  *   padding: 4px 0; color: var(--brand); font-size: 13px; line-height: 1.6;
  *   :hover { text-decoration: underline }
- *   danger 变体叠加 .danger → color: var(--danger)（controls.css 里既有的规则）
+ *   danger 变体叠加 .danger → color: var(--danger)
  *   disabled → 继承 base.css 的 button:disabled { cursor: not-allowed; opacity: 0.5 }
- * 根元素必须保留 text-button 这个 class：页面会用上下文选择器微调它，例如
+ * 根元素保留 text-button 这个 class：页面会用上下文选择器微调它，例如
  *   .history-list .text-button { white-space: nowrap }（CommunityView）
  *   .cover-editor .text-button { display: block; font-size: 12px }（EditorDialog）
  *   .resource-actions .text-button { white-space: nowrap }（resources.css）
- * 所以样式留在 controls.css 这个单一来源里，不在组件里复制一份。
  *
  * to：路由跳转，语义与 Button 的 to 完全相同（RouterLink custom + 真实 <a href>）。
  */
@@ -64,6 +62,17 @@ function navigateTo(event: MouseEvent, navigate: (event?: MouseEvent) => unknown
 </template>
 
 <style scoped>
+.text-button {
+  padding: 4px 0;
+  color: var(--brand);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
 /* 链接形态没有 :disabled；用与 base.css 中 button:disabled 一致的 0.5 透明度 */
 .text-button.is-disabled {
   cursor: not-allowed;

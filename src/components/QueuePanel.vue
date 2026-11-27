@@ -54,7 +54,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 <template>
   <Teleport to="body">
     <div v-if="queue.open" class="queue-backdrop" @click.self="queue.open = false" />
-    <section v-if="queue.open" id="queue-panel" aria-label="播放队列" class="queue-panel">
+    <section v-if="queue.open" id="queue-panel" aria-label="播放队列" class="queue-drawer">
       <header class="queue-head">
         <div>
           <h2>播放队列</h2>
@@ -129,8 +129,8 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
         </li>
       </ol>
 
-      <div v-else class="queue-empty">
-        <span aria-hidden="true" class="empty-symbol">♫</span>
+      <div v-else class="queue-blank">
+        <span aria-hidden="true" class="queue-blank-symbol">♫</span>
         <p>队列还是空的</p>
         <small>在任意歌曲列表里点一首歌，整个列表就会成为播放队列。</small>
       </div>
@@ -146,7 +146,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   inset: 0;
   background: var(--scrim-soft);
 }
-.queue-panel {
+.queue-drawer {
   /* 高于播放器（45）：桌面右下角展开，移动端浮在播放器上方 */
   position: fixed;
   z-index: 46;
@@ -303,17 +303,22 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
     transform: scaleY(1);
   }
 }
-.queue-empty {
+.queue-blank {
   padding: 28px 18px 34px;
   color: var(--text-muted);
   text-align: center;
 }
-.queue-empty p {
+.queue-blank-symbol {
+  color: var(--text-muted);
+  font-size: 26px;
+  line-height: 1.2;
+}
+.queue-blank p {
   margin: 6px 0 4px;
   color: var(--text-deep);
   font-size: 14px;
 }
-.queue-empty small {
+.queue-blank small {
   font-size: 11px;
   line-height: 1.6;
 }
@@ -321,7 +326,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
   .queue-backdrop {
     background: var(--scrim-strong);
   }
-  .queue-panel {
+  .queue-drawer {
     /* 留出播放器高度 + 安全区，避免最后几条曲目被压在播放器下面点不到 */
     right: 8px;
     bottom: calc(var(--player-height) + var(--player-offset) + env(safe-area-inset-bottom, 0px));

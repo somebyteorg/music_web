@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import { computed, inject } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
@@ -95,7 +96,7 @@ const {
               >查看已有歌曲</RouterLink
             >
           </p>
-          <div class="button-group">
+          <ButtonGroup>
             <TextButton
               v-if="TRANSMIT_STATES.includes(task.state)"
               @click="run(() => uploads.pause(task))"
@@ -122,7 +123,7 @@ const {
                 使用已有文件</TextButton
               ><TextButton @click="uploads.skip(task)">跳过</TextButton></template
             >
-          </div>
+          </ButtonGroup>
         </article>
       </div>
       <RouterLink class="text-link" to="/uploads">管理全部上传任务 →</RouterLink>

@@ -28,7 +28,7 @@ const VIEWPORT_HEIGHT = 900
 const ROUTES = [
   { path: '/albums', ready: '.catalog' },
   { path: '/albums/1', ready: '.detail-hero' },
-  { path: '/songs/1', ready: '.resources-panel' },
+  { path: '/songs/1', ready: '.resources-card' },
   { path: '/uploads', ready: '.pending-row' },
   { path: '/settings', ready: '.library-options' },
 ]

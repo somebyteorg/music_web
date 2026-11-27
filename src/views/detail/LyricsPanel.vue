@@ -3,6 +3,7 @@ import Card from '@/components/ui/Card.vue'
 import Tabs from '@/components/ui/Tabs.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import Button from '@/components/ui/Button.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import { inject } from 'vue'
 import BaseSelect from '@/components/BaseSelect.vue'
@@ -17,7 +18,7 @@ const sign = useSignStore()
 </script>
 
 <template>
-  <Card as="section" class="lyrics-panel">
+  <Card as="section" class="lyrics-card">
     <div class="section-heading">
       <h2>
         歌词 <span class="muted">{{ lyrics.versions.length }} 个版本</span>
@@ -27,7 +28,7 @@ const sign = useSignStore()
     <template v-if="lyrics.selected">
       <div class="lyric-toolbar">
         <BaseSelect v-model="lyrics.selectedId" :options="lyrics.options" label="选择歌词版本" />
-        <div class="button-group">
+        <ButtonGroup>
           <Button variant="secondary" :disabled="lyrics.busy" @click="lyrics.edit(lyrics.selected)">
             编辑
           </Button>
@@ -48,7 +49,7 @@ const sign = useSignStore()
           >
             删除
           </TextButton>
-        </div>
+        </ButtonGroup>
       </div>
       <p class="hint">
         {{ lyricKinds.find((kind) => kind.value === lyrics.selected?.kind)?.label }} ·

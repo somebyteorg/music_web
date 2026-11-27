@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * 卡片容器。默认不加内边距（与既有 .panel 用法一致，页面各自管自己的 padding），
- * 需要时用 padding 打开。.panel 的底色/描边/圆角/阴影仍是全局单一来源。
+ * 卡片容器。默认不加内边距（页面各自管自己的 padding），需要时用 padding 打开。
+ * 底色/描边/圆角/阴影由本组件的 <style scoped> 提供，不再依赖全局 .panel。
  */
 withDefaults(
   defineProps<{
@@ -13,12 +13,19 @@ withDefaults(
 </script>
 
 <template>
-  <component :is="as" :class="['panel', padding && `ui-card--pad-${padding}`]">
+  <component :is="as" :class="['ui-card', padding && `ui-card--pad-${padding}`]">
     <slot />
   </component>
 </template>
 
 <style scoped>
+.ui-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
 .ui-card--pad-sm {
   padding: var(--space-3);
 }

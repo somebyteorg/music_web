@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import BaseSelect from '@/components/BaseSelect.vue'
+import ButtonGroup from '@/components/ui/ButtonGroup.vue'
+import TextButton from '@/components/ui/TextButton.vue'
 import { fileUrl } from '@/utils/file'
 import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
@@ -53,14 +55,9 @@ const emit = defineEmits<{
       <p v-if="batch.assetsLoading" class="hint">正在加载目录图片…</p>
       <p v-if="batch.assetsError" class="error-text" role="alert">
         {{ batch.assetsError }}
-        <button
-          :disabled="batch.assetsLoading"
-          class="text-button"
-          type="button"
-          @click="batch.hydratePictures"
-        >
+        <TextButton :disabled="batch.assetsLoading" @click="batch.hydratePictures">
           重试
-        </button>
+        </TextButton>
       </p>
       <div class="image-grid">
         <article
@@ -82,44 +79,30 @@ const emit = defineEmits<{
             >
           </button>
           <span :title="picture.name">{{ picture.name }}</span>
-          <div class="button-group">
-            <button
-              :disabled="picture.waiting || batch.busy"
-              class="text-button"
-              type="button"
-              @click="coverChoice = picture.id"
-            >
+          <ButtonGroup>
+            <TextButton :disabled="picture.waiting || batch.busy" @click="coverChoice = picture.id">
               {{
                 batch.pictureId(album) === picture.id ? '已选正面图' : '选为正面图'
-              }}</button><button
+              }}</TextButton><TextButton
               :disabled="batch.busy || picture.waiting"
-              class="text-button"
-              type="button"
               @click="batch.removePicture(album, picture.id)"
             >
               移除
-            </button>
-          </div>
+            </TextButton>
+          </ButtonGroup>
         </article>
       </div>
       <p v-if="album.excludedPictureIds.length" class="hint">
-        已移除 {{ album.excludedPictureIds.length }} 张候选图，文件仍保留。<button
+        已移除 {{ album.excludedPictureIds.length }} 张候选图，文件仍保留。<TextButton
           :disabled="batch.busy"
-          class="text-button"
-          type="button"
           @click="excludedPictureIds = []"
         >
           恢复候选图
-        </button>
+        </TextButton>
       </p>
-      <button
-        :disabled="batch.busy"
-        class="text-button"
-        type="button"
-        @click="emit('browse-images', album)"
-      >
+      <TextButton :disabled="batch.busy" @click="emit('browse-images', album)">
         从我的图片选择
-      </button>
+      </TextButton>
       <label class="text-link album-cover-upload"
         >另选封面图片<input
           :disabled="batch.busy"
