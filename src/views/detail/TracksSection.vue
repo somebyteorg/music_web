@@ -20,7 +20,19 @@ const emit = defineEmits<{
 const context = inject(tracksContextKey)
 if (!context) throw new Error('曲目区缺少上下文（tracksContextKey）')
 const { acting } = context
-const { type, id, item, songs, total, page, songPageSize, editable } = context.detail
+const {
+  type,
+  id,
+  item,
+  songs,
+  total,
+  tracksStatus,
+  tracksError,
+  page,
+  songPageSize,
+  editable,
+  loadSongs,
+} = context.detail
 const {
   managingTracks,
   selectedEntries,
@@ -42,9 +54,9 @@ const collaboratorNames = computed(() =>
     <div class="section-heading">
       <h2>
         {{ type === 'playlists' ? '歌单曲目' : '收录的歌曲' }}
-        <span class="muted">{{ total }}</span>
+        <span v-if="tracksStatus === 'ready'" class="muted">{{ total }}</span>
       </h2>
-      <ButtonGroup v-if="type === 'playlists' && editable">
+      <ButtonGroup v-if="tracksStatus === 'ready' && type === 'playlists' && editable">
         <Button variant="primary" :disabled="acting" @click="tracks">添加歌曲</Button>
         <Button variant="secondary" :disabled="acting" @click="managingTracks = !managingTracks">
           {{ managingTracks ? '完成管理' : '管理本页曲目' }}
@@ -58,7 +70,7 @@ const collaboratorNames = computed(() =>
           移除已选 {{ selectedEntries.length }} 首
         </Button>
       </ButtonGroup>
-      <ButtonGroup v-else-if="type === 'albums'">
+      <ButtonGroup v-else-if="tracksStatus === 'ready' && type === 'albums'">
         <Button variant="secondary" v-if="songs.length" @click="emit('manageAlbum')">
           管理本页曲目</Button
         ><Button to="/songs" variant="secondary">选择歌曲 →</Button>
@@ -68,39 +80,60 @@ const collaboratorNames = computed(() =>
       协作者：{{ collaboratorNames }}
     </p>
     <Card>
-      <SongList
-        v-if="songs.length"
-        :album-context-id="type === 'albums' ? id : undefined"
-        :disabled="acting"
-        :editable="type === 'albums'"
-        :items="songs"
-        :label="queueLabel"
-        :offset="(page - 1) * songPageSize"
-        :selectable="type === 'playlists' && editable && managingTracks"
-        :selected="selectedEntries"
-        :track-numbers="type === 'albums'"
-        @edit="(song) => emit('editSong', song)"
-        @favorite="
-          (sid, value) => {
-            songs.filter((song) => song.id === sid).forEach((song) => (song.is_favorite = value))
-          }
-        "
-        @select="toggleEntry"
-        @select-all="selectPage"
+      <div
+        v-if="tracksStatus === 'idle' || tracksStatus === 'loading'"
+        aria-label="正在加载曲目"
+        class="tracks-loading"
+        role="status"
       >
-        <template
-          v-if="type === 'playlists' && editable && managingTracks"
-          #actions="{ song, index }"
+        <span v-for="n in 4" :key="n" class="skeleton tracks-skeleton-row"></span>
+      </div>
+      <div v-else-if="tracksStatus === 'error'" class="tracks-error" role="alert">
+        <p>{{ tracksError }}</p>
+        <Button variant="secondary" @click="loadSongs">重试</Button>
+      </div>
+      <template v-else>
+        <SongList
+          v-if="songs.length"
+          :album-context-id="type === 'albums' ? id : undefined"
+          :disabled="acting"
+          :editable="type === 'albums'"
+          :items="songs"
+          :label="queueLabel"
+          :offset="(page - 1) * songPageSize"
+          :selectable="type === 'playlists' && editable && managingTracks"
+          :selected="selectedEntries"
+          :track-numbers="type === 'albums'"
+          @edit="(song) => emit('editSong', song)"
+          @favorite="
+            (sid, value) => {
+              songs.filter((song) => song.id === sid).forEach((song) => (song.is_favorite = value))
+            }
+          "
+          @select="toggleEntry"
+          @select-all="selectPage"
         >
-          <TextButton :disabled="acting" @click="moveEntry(song, index)"> 移动 </TextButton>
-          <TextButton :disabled="acting" variant="danger" @click="removeEntries([song.entry_id!])">
-            移除
-          </TextButton>
-        </template>
-      </SongList>
-      <EmptyState v-else symbol="♫" as="h3" title="暂无歌曲"> 添加歌曲后会显示在这里。 </EmptyState>
+          <template
+            v-if="type === 'playlists' && editable && managingTracks"
+            #actions="{ song, index }"
+          >
+            <TextButton :disabled="acting" @click="moveEntry(song, index)"> 移动 </TextButton>
+            <TextButton
+              :disabled="acting"
+              variant="danger"
+              @click="removeEntries([song.entry_id!])"
+            >
+              移除
+            </TextButton>
+          </template>
+        </SongList>
+        <EmptyState v-else symbol="♫" as="h3" title="暂无歌曲">
+          添加歌曲后会显示在这里。
+        </EmptyState>
+      </template>
     </Card>
     <Pagination
+      v-if="tracksStatus === 'ready'"
       :page="page"
       :page-size="songPageSize"
       :total="total"
@@ -108,3 +141,25 @@ const collaboratorNames = computed(() =>
     />
   </section>
 </template>
+
+<style scoped>
+.tracks-loading {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+}
+.tracks-skeleton-row {
+  height: 44px;
+}
+.tracks-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 28px 24px;
+}
+.tracks-error p {
+  color: var(--danger);
+  font-size: 13px;
+}
+</style>

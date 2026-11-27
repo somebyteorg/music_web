@@ -35,6 +35,14 @@ const TINY_PNG = Buffer.from(
   'base64',
 )
 
+/**
+ * 故障注入：none | songs | detail。
+ * - songs：/api/catalog/songs?album_id=... 与 /api/playlists/:id/songs 返回 500
+ * - detail：/api/catalog/albums/:id 返回 500
+ * 默认 none，视觉回归行为不变。
+ */
+let failureMode = 'none'
+
 function sendJson(res, status, body) {
   res.writeHead(status, JSON_HEADERS)
   res.end(JSON.stringify(body))
@@ -114,13 +122,20 @@ function handle(req, res) {
   if (isGet && path === '/api/catalog/libraries') return sendJson(res, 200, pageOf(libraries, url))
   if (isGet && path === '/api/catalog/albums') return sendJson(res, 200, pageOf(albums, url))
   if (isGet && path === '/api/catalog/artists') return sendJson(res, 200, pageOf(artists, url))
-  if (isGet && path === '/api/catalog/songs') return sendJson(res, 200, pageOf(songsFor(url), url, 48))
+  if (isGet && path === '/api/catalog/songs') {
+    if (failureMode === 'songs' && url.searchParams.has('album_id'))
+      return sendJson(res, 500, { message: '曲目加载失败（模拟）' })
+    return sendJson(res, 200, pageOf(songsFor(url), url, 48))
+  }
   if (isGet && (match = path.match(/^\/api\/catalog\/(songs|albums|artists|libraries)\/([^/]+)$/))) {
+    if (failureMode === 'detail' && match[1] === 'albums')
+      return sendJson(res, 500, { message: '详情加载失败（模拟）' })
     const detail = itemFor(match[1], match[2])
     return detail ? sendJson(res, 200, detail) : sendJson(res, 404, { message: '找不到这个资源。' })
   }
   if (isGet && path === '/api/playlists') return sendJson(res, 200, pageOf(playlists, url))
   if (isGet && (match = path.match(/^\/api\/playlists\/([^/]+)\/songs$/))) {
+    if (failureMode === 'songs') return sendJson(res, 500, { message: '曲目加载失败（模拟）' })
     return sendJson(res, 200, pageOf(songsFor(url), url, 48))
   }
   if (isGet && (match = path.match(/^\/api\/playlists\/([^/]+)$/))) {
@@ -193,6 +208,7 @@ function handle(req, res) {
 }
 
 export async function startStubApi(options = {}) {
+  failureMode = options.failure ?? failureMode
   const envPort = Number(process.env.STUB_API_PORT ?? process.env.PORT ?? DEFAULT_PORT)
   const port = options.port ?? (Number.isFinite(envPort) ? envPort : DEFAULT_PORT)
   const server = createServer((req, res) => {
@@ -215,6 +231,9 @@ export async function startStubApi(options = {}) {
     server,
     port: actualPort,
     url: `http://127.0.0.1:${actualPort}`,
+    setFailure: (mode) => {
+      failureMode = mode
+    },
     close: () => new Promise((resolve) => server.close(() => resolve())),
   }
 }
@@ -223,7 +242,9 @@ const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv
 if (isMain) {
   const arg = process.argv.find((value) => value.startsWith('--port='))
   const port = arg ? Number(arg.slice('--port='.length)) : undefined
-  startStubApi({ port })
+  const failArg = process.argv.find((value) => value.startsWith('--fail='))
+  const failure = failArg ? failArg.slice('--fail='.length) : undefined
+  startStubApi({ port, failure })
     .then((stub) => {
       process.stdout.write(`stub api listening on ${stub.url}\n`)
     })
