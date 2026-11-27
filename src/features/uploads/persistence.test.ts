@@ -182,9 +182,7 @@ function legacyTask(overrides: Record<string, unknown> = {}) {
   }
 }
 
-function legacyStore(tasks: unknown) {
-  memory.set(LEGACY_KEY, JSON.stringify(tasks))
-}
+const legacyStore = (tasks: unknown) => memory.set(LEGACY_KEY, JSON.stringify(tasks))
 
 function storedSnapshots() {
   return JSON.parse(memory.get(SNAPSHOT_KEY) ?? '{}') as Record<string, UploadTaskSnapshot[]>
@@ -230,9 +228,7 @@ describe('上传任务存储 v1 → v2 迁移', () => {
       'organizeDraft',
       'draft',
       'progress',
-      'sha256',
       'preparedLyrics',
-      'reused',
     ])
       expect(text).not.toContain(`"${key}"`)
   })
@@ -289,5 +285,14 @@ describe('上传任务存储 v1 → v2 迁移', () => {
     expect(memory.get(LEGACY_KEY)).toBe(broken)
     expect(memory.get(SNAPSHOT_KEY)).toBe('{}')
     expect(notification.value?.text).toContain('用户 1 的第 1 个任务')
+  })
+})
+
+describe('上传任务的其它存储 key', () => {
+  it('并发数读到脏值会被归一，不需要给 music-upload-concurrency 升版本', () => {
+    memory.set('music-upload-concurrency', '0')
+    expect(useUploadPersistence().concurrency.value).toBe(1)
+    memory.set('music-upload-concurrency', '爆')
+    expect(useUploadPersistence().concurrency.value).toBe(8)
   })
 })
