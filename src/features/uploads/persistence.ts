@@ -113,9 +113,10 @@ function migrateLegacySnapshots(
   saved: Ref<Record<string, UploadTaskSnapshot[]>>,
 ) {
   if (!store) return
-  const legacy = store.getItem(LEGACY_STORAGE_KEY)
-  if (!legacy) return
   try {
+    // 读 v1 也放进 try：存储被禁用时不该连累整个队列的加载
+    const legacy = store.getItem(LEGACY_STORAGE_KEY)
+    if (!legacy) return
     if (!isEmptySnapshots(saved.value)) {
       store.removeItem(LEGACY_STORAGE_KEY)
       return
