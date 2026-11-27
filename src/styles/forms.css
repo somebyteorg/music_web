@@ -132,6 +132,16 @@ input[type='radio'] {
   background: var(--surface-muted);
 }
 
+/*
+ * 菜单里的危险动作（删除资料 / 删除资源）是原生 <button>，
+ * 用 (.action-menu-items > button.danger) 的 (0,2,1) 压过 button 的继承色。
+ * 组件化按钮的危险态各自在 Button.vue / TextButton.vue / IconButton.vue 里定义，
+ * 全局 .danger 已随这次清理删除。
+ */
+.action-menu-items > button.danger {
+  color: var(--danger);
+}
+
 .avatar {
   display: inline-grid;
   place-items: center;

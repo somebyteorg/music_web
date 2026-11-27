@@ -102,12 +102,20 @@
   white-space: nowrap;
 }
 
-.resource-actions-heading {
-  text-align: right !important;
+/*
+ * 表头默认 .resource-table th 是左对齐（0,2,1，含 scoped 属性），
+ * 这里叠一层 th 提到 (0,3,1) 右对齐，代替原来的提权。
+ */
+.resource-table th.resource-actions-heading {
+  text-align: right;
 }
 
+/*
+ * 「设为默认」的菜单版：桌面藏在 ⋯ 菜单里，≤680 才显示。
+ * forms.css 的 .action-menu-items > button 是 (0,1,1)，scoped 后这里 (0,2,0) 已获胜。
+ */
 .mobile-default {
-  display: none !important;
+  display: none;
 }
 
 @media (max-width: 1150px) {
@@ -146,7 +154,7 @@
     display: none;
   }
   .mobile-default {
-    display: block !important;
+    display: block;
   }
   .resource-name {
     align-items: flex-start;

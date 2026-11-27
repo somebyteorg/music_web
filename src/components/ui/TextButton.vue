@@ -5,7 +5,7 @@
  * 视觉全部在本组件的 <style scoped> 里，与旧全局规则逐属性一致：
  *   padding: 4px 0; color: var(--brand); font-size: 13px; line-height: 1.6;
  *   :hover { text-decoration: underline }
- *   danger 变体叠加 .danger → color: var(--danger)
+ *   danger 变体叠加 .danger → color: var(--danger)（见文件末尾的 scoped 规则）
  *   disabled → 继承 base.css 的 button:disabled { cursor: not-allowed; opacity: 0.5 }
  * 根元素保留 text-button 这个 class：页面会用上下文选择器微调它，例如
  *   .history-list .text-button { white-space: nowrap }（community/HistoryList.vue）
@@ -71,6 +71,11 @@ function navigateTo(event: MouseEvent, navigate: (event?: MouseEvent) => unknown
 
 .text-button:hover {
   text-decoration: underline;
+}
+
+/* danger 变体：与 Button.vue 的 .button.danger 同一套路，在本组件内加权到 (0,3,0) */
+.text-button.danger {
+  color: var(--danger);
 }
 
 /* 链接形态没有 :disabled；用与 base.css 中 button:disabled 一致的 0.5 透明度 */

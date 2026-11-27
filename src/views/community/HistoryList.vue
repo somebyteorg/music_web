@@ -121,7 +121,7 @@ const { searchHistory, showAllHistory } = community
 .history-body > p > a {
   color: var(--brand);
 }
-/* 与 .history-body > p 的 13px 区分开：用选择器加权，取代原来的 !important */
+/* 与 .history-body > p 的 13px 区分开：叠一层 .history-reason 加权，不靠提权 */
 .history-body > p.history-reason {
   margin-top: 5px;
   color: var(--text-muted);

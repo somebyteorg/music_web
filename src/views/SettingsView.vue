@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import Field from '@/components/ui/Field.vue'
 import TextButton from '@/components/ui/TextButton.vue'
 import { onMounted, ref } from 'vue'
 import { accountApi } from '@/lib/api/account'
@@ -73,7 +74,9 @@ async function save() {
   </div>
   <Card as="form" class="settings-card form-stack" @submit.prevent="save">
     <h2>当前用户：{{ displayName(sign.user || undefined) }}</h2>
-    <label>显示名称<input v-model="pseudonym" maxlength="30" placeholder="输入显示名称" /></label>
+    <Field label="显示名称"
+      ><input v-model="pseudonym" maxlength="30" placeholder="输入显示名称"
+    /></Field>
     <p class="hint">不填时使用 EMOS 用户名。操作记录也会显示这个名字。</p>
     <h2>默认音质</h2>
     <div class="quality-options">
