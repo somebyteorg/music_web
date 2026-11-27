@@ -75,6 +75,12 @@
   }
 }
 
+/*
+ * 无障碍降级：通配选择器特异性为 0，不提权就压不过任何带 animation / transition 的
+ * 类规则（.skeleton 的 shimmer、各控件的 transition 都在其中），因此这三条必须保留
+ * !important —— 这是全站仅存的提权用法，其余位置都已改成选择器加权。
+ * 附带影响：e2e 截图带 reducedMotion: reduce 跑，靠这里关掉骨架屏动画才稳定。
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
