@@ -29,10 +29,21 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
-      # 布局快照门禁：基线由 layout-baseline job 在 ubuntu 生成（文字撑开的盒子随字体度量变化，
-      # macOS 基线在 runner 上会差 2~7px），浏览器由脚本自己拉 vite preview。
+      # 浏览器只装一次，冒烟与布局快照共用
       - run: pnpm exec playwright install --with-deps chromium
+      # 端到端冒烟：读 / 上传 / 社区三条主链路。与布局快照串行，端口错开（冒烟 8160/4260）
+      - run: pnpm test:smoke
+      # 布局快照门禁：基线由 layout-baseline job 在 ubuntu 生成（文字撑开的盒子随字体度量变化，
+      # macOS 基线在 runner 上会差 2~7px），浏览器由脚本自己拉 vite preview（8150/4250）。
       - run: pnpm test:layout
+      - name: 冒烟失败截图
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-screenshots
+          path: e2e/__smoke__
+          retention-days: 7
+          if-no-files-found: ignore
 
   layout-baseline:
     if: ${{ github.event.inputs.layout_baseline == 'true' }}

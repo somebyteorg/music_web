@@ -15,6 +15,7 @@ import {
   albums,
   artists,
   audioFiles,
+  contribution,
   libraries,
   pendingFiles,
   playlists,
@@ -23,6 +24,7 @@ import {
   songs,
 } from './fixtures.mjs'
 import { history, members, messages } from './community-fixtures.mjs'
+import { createUploadStub } from './smoke/upload-stub.mjs'
 
 const DEFAULT_PORT = 8000
 const JSON_HEADERS = {
@@ -34,6 +36,9 @@ const TINY_PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
   'base64',
 )
+
+/** 上传会话与 tus 直传的 mock：布局快照不用，冒烟链路要用 */
+const uploads = createUploadStub()
 
 /**
  * 故障注入：none | songs | detail。
@@ -79,7 +84,15 @@ function songsFor(url) {
 }
 
 function itemFor(kind, id) {
-  if (kind === 'songs') return songDetails[id]
+  if (kind === 'songs') {
+    const detail = songDetails[id]
+    if (!detail) return null
+    const uploaded = uploads.files().filter((file) => file.song_id === id)
+    if (!uploaded.length) return detail
+    // 冒烟上传完成后，详情页的资源表要多出这一行
+    const current = Array.isArray(detail.item.files) ? detail.item.files : []
+    return { ...detail, item: { ...detail.item, files: [...current, ...uploaded] } }
+  }
   if (kind === 'albums') return albumDetails[id]
   if (kind === 'libraries') {
     const item = libraries.find((entry) => entry.id === id)
@@ -93,10 +106,13 @@ function itemFor(kind, id) {
 }
 
 function handle(req, res) {
-  req.resume()
   const url = new URL(req.url || '/', 'http://127.0.0.1')
   const path = url.pathname
   const method = req.method || 'GET'
+  // 建会话与 tus 分片都要读请求体，必须抢在 req.resume() 之前
+  if (path.startsWith('/upload/') || (path === '/api/uploads' && method === 'POST'))
+    return uploads.handle(req, res, url, method)
+  req.resume()
   const isGet = method === 'GET'
   let match
 
@@ -104,7 +120,11 @@ function handle(req, res) {
   if (isGet && path === '/api/session') return sendJson(res, 200, session)
   if (isGet && path === '/api/csrf-token') return sendJson(res, 200, { csrf_token: 'visual-csrf-token' })
   if (method === 'POST' && path === '/api/logout') return sendEmpty(res)
-  if (method === 'POST' && path === '/api/notice/accept') return sendJson(res, 200, { user: session.user })
+  if (method === 'POST' && path === '/api/notice/accept')
+    // 接受须知后返回带 notice_version 的用户，前端 hasNotice 才会放行上传
+    return sendJson(res, 200, {
+      user: { ...session.user, notice_version: contribution.notice.version },
+    })
   if (method === 'PATCH' && path === '/api/profile') return sendJson(res, 200, { user: session.user })
   if (path === '/api/profile/libraries') {
     const payload = {
@@ -157,20 +177,8 @@ function handle(req, res) {
     res.writeHead(200, { 'content-type': 'image/png', 'cache-control': 'no-store' })
     return res.end(TINY_PNG)
   }
-  if (method === 'POST' && path === '/api/uploads') {
-    return sendJson(res, 201, {
-      session: { id: 'visual-upload-session' },
-      token: 'visual-upload-token',
-      endpoint: '/upload/visual-upload-session',
-    })
-  }
   if (method === 'POST' && path === '/api/uploads/check') return sendJson(res, 200, { file: null })
-  if (isGet && (match = path.match(/^\/api\/uploads\/([^/]+)$/))) {
-    return sendJson(res, 200, {
-      session: { status: 'completed', error: null, expires_at: '2030-01-01T00:00:00.000Z', tus_id: 'visual-tus' },
-      file: pendingFiles[0],
-    })
-  }
+  if (isGet && (match = path.match(/^\/api\/uploads\/([^/]+)$/))) return uploads.status(res, match[1])
   if (method === 'POST' && (match = path.match(/^\/api\/uploads\/([^/]+)\/retry$/))) return sendEmpty(res)
   if (method === 'POST' && (match = path.match(/^\/api\/files\/([^/]+)\/publish$/))) {
     return sendJson(res, 200, { file: audioFiles[0], song_id: '1' })
@@ -234,6 +242,8 @@ export async function startStubApi(options = {}) {
     setFailure: (mode) => {
       failureMode = mode
     },
+    // 冒烟用它确认 tus 真的收满了字节
+    uploads,
     close: () => new Promise((resolve) => server.close(() => resolve())),
   }
 }
