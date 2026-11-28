@@ -141,6 +141,9 @@
   --scrim-modal: #201a2d66;
   --scrim-soft: #1b162a0f;
   --scrim-strong: #1b162a26;
+  /* 沉浸歌词页背景遮罩两端色（.np-backdrop-scrim 用） */
+  --np-scrim-from: #ffffff8c;
+  --np-scrim-to: #ffffffdb;
   --ring-highlight: #ffffff0a;
 
   /* —— 封面占位色（按实体类型区分） ——

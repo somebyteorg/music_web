@@ -101,7 +101,8 @@ function setLyrics(open: boolean) {
     /* FLIP 期间封面会临时盖住信息行与歌词区，抬到最上面才不会被文字穿透 */
     z-index: 1;
     flex-shrink: 0;
-    width: min(100%, calc(var(--np-stage-height) * 0.6));
+    /* 卡片有 padding，封面按卡片高度取 52%，保证「封面 + 信息 + 控制 + 进度」不撑破卡片 */
+    width: min(100%, calc(var(--np-stage-height) * 0.52));
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     transition:
@@ -198,12 +199,14 @@ function setLyrics(open: boolean) {
        space-evenly 让「信息 → 控制」之间不再留出空档，也不贴边 */
     .np-left:not(.is-header) {
       justify-content: space-evenly;
-      /* 不叠加 gap：四段留白（上/封面-信息/信息-控制/下）完全相等 */
       gap: 0;
+      /* 顶部的关闭按钮现在在卡片里，这一栏要让出它那一条 */
+      padding-block-start: calc(44px + var(--space-2));
+      padding-block-end: var(--space-6);
     }
-    /* 封面按舞台高度比例放大，不再用 60vw / 280px 这类固定值 */
+    /* 封面按卡片高度比例取尺寸，且不超出卡片内容区 */
     .np-artwork {
-      width: min(86vw, calc(var(--np-stage-height) * 0.46));
+      width: min(100%, calc(var(--np-stage-height) * 0.46));
     }
     .np-title {
       font-size: 22px;

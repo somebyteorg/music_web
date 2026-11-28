@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { useMediaQuery } from '@vueuse/core'
-import { computed, nextTick, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, computed, useTemplateRef, watch } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import NowPlayingArtwork from './NowPlayingArtwork.vue'
+import NowPlayingBackdrop from './NowPlayingBackdrop.vue'
 import NowPlayingSide from './NowPlayingSide.vue'
 
 /**
- * 全屏「歌词预览页」外壳：只负责开关、焦点、锁滚动、Esc，以及「舞台」的尺寸编排。
- * 舞台（.np-stage）是居中的一块定高区：桌面 min(78vh, 720px) 两栏等高，
- * 移动端 calc(100dvh - 2 * --space-6)，默认只有封面，点开歌词后变成「顶部一行 + 下方歌词」。
- * 左栏在 NowPlayingArtwork，右栏（歌词/队列）在 NowPlayingSide，页面本身不持有歌词状态。
+ * 全屏「沉浸歌词页」外壳：开关、焦点、锁滚动、Esc，以及卡片编排。
+ * 卡片（.np-stage）是居中的一块定高玻璃卡：背景是模糊封面 + 主题遮罩（NowPlayingBackdrop），
+ * 关闭按钮移进卡片右上角。左栏在 NowPlayingArtwork，右栏（歌词/队列）在 NowPlayingSide。
  * z-index 60：压过播放器（45）与队列抽屉（46）。
  */
 const player = usePlayerStore()
@@ -85,22 +85,23 @@ onBeforeUnmount(() => {
         class="now-playing"
         role="dialog"
       >
-        <button
-          ref="closeButton"
-          aria-label="关闭歌词预览"
-          class="icon-button large np-close"
-          title="关闭"
-          type="button"
-          @click="close"
-        >
-          <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-            <path d="m6 6 12 12M6 18 18 6" />
-          </svg>
-        </button>
-        <div :class="['np-stage', { 'is-lyrics': compact && player.nowPlayingLyrics }]">
-          <NowPlayingArtwork />
+        <NowPlayingBackdrop />
+        <div :class="['np-stage', { 'is-lyrics': lyricsOpen }]">
+          <button
+            ref="closeButton"
+            aria-label="关闭歌词预览"
+            class="icon-button large np-close"
+            title="关闭"
+            type="button"
+            @click="close"
+          >
+            <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
+              <path d="m6 6 12 12M6 18 18 6" />
+            </svg>
+          </button>
+          <NowPlayingArtwork class="np-left-slot" />
           <Transition name="np-side">
-            <NowPlayingSide v-if="lyricsOpen" />
+            <NowPlayingSide v-if="lyricsOpen" class="np-side-slot" />
           </Transition>
         </div>
       </div>
@@ -115,28 +116,44 @@ onBeforeUnmount(() => {
     z-index: 60;
     inset: 0;
     display: grid;
-    /* 舞台整体居中；尺寸由 .np-stage 自己定，两栏因此等高 */
-    place-content: center;
-    /* 舞台高度：桌面 min(78vh, 720px)，移动端整屏减去上下 padding（见媒体查询） */
+    /* 单列铺满 + 居中：卡片宽度按可视宽度算 */
+    grid-template-columns: minmax(0, 1fr);
+    place-items: center;
+    /* 卡片高度：桌面 min(78vh, 720px)，移动端整屏减去上下留白（见媒体查询） */
     --np-stage-height: min(78vh, 720px);
-    background: var(--scrim-strong);
-    backdrop-filter: blur(24px);
     overflow: hidden;
   }
+  /* 玻璃卡片：半透明面板 + 大圆角 + 大模糊，背景的模糊封面透上来 */
   .np-stage {
+    position: relative;
+    z-index: 1;
     display: grid;
-    /* 左窄右宽：歌词列 1280×800 下约 660px */
     grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
-    gap: var(--space-8);
+    grid-template-rows: minmax(0, 1fr);
+    gap: var(--space-4) var(--space-8);
     width: min(1180px, calc(100% - 2 * var(--space-8)));
     height: var(--np-stage-height);
     margin: auto;
+    padding: var(--space-6);
+    background: color-mix(in srgb, var(--surface) 58%, transparent);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(40px);
+  }
+  .np-left-slot {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .np-side-slot {
+    grid-column: 2;
+    grid-row: 1;
   }
   .np-close {
     position: absolute;
     top: var(--space-4);
     right: var(--space-4);
-    z-index: 1;
+    z-index: 2;
   }
   /* 热区 44×44（.icon-button.large），图标本体保持 18px */
   .np-close .ui-icon {
@@ -172,25 +189,33 @@ onBeforeUnmount(() => {
       --np-stage-height: calc(100dvh - 2 * var(--space-6));
       padding: var(--space-6) var(--space-4);
     }
-    /* 竖排：封面态整屏一栏；歌词态是「顶部一行信息 + 下方整块歌词」，两态都等高 */
+    /* 竖排：封面态整张卡片只有左栏；歌词态是「小封面信息行 + 歌词」 */
     .np-stage {
       grid-template-columns: minmax(0, 1fr);
       grid-template-rows: minmax(0, 1fr);
       gap: var(--space-3);
       width: 100%;
+      padding: var(--space-4);
+      border-radius: var(--radius-xl);
     }
-    /* 歌词态：header 自适应、歌词栏吃满剩余高度；
-       顶部让出关闭按钮（40px 按钮 + 上下各 8），底部只留 --space-4 */
+    .np-left-slot {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    /* 离开歌词态时右栏还在淡出：它必须落回同一个格子，
+       否则会在单列舞台里生出隐式第二列/第二行，把左栏挤成 0 宽 */
+    .np-side-slot {
+      grid-column: 1;
+      grid-row: 1;
+    }
     .np-stage.is-lyrics {
       grid-template-rows: auto minmax(0, 1fr);
-      align-content: stretch;
-      row-gap: var(--space-3);
-      padding-top: calc(var(--space-2) + 40px + var(--space-2));
-      padding-bottom: var(--space-4);
     }
-    .np-close {
-      top: var(--space-2);
-      right: var(--space-2);
+    .np-stage.is-lyrics .np-left-slot {
+      grid-row: 1;
+    }
+    .np-stage.is-lyrics .np-side-slot {
+      grid-row: 2;
     }
   }
 }
