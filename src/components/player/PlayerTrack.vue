@@ -37,12 +37,16 @@ const subtitle = computed(() => {
 <style scoped>
 @layer components {
   /* EntityCover 的根元素就是 .cover（子组件根节点带本组件的 scope id），宽度由这里决定。
-     收起态不缩封面：拆分前那条 .collapsed .player > .cover 因为 .collapsed 与 .player
-     是同一个元素而从未生效（实测收起时封面一直是 46px），这里保持同样的结果。 */
+     收起态收到 38px：.collapsed 与 .player 是同一个元素，所以选择器必须写成
+     .player.collapsed > .cover —— 拆分前那条 .collapsed .player > .cover 因此从未生效。
+     :global 里要给完整选择器：Vue 的 :global 只保留括号内的部分，括号外会被丢掉。 */
   .cover {
     width: 46px;
     flex-shrink: 0;
     transition: width var(--motion-morph);
+  }
+  :global(.player.collapsed > .cover) {
+    width: 38px;
   }
   .player-title {
     display: flex;
