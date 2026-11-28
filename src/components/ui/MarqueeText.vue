@@ -125,22 +125,11 @@ watch(
     overflow: visible;
     padding-inline-end: var(--marquee-gap);
   }
-  /* 两侧渐隐，与歌词列表同一套 mask 手法 */
+  /* 只在滚动消失的一侧（右侧）渐隐：左侧保持实边，文字从左边开始读，
+     静止时不会被误看成「首字被裁」 */
   .marquee.is-overflowing {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 16px,
-      #000 calc(100% - 16px),
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 16px,
-      #000 calc(100% - 16px),
-      transparent 100%
-    );
+    -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 16px), transparent 100%);
+    mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 16px), transparent 100%);
   }
   .marquee.is-overflowing:hover .marquee-track,
   .marquee.is-overflowing:focus .marquee-track {

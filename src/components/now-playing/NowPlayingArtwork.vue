@@ -227,9 +227,11 @@ function setLyrics(open: boolean) {
   }
   @media (max-width: 899px) {
     /* 封面态：封面 / 信息 / 控制三段铺开；顶部让出关闭按钮那一条，底部留常规内边距 */
+    /* 三段整体居中、统一 --space-6 间距（不再拉到两端，标题/歌手与实际控制行之间不再有大片空白）；
+       顶部让出卡片里的关闭按钮那一条，底部留常规内边距 */
     .np-left:not(.is-header) {
-      justify-content: space-between;
-      gap: var(--space-3);
+      justify-content: center;
+      gap: var(--space-6);
       padding-block-start: calc(44px + var(--space-2));
       padding-block-end: var(--space-6);
     }

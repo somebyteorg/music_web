@@ -128,13 +128,12 @@ onBeforeUnmount(() => {
             </svg>
           </button>
           <NowPlayingHeader v-if="showHeader" v-model:tab="tab" class="np-header-slot" />
-          <NowPlayingEmpty v-if="showEmpty" class="np-empty-slot" />
-          <template v-else>
-            <NowPlayingArtwork class="np-left-slot" />
-            <Transition name="np-side">
-              <NowPlayingSide v-if="lyricsOpen" :tab="tab" class="np-side-slot" />
-            </Transition>
-          </template>
+          <NowPlayingArtwork class="np-left-slot" />
+          <Transition name="np-side">
+            <!-- 空态只接管右侧面板：左栏（封面 / 信息 / 控制 / 进度）必须一直在，沉浸页里照样能控播放 -->
+            <NowPlayingEmpty v-if="showEmpty" class="np-side-slot" />
+            <NowPlayingSide v-else-if="lyricsOpen" :tab="tab" class="np-side-slot" />
+          </Transition>
         </div>
       </div>
     </Transition>
@@ -185,10 +184,6 @@ onBeforeUnmount(() => {
   }
   .np-side-slot {
     grid-column: 2;
-    grid-row: 2;
-  }
-  .np-empty-slot {
-    grid-column: 1 / -1;
     grid-row: 2;
   }
   /* 卡片顶部进度线：2px，前景品牌色、底轨 --line，纯展示 */
@@ -266,9 +261,6 @@ onBeforeUnmount(() => {
     .np-side-slot {
       grid-column: 1;
       grid-row: 1;
-    }
-    .np-empty-slot {
-      grid-row: 1 / -1;
     }
     .np-stage.is-lyrics {
       grid-template-rows: auto auto minmax(0, 1fr);
