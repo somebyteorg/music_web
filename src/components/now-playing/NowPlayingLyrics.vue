@@ -80,7 +80,7 @@ onMounted(() => {
   .np-lyrics {
     display: flex;
     flex-direction: column;
-    /* 父级网格是 justify-items: center，这里必须显式撑满列宽，否则歌词会缩成一条窄柱 */
+    /* 父级是网格列：显式撑满列宽/列高，否则歌词会缩成一条窄柱 */
     width: 100%;
     min-width: 0;
     min-height: 0;
@@ -91,17 +91,33 @@ onMounted(() => {
     flex: 1;
     min-height: 0;
     margin: 0;
+    /* 上下留白给渐隐遮罩让位，滚到顶/底时不至于把第一行截掉 */
     padding: var(--space-7) var(--space-4);
     overflow-y: auto;
     overscroll-behavior: contain;
     list-style: none;
     scrollbar-gutter: stable;
+    /* 上下渐隐：滚出可视区的歌词淡出，桌面与移动端同一份 */
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 32px,
+      #000 calc(100% - 32px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 32px,
+      #000 calc(100% - 32px),
+      transparent 100%
+    );
   }
   .np-line {
-    padding: var(--space-2) var(--space-3);
+    padding: 10px var(--space-3);
     color: var(--text-muted);
-    font-size: 15px;
-    line-height: 1.7;
+    font-size: 17.5px;
+    line-height: 1.85;
     text-align: center;
     border-radius: var(--radius-md);
     transition:
@@ -111,7 +127,7 @@ onMounted(() => {
   .np-line.is-active {
     color: var(--brand);
     font-weight: 600;
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
   .np-note {
     margin: auto;
