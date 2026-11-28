@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, useTemplateRef, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useNowPlayingLyrics } from '@/composables/useNowPlayingLyrics'
 import { useScrollFade } from '@/composables/useScrollFade'
 
@@ -21,6 +21,26 @@ const { status, lines, activeIndex, message, retry } = useNowPlayingLyrics()
 const list = useTemplateRef<HTMLOListElement>('list')
 /** 滚动渐隐：贴顶/贴底/不可滚三态由共享 composable 维护（样式在 styles/components.css） */
 const { refresh: refreshFade } = useScrollFade(list)
+
+/** 折成多行的歌词行：当前行的 scale(1.04) 在换行时会压到相邻行，这类行打 is-wrapped 取消缩放 */
+const wrapped = ref<boolean[]>([])
+let wrapObserver: ResizeObserver | null = null
+
+/** 行高按内容高度判断（clientHeight 含上下 padding，先减掉再和 lineHeight 比） */
+async function measureWrapped() {
+  await nextTick()
+  const el = list.value
+  if (!el) return
+  wrapped.value = Array.from(el.children).map((child) => {
+    if (!(child instanceof HTMLElement)) return false
+    const style = getComputedStyle(child)
+    const text =
+      child.clientHeight -
+      Number.parseFloat(style.paddingTop) -
+      Number.parseFloat(style.paddingBottom)
+    return text > Number.parseFloat(style.lineHeight) * 1.5
+  })
+}
 let pausedUntil = 0
 let autoScrolling = false
 let idleTimer = 0
@@ -51,6 +71,7 @@ function onScroll() {
 }
 
 watch(activeIndex, (index) => {
+  void measureWrapped()
   if (index < 0 || Date.now() < pausedUntil) return
   scrollToActive(index)
 })
@@ -59,7 +80,27 @@ watch(activeIndex, (index) => {
 watch(lines, async () => {
   await nextTick()
   refreshFade()
+  await measureWrapped()
   if (activeIndex.value >= 0) scrollToActive(activeIndex.value)
+})
+
+// 歌词列表挂载后开始跟随容器宽度重算换行（字号变化、窗口缩放、tab 切换都会走这里）
+watch(
+  list,
+  (el) => {
+    wrapObserver?.disconnect()
+    wrapObserver = null
+    if (!el) return
+    wrapObserver = new ResizeObserver(() => void measureWrapped())
+    wrapObserver.observe(el)
+    void measureWrapped()
+  },
+  { flush: 'post' },
+)
+
+onBeforeUnmount(() => {
+  wrapObserver?.disconnect()
+  wrapObserver = null
 })
 
 onMounted(() => {
@@ -75,13 +116,16 @@ onMounted(() => {
       <p>歌词加载失败，<button class="np-retry" type="button" @click="retry()">点此重试</button></p>
       <p v-if="message" class="np-detail">{{ message }}</p>
     </div>
-    <p v-else-if="status === 'empty'" class="np-note">暂无歌词</p>
+    <div v-else-if="status === 'empty'" class="np-note">
+      <p>这首歌还没有歌词</p>
+      <p class="np-detail">可以在歌曲详情页的「歌词」里添加</p>
+    </div>
     <ol v-else ref="list" class="np-lines scroll-fade" @scroll.passive="onScroll">
       <li
         v-for="(line, index) in lines"
         :key="index"
         :aria-current="index === activeIndex ? 'true' : undefined"
-        :class="['np-line', { 'is-active': index === activeIndex }]"
+        :class="['np-line', { 'is-active': index === activeIndex, 'is-wrapped': wrapped[index] }]"
         :style="{ '--d': depth(index) }"
       >
         {{ line.text }}
@@ -122,6 +166,9 @@ onMounted(() => {
     scrollbar-gutter: stable;
   }
   .np-line {
+    /* 一行最多 24em（桌面 22px → 528px），661px 的列里长句自然折成两行 */
+    max-width: 24em;
+    margin-inline: auto;
     padding: 12px var(--space-3);
     color: var(--text-muted);
     font-size: var(--np-line-size);
@@ -145,6 +192,10 @@ onMounted(() => {
     opacity: 1;
     filter: none;
     transform: scale(1.04);
+  }
+  /* 折行的当前行不再放大，否则会压到上下两行 */
+  .np-line.is-active.is-wrapped {
+    transform: none;
   }
   .np-note {
     margin: auto;
