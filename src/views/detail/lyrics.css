@@ -16,12 +16,14 @@
     margin-top: 20px;
   }
 
-  .lyrics-panel {
+  /* 卡片根类由 .lyrics-panel 改名为 .lyrics-card（Card 组件）后，这两条一直没跟上，
+     导致标题与「添加版本」按钮贴着卡片边框。padding 现在回到卡片自身。 */
+  .lyrics-card {
     margin-top: 16px;
-    padding: 20px;
+    padding: var(--space-5);
   }
 
-  .lyrics-panel pre {
+  .lyrics-card pre {
     font-family: inherit;
     font-size: 13px;
     line-height: 2;
