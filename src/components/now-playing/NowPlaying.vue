@@ -1,23 +1,38 @@
 <script lang="ts" setup>
 import { useMediaQuery } from '@vueuse/core'
-import { nextTick, onBeforeUnmount, onMounted, computed, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { useNowPlayingLyrics } from '@/composables/useNowPlayingLyrics'
 import { usePlayerStore } from '@/stores/player'
 import NowPlayingArtwork from './NowPlayingArtwork.vue'
 import NowPlayingBackdrop from './NowPlayingBackdrop.vue'
+import NowPlayingEmpty from './NowPlayingEmpty.vue'
+import NowPlayingHeader from './NowPlayingHeader.vue'
 import NowPlayingSide from './NowPlayingSide.vue'
+import { provideNowPlayingLyrics } from './lyricsContext'
 
 /**
- * 全屏「沉浸歌词页」外壳：开关、焦点、锁滚动、Esc，以及卡片编排。
+ * 全屏「沉浸歌词页」外壳：开关、焦点、锁滚动、Esc、卡片编排，以及歌词状态的所有者。
  * 卡片（.np-stage）是居中的一块定高玻璃卡：背景是模糊封面 + 主题遮罩（NowPlayingBackdrop），
- * 关闭按钮移进卡片右上角。左栏在 NowPlayingArtwork，右栏（歌词/队列）在 NowPlayingSide。
+ * 卡内第一行是头部（专辑·歌手 + 歌词/队列 tab），下面是左栏（封面/信息/控制）与右栏（歌词/队列）。
+ * 歌词状态在这里取一次，通过 provide 给右栏与卡片级空态共用，避免重复取词。
  * z-index 60：压过播放器（45）与队列抽屉（46）。
  */
 const player = usePlayerStore()
+const lyrics = useNowPlayingLyrics()
+provideNowPlayingLyrics(lyrics)
+
 const closeButton = useTemplateRef<HTMLButtonElement>('closeButton')
 const compact = useMediaQuery('(max-width: 899px)')
+const tab = ref<'lyrics' | 'queue'>('lyrics')
 
 /** 移动端歌词态；桌面永远算"已展开" */
 const lyricsOpen = computed(() => !compact.value || player.nowPlayingLyrics)
+/** 头部行（专辑·歌手 + tab）：桌面恒有，移动端只在歌词态出现 */
+const showHeader = computed(() => !compact.value || player.nowPlayingLyrics)
+/** 空态顶掉整张卡片的内容：只在看着歌词、且确实没有歌词时 */
+const showEmpty = computed(
+  () => lyricsOpen.value && tab.value === 'lyrics' && lyrics.status.value === 'empty',
+)
 
 let origin: HTMLElement | null = null
 let savedOverflow = ''
@@ -86,7 +101,7 @@ onBeforeUnmount(() => {
         role="dialog"
       >
         <NowPlayingBackdrop />
-        <div :class="['np-stage', { 'is-lyrics': lyricsOpen }]">
+        <div :class="['np-stage', { 'is-lyrics': lyricsOpen, 'is-empty': showEmpty }]">
           <button
             ref="closeButton"
             aria-label="关闭歌词预览"
@@ -99,10 +114,14 @@ onBeforeUnmount(() => {
               <path d="m6 6 12 12M6 18 18 6" />
             </svg>
           </button>
-          <NowPlayingArtwork class="np-left-slot" />
-          <Transition name="np-side">
-            <NowPlayingSide v-if="lyricsOpen" class="np-side-slot" />
-          </Transition>
+          <NowPlayingHeader v-if="showHeader" v-model:tab="tab" class="np-header-slot" />
+          <NowPlayingEmpty v-if="showEmpty" class="np-empty-slot" />
+          <template v-else>
+            <NowPlayingArtwork class="np-left-slot" />
+            <Transition name="np-side">
+              <NowPlayingSide v-if="lyricsOpen" :tab="tab" class="np-side-slot" />
+            </Transition>
+          </template>
         </div>
       </div>
     </Transition>
@@ -116,7 +135,8 @@ onBeforeUnmount(() => {
     z-index: 60;
     inset: 0;
     display: grid;
-    /* 单列铺满 + 居中：卡片宽度按可视宽度算 */
+    /* 单列铺满 + 居中：卡片宽度按可视宽度算（place-content: center 会让轨道缩成内容宽度，
+       空态时卡片会突然变窄） */
     grid-template-columns: minmax(0, 1fr);
     place-items: center;
     /* 卡片高度：桌面 min(78vh, 720px)，移动端整屏减去上下留白（见媒体查询） */
@@ -128,8 +148,9 @@ onBeforeUnmount(() => {
     position: relative;
     z-index: 1;
     display: grid;
+    /* 左窄右宽：歌词列 1280×800 下约 630px */
     grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
-    grid-template-rows: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
     gap: var(--space-4) var(--space-8);
     width: min(1180px, calc(100% - 2 * var(--space-8)));
     height: var(--np-stage-height);
@@ -141,13 +162,21 @@ onBeforeUnmount(() => {
     box-shadow: var(--shadow-lg);
     backdrop-filter: blur(40px);
   }
+  .np-header-slot {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
   .np-left-slot {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
   }
   .np-side-slot {
     grid-column: 2;
-    grid-row: 1;
+    grid-row: 2;
+  }
+  .np-empty-slot {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
   .np-close {
     position: absolute;
@@ -189,7 +218,7 @@ onBeforeUnmount(() => {
       --np-stage-height: calc(100dvh - 2 * var(--space-6));
       padding: var(--space-6) var(--space-4);
     }
-    /* 竖排：封面态整张卡片只有左栏；歌词态是「小封面信息行 + 歌词」 */
+    /* 竖排：封面态整张卡片只有左栏；歌词态是「头部行 + 小封面信息行 + 歌词」 */
     .np-stage {
       grid-template-columns: minmax(0, 1fr);
       grid-template-rows: minmax(0, 1fr);
@@ -208,14 +237,22 @@ onBeforeUnmount(() => {
       grid-column: 1;
       grid-row: 1;
     }
-    .np-stage.is-lyrics {
-      grid-template-rows: auto minmax(0, 1fr);
+    .np-empty-slot {
+      grid-row: 1 / -1;
     }
-    .np-stage.is-lyrics .np-left-slot {
+    .np-stage.is-lyrics {
+      grid-template-rows: auto auto minmax(0, 1fr);
+    }
+    .np-stage.is-lyrics .np-header-slot {
+      grid-column: 1;
       grid-row: 1;
     }
-    .np-stage.is-lyrics .np-side-slot {
+    .np-stage.is-lyrics .np-left-slot {
       grid-row: 2;
+    }
+    .np-stage.is-lyrics .np-side-slot {
+      grid-column: 1;
+      grid-row: 3;
     }
   }
 }

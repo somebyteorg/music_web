@@ -55,7 +55,9 @@ function setLyrics(open: boolean) {
       <EntityCover v-else :item="displayItem" />
     </div>
     <div class="np-meta">
-      <h2 class="np-title"><MarqueeText :text="displayItem?.name" /></h2>
+      <!-- 桌面：两行截断（不再滚）；移动端：跑马灯，先静置 1.2s -->
+      <h2 v-if="!compact" class="np-title np-title--clamp">{{ displayItem?.name }}</h2>
+      <h2 v-else class="np-title"><MarqueeText :delay="1.2" :text="displayItem?.name" /></h2>
       <p v-if="artist" class="np-artist">{{ artist }}</p>
     </div>
     <div class="np-bottom">
@@ -131,6 +133,15 @@ function setLyrics(open: boolean) {
     font-size: 22px;
     font-weight: 600;
     line-height: 1.35;
+  }
+  /* 桌面标题：两行截断，静态看不再像被裁断 */
+  .np-title--clamp {
+    display: -webkit-box;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
   .np-artist {
     margin: var(--space-1) 0 0;
