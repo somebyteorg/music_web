@@ -5,17 +5,31 @@ import { useQueueStore } from '@/stores/queue'
 
 /**
  * 上一首 / 播放暂停 / 下一首：播放器外框与全屏歌词页共用，尺寸差异走 variant。
- * variant="stage" 是全屏页那套（52px 播放键、窄屏也保留前后切歌），不复制模板。
+ * - bar：播放器外框
+ * - stage：全屏舞台（52px 播放键、窄屏也保留前后切歌）
+ * - header：移动端歌词态的信息行，只留播放/暂停 + 下一首（40px，塞在书名号那一行里）
+ * 三档都不复制模板，只在样式与「显示哪几个键」上分支。
  */
-withDefaults(defineProps<{ variant?: 'bar' | 'stage' }>(), { variant: 'bar' })
+withDefaults(defineProps<{ variant?: 'bar' | 'stage' | 'header' }>(), { variant: 'bar' })
 
 const player = usePlayerStore()
 const queue = useQueueStore()
 </script>
 
 <template>
-  <div :class="['player-controls', { 'is-stage': variant === 'stage' }]">
-    <IconButton label="上一首" :disabled="!queue.length" title="上一首" @click="player.previous()">
+  <div
+    :class="[
+      'player-controls',
+      { 'is-stage': variant === 'stage', 'is-header': variant === 'header' },
+    ]"
+  >
+    <IconButton
+      v-if="variant !== 'header'"
+      label="上一首"
+      :disabled="!queue.length"
+      title="上一首"
+      @click="player.previous()"
+    >
       <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
         <path d="M7 5v14M19 5l-9 7 9 7Z" /></svg></IconButton
     ><button
@@ -72,6 +86,19 @@ const queue = useQueueStore()
     width: 22px;
     height: 22px;
   }
+  /* 移动端歌词态信息行：40px，间距 --space-2 */
+  .player-controls.is-header {
+    gap: var(--space-2);
+  }
+  .player-controls.is-header .play-button {
+    width: 40px;
+    height: 40px;
+  }
+  .player-controls.is-header .icon-button {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+  }
   /* 移动端全屏舞台：播放键 56px、前后切歌 40px（尺寸只在这里定义，页面里不复制） */
   @media (max-width: 899px) {
     .player-controls.is-stage {
@@ -88,7 +115,8 @@ const queue = useQueueStore()
     }
   }
   @media (max-width: 540px) {
-    .player-controls:not(.is-stage) .icon-button {
+    /* 只收播放器外框的前后切歌；全屏舞台与歌词态信息行都要保留 */
+    .player-controls:not(.is-stage):not(.is-header) .icon-button {
       display: none;
     }
   }

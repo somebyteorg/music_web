@@ -15,7 +15,8 @@ import { computed } from 'vue'
  * 控制行与进度条直接复用播放器的 PlayerTransport / PlayerSeek / PlayerModeButton（variant="stage"），
  * 不在这里再写一份「上一首/播放/下一首」。曲名用共享的 MarqueeText。
  * 尺寸跟着舞台高度走（--np-stage-height），左栏内容不会把舞台撑高。
- * 移动端（≤899px）封面态是竖排三段、按可用高度分开；歌词态整栏收成顶部一行。
+ * 移动端（≤899px）封面态是竖排三段、按可用高度分开；歌词态整栏收成一行：
+ * 44px 小封面 + 歌名/歌手两行 + 右侧播放控件（PlayerTransport variant="header"）。
  */
 const player = usePlayerStore()
 const { displayItem, artist } = usePlayerMeta()
@@ -46,10 +47,10 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     </div>
     <div class="np-bottom">
       <div class="np-controls">
-        <PlayerTransport variant="stage" />
-        <PlayerModeButton :in-player="false" />
+        <PlayerTransport :variant="header ? 'header' : 'stage'" />
+        <PlayerModeButton v-if="!header" :in-player="false" />
       </div>
-      <PlayerSeek class="np-progress" variant="stage" />
+      <PlayerSeek v-if="!header" class="np-progress" variant="stage" />
       <Button
         v-if="showLyricsEntry"
         aria-label="显示歌词"
@@ -137,14 +138,13 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     width: 100%;
     min-height: 44px;
   }
-  /* 移动端歌词态：整栏退化成一行（44px 小封面 + 歌名/歌手两行），底部一组让位给歌词 */
+  /* 移动端歌词态：整栏退化成一行（44px 小封面 + 歌名/歌手两行 + 右侧播放控件）。
+     这一行在舞台里垂直居中，离顶部的 × 很远，不用再给它让位。 */
   .np-artwork.is-header {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
     gap: var(--space-3);
-    /* 右上角的关闭按钮浮在页面上，这一行要给它让出位置，别让歌名压到 × 下面 */
-    padding-inline-end: var(--space-8);
   }
   .np-artwork.is-header .np-cover,
   .np-artwork.is-header .np-cover-button {
@@ -159,7 +159,7 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     text-align: left;
   }
   .np-artwork.is-header .np-title {
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.4;
   }
   .np-artwork.is-header .np-artist {
@@ -169,8 +169,14 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     white-space: nowrap;
     text-overflow: ellipsis;
   }
+  /* 歌词态底部一组只剩右侧播放控件（进度条与「显示歌词」都不渲染） */
   .np-artwork.is-header .np-bottom {
-    display: none;
+    flex: none;
+    width: auto;
+    gap: 0;
+  }
+  .np-artwork.is-header .np-controls {
+    gap: var(--space-2);
   }
   @media (max-width: 899px) {
     /* 封面态：三段（封面 / 信息 / 底部一组）按可用高度铺开，吃满舞台而不是挤在中间 */

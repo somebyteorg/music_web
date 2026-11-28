@@ -51,5 +51,12 @@ const tab = ref<'lyrics' | 'queue'>('lyrics')
     flex: 1;
     min-height: 0;
   }
+  @media (max-width: 899px) {
+    /* 移动端歌词态：歌词栏限高（844 下≈490、667 下≈387），内部自己滚，不再顶天立地 */
+    .np-side {
+      height: auto;
+      max-height: min(58vh, 520px);
+    }
+  }
 }
 </style>

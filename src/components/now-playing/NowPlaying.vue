@@ -21,6 +21,8 @@ const lyricsOpen = computed(() => !compact.value || player.nowPlayingLyrics)
 
 let origin: HTMLElement | null = null
 let savedOverflow = ''
+// html 也要锁：只锁 body 时根元素仍可滚动（滚动条会把浮层宽度挤窄 15~20px，背景也会跟着滚）
+let savedRootOverflow = ''
 let locked = false
 
 function close() {
@@ -45,7 +47,9 @@ watch(
       const active = document.activeElement
       origin = active instanceof HTMLElement ? active : null
       savedOverflow = document.body.style.overflow
+      savedRootOverflow = document.documentElement.style.overflow
       document.body.style.overflow = 'hidden'
+      document.documentElement.style.overflow = 'hidden'
       locked = true
       await nextTick()
       closeButton.value?.focus()
@@ -53,6 +57,7 @@ watch(
     }
     if (locked) {
       document.body.style.overflow = savedOverflow
+      document.documentElement.style.overflow = savedRootOverflow
       locked = false
     }
     if (origin && origin.isConnected) origin.focus()
@@ -63,7 +68,10 @@ watch(
 onMounted(() => window.addEventListener('keydown', onKeydown))
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
-  if (locked) document.body.style.overflow = savedOverflow
+  if (locked) {
+    document.body.style.overflow = savedOverflow
+    document.documentElement.style.overflow = savedRootOverflow
+  }
 })
 </script>
 
@@ -152,8 +160,12 @@ onBeforeUnmount(() => {
       gap: var(--space-3);
       width: 100%;
     }
+    /* 歌词态：头部与歌词栏都是内容高度，整块在舞台里垂直居中，
+       不再从顶部一路铺到底（歌词栏自己的 max-height 见 NowPlayingSide） */
     .np-stage.is-lyrics {
-      grid-template-rows: auto minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      align-content: center;
+      row-gap: var(--space-4);
     }
     .np-close {
       top: var(--space-2);
