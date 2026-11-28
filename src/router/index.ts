@@ -18,7 +18,12 @@ const router = createRouter({
     return { top: 0 }
   },
   routes: [
-    { path: '/', redirect: '/albums' },
+    {
+      path: '/',
+      alias: '/home',
+      component: () => import('@/views/HomeView.vue'),
+      meta: { title: '首页' },
+    },
     ...catalogTypes.flatMap((type) => [
       { path: `/${type}`, component: () => import('@/views/CatalogView.vue'), meta: { type } },
       { path: `/${type}/:id`, component: () => import('@/views/DetailView.vue'), meta: { type } },

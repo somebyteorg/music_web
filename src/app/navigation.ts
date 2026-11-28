@@ -2,6 +2,7 @@ export const navigation = [
   {
     label: '曲库',
     items: [
+      { to: '/', label: '首页', icon: 'M4 11 12 3l8 8M6 9.5V21h12V9.5M10 21v-6h4v6' },
       { to: '/libraries', label: '媒体库', icon: 'M3 6h18v14H3V6Zm3-3h12M7 10h10M7 14h7' },
       {
         to: '/albums',
