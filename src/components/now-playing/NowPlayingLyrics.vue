@@ -6,10 +6,14 @@ import { useNowPlayingLyrics } from '@/composables/useNowPlayingLyrics'
  * 预览页右栏：歌词列表。
  * 当前行高亮并滚到可视区中间；用户自己滚过之后 4 秒内不再自动拽回，
  * 否则一边读一边被拉走（体验关键）。
+ * 每行带一个 --d（离当前行的距离 0..5），越远越淡、越虚、越小，形成距离层次；
+ * 没有时间轴的纯文本歌词 --d 恒为 0，整篇同亮度。
  */
 const PAUSE_AFTER_SCROLL = 4000
 /** 平滑滚动自己也会持续触发 scroll 事件，这段时间内的事件不算"用户滚动" */
 const AUTO_SCROLL_WINDOW = 900
+/** 层次最远到第 5 行，再远都按同一档 */
+const MAX_DEPTH = 5
 
 const { status, lines, activeIndex, message, retry } = useNowPlayingLyrics()
 
@@ -17,6 +21,11 @@ const list = useTemplateRef<HTMLOListElement>('list')
 let pausedUntil = 0
 let autoScrolling = false
 let idleTimer = 0
+
+function depth(index: number) {
+  if (activeIndex.value < 0) return 0
+  return Math.min(Math.abs(index - activeIndex.value), MAX_DEPTH)
+}
 
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -68,6 +77,7 @@ onMounted(() => {
         :key="index"
         :aria-current="index === activeIndex ? 'true' : undefined"
         :class="['np-line', { 'is-active': index === activeIndex }]"
+        :style="{ '--d': depth(index) }"
       >
         {{ line.text }}
       </li>
@@ -86,6 +96,9 @@ onMounted(() => {
     min-height: 0;
     height: 100%;
     justify-self: stretch;
+    /* 字号桌面 22 / 当前行 24，移动端 18 / 20 */
+    --np-line-size: 22px;
+    --np-line-active-size: 24px;
   }
   .np-lines {
     flex: 1;
@@ -114,19 +127,28 @@ onMounted(() => {
     );
   }
   .np-line {
-    padding: 10px var(--space-3);
+    padding: 12px var(--space-3);
     color: var(--text-muted);
-    font-size: 17.5px;
-    line-height: 1.85;
+    font-size: var(--np-line-size);
+    line-height: 1.55;
     text-align: center;
     border-radius: var(--radius-md);
+    /* 距离层次：越远越淡 / 越虚 / 越小；--d 由模板按 |i - activeIndex| 给（0..5） */
+    opacity: calc(1 - var(--d, 0) * 0.16);
+    filter: blur(calc(var(--d, 0) * 0.3px));
+    transform: scale(calc(1 - var(--d, 0) * 0.015));
     transition:
       color var(--motion-morph),
+      opacity var(--motion-morph),
+      filter var(--motion-morph),
       transform var(--motion-morph);
   }
   .np-line.is-active {
     color: var(--brand);
+    font-size: var(--np-line-active-size);
     font-weight: 600;
+    opacity: 1;
+    filter: none;
     transform: scale(1.04);
   }
   .np-note {
@@ -149,6 +171,15 @@ onMounted(() => {
     margin-top: var(--space-2);
     font-size: 11px;
     opacity: 0.7;
+  }
+  @media (max-width: 899px) {
+    .np-lyrics {
+      --np-line-size: 18px;
+      --np-line-active-size: 20px;
+    }
+    .np-line {
+      padding: 10px var(--space-2);
+    }
   }
 }
 </style>

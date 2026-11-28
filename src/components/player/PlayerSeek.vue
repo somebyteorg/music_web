@@ -113,16 +113,16 @@ const hidden = computed(() => props.variant === 'bar' && player.collapsed)
     }
   }
   @media (max-width: 540px) {
-    /* 窄屏把「时间 / 进度 / 音量」整段放到第二行（只对外框生效，全屏页是纵向排布） */
+    /* 窄屏把「时间 / 进度 / 音量」整段放到第二行（只对外框生效，全屏页是纵向排布且要保留时间） */
     .player-mid:not(.is-stage) {
       order: 5;
       flex-basis: 100%;
       gap: 7px;
     }
-    .seek {
+    .player-mid:not(.is-stage) .seek {
       margin: 0;
     }
-    .time {
+    .player-mid:not(.is-stage) .time {
       display: none;
     }
   }

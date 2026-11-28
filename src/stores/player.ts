@@ -25,6 +25,8 @@ export const usePlayerStore = defineStore('player', () => {
   const collapsed = ref(false)
   /** 全屏「歌词预览页」是否打开（由播放器封面按钮打开，Esc/×/关闭播放器都会关掉） */
   const nowPlaying = ref(false)
+  /** 全屏页在移动端是否展开歌词（≤899px 才生效；桌面恒为两栏，忽略这个态） */
+  const nowPlayingLyrics = ref(false)
   const available = computed(() => !!file.value)
   let failures = 0
 
@@ -214,7 +216,17 @@ export const usePlayerStore = defineStore('player', () => {
   }
 
   function openNowPlaying() {
+    // 每次打开都回到封面态：桌面看不出差别，移动端默认不显示歌词
+    nowPlayingLyrics.value = false
     nowPlaying.value = true
+  }
+
+  function setNowPlayingLyrics(value: boolean) {
+    nowPlayingLyrics.value = value
+  }
+
+  function toggleNowPlayingLyrics() {
+    nowPlayingLyrics.value = !nowPlayingLyrics.value
   }
 
   function closeNowPlaying() {
@@ -254,6 +266,7 @@ export const usePlayerStore = defineStore('player', () => {
     volume,
     collapsed,
     nowPlaying,
+    nowPlayingLyrics,
     available,
     play,
     playList,
@@ -266,6 +279,8 @@ export const usePlayerStore = defineStore('player', () => {
     setVolume,
     openNowPlaying,
     closeNowPlaying,
+    setNowPlayingLyrics,
+    toggleNowPlayingLyrics,
     close,
     supported,
   }
