@@ -1,30 +1,17 @@
 <script lang="ts" setup>
 import EntityCover from '@/components/EntityCover.vue'
-import { computed } from 'vue'
+import MarqueeText from '@/components/ui/MarqueeText.vue'
+import { usePlayerMeta } from '@/composables/usePlayerMeta'
 import { usePlayerStore } from '@/stores/player'
-import { useQueueStore } from '@/stores/queue'
-import { qualities } from '@/utils/format'
 
 /**
  * 播放器左端：封面 + 曲名/副标题（音质·编码，或"已暂停"）。
+ * 曲名用共享的 MarqueeText（旧站行为：溢出才滚、首尾 28px、悬停暂停）。
  * 收起态的尺寸差异也写在本组件里，用 :global 命中外壳的 .player.collapsed：
  * 收起状态在 store 上，子组件自己读，不在父子之间传 props。
  */
 const player = usePlayerStore()
-const queue = useQueueStore()
-
-const displayItem = computed(() => {
-  if (player.song) return player.song
-  const entry = queue.current
-  return entry
-    ? { id: entry.songId, name: entry.name, cover_id: entry.coverId, image_url: entry.imageUrl }
-    : undefined
-})
-
-const subtitle = computed(() => {
-  if (player.file) return `${qualities[player.file.quality]} · ${player.file.codec.toUpperCase()}`
-  return queue.current ? '已暂停' : ''
-})
+const { displayItem, subtitle } = usePlayerMeta()
 </script>
 
 <template>
@@ -38,7 +25,8 @@ const subtitle = computed(() => {
     <EntityCover :item="displayItem" />
   </button>
   <div class="player-title">
-    <strong>{{ displayItem?.name }}</strong><span>{{ subtitle }}</span>
+    <strong class="player-title-name"><MarqueeText :text="displayItem?.name" /></strong>
+    <span>{{ subtitle }}</span>
   </div>
 </template>
 
@@ -69,11 +57,13 @@ const subtitle = computed(() => {
     width: 168px;
     min-width: 0;
   }
-  .player-title strong {
+  /* 曲名容器交给 MarqueeText 量宽（旧站同样只在这 168px 里滚） */
+  .player-title-name {
+    display: block;
+    width: 100%;
+    min-width: 0;
     font-size: 14px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    font-weight: 600;
   }
   .player-title span {
     font-size: 11px;
