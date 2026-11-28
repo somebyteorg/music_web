@@ -99,7 +99,9 @@ onBeforeUnmount(() => {
         </button>
         <div :class="['np-stage', { 'is-lyrics': compact && player.nowPlayingLyrics }]">
           <NowPlayingArtwork />
-          <NowPlayingSide v-if="lyricsOpen" />
+          <Transition name="np-side">
+            <NowPlayingSide v-if="lyricsOpen" />
+          </Transition>
         </div>
       </div>
     </Transition>
@@ -135,6 +137,18 @@ onBeforeUnmount(() => {
     top: var(--space-4);
     right: var(--space-4);
     z-index: 1;
+  }
+  /* 歌词区进出：淡入 + 轻微上浮缩放（transform 不参与布局，不会挤动头部） */
+  .np-side-enter-active,
+  .np-side-leave-active {
+    transition:
+      opacity var(--motion-morph),
+      transform var(--motion-morph);
+  }
+  .np-side-enter-from,
+  .np-side-leave-to {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
   }
   /* 进出：淡入 + 轻微缩放；prefers-reduced-motion 由 @layer a11y 统一关掉 */
   .np-enter-active,

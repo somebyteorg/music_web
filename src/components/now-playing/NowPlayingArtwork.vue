@@ -5,42 +5,55 @@ import MarqueeText from '@/components/ui/MarqueeText.vue'
 import PlayerModeButton from '@/components/player/PlayerModeButton.vue'
 import PlayerSeek from '@/components/player/PlayerSeek.vue'
 import PlayerTransport from '@/components/player/PlayerTransport.vue'
+import { useFlipMorph } from '@/composables/useFlipMorph'
 import { usePlayerMeta } from '@/composables/usePlayerMeta'
 import { usePlayerStore } from '@/stores/player'
 import { useMediaQuery } from '@vueuse/core'
-import { computed } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 /**
  * 预览页左栏：大封面 + 曲名/歌手 + 底部一组（控制行 / 进度 / 移动端「显示歌词」）。
  * 控制行与进度条直接复用播放器的 PlayerTransport / PlayerSeek / PlayerModeButton（variant="stage"），
  * 不在这里再写一份「上一首/播放/下一首」。曲名用共享的 MarqueeText。
- * 尺寸跟着舞台高度走（--np-stage-height），左栏内容不会把舞台撑高。
- * 移动端（≤899px）封面态是竖排三段、按可用高度分开；歌词态整栏收成一行：
- * 44px 小封面 + 歌名/歌手两行 + 右侧播放控件（PlayerTransport variant="header"）。
+ *
+ * 结构：.np-left（整栏，负责排版）→ .np-artwork（只包封面，两态切换的 FLIP 目标）+ .np-meta + .np-bottom。
+ * 封面单独一层是刻意的：.np-left 的盒子在两种态里是 358×796 → 358×44，非等比缩放会把内容拉成竖条，
+ * 只有「只包封面」的 .np-artwork 才能做等比 FLIP（大图 → 头部 44px 小图，仍是同一个 DOM 元素）。
  */
 const player = usePlayerStore()
 const { displayItem, artist } = usePlayerMeta()
 
 const compact = useMediaQuery('(max-width: 899px)')
-/** 移动端的歌词态：本栏从整块封面收成顶部一行 */
+/** 移动端的歌词态：本栏从整块封面收成一行 */
 const header = computed(() => compact.value && player.nowPlayingLyrics)
 /** 移动端封面态的「显示歌词」入口：参加布局，不再浮在进度条右下 */
 const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics)
+
+/** 两态切换用 FLIP：reduce 下 composable 内部直接切；桌面端这两个入口不存在，不会触发 */
+const artworkEl = useTemplateRef<HTMLDivElement>('artworkEl')
+const flip = useFlipMorph(artworkEl)
+
+function setLyrics(open: boolean) {
+  if (!compact.value) return
+  void flip.run(() => player.setNowPlayingLyrics(open))
+}
 </script>
 
 <template>
-  <div :class="['np-artwork', { 'is-header': header }]">
-    <button
-      v-if="compact"
-      :aria-label="header ? '收起歌词' : '显示歌词'"
-      :title="header ? '收起歌词' : '显示歌词'"
-      class="np-cover-button"
-      type="button"
-      @click="player.toggleNowPlayingLyrics()"
-    >
-      <EntityCover :item="displayItem" />
-    </button>
-    <EntityCover v-else class="np-cover" :item="displayItem" />
+  <div :class="['np-left', { 'is-header': header }]">
+    <div ref="artworkEl" class="np-artwork">
+      <button
+        v-if="compact"
+        :aria-label="header ? '收起歌词' : '显示歌词'"
+        :title="header ? '收起歌词' : '显示歌词'"
+        class="np-cover-button"
+        type="button"
+        @click="setLyrics(!header)"
+      >
+        <EntityCover :item="displayItem" />
+      </button>
+      <EntityCover v-else :item="displayItem" />
+    </div>
     <div class="np-meta">
       <h2 class="np-title"><MarqueeText :text="displayItem?.name" /></h2>
       <p v-if="artist" class="np-artist">{{ artist }}</p>
@@ -57,7 +70,7 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
         class="np-show-lyrics"
         type="button"
         variant="secondary"
-        @click="player.setNowPlayingLyrics(true)"
+        @click="setLyrics(true)"
       >
         <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
           <path d="M4 6h11M4 11h11M4 16h7" />
@@ -70,7 +83,7 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
 
 <style scoped>
 @layer components {
-  .np-artwork {
+  .np-left {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -80,27 +93,30 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     min-width: 0;
     min-height: 0;
   }
-  /* 封面（裸 EntityCover 与移动端按钮两种外壳共用一套尺寸）：
-     宽度上限取舞台高度的 60%，保证「封面 + 信息 + 控制 + 进度」整套塞得进等高舞台；
-     宽度/圆角/阴影都带过渡，移动端切歌词态时封面是"缩"过去而不是跳过去 */
-  .np-artwork .np-cover,
-  .np-artwork .np-cover-button {
+  /* 封面框：尺寸跟着舞台高度走（--np-stage-height），保证「封面 + 信息 + 控制 + 进度」塞得进等高舞台。
+     圆角/阴影带过渡跟着 FLIP 一起变；尺寸交给 FLIP 的 transform，width 不再过渡，
+     否则 FLIP 量到的 last 矩形会停在旧宽度上。 */
+  .np-artwork {
+    position: relative;
+    /* FLIP 期间封面会临时盖住信息行与歌词区，抬到最上面才不会被文字穿透 */
+    z-index: 1;
+    flex-shrink: 0;
     width: min(100%, calc(var(--np-stage-height) * 0.6));
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-lg);
     transition:
-      width var(--motion-morph),
       border-radius var(--motion-morph),
       box-shadow var(--motion-morph);
   }
   .np-cover-button {
     display: block;
-    flex-shrink: 0;
+    width: 100%;
     padding: 0;
     background: none;
+    border-radius: inherit;
   }
-  /* EntityCover 的根元素，圆角跟着上面的外壳走 */
-  .np-cover-button > .cover {
+  /* EntityCover 的根元素，圆角跟着封面框走 */
+  .np-artwork .cover {
     width: 100%;
     border-radius: inherit;
   }
@@ -120,7 +136,7 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     color: var(--text-muted);
     font-size: 13px;
   }
-  /* 底部一组：控制行 / 进度 / 移动端入口，桌面端与封面、信息同列 */
+  /* 底部一组：控制行 / 进度 / 移动端入口 */
   .np-bottom {
     display: flex;
     flex-direction: column;
@@ -138,31 +154,30 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     width: 100%;
     min-height: 44px;
   }
-  /* 移动端歌词态：整栏退化成一行（44px 小封面 + 歌名/歌手两行 + 右侧播放控件）。
-     这一行在舞台里垂直居中，离顶部的 × 很远，不用再给它让位。 */
-  .np-artwork.is-header {
+  /* 移动端歌词态：整栏退化成一行（44px 封面 + 歌名/歌手两行 + 右侧播放控件）。
+     这一行在舞台里靠顶部 padding 让开关闭按钮，不用再给 × 单独让位。 */
+  .np-left.is-header {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
     gap: var(--space-3);
   }
-  .np-artwork.is-header .np-cover,
-  .np-artwork.is-header .np-cover-button {
+  .np-left.is-header .np-artwork {
     width: 44px;
     border-radius: var(--radius-md);
     box-shadow: none;
   }
-  .np-artwork.is-header .np-meta {
+  .np-left.is-header .np-meta {
     flex: 1;
     min-width: 0;
     max-width: none;
     text-align: left;
   }
-  .np-artwork.is-header .np-title {
+  .np-left.is-header .np-title {
     font-size: 17px;
     line-height: 1.4;
   }
-  .np-artwork.is-header .np-artist {
+  .np-left.is-header .np-artist {
     margin: 0;
     overflow: hidden;
     font-size: 12px;
@@ -170,24 +185,23 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
     text-overflow: ellipsis;
   }
   /* 歌词态底部一组只剩右侧播放控件（进度条与「显示歌词」都不渲染） */
-  .np-artwork.is-header .np-bottom {
+  .np-left.is-header .np-bottom {
     flex: none;
     width: auto;
     gap: 0;
   }
-  .np-artwork.is-header .np-controls {
+  .np-left.is-header .np-controls {
     gap: var(--space-2);
   }
   @media (max-width: 899px) {
     /* 封面态：三段（封面 / 信息 / 底部一组）按可用高度铺开，吃满舞台而不是挤在中间 */
-    .np-artwork:not(.is-header) {
+    .np-left:not(.is-header) {
       justify-content: space-between;
       gap: var(--space-3);
       padding-block: var(--space-5);
     }
     /* 封面按舞台高度比例放大，不再用 60vw / 280px 这类固定值 */
-    .np-artwork .np-cover,
-    .np-artwork .np-cover-button {
+    .np-artwork {
       width: min(86vw, calc(var(--np-stage-height) * 0.46));
     }
     .np-title {
@@ -197,11 +211,11 @@ const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics
       margin-top: var(--space-2);
       font-size: 14px;
     }
-    .np-artwork:not(.is-header) .np-bottom {
+    .np-left:not(.is-header) .np-bottom {
       gap: var(--space-3);
     }
-    /* 进度条整行宽，两侧留出内边距，不再被浮动按钮压住 */
-    .np-artwork:not(.is-header) .np-progress {
+    /* 进度条整行宽，两侧留出内边距 */
+    .np-left:not(.is-header) .np-progress {
       width: 100%;
       padding-inline: var(--space-3);
     }
