@@ -97,6 +97,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     <div class="player-extra">
       <IconButton
         :label="modeLabel"
+        :aria-hidden="player.collapsed"
+        :tabindex="player.collapsed ? -1 : 0"
         :title="modeLabel"
         @click="queue.cycleMode()"
         class="mode-button"
@@ -286,6 +288,22 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     box-shadow: var(--shadow-player-collapsed);
   }
   /* 收起时进度/时间/音量不是"消失"，而是被压扁并淡出 */
+  /* 收起时让出「循环模式」这 32px 给标题（宽度与透明度一起过渡，避免突然消失） */
+  .mode-button {
+    transition:
+      width var(--motion-morph),
+      min-width var(--motion-morph),
+      opacity var(--motion-morph);
+  }
+  .collapsed .mode-button {
+    width: 0;
+    min-width: 0;
+    padding-inline: 0;
+    border-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
   .collapsed .seek,
   .collapsed .volume,
   .collapsed .time {
