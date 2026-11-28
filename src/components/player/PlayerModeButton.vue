@@ -21,6 +21,7 @@ const { modeLabel } = usePlayerMeta()
     :aria-hidden="inPlayer && player.collapsed"
     :class="['mode-button', { 'in-player': inPlayer }]"
     :label="modeLabel"
+    :size="inPlayer ? 'md' : 'lg'"
     :tabindex="inPlayer && player.collapsed ? -1 : 0"
     :title="modeLabel"
     @click="queue.cycleMode()"

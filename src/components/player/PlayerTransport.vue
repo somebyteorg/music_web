@@ -25,6 +25,7 @@ const queue = useQueueStore()
   >
     <IconButton
       v-if="variant !== 'header'"
+      :size="variant === 'bar' ? 'md' : 'lg'"
       label="上一首"
       :disabled="!queue.length"
       title="上一首"
@@ -42,7 +43,13 @@ const queue = useQueueStore()
       <svg aria-hidden="true" class="ui-icon playback-icon" viewBox="0 0 24 24">
         <path :d="player.playing ? 'M6 5h4v14H6zM14 5h4v14h-4z' : 'm8 5 11 7-11 7Z'" />
       </svg></button
-    ><IconButton label="下一首" :disabled="!queue.length" title="下一首" @click="player.next()">
+    ><IconButton
+      :size="variant === 'bar' ? 'md' : 'lg'"
+      label="下一首"
+      :disabled="!queue.length"
+      title="下一首"
+      @click="player.next()"
+    >
       <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
         <path d="M17 5v14M5 5l9 7-9 7Z" />
       </svg>
@@ -86,20 +93,15 @@ const queue = useQueueStore()
     width: 22px;
     height: 22px;
   }
-  /* 移动端歌词态信息行：40px，间距 --space-2 */
+  /* 移动端歌词态信息行：播放键 44px，前后切歌走 IconButton 的 lg 热区档 */
   .player-controls.is-header {
     gap: var(--space-2);
   }
   .player-controls.is-header .play-button {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
-  .player-controls.is-header .icon-button {
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-  }
-  /* 移动端全屏舞台：播放键 56px、前后切歌 40px（尺寸只在这里定义，页面里不复制） */
+  /* 移动端全屏舞台：播放键 56px（前后切歌的热区同样走 lg 档） */
   @media (max-width: 899px) {
     .player-controls.is-stage {
       gap: var(--space-4);
@@ -107,11 +109,6 @@ const queue = useQueueStore()
     .player-controls.is-stage .play-button {
       width: 56px;
       height: 56px;
-    }
-    .player-controls.is-stage .icon-button {
-      width: 40px;
-      min-width: 40px;
-      height: 40px;
     }
   }
   @media (max-width: 540px) {

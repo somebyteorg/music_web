@@ -88,7 +88,7 @@ onBeforeUnmount(() => {
         <button
           ref="closeButton"
           aria-label="关闭歌词预览"
-          class="icon-button np-close"
+          class="icon-button large np-close"
           title="关闭"
           type="button"
           @click="close"
@@ -137,6 +137,11 @@ onBeforeUnmount(() => {
     top: var(--space-4);
     right: var(--space-4);
     z-index: 1;
+  }
+  /* 热区 44×44（.icon-button.large），图标本体保持 18px */
+  .np-close .ui-icon {
+    width: 18px;
+    height: 18px;
   }
   /* 歌词区进出：淡入 + 轻微上浮缩放（transform 不参与布局，不会挤动头部） */
   .np-side-enter-active,
