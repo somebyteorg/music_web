@@ -275,3 +275,36 @@
   -webkit-mask-image: none;
   mask-image: none;
 }
+
+/* 横轴版本（首页横向楼层）：贴左只剩右侧渐隐，贴右只剩左侧渐隐 */
+.scroll-fade-x.is-scrollable-x {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+}
+
+.scroll-fade-x.is-scrollable-x.is-at-start {
+  -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 28px), transparent 100%);
+}
+
+.scroll-fade-x.is-scrollable-x.is-at-end {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 28px, #000 100%);
+}
+
+.scroll-fade-x.is-scrollable-x.is-at-start.is-at-end {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
