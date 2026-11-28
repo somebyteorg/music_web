@@ -1,11 +1,22 @@
 <script lang="ts" setup>
+import PlayingBadge from './PlayingBadge.vue'
+import { usePlayerStore } from '@/stores/player'
 import type { Entity } from '@/types/catalog'
+import { computed } from 'vue'
 
 /**
  * 黑胶盘卡（常听专辑）：圆形唱片 + 中心 8px 圆孔，hover 时 8s 线性旋转。
  * 旋转是 animation，prefers-reduced-motion 时由 @layer a11y 的 animation:none 统一关掉（保留静态层次）。
  */
-defineProps<{ album: Entity }>()
+const props = defineProps<{ album: Entity }>()
+
+const player = usePlayerStore()
+/** 正在播放：player.song.albums 里含这张专辑 */
+const isPlaying = computed(() => {
+  const albums = player.song?.albums
+  if (!albums) return false
+  return albums.some((album) => album.id === props.album.id)
+})
 
 function artistsOf(album: Entity) {
   const artists = album.artists
@@ -15,8 +26,16 @@ function artistsOf(album: Entity) {
 </script>
 
 <template>
-  <RouterLink :aria-label="'打开专辑 ' + album.name" class="vinyl-card" :to="'/albums/' + album.id">
-    <span aria-hidden="true" class="vinyl-disc"></span>
+  <RouterLink
+    :aria-current="isPlaying ? 'true' : undefined"
+    :aria-label="'打开专辑 ' + album.name"
+    :class="['vinyl-card', { 'is-playing': isPlaying }]"
+    :to="'/albums/' + album.id"
+  >
+    <span class="vinyl-art">
+      <span aria-hidden="true" class="vinyl-disc"></span>
+      <PlayingBadge v-if="isPlaying" class="vinyl-playing" />
+    </span>
     <span class="vinyl-name">{{ album.name }}</span>
     <span class="vinyl-meta">{{ artistsOf(album) }}</span>
   </RouterLink>
@@ -43,6 +62,23 @@ function artistsOf(album: Entity) {
   .vinyl-card:focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
+  }
+  /* 正在播放：唱片外圈 2px 品牌描边（与唱片自身阴影叠在一起） */
+  .vinyl-card.is-playing .vinyl-disc {
+    box-shadow:
+      0 0 0 2px var(--brand),
+      var(--shadow-md);
+  }
+  .vinyl-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+  .vinyl-playing {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    z-index: 1;
   }
   /* 唱片本体：外圈刻纹（radial 渐变）+ 中心 8px 圆孔（透明，露出底色） */
   .vinyl-disc {
