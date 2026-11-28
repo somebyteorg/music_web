@@ -42,6 +42,21 @@ export function detailKeys(userId: UserId) {
   }
 }
 
+/**
+ * 首页楼层。首页只有读：收藏/历史都是本地 localStorage（不走缓存失效），
+ * 所以这里不需要 keyPrefixes / KeyScope 映射。
+ */
+export function homeKeys(userId: UserId) {
+  const prefix = `${userId}${SEP}home${SEP}`
+  return {
+    prefix,
+    /** 楼层里的歌曲列表：scope = 这一层用的查询参数（latest / random:7 / artist:xxx / ids:...） */
+    songs: (scope: string) => `${prefix}songs${SEP}${scope}`,
+    /** 楼层里的专辑详情（常听专辑要拿封面）：scope = 拼好的 id 列表 */
+    albums: (scope: string) => `${prefix}albums${SEP}${scope}`,
+  }
+}
+
 export function pendingUploadKeys(userId: UserId) {
   const prefix = `${userId}${SEP}pending-uploads${SEP}`
   return { prefix, page: (page: number) => `${prefix}${page}` }

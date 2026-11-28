@@ -8,6 +8,7 @@ import type { AppTopbarExpose } from '@/app/appShellContext'
 import { useAppShell } from '@/app/useAppShell'
 import PlayerBar from '@/components/PlayerBar.vue'
 import { notification, notificationTarget } from '@/composables/useFeedback'
+import { usePlayTracking } from '@/composables/usePlayTracking'
 
 /**
  * 应用骨架：只做全局接线（useAppShell → provide）、路由出口、播放器与全局提示。
@@ -16,6 +17,8 @@ import { notification, notificationTarget } from '@/composables/useFeedback'
 const topbar = useTemplateRef<AppTopbarExpose>('topbar')
 const shell = useAppShell({ focusMenuButton: () => topbar.value?.focusMenuButton() })
 provide(appShellKey, shell)
+// 播放历史只在这里记一处：首页「继续听 / 猜你喜欢」的数据源
+usePlayTracking()
 
 const { sign, booting, menu, playerVisible, route, closeNavigation } = shell
 const signedIn = computed(() => !booting.value && sign.ready && !!sign.user)

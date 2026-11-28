@@ -2,7 +2,9 @@ import { computed, inject, ref, type ComputedRef, type InjectionKey } from 'vue'
 import type { AlbumPosition, Entity } from '@/types/catalog'
 import { usePlayerStore } from '@/stores/player'
 import { useQueueStore } from '@/stores/queue'
+import { useSignStore } from '@/stores/sign'
 import { catalogApi } from '@/lib/api/catalog'
+import { syncFavorites } from '@/features/home/favorites'
 import { notify, report } from '@/composables/useFeedback'
 import { audioFileCount } from '@/utils/audio'
 
@@ -70,6 +72,7 @@ export function createSongListController(
 ): SongListController {
   const player = usePlayerStore()
   const queue = useQueueStore()
+  const sign = useSignStore()
   const favoriting = ref(new Set<string>())
 
   function rowKey(song: Entity) {
@@ -98,6 +101,7 @@ export function createSongListController(
     const value = !song.is_favorite
     try {
       await catalogApi.favorite(song.id, value)
+      syncFavorites(sign.user?.id, [song], value)
       actions.favorite(song.id, value)
     } catch (e) {
       report(e)

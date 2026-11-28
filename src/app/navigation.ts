@@ -2,6 +2,8 @@ export const navigation = [
   {
     label: '曲库',
     items: [
+      // 闭合轮廓的房子（屋顶与墙体是一个整体，门在底边上），20px 下不会有悬空的屋檐尾巴
+      { to: '/', label: '首页', icon: 'M4 10.4 12 3.6l8 6.8V21H4ZM9.5 21v-6h5v6' },
       { to: '/libraries', label: '媒体库', icon: 'M3 6h18v14H3V6Zm3-3h12M7 10h10M7 14h7' },
       {
         to: '/albums',
