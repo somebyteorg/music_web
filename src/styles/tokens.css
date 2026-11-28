@@ -20,12 +20,16 @@
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
+  /* 封面瓦片：封面统一圆角（原 EntityCover 的字面量 10px） */
+  --radius-cover: 10px;
 
   /* —— 字号 —— */
   --font-xs: 11px;
   --font-sm: 12px;
   --font-base: 13px;
   --font-lg: 16px;
+  /* 卡片标题（原 catalogGrid 的字面量 14px） */
+  --font-md: 14px;
 
   /* —— 间距（4px 栅格） —— */
   --space-1: 4px;
@@ -40,6 +44,12 @@
   /* —— 动效 —— */
   --transition-fast: 0.15s;
   --transition-base: 0.2s;
+
+  /* —— 卡片 —— */
+  /* hover 浮起距离 */
+  --lift-hover: 4px;
+  /* 横向滚动容器给 hover 位移 + 阴影留的余量 */
+  --scroll-headroom: 26px;
 
   /* —— 布局尺寸 —— */
   --sidebar-width: 224px;

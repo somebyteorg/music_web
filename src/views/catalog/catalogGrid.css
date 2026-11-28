@@ -59,7 +59,8 @@
     gap: 14px;
     min-width: 0;
   }
-  .entity-main > .cover {
+  /* 48px 是列表行里的缩略图尺寸；grid 的封面尺寸由共享的 .cover-tile 决定 */
+  .list .entity-main > .cover {
     width: 48px;
     flex-shrink: 0;
   }
@@ -70,7 +71,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 14px;
+    font-size: var(--font-md);
+    /* 目录里的标题沿用既有字重（base.css 的 h3: 650），共享的 cover-tile-name 只提供字号 / 省略 / hover 配色 */
+    font-weight: 650;
   }
   .entity-main:hover h3 {
     color: var(--brand);
@@ -98,28 +101,9 @@
   .grid .entity-main {
     display: block;
   }
-  .grid .entity-main > .cover {
-    width: 100%;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow-cover);
-    transition:
-      transform 0.25s,
-      box-shadow 0.25s;
-  }
-  .grid .entity-main:hover > .cover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-cover-hover);
-  }
   .grid .entity-main > .cover.round {
     width: 85%;
     margin: 8px auto 20px;
-  }
-  .grid .entity-main p {
-    font-size: 12px;
-    margin-top: 6px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .grid .entity-secondary {
     display: none;

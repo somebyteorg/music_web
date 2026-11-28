@@ -81,12 +81,17 @@ const { assignAlbum, bulkFavorite, edit, toggle, favorite } = actions
         <span>操作</span>
       </div>
       <article v-for="item in items" :key="item.id" class="entity-row">
-        <RouterLink :to="`/${type}/${item.id}`" class="entity-main">
+        <RouterLink
+          :class="['entity-main', { 'cover-tile': layout === 'grid' }]"
+          :to="`/${type}/${item.id}`"
+        >
           <EntityCover :item="item" :round="type === 'artists'" />
           <div>
-            <h3 :title="item.name">{{ item.name }}</h3>
+            <h3 :class="{ 'cover-tile-name': layout === 'grid' }" :title="item.name">
+              {{ item.name }}
+            </h3>
             <Tag variant="default" v-if="type === 'playlists' && !item.is_public">私密</Tag>
-            <p v-if="layout === 'grid'" class="muted">
+            <p v-if="layout === 'grid'" class="muted cover-tile-meta">
               {{
                 type === 'playlists' || type === 'libraries'
                   ? displayName(item.owner || item.creator)
