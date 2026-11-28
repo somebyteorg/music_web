@@ -18,7 +18,7 @@ const { searchHistory, showAllHistory } = community
 
 <template>
   <Card as="form" class="history-filters" @submit.prevent="searchHistory">
-    <label>
+    <span class="field-label">
       操作分类
       <BaseSelect
         v-model="historyFilters.category"
@@ -26,7 +26,7 @@ const { searchHistory, showAllHistory } = community
         :searchable="false"
         label="操作分类"
       />
-    </label>
+    </span>
     <label>
       成员名字
       <input v-model="historyFilters.user" maxlength="100" placeholder="化名或用户名" />

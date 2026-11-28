@@ -9,6 +9,19 @@ label {
   font-weight: 500;
 }
 
+/*
+ * 自定义控件（按钮型 combobox 等）无法被 <label> 编程关联（label 只能关联 labelable 元素），
+ * 这类字段用同样的视觉配方 + 控件自身的 aria-label。
+ */
+.field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 500;
+}
+
 :where(input:not([type='checkbox']):not([type='radio']):not([type='range'])),
 select,
 textarea {

@@ -71,7 +71,10 @@ function setLyrics(open: boolean) {
     <div class="np-meta">
       <!-- 桌面：两行截断（不滚）；移动端：跑马灯直接开滚（首帧静置会让人以为被截断） -->
       <h2 v-if="!compact" class="np-title np-title--clamp">{{ displayItem?.name }}</h2>
-      <h2 v-else class="np-title"><MarqueeText :text="displayItem?.name" /></h2>
+      <h2 v-else class="np-title">
+        <span class="sr-only">{{ displayItem?.name }}</span>
+        <MarqueeText aria-hidden="true" :text="displayItem?.name" />
+      </h2>
       <p v-if="artist" class="np-artist">{{ artist }}</p>
     </div>
     <div class="np-bottom">

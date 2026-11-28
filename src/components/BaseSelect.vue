@@ -145,14 +145,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
       </svg>
     </button>
     <Teleport :to="root?.closest('dialog') || 'body'">
-      <div
-        v-if="open"
-        ref="dropdown"
-        :style="position"
-        class="select-dropdown"
-        tabindex="-1"
-        @keydown="keydown"
-      >
+      <div v-if="open" ref="dropdown" :style="position" class="select-dropdown" tabindex="-1">
         <div v-if="searchable" class="select-search">
           <input
             ref="searchInput"
@@ -165,6 +158,7 @@ useEventListener(window, 'scroll', locate, { capture: true, passive: true })
             autocomplete="off"
             placeholder="搜索选项…"
             role="combobox"
+            @keydown="keydown"
           />
         </div>
         <div :id="`${id}-list`" :aria-label="label" class="select-options" role="listbox">

@@ -41,20 +41,20 @@ const lyricInput = ref<HTMLInputElement>()
             placeholder="zh-Hans、en、und"
             required
         /></label>
-        <label
+        <span class="field-label"
           >格式<BaseSelect
             v-model="lyrics.form.format"
             :options="lyricFormats"
             :searchable="false"
             label="歌词格式"
-        /></label>
-        <label
+        /></span>
+        <span class="field-label"
           >用途<BaseSelect
             v-model="lyrics.form.kind"
             :options="lyricKinds"
             :searchable="false"
             label="歌词用途"
-        /></label>
+        /></span>
       </div>
       <label
         >来源<input
@@ -66,6 +66,7 @@ const lyricInput = ref<HTMLInputElement>()
         <input
           ref="lyricInput"
           accept=".txt,.lrc,.elrc,.ttml"
+          aria-label="从文件导入歌词"
           hidden
           type="file"
           @change="lyrics.importFile"

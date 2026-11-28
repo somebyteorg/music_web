@@ -60,14 +60,14 @@ const emit = defineEmits<{
         </p>
       </div>
     </div>
-    <label
+    <span class="field-label"
       >专辑归属<BaseSelect
         v-model="selection"
         :disabled="batch.busy || album.loading"
         :label="`${album.name || '本组'} 的专辑归属`"
         :options="batch.albumOptions(album)"
         @update:model-value="batch.changeAlbum(album)"
-    /></label>
+    /></span>
     <p v-if="album.needsReview && !album.selection" class="notice">
       本组的专辑标签不一致，请选择专辑归属，或作为单曲入库。
     </p>
