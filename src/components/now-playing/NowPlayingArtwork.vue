@@ -185,22 +185,8 @@ function setLyrics(open: boolean) {
     align-items: center;
     gap: var(--space-2);
   }
-  /* 桌面：整栏走左基线（封面 / 标题 / 歌手 / 控制行 / 进度条同一条 x），
-     与右栏居中的歌词形成轴线对比；移动端保持居中，所以只在这一档覆盖 */
-  @media (min-width: 900px) {
-    .np-left {
-      align-items: flex-start;
-    }
-    .np-meta {
-      text-align: left;
-    }
-    .np-bottom {
-      align-items: flex-start;
-    }
-    .np-controls {
-      justify-content: flex-start;
-    }
-  }
+  /* 桌面与移动一致：整栏居中（封面 / 标题 / 歌手 / 控制行 / 进度条同一条中轴）；
+     曾试过桌面左基线，观感不如居中，已回退 */
   /* 移动端歌词态：整栏退化成一行（44px 封面 + 歌名/歌手两行 + 右侧播放控件） */
   .np-left.is-header {
     flex-direction: row;
