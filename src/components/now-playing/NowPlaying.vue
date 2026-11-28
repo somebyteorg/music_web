@@ -2,11 +2,11 @@
 import { nextTick, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import NowPlayingArtwork from './NowPlayingArtwork.vue'
-import NowPlayingLyrics from './NowPlayingLyrics.vue'
+import NowPlayingSide from './NowPlayingSide.vue'
 
 /**
- * 全屏「歌词预览页」外壳：只负责开关、焦点、锁滚动、Esc。
- * 左栏在 NowPlayingArtwork，歌词在 NowPlayingLyrics，页面本身不持有歌词状态。
+ * 全屏「歌词预览页」外壳：只负责开关、焦点、锁滚动、Esc 与两栏编排。
+ * 左栏在 NowPlayingArtwork，右栏（歌词/队列）在 NowPlayingSide，页面本身不持有歌词状态。
  * z-index 60：压过播放器（45）与队列抽屉（46）。
  */
 const player = usePlayerStore()
@@ -77,7 +77,7 @@ onBeforeUnmount(() => {
           </svg>
         </button>
         <NowPlayingArtwork />
-        <NowPlayingLyrics />
+        <NowPlayingSide />
       </div>
     </Transition>
   </Teleport>
@@ -90,8 +90,9 @@ onBeforeUnmount(() => {
     z-index: 60;
     inset: 0;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: center;
+    /* 左窄右宽：歌词列 1280px 下约 660px */
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+    align-items: stretch;
     gap: clamp(var(--space-6), 5vw, var(--space-8));
     padding: clamp(var(--space-5), 4vw, var(--space-8));
     background: var(--scrim-strong);
@@ -121,7 +122,6 @@ onBeforeUnmount(() => {
     .now-playing {
       grid-template-columns: minmax(0, 1fr);
       grid-template-rows: auto minmax(0, 1fr);
-      justify-items: center;
       align-items: stretch;
       gap: var(--space-3);
       padding: var(--space-6) var(--space-4) var(--space-4);
