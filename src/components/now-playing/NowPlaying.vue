@@ -186,15 +186,17 @@ onBeforeUnmount(() => {
     grid-column: 2;
     grid-row: 2;
   }
-  /* 卡片顶部进度线：2px，前景品牌色、底轨 --line，纯展示 */
+  /* 卡片顶部进度线：2px，前景品牌色、底轨 --line，纯展示；
+     缩进到 1px 边框内侧、圆角取 23px（24 − 1），线的两端才不会压在卡片圆角上被切 */
   .np-progress-line {
     position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
+    top: 1px;
+    right: 1px;
+    left: 1px;
     height: 2px;
     overflow: hidden;
-    border-radius: 24px 24px 0 0;
+    border-top-left-radius: 23px;
+    border-top-right-radius: 23px;
     background: var(--line);
   }
   .np-progress-line > span {

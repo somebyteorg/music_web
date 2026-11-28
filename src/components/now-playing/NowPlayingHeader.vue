@@ -53,7 +53,8 @@ const { albumName, artist } = usePlayerMeta()
     margin: 0;
     overflow: hidden;
     color: var(--text-muted);
-    font-size: var(--font-sm);
+    /* 桌面与移动同一档 13px */
+    font-size: var(--font-base);
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -80,7 +81,6 @@ const { albumName, artist } = usePlayerMeta()
       align-items: center;
       min-height: 44px;
       padding-inline-end: calc(44px + var(--space-4));
-      font-size: var(--font-base);
     }
     .np-header-tabs {
       width: 100%;
