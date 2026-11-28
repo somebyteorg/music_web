@@ -1,25 +1,29 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { usePlayerMeta } from '@/composables/usePlayerMeta'
 import { usePlayerStore } from '@/stores/player'
-import { useQueueStore } from '@/stores/queue'
 import { duration } from '@/utils/format'
 
 /**
- * 播放器中段的进度条：时间 / 进度 / 总时长 / 音量。
- * 收起时整段被压扁并淡出（max-width: 0 + opacity: 0），不是突然消失。
+ * 进度条：时间 / 进度 / 总时长 / 音量。播放器外框与全屏歌词页共用。
+ * 播放器里收起时整段被压扁并淡出（max-width: 0 + opacity: 0）；收起态只属于外框，
+ * 所以 variant="stage" 不再把 collapsed 当成隐藏依据。
  */
-const player = usePlayerStore()
-const queue = useQueueStore()
+const props = withDefaults(defineProps<{ variant?: 'bar' | 'stage' }>(), { variant: 'bar' })
 
-const totalLength = computed(() => player.length || queue.current?.duration || 0)
+const player = usePlayerStore()
+const { totalLength } = usePlayerMeta()
+
+/** 收起态只在外框里让位，全屏页即使播放器是收起打开的也要能操作 */
+const hidden = computed(() => props.variant === 'bar' && player.collapsed)
 </script>
 
 <template>
-  <div class="player-mid">
-    <span class="time" :aria-hidden="player.collapsed">{{ duration(player.time) }}</span><input
-      :aria-hidden="player.collapsed"
+  <div :class="['player-mid', { 'is-stage': variant === 'stage' }]">
+    <span class="time" :aria-hidden="hidden">{{ duration(player.time) }}</span><input
+      :aria-hidden="hidden"
       :max="totalLength || 1"
-      :tabindex="player.collapsed ? -1 : 0"
+      :tabindex="hidden ? -1 : 0"
       :value="player.time"
       aria-label="播放进度"
       class="seek"
@@ -27,10 +31,10 @@ const totalLength = computed(() => player.length || queue.current?.duration || 0
       step="0.1"
       type="range"
       @input="player.seek(Number(($event.target as HTMLInputElement).value))"
-    /><span class="time" :aria-hidden="player.collapsed">{{ duration(totalLength) }}</span
+    /><span class="time" :aria-hidden="hidden">{{ duration(totalLength) }}</span
     ><input
-      :aria-hidden="player.collapsed"
-      :tabindex="player.collapsed ? -1 : 0"
+      :aria-hidden="hidden"
+      :tabindex="hidden ? -1 : 0"
       :value="player.volume"
       aria-label="音量"
       class="volume"
@@ -90,14 +94,27 @@ const totalLength = computed(() => player.length || queue.current?.duration || 0
     overflow: hidden;
     pointer-events: none;
   }
+  /* 全屏页：不再参与外框的弹性分配，宽度对齐上面那一列 420px */
+  .player-mid.is-stage {
+    flex: none;
+    width: min(420px, 100%);
+    gap: var(--space-3);
+  }
+  .player-mid.is-stage .volume {
+    width: 120px;
+  }
+  .player-mid.is-stage .time {
+    max-width: none;
+    font-size: var(--font-xs);
+  }
   @media (max-width: 760px) {
     .volume {
       display: none;
     }
   }
   @media (max-width: 540px) {
-    /* 窄屏把「时间 / 进度 / 音量」整段放到第二行（原来是对 .seek 单独设置，包裹后改为整段） */
-    .player-mid {
+    /* 窄屏把「时间 / 进度 / 音量」整段放到第二行（只对外框生效，全屏页是纵向排布） */
+    .player-mid:not(.is-stage) {
       order: 5;
       flex-basis: 100%;
       gap: 7px;

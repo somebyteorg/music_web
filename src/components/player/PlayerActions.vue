@@ -1,15 +1,12 @@
 <script lang="ts" setup>
 import IconButton from '@/components/ui/IconButton.vue'
-import PlayModeIcon from '@/components/PlayModeIcon.vue'
-import { computed } from 'vue'
+import PlayerModeButton from './PlayerModeButton.vue'
 import { usePlayerStore } from '@/stores/player'
-import { playModeLabels, useQueueStore } from '@/stores/queue'
+import { useQueueStore } from '@/stores/queue'
 
-/** 播放器右端：循环模式 / 队列 / 收起展开 / 关闭。 */
+/** 播放器右端：循环模式 / 队列 / 收起展开 / 关闭。循环按钮本体在 PlayerModeButton（全屏页共用）。 */
 const player = usePlayerStore()
 const queue = useQueueStore()
-
-const modeLabel = computed(() => playModeLabels[queue.mode])
 
 function closeAll() {
   player.close()
@@ -19,16 +16,7 @@ function closeAll() {
 
 <template>
   <div class="player-extra">
-    <IconButton
-      :label="modeLabel"
-      :aria-hidden="player.collapsed"
-      :tabindex="player.collapsed ? -1 : 0"
-      :title="modeLabel"
-      @click="queue.cycleMode()"
-      class="mode-button"
-    >
-      <PlayModeIcon :mode="queue.mode" />
-    </IconButton>
+    <PlayerModeButton />
     <IconButton
       :label="`播放队列，共 ${queue.length} 首`"
       :aria-expanded="queue.open"
@@ -98,27 +86,6 @@ function closeAll() {
   }
   .collapse-icon.flipped {
     transform: rotate(180deg);
-  }
-  .mode-button {
-    transition:
-      width var(--motion-morph),
-      min-width var(--motion-morph),
-      opacity var(--motion-morph);
-  }
-  /* 收起时让出「循环模式」这 32px 给标题（宽度与透明度一起过渡，避免突然消失） */
-  :global(.player.collapsed .mode-button) {
-    width: 0;
-    min-width: 0;
-    padding-inline: 0;
-    border-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-  @media (max-width: 980px) {
-    .mode-button {
-      display: none;
-    }
   }
 }
 </style>
