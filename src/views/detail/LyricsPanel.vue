@@ -64,7 +64,7 @@ const sign = useSignStore()
       </Tabs>
       <pre>{{ lyrics.raw ? lyrics.selected.content : lyrics.preview }}</pre>
     </template>
-    <EmptyState v-else compact symbol="♩" as="h3" title="暂无歌词">
+    <EmptyState v-else symbol="♩" as="h3" title="暂无歌词">
       可以添加纯文本、逐行或逐字同步歌词，也可以保留不同语言的版本。
       <template #actions>
         <Button variant="secondary" @click="lyrics.edit()">添加歌词</Button>
