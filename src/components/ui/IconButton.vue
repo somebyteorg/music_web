@@ -2,6 +2,8 @@
 /**
  * 方角图标按钮：替代散落的 .icon-button / .tiny-play 用法。
  *
+ * size="lg" 是热区放大档（44×44，图标不变），尺寸规则在 styles/controls.css 的 .icon-button.large 里，
+ * 调用方只选档位，不写宽高。
  * 危险态由调用方传 class="danger"（例如操作对话框里「移除曲目」的 ×）：
  * 颜色在本组件的 <style scoped> 里加权定义，跟随 Button.vue 的 .button.danger 写法。
  */
@@ -10,13 +12,19 @@ withDefaults(
     label: string
     type?: 'button' | 'submit' | 'reset'
     disabled?: boolean
+    size?: 'md' | 'lg'
   }>(),
-  {},
+  { size: 'md' },
 )
 </script>
 
 <template>
-  <button class="icon-button" :aria-label="label" :type="type" :disabled="disabled">
+  <button
+    :class="['icon-button', { large: size === 'lg' }]"
+    :aria-label="label"
+    :type="type"
+    :disabled="disabled"
+  >
     <slot />
   </button>
 </template>

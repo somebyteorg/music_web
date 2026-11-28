@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue'
+import { useScrollFade } from '@/composables/useScrollFade'
 import { useQueueStore } from '@/stores/queue'
 import QueueItem from './queue/QueueItem.vue'
 import QueueTools from './queue/QueueTools.vue'
@@ -9,6 +10,11 @@ import QueueTools from './queue/QueueTools.vue'
  * 头部/工具条在 QueueTools，单行曲目（含触屏删除按钮）在 QueueItem。
  */
 const queue = useQueueStore()
+const list = useTemplateRef<HTMLOListElement>('list')
+const { refresh: refreshFade } = useScrollFade(list)
+
+// 队列增删 / 抽屉开合后重算滚动渐隐
+watch([() => queue.items.length, () => queue.open], () => void refreshFade())
 
 function onKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape' && queue.open) queue.open = false
@@ -22,7 +28,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
     <div v-if="queue.open" class="queue-backdrop" @click.self="queue.open = false" />
     <section v-if="queue.open" id="queue-panel" aria-label="播放队列" class="queue-drawer">
       <QueueTools />
-      <ol v-if="queue.length" class="queue-list">
+      <ol v-if="queue.length" ref="list" class="queue-list scroll-fade">
         <QueueItem
           v-for="(entry, index) in queue.items"
           :key="entry.key"

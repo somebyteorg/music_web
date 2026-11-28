@@ -61,7 +61,7 @@ function remove() {
     </button>
     <IconButton class="queue-remove" label="从队列移除" title="从队列移除" @click="remove">
       <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-        <path d="M5 12h14" />
+        <path d="m6 6 12 12M6 18 18 6" />
       </svg>
     </IconButton>
   </li>

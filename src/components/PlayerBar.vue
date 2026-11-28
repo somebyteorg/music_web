@@ -1,34 +1,24 @@
 <script lang="ts" setup>
-import IconButton from '@/components/ui/IconButton.vue'
 import { computed } from 'vue'
 import { usePlayerStore } from '@/stores/player'
-import { playModeLabels, useQueueStore } from '@/stores/queue'
-import { duration, qualities } from '@/utils/format'
-import EntityCover from './EntityCover.vue'
-import PlayModeIcon from './PlayModeIcon.vue'
+import { useQueueStore } from '@/stores/queue'
+import NowPlaying from './now-playing/NowPlaying.vue'
+import PlayerActions from './player/PlayerActions.vue'
+import PlayerSeek from './player/PlayerSeek.vue'
+import PlayerTrack from './player/PlayerTrack.vue'
+import PlayerTransport from './player/PlayerTransport.vue'
 import QueuePanel from './QueuePanel.vue'
 
+/**
+ * 播放器外壳：只负责可见性、.player 外壳与收起/展开形变，外加全屏歌词预览的挂载点。
+ * 内部四段各管各的：封面/曲目信息 → PlayerTrack，播放键 → PlayerTransport，
+ * 进度/时间/音量 → PlayerSeek，循环/队列/收起/关闭 → PlayerActions。
+ * 收起态是 store 里的全局状态，子组件自己读，不在这里做 props 转发。
+ */
 const player = usePlayerStore()
 const queue = useQueueStore()
 
 const visible = computed(() => player.available || !!queue.current)
-const displayItem = computed(() => {
-  if (player.song) return player.song
-  const entry = queue.current
-  return entry
-    ? { id: entry.songId, name: entry.name, cover_id: entry.coverId, image_url: entry.imageUrl }
-    : undefined
-})
-const totalLength = computed(() => player.length || queue.current?.duration || 0)
-const subtitle = computed(() => {
-  if (player.file) return `${qualities[player.file.quality]} · ${player.file.codec.toUpperCase()}`
-  return queue.current ? '已暂停' : ''
-})
-function closeAll() {
-  player.close()
-  queue.clear()
-}
-const modeLabel = computed(() => playModeLabels[queue.mode])
 </script>
 
 <template>
@@ -37,109 +27,13 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     :class="['player', { collapsed: player.collapsed }]"
     aria-label="试听播放器"
   >
-    <EntityCover :item="displayItem" />
-    <div class="player-title">
-      <strong>{{ displayItem?.name }}</strong><span>{{ subtitle }}</span>
-    </div>
-    <div class="player-controls">
-      <IconButton
-        label="上一首"
-        :disabled="!queue.length"
-        title="上一首"
-        @click="player.previous()"
-      >
-        <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-          <path d="M7 5v14M19 5l-9 7 9 7Z" /></svg></IconButton
-      ><button
-        :aria-busy="player.loading"
-        :aria-label="player.playing ? '暂停' : '播放'"
-        :title="player.playing ? '暂停' : '播放'"
-        class="play-button"
-        @click="player.toggle()"
-      >
-        <svg aria-hidden="true" class="ui-icon playback-icon" viewBox="0 0 24 24">
-          <path :d="player.playing ? 'M6 5h4v14H6zM14 5h4v14h-4z' : 'm8 5 11 7-11 7Z'" />
-        </svg></button
-      ><IconButton label="下一首" :disabled="!queue.length" title="下一首" @click="player.next()">
-        <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-          <path d="M17 5v14M5 5l9 7-9 7Z" />
-        </svg>
-      </IconButton>
-    </div>
-    <div class="player-mid">
-      <span class="time" :aria-hidden="player.collapsed">{{ duration(player.time) }}</span><input
-        :aria-hidden="player.collapsed"
-        :max="totalLength || 1"
-        :tabindex="player.collapsed ? -1 : 0"
-        :value="player.time"
-        aria-label="播放进度"
-        class="seek"
-        min="0"
-        step="0.1"
-        type="range"
-        @input="player.seek(Number(($event.target as HTMLInputElement).value))"
-      /><span class="time" :aria-hidden="player.collapsed">{{ duration(totalLength) }}</span
-      ><input
-        :aria-hidden="player.collapsed"
-        :tabindex="player.collapsed ? -1 : 0"
-        :value="player.volume"
-        aria-label="音量"
-        class="volume"
-        max="1"
-        min="0"
-        step=".01"
-        type="range"
-        @input="player.setVolume(Number(($event.target as HTMLInputElement).value))"
-      />
-    </div>
-    <div class="player-extra">
-      <IconButton
-        :label="modeLabel"
-        :aria-hidden="player.collapsed"
-        :tabindex="player.collapsed ? -1 : 0"
-        :title="modeLabel"
-        @click="queue.cycleMode()"
-        class="mode-button"
-      >
-        <PlayModeIcon :mode="queue.mode" />
-      </IconButton>
-      <IconButton
-        :label="`播放队列，共 ${queue.length} 首`"
-        :aria-expanded="queue.open"
-        aria-controls="queue-panel"
-        :title="`播放队列（${queue.length}）`"
-        @click="queue.open = !queue.open"
-        class="queue-button"
-      >
-        <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-          <path d="M4 6h11M4 11h11M4 16h7M17 10l4 3-4 3Z" />
-        </svg>
-        <span v-if="queue.length" class="queue-count">{{
-          queue.length > 99 ? '99+' : queue.length
-        }}</span>
-      </IconButton>
-      <IconButton
-        :label="player.collapsed ? '展开播放器' : '收起播放器'"
-        :aria-expanded="!player.collapsed"
-        :title="player.collapsed ? '展开播放器' : '收起播放器'"
-        @click="player.collapsed = !player.collapsed"
-      >
-        <svg
-          aria-hidden="true"
-          :class="['ui-icon', 'collapse-icon', { flipped: player.collapsed }]"
-          viewBox="0 0 24 24"
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
-      </IconButton>
-      <IconButton label="关闭播放器" title="关闭播放器" @click="closeAll">
-        <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-          <path d="m6 6 12 12M6 18 18 6" />
-        </svg>
-      </IconButton>
-    </div>
+    <PlayerTrack />
+    <PlayerTransport />
+    <PlayerSeek />
+    <PlayerActions />
   </aside>
   <QueuePanel />
+  <NowPlaying />
 </template>
 
 <style scoped>
@@ -171,118 +65,6 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
       border-radius var(--motion-morph),
       box-shadow var(--motion-morph);
   }
-  .player > .cover {
-    width: 46px;
-    flex-shrink: 0;
-    transition: width var(--motion-morph);
-  }
-  .player-title {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 168px;
-    min-width: 0;
-  }
-  .player-title strong {
-    font-size: 14px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .player-title span {
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-  .player-controls {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .player-controls .icon-button {
-    color: var(--text-muted);
-  }
-  .play-button {
-    display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    color: var(--on-brand);
-    background: var(--brand);
-  }
-  .play-button[aria-busy='true'] {
-    opacity: 0.6;
-  }
-  .player-mid {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex: 1;
-    min-width: 0;
-    max-width: 100%;
-    transition:
-      max-width var(--motion-morph),
-      opacity var(--motion-morph);
-  }
-  .seek {
-    flex: 1;
-    min-width: 60px;
-    accent-color: var(--brand);
-    transition:
-      max-width var(--motion-morph),
-      opacity var(--motion-morph);
-  }
-  .volume {
-    width: 75px;
-    accent-color: var(--brand);
-    transition:
-      max-width var(--motion-morph),
-      opacity var(--motion-morph);
-  }
-  .time {
-    color: var(--text-muted);
-    font-size: 11px;
-    font-variant-numeric: tabular-nums;
-    max-width: 72px;
-    overflow: hidden;
-    white-space: nowrap;
-    transition:
-      max-width var(--motion-morph),
-      opacity var(--motion-morph);
-  }
-  .collapse-icon {
-    transition: transform var(--motion-morph);
-  }
-  .collapse-icon.flipped {
-    transform: rotate(180deg);
-  }
-  .player-extra {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  .player-extra .icon-button {
-    color: var(--text-muted);
-  }
-  .queue-button {
-    position: relative;
-  }
-  .queue-count {
-    position: absolute;
-    top: -2px;
-    right: -4px;
-    min-width: 15px;
-    padding: 0 3px;
-    border-radius: 8px;
-    background: var(--brand);
-    color: var(--on-brand);
-    font-size: 9px;
-    line-height: 15px;
-    font-variant-numeric: tabular-nums;
-  }
   .player.collapsed {
     /* 用长度代替 left:auto + width，浏览器才能在两端之间插值 */
     left: calc(100% - 432px);
@@ -295,46 +77,6 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     border-radius: 12px;
     box-shadow: var(--shadow-player-collapsed);
   }
-  /* 收起时进度/时间/音量不是"消失"，而是被压扁并淡出 */
-  /* 收起时让出「循环模式」这 32px 给标题（宽度与透明度一起过渡，避免突然消失） */
-  .mode-button {
-    transition:
-      width var(--motion-morph),
-      min-width var(--motion-morph),
-      opacity var(--motion-morph);
-  }
-  .collapsed .mode-button {
-    width: 0;
-    min-width: 0;
-    padding-inline: 0;
-    border-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-  /* 中段作为整体收放：收起时只让出 1 个间距，而不是 4 个 */
-  .collapsed .player-mid {
-    flex: 0 1 0;
-    max-width: 0;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-  .collapsed .player > .cover {
-    width: 38px;
-  }
-  .collapsed .player-title {
-    flex: 1;
-    width: auto;
-  }
-  .collapsed .player-controls {
-    flex-shrink: 0;
-  }
-  @media (max-width: 980px) {
-    .mode-button {
-      display: none;
-    }
-  }
   @media (max-width: 760px) {
     .player {
       left: 16px;
@@ -345,12 +87,6 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     .player.collapsed {
       left: 12px;
       right: 12px;
-    }
-    .player-title {
-      width: 120px;
-    }
-    .volume {
-      display: none;
     }
   }
   @media (max-width: 540px) {
@@ -364,25 +100,6 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     /* 收起后回到单行小窗（进度条那行的 flex-basis 归零，随之收高） */
     .player.collapsed {
       flex-wrap: nowrap;
-    }
-    .player-title {
-      flex: 1;
-      width: 100px;
-    }
-    /* 窄屏把「时间 / 进度 / 音量」整段放到第二行（原来是对 .seek 单独设置，包裹后改为整段） */
-    .player-mid {
-      order: 5;
-      flex-basis: 100%;
-      gap: 7px;
-    }
-    .seek {
-      margin: 0;
-    }
-    .time {
-      display: none;
-    }
-    .player-controls .icon-button {
-      display: none;
     }
   }
 }
