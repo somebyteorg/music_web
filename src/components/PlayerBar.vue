@@ -66,9 +66,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         </svg>
       </IconButton>
     </div>
-    <template
-      ><span class="time" :aria-hidden="player.collapsed">{{ duration(player.time) }}</span
-      ><input
+    <div class="player-mid">
+      <span class="time" :aria-hidden="player.collapsed">{{ duration(player.time) }}</span><input
         :aria-hidden="player.collapsed"
         :max="totalLength || 1"
         :tabindex="player.collapsed ? -1 : 0"
@@ -78,10 +77,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         min="0"
         step="0.1"
         type="range"
-        @input="player.seek(Number(($event.target as HTMLInputElement).value))" /><span
-        class="time"
-        :aria-hidden="player.collapsed"
-        >{{ duration(totalLength) }}</span
+        @input="player.seek(Number(($event.target as HTMLInputElement).value))"
+      /><span class="time" :aria-hidden="player.collapsed">{{ duration(totalLength) }}</span
       ><input
         :aria-hidden="player.collapsed"
         :tabindex="player.collapsed ? -1 : 0"
@@ -93,7 +90,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         step=".01"
         type="range"
         @input="player.setVolume(Number(($event.target as HTMLInputElement).value))"
-    /></template>
+      />
+    </div>
     <div class="player-extra">
       <IconButton
         :label="modeLabel"
@@ -217,10 +215,20 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   .play-button[aria-busy='true'] {
     opacity: 0.6;
   }
+  .player-mid {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+    transition:
+      max-width var(--motion-morph),
+      opacity var(--motion-morph);
+  }
   .seek {
     flex: 1;
     min-width: 60px;
-    max-width: 100%;
     accent-color: var(--brand);
     transition:
       max-width var(--motion-morph),
@@ -304,18 +312,13 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     overflow: hidden;
     pointer-events: none;
   }
-  .collapsed .seek,
-  .collapsed .volume,
-  .collapsed .time {
+  /* 中段作为整体收放：收起时只让出 1 个间距，而不是 4 个 */
+  .collapsed .player-mid {
+    flex: 0 1 0;
     max-width: 0;
-    min-width: 0;
-    padding-inline: 0;
-    border-width: 0;
     opacity: 0;
+    overflow: hidden;
     pointer-events: none;
-  }
-  .collapsed .seek {
-    flex-basis: 0;
   }
   .collapsed .player > .cover {
     width: 38px;
@@ -366,9 +369,13 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
       flex: 1;
       width: 100px;
     }
-    .seek {
+    /* 窄屏把「时间 / 进度 / 音量」整段放到第二行（原来是对 .seek 单独设置，包裹后改为整段） */
+    .player-mid {
       order: 5;
       flex-basis: 100%;
+      gap: 7px;
+    }
+    .seek {
       margin: 0;
     }
     .time {
