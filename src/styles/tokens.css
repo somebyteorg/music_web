@@ -45,6 +45,8 @@
   --sidebar-width: 224px;
   /* 播放器尺寸：QueuePanel 等需要避让它的地方统一引用，避免散落的魔法数 */
   --player-height: 76px;
+  /* 播放器收起/展开的形变时长与缓动：收放都带一点缓冲，避免"弹一下" */
+  --motion-morph: 320ms cubic-bezier(0.22, 0.61, 0.36, 1);
   --player-offset: 16px;
   --page-gutter: clamp(24px, 3.2vw, 56px);
 }

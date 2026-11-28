@@ -66,10 +66,12 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         </svg>
       </IconButton>
     </div>
-    <template v-if="!player.collapsed"
-      ><span class="time">{{ duration(player.time) }}</span
+    <template
+      ><span class="time" :aria-hidden="player.collapsed">{{ duration(player.time) }}</span
       ><input
+        :aria-hidden="player.collapsed"
         :max="totalLength || 1"
+        :tabindex="player.collapsed ? -1 : 0"
         :value="player.time"
         aria-label="播放进度"
         class="seek"
@@ -78,8 +80,11 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         type="range"
         @input="player.seek(Number(($event.target as HTMLInputElement).value))" /><span
         class="time"
+        :aria-hidden="player.collapsed"
         >{{ duration(totalLength) }}</span
       ><input
+        :aria-hidden="player.collapsed"
+        :tabindex="player.collapsed ? -1 : 0"
         :value="player.volume"
         aria-label="音量"
         class="volume"
@@ -92,6 +97,8 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     <div class="player-extra">
       <IconButton
         :label="modeLabel"
+        :aria-hidden="player.collapsed"
+        :tabindex="player.collapsed ? -1 : 0"
         :title="modeLabel"
         @click="queue.cycleMode()"
         class="mode-button"
@@ -119,8 +126,12 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
         :title="player.collapsed ? '展开播放器' : '收起播放器'"
         @click="player.collapsed = !player.collapsed"
       >
-        <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-          <path :d="player.collapsed ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6'" />
+        <svg
+          aria-hidden="true"
+          :class="['ui-icon', 'collapse-icon', { flipped: player.collapsed }]"
+          viewBox="0 0 24 24"
+        >
+          <path d="m6 9 6 6 6-6" />
         </svg>
       </IconButton>
       <IconButton label="关闭播放器" title="关闭播放器" @click="closeAll">
@@ -151,10 +162,21 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     border-radius: 14px;
     box-shadow: var(--shadow-player);
     backdrop-filter: blur(20px);
+    /* 收起/展开全程只动可插值的长度属性（不再出现 left: auto / width: 撑开） */
+    transition:
+      left var(--motion-morph),
+      right var(--motion-morph),
+      bottom var(--motion-morph),
+      padding var(--motion-morph),
+      min-height var(--motion-morph),
+      gap var(--motion-morph),
+      border-radius var(--motion-morph),
+      box-shadow var(--motion-morph);
   }
   .player > .cover {
     width: 46px;
     flex-shrink: 0;
+    transition: width var(--motion-morph);
   }
   .player-title {
     display: flex;
@@ -198,16 +220,35 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
   .seek {
     flex: 1;
     min-width: 60px;
+    max-width: 100%;
     accent-color: var(--brand);
+    transition:
+      max-width var(--motion-morph),
+      opacity var(--motion-morph);
   }
   .volume {
     width: 75px;
     accent-color: var(--brand);
+    transition:
+      max-width var(--motion-morph),
+      opacity var(--motion-morph);
   }
   .time {
     color: var(--text-muted);
     font-size: 11px;
     font-variant-numeric: tabular-nums;
+    max-width: 72px;
+    overflow: hidden;
+    white-space: nowrap;
+    transition:
+      max-width var(--motion-morph),
+      opacity var(--motion-morph);
+  }
+  .collapse-icon {
+    transition: transform var(--motion-morph);
+  }
+  .collapse-icon.flipped {
+    transform: rotate(180deg);
   }
   .player-extra {
     display: flex;
@@ -235,16 +276,49 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
     font-variant-numeric: tabular-nums;
   }
   .player.collapsed {
-    left: auto;
+    /* 用长度代替 left:auto + width，浏览器才能在两端之间插值 */
+    left: calc(100% - 432px);
     right: 12px;
     bottom: 12px;
-    width: min(420px, calc(100% - 24px));
     padding: 8px 12px;
     min-height: 54px;
     gap: 10px;
     border: 1px solid var(--line);
     border-radius: 12px;
     box-shadow: var(--shadow-player-collapsed);
+  }
+  /* 收起时进度/时间/音量不是"消失"，而是被压扁并淡出 */
+  /* 收起时让出「循环模式」这 32px 给标题（宽度与透明度一起过渡，避免突然消失） */
+  .mode-button {
+    transition:
+      width var(--motion-morph),
+      min-width var(--motion-morph),
+      opacity var(--motion-morph);
+  }
+  .collapsed .mode-button {
+    width: 0;
+    min-width: 0;
+    padding-inline: 0;
+    border-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .collapsed .seek,
+  .collapsed .volume,
+  .collapsed .time {
+    max-width: 0;
+    min-width: 0;
+    padding-inline: 0;
+    border-width: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .collapsed .seek {
+    flex-basis: 0;
+  }
+  .collapsed .player > .cover {
+    width: 38px;
   }
   .collapsed .player-title {
     flex: 1;
@@ -264,6 +338,11 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
       right: 16px;
       padding-inline: 14px;
     }
+    /* 窄屏下小窗贴满左右 12px（与桌面 420px 宽等效的视觉密度） */
+    .player.collapsed {
+      left: 12px;
+      right: 12px;
+    }
     .player-title {
       width: 120px;
     }
@@ -278,6 +357,10 @@ const modeLabel = computed(() => playModeLabels[queue.mode])
       bottom: 10px;
       flex-wrap: wrap;
       gap: 7px;
+    }
+    /* 收起后回到单行小窗（进度条那行的 flex-basis 归零，随之收高） */
+    .player.collapsed {
+      flex-wrap: nowrap;
     }
     .player-title {
       flex: 1;
