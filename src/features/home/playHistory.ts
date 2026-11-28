@@ -159,12 +159,3 @@ export function topAlbums(history: PlayRecord[], n: number): AlbumTaste[] {
 export function continueListening(history: PlayRecord[], n: number): PlayRecord[] {
   return [...history].sort((a, b) => b.lastPlayedAt - a.lastPlayedAt).slice(0, n)
 }
-
-export function clearHistory(userId: number) {
-  localStorage.removeItem(storageKey(userId))
-}
-
-/** 已听过的歌曲 id 集合：猜你喜欢要排除它们 */
-export function playedSongIds(history: PlayRecord[]): Set<string> {
-  return new Set(history.map((record) => record.songId))
-}

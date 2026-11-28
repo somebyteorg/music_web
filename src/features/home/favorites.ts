@@ -58,25 +58,8 @@ function writeFavorites(userId: number, list: FavoriteRecord[]): FavoriteRecord[
   return trimmed
 }
 
-/** 收藏 / 取消收藏；返回落盘后的列表 */
-export function setFavorite(userId: number, song: Entity, value: boolean): FavoriteRecord[] {
-  const list = readFavorites(userId)
-  const rest = list.filter((record) => record.songId !== song.id)
-  if (!value) return writeFavorites(userId, rest)
-  return writeFavorites(userId, [
-    {
-      songId: song.id,
-      name: song.name,
-      artistName: song.artists?.map((artist) => artist.name).join(' / ') || '未填写歌手',
-      albumName: song.albums?.[0]?.name || '单曲',
-      at: Date.now(),
-    },
-    ...rest,
-  ])
-}
-
-/** 批量收藏/取消：只落盘一次，列表页勾选多首时用它 */
-export function setFavorites(userId: number, songs: Entity[], value: boolean): FavoriteRecord[] {
+/** 批量收藏/取消：只落盘一次（syncFavorites 是唯一调用方） */
+function setFavorites(userId: number, songs: Entity[], value: boolean): FavoriteRecord[] {
   const removed = new Set(songs.map((song) => song.id))
   const rest = readFavorites(userId).filter((record) => !removed.has(record.songId))
   if (!value) return writeFavorites(userId, rest)
@@ -98,8 +81,4 @@ export function syncFavorites(userId: number | undefined, songs: Entity[], value
   if (!userId || songs.length === 0) return
   setFavorites(userId, songs, value)
   window.dispatchEvent(new CustomEvent(FAVORITES_UPDATED_EVENT))
-}
-
-export function isFavorite(userId: number, songId: string): boolean {
-  return readFavorites(userId).some((record) => record.songId === songId)
 }

@@ -2,6 +2,7 @@
 import Button from '@/components/ui/Button.vue'
 import EntityCover from '@/components/EntityCover.vue'
 import type { Entity } from '@/types/catalog'
+import { clock } from '@/utils/format'
 import { computed } from 'vue'
 
 /**
@@ -22,12 +23,6 @@ const props = defineProps<{
 const emit = defineEmits<{ play: []; enqueue: []; random: [] }>()
 
 const song = computed(() => (props.songs.length > 0 ? props.songs[0] : null))
-
-/** 00:00 形式（进度与总时长都要两位分钟，且长度固定不抖） */
-function clock(seconds: number) {
-  const value = Math.max(0, Math.round(seconds))
-  return String(Math.floor(value / 60)).padStart(2, '0') + ':' + String(value % 60).padStart(2, '0')
-}
 
 /** 总时长：详情接口不带 `duration`（只有列表接口带），优先取首个音频文件的时长 */
 const total = computed(() => {
