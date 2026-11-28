@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import PlayingBadge from './PlayingBadge.vue'
 import { usePlayerStore } from '@/stores/player'
 import type { Entity } from '@/types/catalog'
 import { computed } from 'vue'
@@ -34,7 +33,6 @@ function artistsOf(album: Entity) {
   >
     <span class="vinyl-art">
       <span aria-hidden="true" class="vinyl-disc"></span>
-      <PlayingBadge v-if="isPlaying" class="vinyl-playing" />
     </span>
     <span class="vinyl-name">{{ album.name }}</span>
     <span class="vinyl-meta">{{ artistsOf(album) }}</span>
@@ -63,22 +61,14 @@ function artistsOf(album: Entity) {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
-  /* 正在播放：唱片外圈 2px 品牌描边（与唱片自身阴影叠在一起） */
-  .vinyl-card.is-playing .vinyl-disc {
-    box-shadow:
-      0 0 0 2px var(--brand),
-      var(--shadow-md);
+  /* 正在播放：只让专辑名转品牌色（与 SongRow.playing 一致），不加描边/徽标 */
+  .vinyl-card.is-playing .vinyl-name {
+    color: var(--brand-strong);
   }
   .vinyl-art {
     position: relative;
     display: grid;
     place-items: center;
-  }
-  .vinyl-playing {
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-    z-index: 1;
   }
   /* 唱片本体：外圈刻纹（radial 渐变）+ 中心 8px 圆孔（透明，露出底色） */
   .vinyl-disc {

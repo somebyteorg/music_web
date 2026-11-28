@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import EntityCover from '@/components/EntityCover.vue'
-import PlayingBadge from './PlayingBadge.vue'
 import { usePlayerStore } from '@/stores/player'
 import type { Entity } from '@/types/catalog'
 import { computed } from 'vue'
@@ -30,7 +29,6 @@ function artistsOf(song: Entity) {
   >
     <span class="chip-art">
       <EntityCover class="chip-cover" :item="song" />
-      <PlayingBadge v-if="isPlaying" class="chip-playing" />
     </span>
     <span class="chip-text">
       <strong>{{ song.name }}</strong>
@@ -70,9 +68,9 @@ function artistsOf(song: Entity) {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
-  /* 正在播放：小封面外圈 2px 品牌描边 + 左下角均衡器 */
-  .home-chip.is-playing .chip-art {
-    box-shadow: 0 0 0 2px var(--brand);
+  /* 正在播放：只让曲名转品牌色（与 SongRow.playing 一致），不加描边/徽标 */
+  .home-chip.is-playing .chip-text strong {
+    color: var(--brand-strong);
   }
   .chip-art {
     position: relative;
@@ -83,12 +81,6 @@ function artistsOf(song: Entity) {
   .chip-art > .chip-cover {
     width: 100%;
     border-radius: inherit;
-  }
-  .chip-playing {
-    position: absolute;
-    bottom: -4px;
-    left: -4px;
-    z-index: 1;
   }
   .chip-text {
     display: flex;
