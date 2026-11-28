@@ -23,6 +23,8 @@ export const usePlayerStore = defineStore('player', () => {
   const length = ref(0)
   const volume = ref(0.8)
   const collapsed = ref(false)
+  /** 全屏「歌词预览页」是否打开（由播放器封面按钮打开，Esc/×/关闭播放器都会关掉） */
+  const nowPlaying = ref(false)
   const available = computed(() => !!file.value)
   let failures = 0
 
@@ -211,7 +213,16 @@ export const usePlayerStore = defineStore('player', () => {
     audio.volume = value
   }
 
+  function openNowPlaying() {
+    nowPlaying.value = true
+  }
+
+  function closeNowPlaying() {
+    nowPlaying.value = false
+  }
+
   function close() {
+    nowPlaying.value = false
     file.value = null
     song.value = null
     entryKey.value = null
@@ -242,6 +253,7 @@ export const usePlayerStore = defineStore('player', () => {
     length,
     volume,
     collapsed,
+    nowPlaying,
     available,
     play,
     playList,
@@ -252,6 +264,8 @@ export const usePlayerStore = defineStore('player', () => {
     previous,
     seek,
     setVolume,
+    openNowPlaying,
+    closeNowPlaying,
     close,
     supported,
   }
