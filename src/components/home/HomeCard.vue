@@ -49,44 +49,39 @@ function artistsOf(item: Entity) {
     v-if="to"
     :aria-current="isPlaying ? 'true' : undefined"
     :aria-label="'打开专辑 ' + item.name"
-    :class="['home-card', 'home-card--' + variant, { 'is-playing': isPlaying }]"
+    :class="['cover-tile', 'home-card', 'home-card--' + variant, { 'is-playing': isPlaying }]"
     :to="to"
   >
-    <span class="card-art">
-      <EntityCover :item="item" />
-    </span>
-    <span class="card-name">{{ item.name }}</span>
-    <span class="card-meta">{{ artistsOf(item) }}</span>
+    <EntityCover :item="item" />
+    <span class="cover-tile-name">{{ item.name }}</span>
+    <span class="cover-tile-meta">{{ artistsOf(item) }}</span>
   </RouterLink>
   <button
     v-else
     :aria-current="isPlaying ? 'true' : undefined"
     :aria-label="(isPlaying ? '正在播放 ' : '播放 ') + item.name"
-    :class="['home-card', 'home-card--' + variant, { 'is-playing': isPlaying }]"
+    :class="['cover-tile', 'home-card', 'home-card--' + variant, { 'is-playing': isPlaying }]"
     type="button"
     @click="emit('play')"
   >
-    <span class="card-art">
-      <EntityCover :item="item" />
-      <span v-if="showPlay" aria-hidden="true" class="card-play">
-        <svg class="ui-icon" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z" /></svg>
-      </span>
+    <EntityCover :item="item" />
+    <span v-if="showPlay" aria-hidden="true" class="card-play">
+      <svg class="ui-icon" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z" /></svg>
     </span>
-    <span class="card-name">{{ item.name }}</span>
-    <span class="card-meta">{{ hint || artistsOf(item) }}</span>
+    <span class="cover-tile-name">{{ item.name }}</span>
+    <span class="cover-tile-meta">{{ hint || artistsOf(item) }}</span>
   </button>
 </template>
 
 <style scoped>
 @layer components {
-  /* 与目录网格（catalogGrid.css 的 .grid .entity-main）同一套口径：
-     卡片本身不画框，封面自己带圆角与阴影，hover 时封面浮起 */
+  /* 排版、封面圆角/阴影、标题与副文案全部来自共享的 .cover-tile（components.css）；
+     这里只留首页特有的：列宽、竖版比例、hover 播放钮 */
   .home-card {
-    display: flex;
-    flex-direction: column;
+    position: relative;
     flex: 0 0 176px;
     width: 176px;
-    text-align: left;
+    padding: 0;
     scroll-snap-align: start;
   }
   .home-card--cover-play {
@@ -97,43 +92,26 @@ function artistsOf(item: Entity) {
     flex-basis: 144px;
     width: 144px;
   }
-  .card-art {
-    position: relative;
-    display: block;
-    /* 10px 与 EntityCover 的 .cover 圆角一致（那里也是字面量），
-       否则外框阴影会被裁成另一个形状 */
-    margin-bottom: var(--space-4);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: var(--shadow-cover);
-    transition:
-      transform 0.25s,
-      box-shadow 0.25s;
-  }
-  .home-card--poster .card-art {
+  /* 收藏的竖版卡：封面框 4:5 */
+  .home-card--poster > .cover {
     aspect-ratio: 4 / 5;
-    overflow: hidden;
   }
-  .home-card--poster .card-art > .cover {
-    height: 100%;
-  }
-  .card-art > .cover {
-    width: 100%;
-  }
-  /* 正在播放：只让曲名转品牌色，与 SongRow.playing 的写法一致，不加描边/徽标 */
-  .home-card.is-playing .card-name {
-    color: var(--brand-strong);
-  }
-  /* hover 播放钮：默认透明，hover / 键盘聚焦时淡入 */
+  /* hover 播放钮：盖住封面那块（宽高比与封面一致），默认透明，hover / 键盘聚焦时淡入 */
   .card-play {
     position: absolute;
-    inset: 0;
+    top: 0;
+    right: 0;
+    left: 0;
     display: grid;
     place-items: center;
-    border-radius: inherit;
+    aspect-ratio: 1;
+    border-radius: var(--radius-cover);
     background: color-mix(in srgb, var(--ink) 28%, transparent);
     opacity: 0;
     transition: opacity var(--transition-fast);
+  }
+  .home-card--poster .card-play {
+    aspect-ratio: 4 / 5;
   }
   .card-play .ui-icon {
     width: 40px;
@@ -149,51 +127,6 @@ function artistsOf(item: Entity) {
   .home-card:hover .card-play,
   .home-card:focus-visible .card-play {
     opacity: 1;
-  }
-  .home-card:hover .card-art {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-cover-hover);
-  }
-  .home-card:hover .card-name {
-    color: var(--brand);
-  }
-  .home-card:focus-visible {
-    outline: 2px solid var(--brand);
-    outline-offset: 2px;
-  }
-  /* 与目录网格同一套排版：标题 14、副文案 12 且上边距 6 */
-  .card-name {
-    overflow: hidden;
-    color: var(--text);
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .card-meta {
-    margin-top: 6px;
-    overflow: hidden;
-    color: var(--text-muted);
-    font-size: 12px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  /* reduce：不打位移、播放钮直接出现（静态层次保留） */
-  @media (prefers-reduced-motion: reduce) {
-    .home-card:hover .card-art {
-      transform: none;
-    }
-  }
-  @media (max-width: 899px) {
-    .home-card,
-    .home-card--cover-play {
-      flex-basis: 132px;
-      width: 132px;
-    }
-    .home-card--poster {
-      flex-basis: 128px;
-      width: 128px;
-    }
   }
 }
 </style>
