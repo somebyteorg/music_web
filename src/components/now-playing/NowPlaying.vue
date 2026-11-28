@@ -2,7 +2,6 @@
 import { useMediaQuery } from '@vueuse/core'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useNowPlayingLyrics } from '@/composables/useNowPlayingLyrics'
-import { usePlayerMeta } from '@/composables/usePlayerMeta'
 import { usePlayerStore } from '@/stores/player'
 import NowPlayingArtwork from './NowPlayingArtwork.vue'
 import NowPlayingBackdrop from './NowPlayingBackdrop.vue'
@@ -19,7 +18,6 @@ import { provideNowPlayingLyrics } from './lyricsContext'
  * z-index 60：压过播放器（45）与队列抽屉（46）。
  */
 const player = usePlayerStore()
-const { totalLength } = usePlayerMeta()
 const lyrics = useNowPlayingLyrics()
 provideNowPlayingLyrics(lyrics)
 
@@ -35,14 +33,6 @@ const showHeader = computed(() => !compact.value || player.nowPlayingLyrics)
 const showEmpty = computed(
   () => lyricsOpen.value && tab.value === 'lyrics' && lyrics.status.value === 'empty',
 )
-
-/** 卡片顶部进度线的宽度（纯展示，不交互） */
-const progressWidth = computed(() => {
-  const total = totalLength.value
-  if (!total) return '0%'
-  const ratio = Math.min(1, player.time / total)
-  return `${(ratio * 100).toFixed(2)}%`
-})
 
 let origin: HTMLElement | null = null
 let savedOverflow = ''
@@ -112,9 +102,6 @@ onBeforeUnmount(() => {
       >
         <NowPlayingBackdrop />
         <div :class="['np-stage', { 'is-lyrics': lyricsOpen, 'is-empty': showEmpty }]">
-          <div aria-hidden="true" class="np-progress-line">
-            <span :style="{ width: progressWidth }"></span>
-          </div>
           <button
             ref="closeButton"
             aria-label="关闭歌词预览"
@@ -185,26 +172,6 @@ onBeforeUnmount(() => {
   .np-side-slot {
     grid-column: 2;
     grid-row: 2;
-  }
-  /* 卡片顶部进度线：2px，前景品牌色、底轨 --line，纯展示；
-     缩进到 1px 边框内侧、圆角取 23px（24 − 1），线的两端才不会压在卡片圆角上被切 */
-  .np-progress-line {
-    position: absolute;
-    top: 1px;
-    right: 1px;
-    left: 1px;
-    height: 2px;
-    overflow: hidden;
-    border-top-left-radius: 23px;
-    border-top-right-radius: 23px;
-    background: var(--line);
-  }
-  .np-progress-line > span {
-    display: block;
-    height: 100%;
-    /* 降权：别和底部那条自定义进度条抢注意力 */
-    background: color-mix(in srgb, var(--brand) 60%, transparent);
-    transition: width var(--transition-base) linear;
   }
   .np-close {
     position: absolute;
