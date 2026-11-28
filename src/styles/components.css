@@ -239,3 +239,39 @@
   margin: 0 auto 12px;
   object-fit: contain;
 }
+/*
+ * 滚动渐隐（由 composables/useScrollFade.ts 按滚动位置挂状态类）：
+ * 不可滚时无遮罩、贴顶只剩底部、贴底只剩顶部、内容不足一屏完全不遮。
+ * 遮罩必须加在滚动容器本身，不要加在带 backdrop-filter 的祖先上（Safari 下会异常）。
+ */
+.scroll-fade.is-scrollable {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent 100%
+  );
+}
+
+.scroll-fade.is-scrollable.is-at-top {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
+}
+
+.scroll-fade.is-scrollable.is-at-bottom {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 100%);
+}
+
+.scroll-fade.is-scrollable.is-at-top.is-at-bottom {
+  -webkit-mask-image: none;
+  mask-image: none;
+}

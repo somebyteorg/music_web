@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, useTemplateRef, watch } from 'vue'
 import { useNowPlayingLyrics } from '@/composables/useNowPlayingLyrics'
+import { useScrollFade } from '@/composables/useScrollFade'
 
 /**
  * 预览页右栏：歌词列表。
@@ -18,6 +19,8 @@ const MAX_DEPTH = 5
 const { status, lines, activeIndex, message, retry } = useNowPlayingLyrics()
 
 const list = useTemplateRef<HTMLOListElement>('list')
+/** 滚动渐隐：贴顶/贴底/不可滚三态由共享 composable 维护（样式在 styles/components.css） */
+const { refresh: refreshFade } = useScrollFade(list)
 let pausedUntil = 0
 let autoScrolling = false
 let idleTimer = 0
@@ -52,13 +55,15 @@ watch(activeIndex, (index) => {
   scrollToActive(index)
 })
 
-// 歌词解析完成（含切歌）后先对到当前行
+// 歌词解析完成（含切歌）后先对到当前行，并重算滚动渐隐
 watch(lines, async () => {
   await nextTick()
+  refreshFade()
   if (activeIndex.value >= 0) scrollToActive(activeIndex.value)
 })
 
 onMounted(() => {
+  refreshFade()
   if (activeIndex.value >= 0) scrollToActive(activeIndex.value)
 })
 </script>
@@ -71,7 +76,7 @@ onMounted(() => {
       <p v-if="message" class="np-detail">{{ message }}</p>
     </div>
     <p v-else-if="status === 'empty'" class="np-note">暂无歌词</p>
-    <ol v-else ref="list" class="np-lines" @scroll.passive="onScroll">
+    <ol v-else ref="list" class="np-lines scroll-fade" @scroll.passive="onScroll">
       <li
         v-for="(line, index) in lines"
         :key="index"
@@ -115,21 +120,6 @@ onMounted(() => {
     overscroll-behavior: contain;
     list-style: none;
     scrollbar-gutter: stable;
-    /* 上下渐隐：滚出可视区的歌词淡出，桌面与移动端同一份 */
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 32px,
-      #000 calc(100% - 32px),
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 32px,
-      #000 calc(100% - 32px),
-      transparent 100%
-    );
   }
   .np-line {
     padding: 12px var(--space-3);
