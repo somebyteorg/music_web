@@ -202,7 +202,8 @@ onBeforeUnmount(() => {
   .np-progress-line > span {
     display: block;
     height: 100%;
-    background: var(--brand);
+    /* 降权：别和底部那条自定义进度条抢注意力 */
+    background: color-mix(in srgb, var(--brand) 60%, transparent);
     transition: width var(--transition-base) linear;
   }
   .np-close {
