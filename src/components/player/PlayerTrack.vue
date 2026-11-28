@@ -28,7 +28,15 @@ const subtitle = computed(() => {
 </script>
 
 <template>
-  <EntityCover :item="displayItem" />
+  <button
+    aria-label="打开歌词预览"
+    class="cover-button"
+    title="歌词预览"
+    type="button"
+    @click="player.openNowPlaying()"
+  >
+    <EntityCover :item="displayItem" />
+  </button>
   <div class="player-title">
     <strong>{{ displayItem?.name }}</strong><span>{{ subtitle }}</span>
   </div>
@@ -36,17 +44,23 @@ const subtitle = computed(() => {
 
 <style scoped>
 @layer components {
-  /* EntityCover 的根元素就是 .cover（子组件根节点带本组件的 scope id），宽度由这里决定。
-     收起态收到 38px：.collapsed 与 .player 是同一个元素，所以选择器必须写成
-     .player.collapsed > .cover —— 拆分前那条 .collapsed .player > .cover 因此从未生效。
-     :global 里要给完整选择器：Vue 的 :global 只保留括号内的部分，括号外会被丢掉。 */
-  .cover {
+  /* 封面是个按钮（打开全屏歌词预览）：它是 .player 的 flex 项，宽度与原来的 .cover 一致。
+     收起态收到 38px：.collapsed 与 .player 是同一个元素，所以选择器要写成 .player.collapsed > …；
+     :global 里必须给完整选择器 —— Vue 的 :global 只保留括号内的部分，括号外会被丢掉。 */
+  .cover-button {
+    display: block;
     width: 46px;
     flex-shrink: 0;
+    padding: 0;
+    border-radius: 10px;
     transition: width var(--motion-morph);
   }
-  :global(.player.collapsed > .cover) {
+  :global(.player.collapsed > .cover-button) {
     width: 38px;
+  }
+  /* EntityCover 的根元素（就是 .cover）撑满按钮 */
+  .cover-button > .cover {
+    width: 100%;
   }
   .player-title {
     display: flex;

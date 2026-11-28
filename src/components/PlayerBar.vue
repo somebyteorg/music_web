@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { usePlayerStore } from '@/stores/player'
 import { useQueueStore } from '@/stores/queue'
+import NowPlaying from './now-playing/NowPlaying.vue'
 import PlayerActions from './player/PlayerActions.vue'
 import PlayerSeek from './player/PlayerSeek.vue'
 import PlayerTrack from './player/PlayerTrack.vue'
@@ -9,7 +10,7 @@ import PlayerTransport from './player/PlayerTransport.vue'
 import QueuePanel from './QueuePanel.vue'
 
 /**
- * 播放器外壳：只负责可见性、.player 外壳与收起/展开形变。
+ * 播放器外壳：只负责可见性、.player 外壳与收起/展开形变，外加全屏歌词预览的挂载点。
  * 内部四段各管各的：封面/曲目信息 → PlayerTrack，播放键 → PlayerTransport，
  * 进度/时间/音量 → PlayerSeek，循环/队列/收起/关闭 → PlayerActions。
  * 收起态是 store 里的全局状态，子组件自己读，不在这里做 props 转发。
@@ -32,6 +33,7 @@ const visible = computed(() => player.available || !!queue.current)
     <PlayerActions />
   </aside>
   <QueuePanel />
+  <NowPlaying />
 </template>
 
 <style scoped>
