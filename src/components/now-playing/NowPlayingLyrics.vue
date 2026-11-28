@@ -80,9 +80,12 @@ onMounted(() => {
   .np-lyrics {
     display: flex;
     flex-direction: column;
+    /* 父级网格是 justify-items: center，这里必须显式撑满列宽，否则歌词会缩成一条窄柱 */
+    width: 100%;
     min-width: 0;
     min-height: 0;
     height: 100%;
+    justify-self: stretch;
   }
   .np-lines {
     flex: 1;
