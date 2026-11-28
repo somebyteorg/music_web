@@ -124,10 +124,13 @@ const kind = computed(() => {
     gap: var(--space-4);
     flex-shrink: 0;
   }
+  /* overflow-x: auto 会纵向裁切：hover 的 -4px 位移与阴影必须在容器内留出空间，
+     再用等量负 margin 抵消，楼层节奏不变 */
   .home-row-scroller {
     display: flex;
     gap: var(--space-3);
-    padding-bottom: var(--space-1);
+    padding-block: 26px;
+    margin-block: -26px;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x proximity;

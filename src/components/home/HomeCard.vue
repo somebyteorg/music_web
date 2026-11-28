@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import EntityCover from '@/components/EntityCover.vue'
-import PlayingBadge from './PlayingBadge.vue'
 import { usePlayerStore } from '@/stores/player'
 import type { Entity } from '@/types/catalog'
 import { computed } from 'vue'
@@ -55,7 +54,6 @@ function artistsOf(item: Entity) {
   >
     <span class="card-art">
       <EntityCover :item="item" />
-      <PlayingBadge v-if="isPlaying" class="card-playing" />
     </span>
     <span class="card-name">{{ item.name }}</span>
     <span class="card-meta">{{ artistsOf(item) }}</span>
@@ -70,7 +68,6 @@ function artistsOf(item: Entity) {
   >
     <span class="card-art">
       <EntityCover :item="item" />
-      <PlayingBadge v-if="isPlaying" class="card-playing" />
       <span v-if="showPlay" aria-hidden="true" class="card-play">
         <svg class="ui-icon" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z" /></svg>
       </span>
@@ -82,23 +79,15 @@ function artistsOf(item: Entity) {
 
 <style scoped>
 @layer components {
+  /* 与目录网格（catalogGrid.css 的 .grid .entity-main）同一套口径：
+     卡片本身不画框，封面自己带圆角与阴影，hover 时封面浮起 */
   .home-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
     flex: 0 0 176px;
     width: 176px;
-    padding: var(--space-2);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-xl);
-    background: var(--surface);
-    box-shadow: var(--shadow-cover);
     text-align: left;
     scroll-snap-align: start;
-    transition:
-      transform var(--transition-fast),
-      box-shadow var(--transition-fast),
-      border-color var(--transition-fast);
   }
   .home-card--cover-play {
     flex-basis: 160px;
@@ -111,8 +100,15 @@ function artistsOf(item: Entity) {
   .card-art {
     position: relative;
     display: block;
-    border-radius: var(--radius-lg);
+    /* 10px 与 EntityCover 的 .cover 圆角一致（那里也是字面量），
+       否则外框阴影会被裁成另一个形状 */
+    margin-bottom: var(--space-4);
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: var(--shadow-cover);
+    transition:
+      transform 0.25s,
+      box-shadow 0.25s;
   }
   .home-card--poster .card-art {
     aspect-ratio: 4 / 5;
@@ -123,17 +119,10 @@ function artistsOf(item: Entity) {
   }
   .card-art > .cover {
     width: 100%;
-    border-radius: inherit;
   }
-  /* 正在播放：封面外圈一道 2px 品牌描边（卡片外框不动），左下角一个均衡器小圆点 */
-  .home-card.is-playing .card-art {
-    box-shadow: 0 0 0 2px var(--brand);
-  }
-  .card-playing {
-    position: absolute;
-    bottom: var(--space-2);
-    left: var(--space-2);
-    z-index: 2;
+  /* 正在播放：只让曲名转品牌色，与 SongRow.playing 的写法一致，不加描边/徽标 */
+  .home-card.is-playing .card-name {
+    color: var(--brand-strong);
   }
   /* hover 播放钮：默认透明，hover / 键盘聚焦时淡入 */
   .card-play {
@@ -161,35 +150,37 @@ function artistsOf(item: Entity) {
   .home-card:focus-visible .card-play {
     opacity: 1;
   }
-  .home-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--brand-line-strong);
-    box-shadow: var(--shadow-md);
+  .home-card:hover .card-art {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-cover-hover);
+  }
+  .home-card:hover .card-name {
+    color: var(--brand);
   }
   .home-card:focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
-  /* 标题与封面之间留 8（卡片自身 gap 4 + 这里 4） */
+  /* 与目录网格同一套排版：标题 14、副文案 12 且上边距 6 */
   .card-name {
-    margin-top: var(--space-1);
     overflow: hidden;
     color: var(--text);
-    font-size: var(--font-base);
+    font-size: 14px;
     font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .card-meta {
+    margin-top: 6px;
     overflow: hidden;
     color: var(--text-muted);
-    font-size: var(--font-sm);
+    font-size: 12px;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   /* reduce：不打位移、播放钮直接出现（静态层次保留） */
   @media (prefers-reduced-motion: reduce) {
-    .home-card:hover {
+    .home-card:hover .card-art {
       transform: none;
     }
   }
