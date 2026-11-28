@@ -96,9 +96,14 @@ onMounted(() => {
     min-height: 0;
     height: 100%;
     justify-self: stretch;
-    /* 字号桌面 22 / 当前行 24，移动端 18 / 20 */
+    /* 字号桌面 22 / 当前行 24，移动端 17/1.75、当前行 19 */
     --np-line-size: 22px;
     --np-line-active-size: 24px;
+    --np-line-height: 1.55;
+    /* 距离层次：-0.16/行、模糊 0.3px/行、缩放 0.015/行（移动端在媒体查询里放缓） */
+    --np-depth-fade: 0.16;
+    --np-depth-blur: 0.3px;
+    --np-depth-scale: 0.015;
   }
   .np-lines {
     flex: 1;
@@ -130,13 +135,13 @@ onMounted(() => {
     padding: 12px var(--space-3);
     color: var(--text-muted);
     font-size: var(--np-line-size);
-    line-height: 1.55;
+    line-height: var(--np-line-height);
     text-align: center;
     border-radius: var(--radius-md);
     /* 距离层次：越远越淡 / 越虚 / 越小；--d 由模板按 |i - activeIndex| 给（0..5） */
-    opacity: calc(1 - var(--d, 0) * 0.16);
-    filter: blur(calc(var(--d, 0) * 0.3px));
-    transform: scale(calc(1 - var(--d, 0) * 0.015));
+    opacity: calc(1 - var(--d, 0) * var(--np-depth-fade));
+    filter: blur(calc(var(--d, 0) * var(--np-depth-blur)));
+    transform: scale(calc(1 - var(--d, 0) * var(--np-depth-scale)));
     transition:
       color var(--motion-morph),
       opacity var(--motion-morph),
@@ -174,8 +179,17 @@ onMounted(() => {
   }
   @media (max-width: 899px) {
     .np-lyrics {
-      --np-line-size: 18px;
-      --np-line-active-size: 20px;
+      --np-line-size: 17px;
+      --np-line-active-size: 19px;
+      --np-line-height: 1.75;
+      /* 移动端屏幕小，层次衰减放缓，避免远处几行直接糊成一片 */
+      --np-depth-fade: 0.12;
+      --np-depth-blur: 0.22px;
+      --np-depth-scale: 0.012;
+    }
+    .np-lines {
+      padding-block: var(--space-4);
+      padding-inline: var(--space-2);
     }
     .np-line {
       padding: 10px var(--space-2);

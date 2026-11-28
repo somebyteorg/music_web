@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import EntityCover from '@/components/EntityCover.vue'
+import Button from '@/components/ui/Button.vue'
 import MarqueeText from '@/components/ui/MarqueeText.vue'
 import PlayerModeButton from '@/components/player/PlayerModeButton.vue'
 import PlayerSeek from '@/components/player/PlayerSeek.vue'
@@ -10,11 +11,11 @@ import { useMediaQuery } from '@vueuse/core'
 import { computed } from 'vue'
 
 /**
- * 预览页左栏：大封面 + 曲名/歌手 + 控制行（循环模式）。
+ * 预览页左栏：大封面 + 曲名/歌手 + 底部一组（控制行 / 进度 / 移动端「显示歌词」）。
  * 控制行与进度条直接复用播放器的 PlayerTransport / PlayerSeek / PlayerModeButton（variant="stage"），
  * 不在这里再写一份「上一首/播放/下一首」。曲名用共享的 MarqueeText。
  * 尺寸跟着舞台高度走（--np-stage-height），左栏内容不会把舞台撑高。
- * 移动端（≤899px）封面是按钮：点它切入歌词态；切过去后本栏收成顶部一行（44px 小封面 + 两行信息）。
+ * 移动端（≤899px）封面态是竖排三段、按可用高度分开；歌词态整栏收成顶部一行。
  */
 const player = usePlayerStore()
 const { displayItem, artist } = usePlayerMeta()
@@ -22,6 +23,8 @@ const { displayItem, artist } = usePlayerMeta()
 const compact = useMediaQuery('(max-width: 899px)')
 /** 移动端的歌词态：本栏从整块封面收成顶部一行 */
 const header = computed(() => compact.value && player.nowPlayingLyrics)
+/** 移动端封面态的「显示歌词」入口：参加布局，不再浮在进度条右下 */
+const showLyricsEntry = computed(() => compact.value && !player.nowPlayingLyrics)
 </script>
 
 <template>
@@ -41,11 +44,26 @@ const header = computed(() => compact.value && player.nowPlayingLyrics)
       <h2 class="np-title"><MarqueeText :text="displayItem?.name" /></h2>
       <p v-if="artist" class="np-artist">{{ artist }}</p>
     </div>
-    <div class="np-controls">
-      <PlayerTransport variant="stage" />
-      <PlayerModeButton :in-player="false" />
+    <div class="np-bottom">
+      <div class="np-controls">
+        <PlayerTransport variant="stage" />
+        <PlayerModeButton :in-player="false" />
+      </div>
+      <PlayerSeek class="np-progress" variant="stage" />
+      <Button
+        v-if="showLyricsEntry"
+        aria-label="显示歌词"
+        class="np-show-lyrics"
+        type="button"
+        variant="secondary"
+        @click="player.setNowPlayingLyrics(true)"
+      >
+        <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
+          <path d="M4 6h11M4 11h11M4 16h7" />
+        </svg>
+        显示歌词
+      </Button>
     </div>
-    <PlayerSeek class="np-progress" variant="stage" />
   </div>
 </template>
 
@@ -101,12 +119,25 @@ const header = computed(() => compact.value && player.nowPlayingLyrics)
     color: var(--text-muted);
     font-size: 13px;
   }
+  /* 底部一组：控制行 / 进度 / 移动端入口，桌面端与封面、信息同列 */
+  .np-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    width: 100%;
+    min-width: 0;
+  }
   .np-controls {
     display: flex;
     align-items: center;
     gap: var(--space-2);
   }
-  /* 移动端歌词态：整栏退化成一行（44px 小封面 + 歌名/歌手两行），控制行让位给歌词 */
+  .np-bottom .np-show-lyrics {
+    width: 100%;
+    min-height: 44px;
+  }
+  /* 移动端歌词态：整栏退化成一行（44px 小封面 + 歌名/歌手两行），底部一组让位给歌词 */
   .np-artwork.is-header {
     flex-direction: row;
     align-items: center;
@@ -138,21 +169,35 @@ const header = computed(() => compact.value && player.nowPlayingLyrics)
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  .np-artwork.is-header .np-controls,
-  .np-artwork.is-header .np-progress {
+  .np-artwork.is-header .np-bottom {
     display: none;
   }
   @media (max-width: 899px) {
-    .np-artwork {
+    /* 封面态：三段（封面 / 信息 / 底部一组）按可用高度铺开，吃满舞台而不是挤在中间 */
+    .np-artwork:not(.is-header) {
+      justify-content: space-between;
       gap: var(--space-3);
+      padding-block: var(--space-5);
     }
-    /* 竖排：封面按屏宽收（60vw，最多 280px），另外还要让得开舞台高度 */
+    /* 封面按舞台高度比例放大，不再用 60vw / 280px 这类固定值 */
     .np-artwork .np-cover,
     .np-artwork .np-cover-button {
-      width: min(60vw, 280px, calc(var(--np-stage-height) * 0.6));
+      width: min(86vw, calc(var(--np-stage-height) * 0.46));
     }
     .np-title {
-      font-size: 18px;
+      font-size: 22px;
+    }
+    .np-artist {
+      margin-top: var(--space-2);
+      font-size: 14px;
+    }
+    .np-artwork:not(.is-header) .np-bottom {
+      gap: var(--space-3);
+    }
+    /* 进度条整行宽，两侧留出内边距，不再被浮动按钮压住 */
+    .np-artwork:not(.is-header) .np-progress {
+      width: 100%;
+      padding-inline: var(--space-3);
     }
   }
 }

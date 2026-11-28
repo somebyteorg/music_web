@@ -93,19 +93,6 @@ onBeforeUnmount(() => {
           <NowPlayingArtwork />
           <NowPlayingSide v-if="lyricsOpen" />
         </div>
-        <button
-          v-if="compact && !player.nowPlayingLyrics"
-          aria-label="显示歌词"
-          class="np-show-lyrics"
-          title="显示歌词"
-          type="button"
-          @click="player.setNowPlayingLyrics(true)"
-        >
-          <svg aria-hidden="true" class="ui-icon" viewBox="0 0 24 24">
-            <path d="M4 6h11M4 11h11M4 16h7" />
-          </svg>
-          显示歌词
-        </button>
       </div>
     </Transition>
   </Teleport>
@@ -140,21 +127,6 @@ onBeforeUnmount(() => {
     top: var(--space-4);
     right: var(--space-4);
     z-index: 1;
-  }
-  /* 移动端封面态右下角的入口；只在 ≤899px 且未展开歌词时出现 */
-  .np-show-lyrics {
-    position: absolute;
-    right: var(--space-4);
-    bottom: var(--space-4);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-2) var(--space-3);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-xl);
-    color: var(--brand);
-    background: var(--surface-glass-strong);
-    font-size: var(--font-sm);
   }
   /* 进出：淡入 + 轻微缩放；prefers-reduced-motion 由 @layer a11y 统一关掉 */
   .np-enter-active,

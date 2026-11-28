@@ -72,6 +72,21 @@ const queue = useQueueStore()
     width: 22px;
     height: 22px;
   }
+  /* 移动端全屏舞台：播放键 56px、前后切歌 40px（尺寸只在这里定义，页面里不复制） */
+  @media (max-width: 899px) {
+    .player-controls.is-stage {
+      gap: var(--space-4);
+    }
+    .player-controls.is-stage .play-button {
+      width: 56px;
+      height: 56px;
+    }
+    .player-controls.is-stage .icon-button {
+      width: 40px;
+      min-width: 40px;
+      height: 40px;
+    }
+  }
   @media (max-width: 540px) {
     .player-controls:not(.is-stage) .icon-button {
       display: none;
