@@ -6,7 +6,7 @@ import { useTemplateRef, watch } from 'vue'
 
 /**
  * 预览页「播放队列」面板：直接复用队列抽屉的行组件（QueueItem 自己读 store、自己算序号与时长），
- * 这里只补一层可滚动容器、曲目总数与空态。
+ * 这里只补一层可滚动容器与空态。
  */
 const queue = useQueueStore()
 const list = useTemplateRef<HTMLOListElement>('list')
@@ -21,7 +21,6 @@ watch(
 
 <template>
   <div class="np-queue">
-    <p class="np-queue-count">共 {{ queue.length }} 首</p>
     <ol v-if="queue.length" ref="list" class="np-queue-list scroll-fade">
       <QueueItem
         v-for="(entry, index) in queue.items"
@@ -42,13 +41,6 @@ watch(
     flex: 1;
     width: 100%;
     min-height: 0;
-  }
-  .np-queue-count {
-    margin: 0 0 var(--space-2);
-    color: var(--text-muted);
-    font-size: var(--font-xs);
-    font-variant-numeric: tabular-nums;
-    text-align: center;
   }
   .np-queue-list {
     flex: 1;
