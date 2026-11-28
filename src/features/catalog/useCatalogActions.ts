@@ -2,6 +2,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { catalogApi } from '@/lib/api/catalog'
 import { useStorage } from '@vueuse/core'
 import { favoriteSongs } from '@/lib/api/catalog'
+import { syncFavorites } from '@/features/home/favorites'
 import { useLibrariesStore } from '@/stores/libraries'
 import { useSignStore } from '@/stores/sign'
 import { notify, useAction } from '@/composables/useFeedback'
@@ -84,6 +85,15 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
         `已${value ? '收藏' : '取消收藏'} ${count} 首歌曲${count < ids.length ? `，${ids.length - count} 首未完成，请重试` : ''}。`,
         count < ids.length,
       )
+      // 首页「你的收藏」读本地记录：把这次成功的那批写进去
+      syncFavorites(
+        sign.user?.id,
+        ids.flatMap((id) => {
+          const song = items.value.find((item) => item.id === id)
+          return song ? [song] : []
+        }),
+        value,
+      )
       selected.value = []
       invalidateScopes(sign.user?.id, ['detail'])
       await load()
@@ -94,6 +104,7 @@ export function useCatalogActions(catalog: ReturnType<typeof useCatalog>) {
   function favorite(id: string, value: boolean) {
     const song = items.value.find((item) => item.id === id)
     if (song) song.is_favorite = value
+    if (song) syncFavorites(sign.user?.id, [song], value)
     // 当前列表已经就地改过，只失效不重取；详情页的收藏按钮靠失效回到新鲜数据
     invalidateScopes(sign.user?.id, ['catalog', 'detail'])
     if (favorites.value && !value) void load()

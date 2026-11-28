@@ -1,5 +1,6 @@
 import { computed, ref, watch } from 'vue'
 import { catalogApi } from '@/lib/api/catalog'
+import { syncFavorites } from '@/features/home/favorites'
 import { useRouter } from 'vue-router'
 import { filesApi } from '@/lib/api/files'
 import type { Entity } from '@/types/catalog'
@@ -172,8 +173,10 @@ export function useDetailOperations(detail: ReturnType<typeof useEntityDetail>) 
   async function favorite() {
     if (!item.value) return
     await run(async () => {
-      await catalogApi.favorite(id, !item.value!.is_favorite)
-      item.value!.is_favorite = !item.value!.is_favorite
+      const next = !item.value!.is_favorite
+      await catalogApi.favorite(id, next)
+      item.value!.is_favorite = next
+      syncFavorites(sign.user?.id, [item.value!], next)
       // 页面上的按钮已经就地改过，失效只为让列表页回来时看到新状态
       invalidateScopes(sign.user?.id, ['catalog', 'detail'])
     })
