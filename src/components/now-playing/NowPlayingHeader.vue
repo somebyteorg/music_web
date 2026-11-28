@@ -66,13 +66,24 @@ const { albumName, artist } = usePlayerMeta()
     width: min(240px, 100%);
   }
   @media (max-width: 899px) {
-    /* 窄屏一行放不下 240px 的 tab：收窄 tab、收紧间距，把宽度让给「专辑名 · 歌手」 */
+    /* 窄屏拆两行：第一行「专辑 · 歌手」+ 右侧关闭按钮（留 44 + 间距），
+       第二行整宽 tab；两行间距 --space-2 */
     .np-header {
+      flex-direction: column;
+      align-items: stretch;
       gap: var(--space-2);
-      padding-inline-end: calc(44px + var(--space-1));
+      padding-inline-end: 0;
+    }
+    /* 这一行高 44，正好与卡片右上角的关闭按钮同高同轴，右侧留出它的位置 */
+    .np-header-meta {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      padding-inline-end: calc(44px + var(--space-4));
+      font-size: var(--font-base);
     }
     .np-header-tabs {
-      width: min(150px, 100%);
+      width: 100%;
     }
   }
 }
