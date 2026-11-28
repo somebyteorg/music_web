@@ -160,12 +160,14 @@ onBeforeUnmount(() => {
       gap: var(--space-3);
       width: 100%;
     }
-    /* 歌词态：头部与歌词栏都是内容高度，整块在舞台里垂直居中，
-       不再从顶部一路铺到底（歌词栏自己的 max-height 见 NowPlayingSide） */
+    /* 歌词态：header 自适应、歌词栏吃满剩余高度；
+       顶部让出关闭按钮（40px 按钮 + 上下各 8），底部只留 --space-4 */
     .np-stage.is-lyrics {
-      grid-template-rows: auto auto;
-      align-content: center;
-      row-gap: var(--space-4);
+      grid-template-rows: auto minmax(0, 1fr);
+      align-content: stretch;
+      row-gap: var(--space-3);
+      padding-top: calc(var(--space-2) + 40px + var(--space-2));
+      padding-bottom: var(--space-4);
     }
     .np-close {
       top: var(--space-2);
