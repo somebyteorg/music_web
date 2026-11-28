@@ -29,10 +29,13 @@ function clock(seconds: number) {
   return String(Math.floor(value / 60)).padStart(2, '0') + ':' + String(value % 60).padStart(2, '0')
 }
 
+/** 总时长：详情接口不带 `duration`（只有列表接口带），优先取首个音频文件的时长 */
 const total = computed(() => {
   const item = song.value
-  if (!item || !item.duration) return 0
-  return item.duration
+  if (!item) return 0
+  const file = item.files?.[0]
+  if (file && file.duration) return file.duration
+  return item.duration || 0
 })
 
 const position = computed(() => (props.position === undefined ? 0 : props.position))
@@ -201,8 +204,11 @@ function artistsOf(item: Entity) {
       padding: var(--space-4);
       margin-bottom: 32px;
     }
+    /* 移动端封面收到 216：整卡高度降到 ~430，首屏才看得到第一个楼层，而不是被 Hero 占满 */
     .hero-art {
       height: auto;
+      width: 216px;
+      margin-inline: auto;
       aspect-ratio: 1;
       border-radius: var(--radius-md);
     }
