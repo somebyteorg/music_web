@@ -7,6 +7,7 @@ import TextButton from '@/components/ui/TextButton.vue'
 import { usePlayerStore } from '@/stores/player'
 import { useSignStore } from '@/stores/sign'
 import { bytes, date, displayName, duration, qualities } from '@/utils/format'
+import type { ComponentPublicInstance } from 'vue'
 import type { Entity } from '@/types/catalog'
 import type { AudioFile } from '@/types/uploads'
 
@@ -25,6 +26,18 @@ const emit = defineEmits<{
 
 const player = usePlayerStore()
 const sign = useSignStore()
+
+// 操作菜单容器本身不是交互目标（子项都是 <button>），这里只做委派：点任一操作后收起所在 <details>
+function closeMenu(event: MouseEvent) {
+  const target = event.currentTarget
+  if (target instanceof HTMLElement) target.parentElement?.removeAttribute('open')
+}
+const boundMenus = new WeakSet<HTMLElement>()
+function bindMenu(element: Element | ComponentPublicInstance | null) {
+  if (!(element instanceof HTMLElement) || boundMenus.has(element)) return
+  boundMenus.add(element)
+  element.addEventListener('click', closeMenu)
+}
 </script>
 
 <template>
@@ -113,12 +126,7 @@ const sign = useSignStore()
                 </TextButton>
                 <details class="action-menu">
                   <summary :aria-label="`${file.file_name} 的更多操作`">⋯</summary>
-                  <div
-                    class="action-menu-items"
-                    @click="
-                      ($event.currentTarget as HTMLElement).parentElement?.removeAttribute('open')
-                    "
-                  >
+                  <div :ref="bindMenu" class="action-menu-items">
                     <button
                       v-if="!file.is_default"
                       :disabled="acting"

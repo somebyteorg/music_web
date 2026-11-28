@@ -5,6 +5,7 @@ import TextButton from '@/components/ui/TextButton.vue'
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
 import BaseDialog from '@/components/BaseDialog.vue'
 import BaseSelect from '@/components/BaseSelect.vue'
+import { useEventListener } from '@vueuse/core'
 import type { UploadBatch } from './useUploadBatch'
 import type { BatchAlbum } from './batchModel'
 import type { UploadTask } from './model'
@@ -21,6 +22,7 @@ const version = defineModel<string>('version', { required: true })
 const addingAlbum = ref(false)
 const albumName = ref('')
 const albumNameInput = useTemplateRef<HTMLInputElement>('albumNameInput')
+const form = useTemplateRef<HTMLFormElement>('form')
 const groupingOptions = [
   { value: 'folder' as const, label: '按文件夹分组' },
   { value: 'album' as const, label: '按专辑标签分组' },
@@ -31,6 +33,8 @@ function preventUnexpectedEnter(event: KeyboardEvent) {
   event.preventDefault()
   event.stopPropagation()
 }
+// 回车不触发隐式提交：监听挂在表单元素上（容器本身不是交互目标，表单内控件才是）
+useEventListener(form, 'keydown', preventUnexpectedEnter)
 async function startAlbumGroup() {
   addingAlbum.value = true
   await nextTick()
@@ -54,27 +58,27 @@ const emit = defineEmits<{
 </script>
 <template>
   <BaseDialog v-model="open" :busy="batch.busy" title="批量整理音频" wide>
-    <form class="form-stack" novalidate @submit.prevent @keydown.enter="preventUnexpectedEnter">
-      <label
+    <form ref="form" class="form-stack" novalidate @submit.prevent>
+      <span class="field-label"
         >新建歌曲所属媒体库<BaseSelect
           v-model="libraryId"
           :disabled="batch.busy || batch.libraries.busy"
           :options="batch.libraries.options"
           label="上传歌曲所属媒体库"
-      /></label>
+      /></span>
       <p class="hint">关联已有歌曲时保留其媒体库，新增的专辑收录不会移除其他专辑关联。</p>
       <p v-if="batch.libraries.error" class="error-text">
         {{ batch.libraries.error }}
         <TextButton @click="batch.libraries.reload()">重试</TextButton>
       </p>
-      <label
+      <span class="field-label"
         >音频分组<BaseSelect
           :model-value="batch.grouping"
           :options="groupingOptions"
           :disabled="batch.busy || batch.done > 0"
           label="音频分组方式"
           @update:model-value="batch.regroup"
-      /></label>
+      /></span>
       <p class="hint">
         每组确认专辑归属即可入库。CD1、CD2
         等子目录会合在一起；切换分组保留歌曲信息，专辑归属请重新核对。

@@ -3,13 +3,20 @@ import Tag from '@/components/ui/Tag.vue'
 import Button from '@/components/ui/Button.vue'
 import ButtonGroup from '@/components/ui/ButtonGroup.vue'
 import TextButton from '@/components/ui/TextButton.vue'
-import { computed, ref } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
+import { useEventListener } from '@vueuse/core'
 import EntityCover from '@/components/EntityCover.vue'
 import { usePlayerStore } from '@/stores/player'
 import { useQueueStore } from '@/stores/queue'
 import { useSignStore } from '@/stores/sign'
 import { displayName } from '@/utils/format'
 import type { CatalogType, Entity } from '@/types/catalog'
+
+const menuItems = useTemplateRef<HTMLDivElement>('menuItems')
+// 菜单容器本身不是交互目标（子项都是 <button> / <a>），这里只做委派：点任一操作后收起 <details>
+useEventListener(menuItems, 'click', () => {
+  menuItems.value?.parentElement?.removeAttribute('open')
+})
 
 const props = defineProps<{
   item: Entity
@@ -130,10 +137,7 @@ function togglePlay() {
         </Button>
         <details class="action-menu">
           <summary>更多 ⋯</summary>
-          <div
-            class="action-menu-items"
-            @click="($event.currentTarget as HTMLElement).parentElement?.removeAttribute('open')"
-          >
+          <div ref="menuItems" class="action-menu-items">
             <button
               v-if="['songs', 'albums', 'artists'].includes(type) && sign.todbEnabled"
               @click="emit('metadata')"

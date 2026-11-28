@@ -43,14 +43,20 @@ const signedIn = computed(() => !booting.value && sign.ready && !!sign.user)
   </div>
   <Teleport :to="notificationTarget"
     ><Transition name="toast"
-      ><div
-        v-if="notification"
-        :class="['toast', { error: notification.error }]"
-        role="status"
-        @click="notification = null"
-      >
-        <span>{{ notification.error ? '!' : '✓' }}</span>{{ notification.text
-        }}<button aria-label="关闭提示">×</button>
+      ><div v-if="notification" :class="['toast', { error: notification.error }]" role="status">
+        <button class="toast-message" type="button" @click="notification = null">
+          <span aria-hidden="true">{{ notification.error ? '!' : '✓' }}</span>{{
+            notification.text
+          }}
+        </button>
+        <button
+          aria-label="关闭提示"
+          class="toast-close"
+          type="button"
+          @click="notification = null"
+        >
+          ×
+        </button>
       </div></Transition
     ></Teleport
   >
@@ -96,14 +102,23 @@ const signedIn = computed(() => !booting.value && sign.ready && !!sign.user)
     font-size: 13px;
     line-height: 1.6;
   }
-  .toast > span {
+  /* 点击提示条正文即可收起：用真正的按钮承载这件事（Enter / Space 原生可用） */
+  .toast-message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    font: inherit;
+    text-align: left;
+  }
+  .toast-message > span {
     color: var(--success);
     font-weight: 700;
   }
-  .toast.error > span {
+  .toast.error .toast-message > span {
     color: var(--danger);
   }
-  .toast > button {
+  .toast-close {
     margin-left: 8px;
     font-size: 18px;
   }

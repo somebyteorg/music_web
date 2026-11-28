@@ -25,7 +25,13 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 </script>
 <template>
   <Teleport to="body">
-    <div v-if="queue.open" class="queue-backdrop" @click.self="queue.open = false" />
+    <button
+      v-if="queue.open"
+      aria-label="关闭播放队列"
+      class="queue-backdrop"
+      type="button"
+      @click="queue.open = false"
+    />
     <section v-if="queue.open" id="queue-panel" aria-label="播放队列" class="queue-drawer">
       <QueueTools />
       <ol v-if="queue.length" ref="list" class="queue-list scroll-fade">
@@ -51,6 +57,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
     /* 低于播放器（45）：点空白可关队列，但播放器仍可操作 */
     z-index: 40;
     inset: 0;
+    padding: 0;
     background: var(--scrim-soft);
   }
   .queue-drawer {
