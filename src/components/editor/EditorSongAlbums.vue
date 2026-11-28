@@ -9,13 +9,13 @@ const { form, libraries, busy, albumEntries, albumOptions, albumQuery, search, p
 </script>
 
 <template>
-  <label
+  <span class="field-label"
     >所属媒体库<BaseSelect
       v-model="form.library_id"
       :disabled="libraries.busy || busy"
       :options="libraries.options"
       label="歌曲所属媒体库"
-  /></label>
+  /></span>
   <p v-if="libraries.error" class="error-text">
     {{ libraries.error }}
     <TextButton @click="libraries.reload()">重试</TextButton>

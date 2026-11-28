@@ -21,14 +21,14 @@ const emit = defineEmits<{
   <details v-if="album.selection && album.selection !== 'none'" class="batch-details">
     <summary>封面与附图</summary>
     <div class="form-stack">
-      <label
+      <span class="field-label"
         >{{ batch.selectedAlbum(album) && !album.replaceCover ? '补充图片中的正面图' : '专辑封面'
         }}<BaseSelect
           v-model="coverChoice"
           :disabled="batch.busy"
           :label="`${album.name} 的封面`"
           :options="batch.coverOptions(album)"
-      /></label>
+      /></span>
       <label
         v-if="batch.selectedAlbum(album)?.cover_id || batch.selectedAlbum(album)?.image_url"
         class="check-label"

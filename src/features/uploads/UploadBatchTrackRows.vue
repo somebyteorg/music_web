@@ -37,23 +37,25 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
               maxlength="255"
               required
           /></label>
-          <label v-if="entry.row.matches.length"
+          <span v-if="entry.row.matches.length" class="field-label"
             >加入方式<BaseSelect
               v-model="entry.row.choice"
               :disabled="entry.task.state === 'published'"
               :label="`${entry.task.name} 的歌曲归属`"
               :options="batch.options(entry.row)"
               @update:model-value="batch.choose(entry.task, entry.row)"
-          /></label>
-          <label v-else>加入方式<span class="batch-static hint">新建歌曲</span></label>
-          <label v-if="batch.albums.length > 1"
+          /></span>
+          <span v-else class="field-label"
+            >加入方式<span class="batch-static hint">新建歌曲</span></span
+          >
+          <span v-if="batch.albums.length > 1" class="field-label"
             >专辑分组<BaseSelect
               :model-value="entry.row.albumKey"
               :disabled="entry.task.state === 'published'"
               :label="`${entry.task.name} 的专辑分组`"
               :options="batch.groupOptions"
               @update:model-value="batch.moveRow(entry.row, $event)"
-          /></label>
+          /></span>
           <label
             >歌曲演唱者<input
               :value="batch.songArtist(entry.row)"
@@ -173,10 +175,13 @@ const emit = defineEmits<{ preview: [task: UploadTask] }>()
     margin-bottom: 8px;
   }
   .batch-file-fields > label:first-child,
-  .batch-file-fields > label:nth-child(2) {
+  .batch-file-fields > label:nth-child(2),
+  .batch-file-fields > .field-label:first-child,
+  .batch-file-fields > .field-label:nth-child(2) {
     grid-column: span 2;
   }
-  .batch-file-fields > label {
+  .batch-file-fields > label,
+  .batch-file-fields > .field-label {
     min-width: 0;
     font-size: 12px;
   }

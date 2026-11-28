@@ -26,13 +26,13 @@ const {
     <p class="hint">
       为所选 {{ editorProps.tracks?.length || 0 }} 首歌曲修改媒体库，专辑关联与音频资源会保留。
     </p>
-    <label
+    <span class="field-label"
       >目标媒体库<BaseSelect
         v-model="form.library_id"
         :disabled="libraries.busy || busy"
         :options="libraries.options"
         label="目标媒体库"
-    /></label>
+    /></span>
     <p v-if="libraries.error" class="error-text">
       {{ libraries.error }}
       <TextButton @click="libraries.reload()">重试</TextButton>
