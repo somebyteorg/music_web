@@ -88,6 +88,8 @@ const queue = useQueueStore()
   .player-controls.is-stage .play-button {
     width: 52px;
     height: 52px;
+    /* 舞台是玻璃卡片，播放键要浮起来 */
+    box-shadow: 0 10px 28px color-mix(in srgb, var(--brand) 35%, transparent);
   }
   .player-controls.is-stage .play-button .ui-icon {
     width: 22px;

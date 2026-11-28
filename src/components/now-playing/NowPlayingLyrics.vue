@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
-import { useNowPlayingLyrics } from '@/composables/useNowPlayingLyrics'
 import { useScrollFade } from '@/composables/useScrollFade'
+import { useNowPlayingLyricsContext } from './lyricsContext'
 
 /**
- * 预览页右栏：歌词列表。
+ * 预览页右栏：歌词列表（空态由卡片统一渲染，这里只管加载/失败/列表）。
  * 当前行高亮并滚到可视区中间；用户自己滚过之后 4 秒内不再自动拽回，
  * 否则一边读一边被拉走（体验关键）。
  * 每行带一个 --d（离当前行的距离 0..5），越远越淡、越虚、越小，形成距离层次；
@@ -16,7 +16,8 @@ const AUTO_SCROLL_WINDOW = 900
 /** 层次最远到第 5 行，再远都按同一档 */
 const MAX_DEPTH = 5
 
-const { status, lines, activeIndex, message, retry } = useNowPlayingLyrics()
+// 状态由外壳取一次（卡片级空态也要用），这里只消费
+const { status, lines, activeIndex, message, retry } = useNowPlayingLyricsContext()
 
 const list = useTemplateRef<HTMLOListElement>('list')
 /** 滚动渐隐：贴顶/贴底/不可滚三态由共享 composable 维护（样式在 styles/components.css） */
@@ -115,10 +116,6 @@ onMounted(() => {
     <div v-else-if="status === 'error'" class="np-note">
       <p>歌词加载失败，<button class="np-retry" type="button" @click="retry()">点此重试</button></p>
       <p v-if="message" class="np-detail">{{ message }}</p>
-    </div>
-    <div v-else-if="status === 'empty'" class="np-note">
-      <p>这首歌还没有歌词</p>
-      <p class="np-detail">可以在歌曲详情页的「歌词」里添加</p>
     </div>
     <ol v-else ref="list" class="np-lines scroll-fade" @scroll.passive="onScroll">
       <li

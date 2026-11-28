@@ -8,15 +8,15 @@ import type { CSSProperties } from 'vue'
  * - 文本宽度 > 容器宽度才滚（scrollWidth > clientWidth 才加 is-overflowing）
  * - 首尾间隔 gap 默认 28px（旧站 --marquee-line-padding），用一份 aria-hidden 副本做无缝循环
  * - 速度按像素算：35px/s，duration = (textWidth + gap) / 35，下限 6s
+ * - delay（秒）：滚动前的静置时间，默认 0s
  * - 滚动时左右两侧渐隐（mask，与歌词列表同一个手法）
  * - 悬停 / 聚焦暂停；prefers-reduced-motion: reduce 时不滚，退回省略号
  * ResizeObserver 跟随容器宽度变化（小窗 168px ↔ 收起 82px）重新量宽。
  */
-const props = withDefaults(defineProps<{ text?: string; duration?: number; gap?: number }>(), {
-  text: '',
-  duration: 0,
-  gap: 28,
-})
+const props = withDefaults(
+  defineProps<{ text?: string; duration?: number; gap?: number; delay?: number }>(),
+  { text: '', duration: 0, gap: 28, delay: 0 },
+)
 
 const PIXELS_PER_SECOND = 35
 const MIN_SECONDS = 6
@@ -35,6 +35,7 @@ const seconds = computed(() => {
 const style = computed<CSSProperties>(() => ({
   '--marquee-gap': `${props.gap}px`,
   '--marquee-duration': `${seconds.value.toFixed(2)}s`,
+  '--marquee-delay': `${props.delay}s`,
 }))
 
 let motion: MediaQueryList | null = null
@@ -116,29 +117,19 @@ watch(
   /* 溢出：两块等宽 + 首尾间隔，周期正好是轨道宽度的一半，translateX(-50%) 即无缝 */
   .marquee.is-overflowing .marquee-track {
     width: max-content;
-    animation: marquee-scroll var(--marquee-duration) linear infinite;
+    /* delay：滚之前先静置一会儿（全屏页头部用 1.2s），播放器小窗仍是 0s */
+    animation: marquee-scroll var(--marquee-duration) var(--marquee-delay) linear infinite;
   }
   .marquee.is-overflowing .marquee-chunk {
     flex: 0 0 auto;
     overflow: visible;
     padding-inline-end: var(--marquee-gap);
   }
-  /* 两侧渐隐，与歌词列表同一套 mask 手法 */
+  /* 只在滚动消失的一侧（右侧）渐隐：左侧保持实边，文字从左边开始读，
+     静止时不会被误看成「首字被裁」 */
   .marquee.is-overflowing {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 16px,
-      #000 calc(100% - 16px),
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 16px,
-      #000 calc(100% - 16px),
-      transparent 100%
-    );
+    -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 16px), transparent 100%);
+    mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 16px), transparent 100%);
   }
   .marquee.is-overflowing:hover .marquee-track,
   .marquee.is-overflowing:focus .marquee-track {

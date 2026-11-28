@@ -125,6 +125,9 @@
   --scrim-modal: color-mix(in srgb, var(--ink) 40%, transparent);
   --scrim-soft: color-mix(in srgb, var(--ink) 5.9%, transparent);
   --scrim-strong: color-mix(in srgb, var(--ink) 14.9%, transparent);
+  /* 沉浸歌词页背景遮罩两端色（.np-backdrop-scrim 用） */
+  --np-scrim-from: #0c0a128c;
+  --np-scrim-to: #0c0a12e0;
   --ring-highlight: color-mix(in srgb, var(--surface) 3.9%, transparent);
 
   /* —— 封面占位色：本色与表面混合压暗（白字改墨色后也要保证封面字可读） —— */
