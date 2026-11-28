@@ -1,16 +1,14 @@
 <script lang="ts" setup>
 import Button from '@/components/ui/Button.vue'
 import EntityCover from '@/components/EntityCover.vue'
-import { duration } from '@/utils/format'
-import { fileUrl } from '@/utils/file'
 import type { Entity } from '@/types/catalog'
 import { computed } from 'vue'
-import type { CSSProperties } from 'vue'
 
 /**
  * 首页 Hero：继续听（首屏视觉焦点）。
- * 左栏封面 + 封面模糊同色层（本地实现，不引入 NowPlaying 的组件依赖），
- * 右栏「接着上次 → 曲名 → 艺人 → 细进度条 → 继续播放 / 加入队列」。
+ * 背景不用「封面模糊图」：整张卡是 surface 92% + brand 8% 的底色，左上角一团大半径径向光斑，
+ * 干净、也没有全页大模糊的性能负担；封面带投影浮在上面。
+ * 右栏「接着上次 → 曲名 → 艺人 → 4px 进度条 + 时间（常驻）→ 继续播放 / 加入队列」。
  * 没有播放历史时同尺寸换成引导卡，用随机楼层的歌「随机播 N 首」。
  */
 const props = defineProps<{
@@ -25,16 +23,11 @@ const emit = defineEmits<{ play: []; enqueue: []; random: [] }>()
 
 const song = computed(() => (props.songs.length > 0 ? props.songs[0] : null))
 
-function coverUrl(item: Entity) {
-  if (item.cover_id) return fileUrl(item.cover_id)
-  return item.image_url || ''
+/** 00:00 形式（进度与总时长都要两位分钟，且长度固定不抖） */
+function clock(seconds: number) {
+  const value = Math.max(0, Math.round(seconds))
+  return String(Math.floor(value / 60)).padStart(2, '0') + ':' + String(value % 60).padStart(2, '0')
 }
-
-const artStyle = computed<CSSProperties>(() => {
-  const item = song.value
-  const url = item ? coverUrl(item) : ''
-  return url ? { '--hero-art': 'url("' + url + '")' } : {}
-})
 
 const total = computed(() => {
   const item = song.value
@@ -43,11 +36,11 @@ const total = computed(() => {
 })
 
 const position = computed(() => (props.position === undefined ? 0 : props.position))
-const hasProgress = computed(() => position.value > 0 && total.value > 0)
+/** 没有进度时就是 0%（底轨仍然可见），进度条与时间始终在 DOM 里 */
 const percent = computed(() =>
-  hasProgress.value ? Math.min(100, Math.round((position.value / total.value) * 100)) : 0,
+  total.value > 0 ? Math.min(100, Math.round((position.value / total.value) * 100)) : 0,
 )
-const timeLabel = computed(() => duration(position.value) + ' / ' + duration(total.value))
+const timeLabel = computed(() => clock(position.value) + ' / ' + clock(total.value))
 
 function artistsOf(item: Entity) {
   const artists = item.artists
@@ -59,16 +52,14 @@ function artistsOf(item: Entity) {
 <template>
   <section aria-label="继续听" class="home-hero">
     <template v-if="song">
-      <div class="hero-art" :style="artStyle">
-        <span aria-hidden="true" class="hero-art-bg"></span>
-        <span aria-hidden="true" class="hero-art-scrim"></span>
+      <div class="hero-art">
         <EntityCover class="hero-cover" :item="song" />
       </div>
       <div class="hero-body">
         <p class="hero-kicker">接着上次</p>
         <h2 class="hero-title">{{ song.name }}</h2>
         <p class="hero-artist">{{ artistsOf(song) }}</p>
-        <div v-if="hasProgress" class="hero-progress">
+        <div class="hero-progress">
           <span class="hero-bar">
             <span class="hero-bar-fill" :style="{ width: percent + '%' }"></span>
           </span>
@@ -101,6 +92,7 @@ function artistsOf(item: Entity) {
 <style scoped>
 @layer components {
   .home-hero {
+    position: relative;
     display: grid;
     grid-template-columns: 38fr 62fr;
     gap: var(--space-8);
@@ -110,7 +102,14 @@ function artistsOf(item: Entity) {
     margin-bottom: 44px;
     border: 1px solid var(--line);
     border-radius: var(--radius-xl);
-    background: var(--surface);
+    /* 底色 + 左上角一团光斑：整卡一片，没有「贴了一张灰纸」的硬边 */
+    background:
+      radial-gradient(
+        600px 300px at 12% 0%,
+        color-mix(in srgb, var(--brand) 16%, transparent),
+        transparent 70%
+      ),
+      color-mix(in srgb, var(--surface) 92%, var(--brand) 8%);
     box-shadow: var(--shadow-md);
     overflow: hidden;
   }
@@ -119,22 +118,6 @@ function artistsOf(item: Entity) {
     display: grid;
     place-items: center;
     height: 100%;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    background: linear-gradient(135deg, var(--brand-soft), var(--surface-muted));
-  }
-  .hero-art-bg {
-    position: absolute;
-    inset: -15%;
-    background-image: var(--hero-art);
-    background-position: center;
-    background-size: cover;
-    filter: blur(36px) saturate(1.5);
-  }
-  .hero-art-scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, var(--scrim-soft), var(--scrim-strong));
   }
   .hero-cover {
     position: relative;
@@ -177,12 +160,13 @@ function artistsOf(item: Entity) {
     color: var(--text-muted);
     font-size: 14px;
   }
+  /* 进度条 + 时间常驻：一段 4px 轨道（无进度时是空的底轨）+ 固定宽度的时间标签 */
   .hero-progress {
     display: flex;
     align-items: center;
     gap: var(--space-3);
     max-width: 420px;
-    margin-top: var(--space-1);
+    margin-top: var(--space-2);
   }
   .hero-bar {
     flex: 1;
@@ -197,9 +181,11 @@ function artistsOf(item: Entity) {
     background: var(--brand);
   }
   .hero-time {
+    min-width: 92px;
     color: var(--text-muted);
     font-size: var(--font-sm);
     font-variant-numeric: tabular-nums;
+    text-align: right;
     white-space: nowrap;
   }
   .hero-actions {

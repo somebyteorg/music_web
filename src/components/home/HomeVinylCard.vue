@@ -74,7 +74,7 @@ function artistsOf(album: Entity) {
     overflow: hidden;
     color: var(--text);
     font-size: var(--font-base);
-    font-weight: 550;
+    font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
@@ -82,7 +82,7 @@ function artistsOf(album: Entity) {
     max-width: 100%;
     overflow: hidden;
     color: var(--text-muted);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     white-space: nowrap;
     text-overflow: ellipsis;
   }

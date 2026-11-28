@@ -20,6 +20,16 @@ const emit = defineEmits<{ play: []; 'play-item': [index: number]; reshuffle: []
 const scroller = useTemplateRef<HTMLDivElement>('scroller')
 useScrollFade(scroller, 'x')
 
+/** 「猜你喜欢」按艺人分多层，标题带上艺人名：不会出现两个完全相同的楼层标题 */
+const heading = computed(() => {
+  const { key, title, subtitle } = props.row
+  if (key.startsWith('artist:') && subtitle) return title + ' · ' + subtitle
+  return title
+})
+const subheading = computed(() =>
+  heading.value === props.row.title ? props.row.subtitle : undefined,
+)
+
 const kind = computed(() => {
   const key = props.row.key
   if (key.startsWith('artist:')) return 'cover'
@@ -31,11 +41,11 @@ const kind = computed(() => {
 </script>
 
 <template>
-  <section :aria-label="row.title" class="home-row">
+  <section :aria-label="heading" class="home-row">
     <header class="home-row-head">
       <div class="home-row-titles">
-        <h2>{{ row.title }}</h2>
-        <p v-if="row.subtitle" class="home-row-sub">{{ row.subtitle }}</p>
+        <h2>{{ heading }}</h2>
+        <p v-if="subheading" class="home-row-sub">{{ subheading }}</p>
       </div>
       <div class="home-row-actions">
         <TextButton v-if="row.songs.length" :aria-label="row.playLabel" @click="emit('play')">
@@ -46,7 +56,7 @@ const kind = computed(() => {
     </header>
     <div
       ref="scroller"
-      :aria-label="row.title + '：横向列表，聚焦后可用左右方向键滚动'"
+      :aria-label="heading + '：横向列表，聚焦后可用左右方向键滚动'"
       class="home-row-scroller scroll-fade-x"
       role="region"
       tabindex="0"

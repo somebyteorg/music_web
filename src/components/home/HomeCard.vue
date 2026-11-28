@@ -66,11 +66,17 @@ function artistsOf(item: Entity) {
     gap: var(--space-1);
     flex: 0 0 176px;
     width: 176px;
-    padding: var(--space-1);
-    border-radius: var(--radius-lg);
+    padding: var(--space-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    box-shadow: var(--shadow-cover);
     text-align: left;
     scroll-snap-align: start;
-    transition: transform var(--transition-fast);
+    transition:
+      transform var(--transition-fast),
+      box-shadow var(--transition-fast),
+      border-color var(--transition-fast);
   }
   .home-card--cover-play {
     flex-basis: 160px;
@@ -83,9 +89,8 @@ function artistsOf(item: Entity) {
   .card-art {
     position: relative;
     display: block;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-cover);
-    transition: box-shadow var(--transition-fast);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
   }
   .home-card--poster .card-art {
     aspect-ratio: 4 / 5;
@@ -126,26 +131,27 @@ function artistsOf(item: Entity) {
   }
   .home-card:hover {
     transform: translateY(-2px);
-  }
-  .home-card:hover .card-art {
+    border-color: var(--brand-line-strong);
     box-shadow: var(--shadow-md);
   }
   .home-card:focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
+  /* 标题与封面之间留 8（卡片自身 gap 4 + 这里 4） */
   .card-name {
+    margin-top: var(--space-1);
     overflow: hidden;
     color: var(--text);
     font-size: var(--font-base);
-    font-weight: 550;
+    font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .card-meta {
     overflow: hidden;
     color: var(--text-muted);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     white-space: nowrap;
     text-overflow: ellipsis;
   }

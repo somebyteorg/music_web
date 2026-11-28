@@ -29,13 +29,15 @@ function artistsOf(song: Entity) {
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    flex: 0 0 264px;
-    width: 264px;
+    /* 224×4 + 12×3 = 932 ≤ 944（1280 下内容宽）：一行正好 4 个，不被切 */
+    flex: 0 0 224px;
+    width: 224px;
     height: 64px;
     padding: var(--space-2);
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     background: var(--surface);
+    box-shadow: var(--shadow-cover);
     text-align: left;
     scroll-snap-align: start;
     transition:
@@ -46,7 +48,7 @@ function artistsOf(song: Entity) {
   .home-chip:hover {
     transform: translateY(-2px);
     border-color: var(--brand-line-strong);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
   }
   .home-chip:focus-visible {
     outline: 2px solid var(--brand);
@@ -67,14 +69,14 @@ function artistsOf(song: Entity) {
     overflow: hidden;
     color: var(--text);
     font-size: var(--font-base);
-    font-weight: 550;
+    font-weight: 500;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .chip-text small {
     overflow: hidden;
     color: var(--text-muted);
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     white-space: nowrap;
     text-overflow: ellipsis;
   }
