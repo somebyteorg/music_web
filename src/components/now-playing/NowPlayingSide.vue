@@ -13,7 +13,7 @@ const tab = ref<'lyrics' | 'queue'>('lyrics')
 
 <template>
   <div class="np-side">
-    <Tabs class="np-tabs" label="歌词与播放队列" variant="segmented">
+    <Tabs class="np-tabs" label="歌词与播放队列" size="lg" variant="segmented">
       <button :class="{ active: tab === 'lyrics' }" type="button" @click="tab = 'lyrics'">
         歌词</button
       ><button :class="{ active: tab === 'queue' }" type="button" @click="tab = 'queue'">

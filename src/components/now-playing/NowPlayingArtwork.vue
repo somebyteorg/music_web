@@ -194,11 +194,12 @@ function setLyrics(open: boolean) {
     gap: var(--space-2);
   }
   @media (max-width: 899px) {
-    /* 封面态：三段（封面 / 信息 / 底部一组）按可用高度铺开，吃满舞台而不是挤在中间 */
+    /* 封面态：三段（封面 / 信息 / 底部一组）按可用高度均匀铺开，
+       space-evenly 让「信息 → 控制」之间不再留出空档，也不贴边 */
     .np-left:not(.is-header) {
-      justify-content: space-between;
-      gap: var(--space-3);
-      padding-block: var(--space-5);
+      justify-content: space-evenly;
+      /* 不叠加 gap：四段留白（上/封面-信息/信息-控制/下）完全相等 */
+      gap: 0;
     }
     /* 封面按舞台高度比例放大，不再用 60vw / 280px 这类固定值 */
     .np-artwork {
