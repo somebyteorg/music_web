@@ -1,10 +1,17 @@
 <script lang="ts" setup>
 import EntityCover from '@/components/EntityCover.vue'
+import PlayingBadge from './PlayingBadge.vue'
+import { usePlayerStore } from '@/stores/player'
 import type { Entity } from '@/types/catalog'
+import { computed } from 'vue'
 
 /** 紧凑 chip 卡（随机漫游）：44px 小封面 + 曲名/艺人两行；点击整张卡播放 */
-defineProps<{ song: Entity }>()
+const props = defineProps<{ song: Entity }>()
 const emit = defineEmits<{ play: [] }>()
+
+const player = usePlayerStore()
+/** 正在播放：比 player.song.id */
+const isPlaying = computed(() => player.song?.id === props.song.id)
 
 function artistsOf(song: Entity) {
   const artists = song.artists
@@ -14,8 +21,17 @@ function artistsOf(song: Entity) {
 </script>
 
 <template>
-  <button :aria-label="'播放 ' + song.name" class="home-chip" type="button" @click="emit('play')">
-    <EntityCover class="chip-cover" :item="song" />
+  <button
+    :aria-current="isPlaying ? 'true' : undefined"
+    :aria-label="(isPlaying ? '正在播放 ' : '播放 ') + song.name"
+    :class="['home-chip', { 'is-playing': isPlaying }]"
+    type="button"
+    @click="emit('play')"
+  >
+    <span class="chip-art">
+      <EntityCover class="chip-cover" :item="song" />
+      <PlayingBadge v-if="isPlaying" class="chip-playing" />
+    </span>
     <span class="chip-text">
       <strong>{{ song.name }}</strong>
       <small>{{ artistsOf(song) }}</small>
@@ -54,10 +70,25 @@ function artistsOf(song: Entity) {
     outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
-  .home-chip > .chip-cover {
+  /* 正在播放：小封面外圈 2px 品牌描边 + 左下角均衡器 */
+  .home-chip.is-playing .chip-art {
+    box-shadow: 0 0 0 2px var(--brand);
+  }
+  .chip-art {
+    position: relative;
     flex-shrink: 0;
     width: 44px;
     border-radius: var(--radius-sm);
+  }
+  .chip-art > .chip-cover {
+    width: 100%;
+    border-radius: inherit;
+  }
+  .chip-playing {
+    position: absolute;
+    bottom: -4px;
+    left: -4px;
+    z-index: 1;
   }
   .chip-text {
     display: flex;

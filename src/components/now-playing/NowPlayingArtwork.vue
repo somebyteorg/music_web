@@ -5,8 +5,8 @@ import PlayerModeButton from '@/components/player/PlayerModeButton.vue'
 import PlayerSeek from '@/components/player/PlayerSeek.vue'
 import PlayerTransport from '@/components/player/PlayerTransport.vue'
 import { useFlipMorph } from '@/composables/useFlipMorph'
-import { usePlayerMeta } from '@/composables/usePlayerMeta'
 import { usePlayerStore } from '@/stores/player'
+import { useTrackLinks } from '@/composables/useTrackLinks'
 import { useMediaQuery } from '@vueuse/core'
 import { computed, useTemplateRef } from 'vue'
 
@@ -21,7 +21,8 @@ import { computed, useTemplateRef } from 'vue'
  * .np-artwork 才能做等比 FLIP；也正因为它在 FLIP 里被 scale，按钮必须放在它外面。
  */
 const player = usePlayerStore()
-const { displayItem, artist } = usePlayerMeta()
+// 曲名 / 歌手的详情页链接（先关浮层再跳转，见 useTrackLinks）
+const { displayItem, artist, songPath, artistPath, follow } = useTrackLinks()
 
 const compact = useMediaQuery('(max-width: 899px)')
 /** 移动端的歌词态：本栏从整块封面收成一行 */
@@ -69,13 +70,35 @@ function setLyrics(open: boolean) {
       </button>
     </div>
     <div class="np-meta">
-      <!-- 桌面：两行截断（不滚）；移动端：跑马灯直接开滚（首帧静置会让人以为被截断） -->
-      <h2 v-if="!compact" class="np-title np-title--clamp">{{ displayItem?.name }}</h2>
-      <h2 v-else class="np-title">
+      <!-- 曲名是 RouterLink（原生键盘可达），点击先关浮层再跳详情页；
+           桌面两行截断，移动端用跑马灯（aria-hidden 的视觉副本仍在链接内） -->
+      <h2 :class="['np-title', { 'np-title--clamp': !compact }]">
         <span class="sr-only">{{ displayItem?.name }}</span>
-        <MarqueeText aria-hidden="true" :text="displayItem?.name" />
+        <RouterLink
+          v-if="songPath"
+          :aria-label="'打开歌曲 ' + displayItem?.name"
+          class="np-link"
+          :to="songPath"
+          @click.capture="follow($event, songPath)"
+        >
+          <MarqueeText v-if="compact" aria-hidden="true" :text="displayItem?.name" />
+          <template v-else>{{ displayItem?.name }}</template>
+        </RouterLink>
+        <MarqueeText v-else-if="compact" aria-hidden="true" :text="displayItem?.name" />
+        <template v-else>{{ displayItem?.name }}</template>
       </h2>
-      <p v-if="artist" class="np-artist">{{ artist }}</p>
+      <p v-if="artist" class="np-artist">
+        <RouterLink
+          v-if="artistPath"
+          :aria-label="'打开歌手 ' + artist"
+          class="np-link"
+          :to="artistPath"
+          @click.capture="follow($event, artistPath)"
+        >
+          {{ artist }}
+        </RouterLink>
+        <template v-else>{{ artist }}</template>
+      </p>
     </div>
     <div class="np-bottom">
       <div class="np-controls">
@@ -173,6 +196,15 @@ function setLyrics(open: boolean) {
     margin: var(--space-1) 0 0;
     color: var(--text-muted);
     font-size: 13px;
+  }
+  /* 曲名 / 歌手的详情页链接：只加 hover 下划线，焦点环沿用全局 :focus-visible */
+  .np-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .np-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   /* 底部一组：控制行 / 进度 */
   .np-bottom {
