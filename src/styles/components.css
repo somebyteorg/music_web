@@ -277,6 +277,75 @@
 }
 
 /* 横轴版本（首页横向楼层）：贴左只剩右侧渐隐，贴右只剩左侧渐隐 */
+/*
+ * 封面瓦片：目录网格与首页卡片唯一的一份定义（封面 + 标题 + 副文案 + hover 浮起）。
+ * 使用方只加 cover-tile 到条目根，标题/副文案分别加 cover-tile-name / cover-tile-meta。
+ */
+.cover-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  text-align: left;
+}
+
+.cover-tile > .cover {
+  width: 100%;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-cover);
+  box-shadow: var(--shadow-cover);
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+
+.cover-tile:hover > .cover,
+.cover-tile:focus-visible > .cover {
+  transform: translateY(calc(var(--lift-hover) * -1));
+  box-shadow: var(--shadow-cover-hover);
+}
+
+.cover-tile-name {
+  overflow: hidden;
+  font-size: var(--font-md);
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cover-tile:hover .cover-tile-name {
+  color: var(--brand);
+}
+
+.cover-tile-meta {
+  margin-top: 6px;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 正在播放：只让曲名转品牌深色，不加描边/徽标 */
+.cover-tile.is-playing .cover-tile-name {
+  color: var(--brand-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-tile:hover > .cover {
+    transform: none;
+  }
+}
+
+/*
+ * 横轴滚动楼层：overflow-x: auto 会纵向裁切 hover 的位移与阴影，
+ * 所以统一在共享类里留出余量（padding 撑开、负 margin 抵消，楼层节奏不变）。
+ */
+.scroll-fade-x {
+  padding-block: var(--scroll-headroom);
+  margin-block: calc(var(--scroll-headroom) * -1);
+}
+
 .scroll-fade-x.is-scrollable-x {
   -webkit-mask-image: linear-gradient(
     to right,
