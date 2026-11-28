@@ -2,6 +2,7 @@
 import { useMediaQuery } from '@vueuse/core'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import { useNowPlayingLyrics } from '@/composables/useNowPlayingLyrics'
+import { usePlayerMeta } from '@/composables/usePlayerMeta'
 import { usePlayerStore } from '@/stores/player'
 import NowPlayingArtwork from './NowPlayingArtwork.vue'
 import NowPlayingBackdrop from './NowPlayingBackdrop.vue'
@@ -18,6 +19,7 @@ import { provideNowPlayingLyrics } from './lyricsContext'
  * z-index 60：压过播放器（45）与队列抽屉（46）。
  */
 const player = usePlayerStore()
+const { totalLength } = usePlayerMeta()
 const lyrics = useNowPlayingLyrics()
 provideNowPlayingLyrics(lyrics)
 
@@ -33,6 +35,14 @@ const showHeader = computed(() => !compact.value || player.nowPlayingLyrics)
 const showEmpty = computed(
   () => lyricsOpen.value && tab.value === 'lyrics' && lyrics.status.value === 'empty',
 )
+
+/** 卡片顶部进度线的宽度（纯展示，不交互） */
+const progressWidth = computed(() => {
+  const total = totalLength.value
+  if (!total) return '0%'
+  const ratio = Math.min(1, player.time / total)
+  return `${(ratio * 100).toFixed(2)}%`
+})
 
 let origin: HTMLElement | null = null
 let savedOverflow = ''
@@ -102,6 +112,9 @@ onBeforeUnmount(() => {
       >
         <NowPlayingBackdrop />
         <div :class="['np-stage', { 'is-lyrics': lyricsOpen, 'is-empty': showEmpty }]">
+          <div aria-hidden="true" class="np-progress-line">
+            <span :style="{ width: progressWidth }"></span>
+          </div>
           <button
             ref="closeButton"
             aria-label="关闭歌词预览"
@@ -177,6 +190,23 @@ onBeforeUnmount(() => {
   .np-empty-slot {
     grid-column: 1 / -1;
     grid-row: 2;
+  }
+  /* 卡片顶部进度线：2px，前景品牌色、底轨 --line，纯展示 */
+  .np-progress-line {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    overflow: hidden;
+    border-radius: 24px 24px 0 0;
+    background: var(--line);
+  }
+  .np-progress-line > span {
+    display: block;
+    height: 100%;
+    background: var(--brand);
+    transition: width var(--transition-base) linear;
   }
   .np-close {
     position: absolute;
