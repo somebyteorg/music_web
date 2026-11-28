@@ -1,63 +1,18 @@
 import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import type { Entity } from '@/types/catalog'
-import { audioFileCount } from '@/utils/audio'
+import { QUEUE_LIMIT, entryFromSong, playModes, type PlayMode, type QueueEntry } from './types'
+import { loadSnapshot, saveSnapshot } from './persist'
+import {
+  nextPosition,
+  previousPosition,
+  restoreBaseOrder,
+  shuffleAround,
+  shuffleRest,
+} from './shuffle'
 
-export type PlayMode = 'order' | 'repeat-all' | 'repeat-one' | 'shuffle'
-
-export const playModes: PlayMode[] = ['order', 'repeat-all', 'repeat-one', 'shuffle']
-
-export const playModeLabels: Record<PlayMode, string> = {
-  order: '顺序播放',
-  'repeat-all': '列表循环',
-  'repeat-one': '单曲循环',
-  shuffle: '随机播放',
-}
-
-export interface QueueEntry {
-  key: string
-  songId: string
-  name: string
-  artists: string
-  album: string
-  coverId: string | null
-  imageUrl: string | null
-  duration: number | null
-  playable: boolean
-}
-
-/** 队列最多保留的曲目数量。 */
-export const QUEUE_LIMIT = 1000
-
-const storageKey = (userId: number) => `music.queue.v1.${userId}`
-
-export function entryFromSong(song: Entity, index: number): QueueEntry {
-  const album = song.albums?.[0]
-  const audioCount = audioFileCount(song)
-  return {
-    key: song.entry_id || `${song.id}#${index}`,
-    songId: song.id,
-    name: song.name,
-    artists: song.artists?.map((artist) => artist.name).join(' / ') || '未填写歌手',
-    album: album?.name || '单曲',
-    coverId: song.cover_id ?? album?.cover_id ?? null,
-    imageUrl: song.image_url ?? album?.image_url ?? null,
-    duration: song.duration ?? song.files?.[0]?.duration ?? null,
-    playable: song.available !== false && audioCount !== undefined && audioCount > 0,
-  }
-}
-
-function shuffleInPlace(list: QueueEntry[]) {
-  for (let i = list.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[list[i], list[j]] = [list[j], list[i]]
-  }
-}
-
-function isEntry(value: unknown): value is QueueEntry {
-  const entry = value as QueueEntry | null
-  return !!entry && typeof entry.key === 'string' && typeof entry.songId === 'string'
-}
+export { QUEUE_LIMIT, entryFromSong, playModeLabels, playModes } from './types'
+export type { PlayMode, QueueEntry } from './types'
 
 export const useQueueStore = defineStore('queue', () => {
   const items = ref<QueueEntry[]>([])
@@ -81,29 +36,10 @@ export const useQueueStore = defineStore('queue', () => {
 
   function save() {
     if (!initialized.value || owner === null) return
-    try {
-      localStorage.setItem(
-        storageKey(owner),
-        JSON.stringify({
-          items: items.value,
-          pos: pos.value,
-          mode: mode.value,
-          source: source.value,
-          base: baseOrder.value,
-        }),
-      )
-    } catch {
-      /* 存储空间不足时静默失败，队列仍在内存里可用。 */
-    }
+    saveSnapshot(owner, items.value, pos.value, mode.value, source.value, baseOrder.value)
   }
 
   watch([items, pos, mode, source], save, { deep: true })
-
-  function shuffleRest(currentIndex: number) {
-    const rest = items.value.slice(currentIndex + 1)
-    shuffleInPlace(rest)
-    items.value = [...items.value.slice(0, currentIndex + 1), ...rest]
-  }
 
   /** 用一份列表整体替换队列；start 为点击处下标。 */
   function replace(next: QueueEntry[], start: number, label = '') {
@@ -112,7 +48,8 @@ export const useQueueStore = defineStore('queue', () => {
     pos.value = trimmed.length ? Math.min(Math.max(start, 0), trimmed.length - 1) : -1
     source.value = label
     baseOrder.value = null
-    if (mode.value === 'shuffle' && pos.value >= 0) shuffleRest(pos.value)
+    if (mode.value === 'shuffle' && pos.value >= 0)
+      items.value = shuffleRest(items.value, pos.value)
   }
 
   function playList(entities: Entity[], start: number, label = ''): QueueEntry | null {
@@ -137,10 +74,8 @@ export const useQueueStore = defineStore('queue', () => {
   function insertNext(entities: Entity[]) {
     const added = entities.map((song, index) => entryFromSong(song, items.value.length + index))
     const at = pos.value + 1
-    items.value = [...items.value.slice(0, at), ...added, ...items.value.slice(at)].slice(
-      0,
-      QUEUE_LIMIT,
-    )
+    const merged = [...items.value.slice(0, at), ...added, ...items.value.slice(at)]
+    items.value = merged.slice(0, QUEUE_LIMIT)
     if (pos.value < 0) pos.value = 0
     return added
   }
@@ -162,32 +97,15 @@ export const useQueueStore = defineStore('queue', () => {
 
   /** 返回下一首（auto 表示由播放结束触发）；队尾且不循环时返回 null。 */
   function advance(auto = false): QueueEntry | null {
-    if (!items.value.length) return null
-    if (auto && mode.value === 'repeat-one') return current.value
-    if (pos.value + 1 < items.value.length) {
-      pos.value += 1
-      return current.value
-    }
-    if (mode.value === 'repeat-all' || mode.value === 'shuffle') {
-      pos.value = 0
-      return current.value
-    }
-    if (auto) return null
-    pos.value = 0
+    const next = nextPosition(items.value.length, pos.value, mode.value, auto)
+    if (next === null) return null
+    pos.value = next
     return current.value
   }
 
   function previous(): QueueEntry | null {
     if (!items.value.length) return null
-    if (pos.value > 0) {
-      pos.value -= 1
-      return current.value
-    }
-    if (mode.value === 'repeat-all' || mode.value === 'shuffle') {
-      pos.value = items.value.length - 1
-      return current.value
-    }
-    pos.value = 0
+    pos.value = previousPosition(items.value.length, pos.value, mode.value)
     return current.value
   }
 
@@ -196,17 +114,10 @@ export const useQueueStore = defineStore('queue', () => {
     const playing = current.value
     if (next === 'shuffle') {
       baseOrder.value = items.value.map((entry) => entry.key)
-      const rest = items.value.filter((entry) => entry.key !== playing?.key)
-      shuffleInPlace(rest)
-      items.value = playing ? [playing, ...rest] : rest
+      items.value = shuffleAround(items.value, playing)
       pos.value = playing ? 0 : -1
     } else if (mode.value === 'shuffle' && baseOrder.value) {
-      const order = new Map(baseOrder.value.map((key, index) => [key, index]))
-      items.value = [...items.value].sort(
-        (a, b) =>
-          (order.get(a.key) ?? Number.MAX_SAFE_INTEGER) -
-          (order.get(b.key) ?? Number.MAX_SAFE_INTEGER),
-      )
+      items.value = restoreBaseOrder(items.value, baseOrder.value)
       pos.value = playing ? items.value.findIndex((entry) => entry.key === playing.key) : -1
       baseOrder.value = null
     }
@@ -233,28 +144,13 @@ export const useQueueStore = defineStore('queue', () => {
   function restore(userId: number) {
     if (owner === userId && initialized.value) return
     owner = userId
-    try {
-      const raw = localStorage.getItem(storageKey(userId))
-      const data = raw
-        ? (JSON.parse(raw) as {
-            items?: unknown
-            pos?: unknown
-            mode?: unknown
-            source?: unknown
-            base?: unknown
-          })
-        : null
-      if (data && Array.isArray(data.items)) {
-        items.value = data.items.filter(isEntry)
-        pos.value = typeof data.pos === 'number' && data.pos < items.value.length ? data.pos : -1
-        mode.value = playModes.includes(data.mode as PlayMode) ? (data.mode as PlayMode) : 'order'
-        source.value = typeof data.source === 'string' ? data.source : ''
-        baseOrder.value = Array.isArray(data.base)
-          ? data.base.filter((key): key is string => typeof key === 'string')
-          : null
-      }
-    } catch {
-      /* 损坏的本地队列直接忽略。 */
+    const snapshot = loadSnapshot(userId)
+    if (snapshot) {
+      items.value = snapshot.items
+      pos.value = snapshot.pos
+      mode.value = snapshot.mode
+      source.value = snapshot.source
+      baseOrder.value = snapshot.base
     }
     initialized.value = true
   }
