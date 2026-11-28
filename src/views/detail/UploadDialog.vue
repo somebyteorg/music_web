@@ -60,6 +60,7 @@ const {
       <input
         ref="audioInput"
         :accept="audioAccept"
+        aria-label="选择音频文件"
         hidden
         multiple
         type="file"

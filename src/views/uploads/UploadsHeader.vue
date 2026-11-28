@@ -74,12 +74,19 @@ onBeforeUnmount(() => {
       <Button as="label" variant="primary"
         >＋ 添加文件<input
           :accept="accept"
+          aria-label="添加文件"
           class="sr-only"
           multiple
           type="file"
           @change="choose" /></Button
       ><Button as="label" variant="secondary"
-        >添加文件夹<input class="sr-only" multiple type="file" webkitdirectory @change="choose"
+        >添加文件夹<input
+          aria-label="添加文件夹"
+          class="sr-only"
+          multiple
+          type="file"
+          webkitdirectory
+          @change="choose"
       /></Button>
     </ButtonGroup>
   </section>
